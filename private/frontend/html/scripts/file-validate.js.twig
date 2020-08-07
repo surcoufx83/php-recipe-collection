@@ -1,0 +1,44 @@
+
+      var fileid = {{ Page.File.getId() }};
+      var running = false;
+      var runner = null;
+      var icon = null;
+
+      $('#file-validate-start').click(function() {
+        if (running)
+          return;
+        runner = $(this);
+        running = true;
+        run();
+      });
+
+      function run() {
+        icon = runner.find('i.fas');
+        icon.removeClass("fa-play-circle");
+        icon.addClass("fa-spinner fa-spin");
+        $.getJSON('/ajax/file/validate/' + fileid, function(data) {
+          for (key in data.Replacers) {
+            if (data.Replacers[key]['SetHtml']) {
+              $('#' + key).html(data.Replacers[key]['SetHtml']);
+            }
+            if (data.Replacers[key]['SetText']) {
+              $('#' + key).text(data.Replacers[key]['SetText']);
+            }
+            if (data.Replacers[key]['RemoveClass']) {
+              $('#' + key).removeClass(data.Replacers[key]['RemoveClass']);
+            }
+            if (data.Replacers[key]['AddClass']) {
+              $('#' + key).addClass(data.Replacers[key]['AddClass']);
+            }
+          }
+          finish();
+        }).fail(function(obj, error, errno) {
+          finish();
+        });
+      }
+
+      function finish() {
+        icon.removeClass("fa-spinner fa-spin");
+        icon.addClass("fa-play-circle");
+        running = false;
+      }

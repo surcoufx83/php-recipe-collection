@@ -1,0 +1,31 @@
+
+    <div class="container-fluid ">
+      <div class="px-1 px-md-2 px-lg-3 px-xl-5 pb-3 pt-lg-4">
+        <form>
+          <div class="form-row">
+            <div class="col-12 col-xl-6 form-group">
+              <label for="file-view-filename">Dateiname</label>
+              <input type="text" class="form-control" readonly id="file-view-filename" name="fileview_filename" placeholder="Dateiname" value="{{ Page.File.getName() }}">
+            </div>
+            <div class="col-8 col-xl-4 form-group">
+              <label for="file-view-filetype">Dateityp</label>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">{{ Page.File.getExtObject().getIcon('')|raw }}</div>
+                </div>
+                <input type="text" class="form-control" readonly id="file-view-filetype" value="{{ Page.File.getExtObject().getMimeType() }}">
+              </div>
+            </div>
+            <div class="col-4 col-xl-2 form-group">
+              <label for="file-view-filesize">Dateigröße</label>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">{{ Config.Icons.FileSize.getIcon('')|raw }}</div>
+                </div>
+                <input type="text" readonly class="form-control" id="file-view-filesize" value="{{ Page.File.getReadableSize() }}">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>

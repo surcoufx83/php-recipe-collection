@@ -1,0 +1,152 @@
+
+      <div class="w-100">
+        <form class="content-form" id="create-customer-form" action="#">
+          <h4 class="mb-3 font-weight-bold">Allgemeine Kundeninformationen</h4>
+
+          <div class="form-row"><!-- customer type -->
+            <div class="col-6 col-md-3">
+              <div class="form-group">
+                <label for="customer-type">Kundentyp</label>
+                <select class="form-control form-control-sm" id="customer-type" name="customer-type">
+                  <option value="0" selected>Privat</option>
+                  <option value="1">Gewerblich</option>
+                </select>
+                <div class="invalid-feedback"
+                  id="customer-type-feedback">
+                  Bitte wählen Sie einen Eintrag.
+                </div>
+              </div>
+            </div>
+          </div><!-- end row customer type -->
+
+          <div class="form-row"><!-- salutation and name -->
+
+            <div class="col-12 col-md-3">
+              <div class="form-group">
+                <label for="customer-salutation">Anrede</label>
+                <select class="form-control form-control-sm" id="customer-salutation" name="customer-salutation">
+                  <option value="" selected>Bitte wählen</option>
+                  {% for Salut in Data.Salutations %}
+                  <option value="{{ Salut.getId() }}">{{ Salut.getSalutation()|replace({'<customer.name>': '...'}) }}</option>
+                  {% endfor %}
+                </select>
+                <div class="invalid-feedback"
+                  id="customer-salutation-feedback">
+                  Bitte wählen Sie einen Eintrag.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-9">
+              <div class="form-group">
+                <label for="customer-name">Name</label>
+                <input type="text" class="form-control form-control-sm" id="customer-name" name="customer-name"
+                  placeholder="Voller Name des Kunden">
+                <div class="invalid-feedback"
+                  id="customer-name-feedback">
+                  Bitte tragen Sie einen Namen ein.
+                </div>
+              </div>
+            </div>
+
+          </div><!-- end row salutation and name -->
+
+          <div class="form-row"><!-- address -->
+
+            <div class="col-12">
+              <div class="form-group">
+                <label for="find-address-modal-starter">Addresse suchen oder neu erfassen</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text pointer" id="find-address-modal-starter" data-toggle="modal"
+                      data-target="#find-address-modal">{{ Config.Icons.Search.getIcon('fa-fw font-weight-bold')|raw }}</div>
+                  </div>
+                  <input type="text" class="form-control form-control-sm pointer" id="customer-address"
+                    name="customer-address" readonly
+                    data-toggle="modal" data-target="#find-address-modal"
+                    data-selectedid="0" data-selectedtext= "">
+                </div>
+                <div class="invalid-feedback"
+                  id="customer-address-feedback">
+                  Bitte wählen Sie eine Addresse durch Klick auf die Lupe.
+                </div>
+              </div>
+            </div>
+
+          </div><!-- end row address -->
+
+          <div class="form-row pt-3"><!-- submit button -->
+
+          <button type="submit" class="btn btn-blue mx-auto" id="customer-submit">
+            {{ Config.Icons.Spinner.getIcon('mx-1 fa-spin d-none', '', 'customer-submit-spinner')|raw }}
+            {{ Config.Icons.Vote.getIcon('mx-1', '', 'customer-submit-icon')|raw }}
+            Datensatz speichern
+          </button>
+
+          </div><!-- end row submit button -->
+
+        </form>
+      </div>
+
+      <!-- address lookup modal -->
+      <div class="modal fade" id="find-address-modal" tabindex="-1"
+        role="dialog" aria-labelledby="Find customer address modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="movefile-modal-title">
+                {{ Config.Icons.Spinner.getIcon('mx-1 fa-spin d-none', '', 'modal-action-icon-spinner')|raw }}
+                {{ Config.Icons.Search.getIcon('mx-1', '', 'modal-action-icon')|raw }}
+                Addresse suchen</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <div class="input-group md-form form-sm form-1 pl-0">
+                <input class="form-control form-control-sm my-0 py-1" type="text"
+                placeholder="Suchbegriff eingeben..." aria-label="Search"
+                id="modal-search">
+              </div>
+            </div>
+
+            <div class="modal-body" id="find-address-modal-list">
+              <ol class="breadcrumb d-none">
+              </ol>
+              <ul class="list-group list-group-flush" id="find-address-modal-list">
+              </ul>
+            </div>
+
+            <div class="modal-body bg-danger text-light d-none" id="find-address-modal-error">
+              <p>{{ Config.Icons.Exclamation.getIcon('fa-fw mr-1')|raw }}Fehler beim Abrufen der Addressdaten.
+              </p>
+              <p><span id="find-address-modal-error-code">0</span>: <span id="find-address-modal-error-message"></span></p>
+            </div>
+
+            <div class="modal-footer">
+              <ul class="pagination small mr-auto" id="find-address-modal-mode">
+                <li class="page-item active">
+                  <a class="page-link" href="#" aria-label="Search existing address" id="find-address-modal-mode-search">
+                    <span aria-hidden="true">{{ Config.Icons.Search.getIcon('fa-fw')|raw }}</span>
+                    <span class="sr-only">Search existing</span>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#" aria-label="Enter new address" id="find-address-modal-mode-enter">
+                    <span aria-hidden="true">{{ Config.Icons.Keyboard.getIcon('fa-fw')|raw }}</span>
+                    <span class="sr-only">Enter new entry</span>
+                  </a>
+                </li>
+              </ul>
+              <button type="button" class="btn btn-outline-blue" id="find-address-modal-cancel" data-dismiss="modal">Abbruch</button>
+              <button type="button" class="btn btn-blue d-none" id="find-address-modal-select" data-dismiss="modal">
+                {{ Config.Icons.Vote.getIcon('mx-1')|raw }}
+                Addresse übernehmen
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!-- end address lookup modal -->

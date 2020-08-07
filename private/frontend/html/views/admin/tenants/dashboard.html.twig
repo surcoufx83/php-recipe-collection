@@ -1,0 +1,29 @@
+
+      <div class="w-100">
+        <ul class="content-list">
+          {% for Tenant in Tenants %}
+          <li class="item item-hoverable">
+            <div class="item-flexbox">
+              <div class="item-major">
+                <div class="title">
+                  <a href="{{ Controller.getLink('admin:tenant:' ~ Tenant.getId()) }}">
+                    <img class="avatar-18" style="vertical-align: text-bottom;" src="{{ Tenant.getAvatarUrl() }}"/>
+                    {{ Tenant.getName() }}
+                  </a>
+                  {% if Tenant.isDefault() %}{{ Config.Icons.Locked.getIcon('ml-2 fa-sm')|raw }}{% endif %}
+                </div>
+                <div class="info">
+                  <span class="d-none d-md-inline">#{{ Tenant.getId() }}</span>{% if Tenant.getAddress().getName() != '' %} •
+                  <span>{{ Tenant.getAddress().getName() }}</span>{% endif %}{% if Tenant.getQuotaStr() != '' %} •
+                  <span>Limit {{ Tenant.getQuotaStr() }}</span>{% endif %}{% if Tenant.getOwner() %} •
+                <span>Owner <a href="{{ Controller.getLink('admin:user:' ~ Tenant.getOwner().getId()) }}">{{ Tenant.getOwner().getName() }}</a></span>{% endif %}
+                </div>
+              </div>
+              <div class="item-minor">
+
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>

@@ -1,0 +1,246 @@
+
+  var modalicon = $('#modal-action-icon');
+  var modalspinner = $('#modal-action-icon-spinner');
+  var searchurl = "{{ Controller.getLink('ajax:admin:address:search') }}";
+  var selectedid = 0;
+  var selectedtext = '';
+
+  var submitrunning = false;
+  var form = null;
+  var submitspinner = null;
+  var submiticon = null;
+
+  $('#find-address-modal').on('shown.bs.modal', function(e) {
+    var modal = $('#find-address-modal');
+    var input = $('#modal-search');
+    input.focus();
+  });
+
+  $('#modal-search').keyup(delay(function() {
+    lookup();
+  }, 250));
+
+  $('#create-customer-form').submit(function(event) {
+    event.preventDefault();
+    if (submitrunning)
+      return;
+
+    var address = checkCustomerAddress();
+    var name = checkCustomerName();
+    var salute = checkCustomerSalutation();
+    var ctype = checkCustomerType();
+
+    if (ctype === false || salute === false || name === false || address === false)
+      return;
+
+    submitrunning = true;
+    initsave();
+
+    $.ajax({
+      method: 'POST',
+      url: '{{ Controller.getLink("ajax:admin:customer:create") }}',
+      data: {
+        'customerAddress': address,
+        'customerName': name,
+        'customerSalutation': salute,
+        'customerType': ctype
+      }
+    }).done(function(data) {
+      if (data.Result.Success) {
+        savesuccess();
+        location.replace(data.ForwardTo);
+      } else {
+        easytooltip($('#customer-submit'), 'Speichern fehlgeschlagen', 'error');
+      }
+      savefailed();
+    }).fail(function(obj, error, errno) {
+      easytooltip($('#customer-submit'), 'Speichern fehlgeschlagen', 'error');
+      savefailed();
+    });
+
+  });
+
+  function checkCustomerAddress() {
+    var obj = $('#customer-address');
+    if (obj.data('selectedid') == '') {
+      $('#customer-address-feedback').addClass('d-block');
+      obj.removeClass('border border-success');
+      obj.addClass('border border-danger');
+      obj.focus();
+      return false;
+    }
+    $('#customer-address-feedback').removeClass('d-block');
+    obj.removeClass('border border-danger');
+    obj.addClass('border border-success');
+    return obj.data('selectedid');
+  }
+
+  function checkCustomerName() {
+    var obj = $('#customer-name');
+    if (obj.val() == '') {
+      $('#customer-name-feedback').addClass('d-block');
+      obj.removeClass('border border-success');
+      obj.addClass('border border-danger');
+      obj.focus();
+      return false;
+    }
+    $('#customer-name-feedback').removeClass('d-block');
+    obj.removeClass('border border-danger');
+    obj.addClass('border border-success');
+    return obj.val();
+  }
+
+  function checkCustomerSalutation() {
+    var obj = $('#customer-salutation');
+    if (obj.val() == '' || obj.val() == undefined) {
+      $('#customer-salutation-feedback').addClass('d-block');
+      obj.removeClass('border border-success');
+      obj.addClass('border border-danger');
+      obj.focus();
+      return false;
+    }
+    $('#customer-salutation-feedback').removeClass('d-block');
+    obj.removeClass('border border-danger');
+    obj.addClass('border border-success');
+    return obj.val();
+  }
+
+  function checkCustomerType() {
+    var obj = $('#customer-type');
+    if (obj.val() != '0' && obj.val() != '1') {
+      $('#customer-type-feedback').addClass('d-block');
+      obj.removeClass('border border-success');
+      obj.addClass('border border-danger');
+      obj.focus();
+      return false;
+    }
+    $('#customer-type-feedback').removeClass('d-block');
+    obj.removeClass('border border-danger');
+    obj.addClass('border border-success');
+    return obj.val();
+  }
+
+  function initsave() {
+    form = $('#customer-submit');
+    submiticon = $('#customer-submit-icon');
+    submitspinner = $('#customer-submit-spinner');
+    form.prop('disabled', true);
+    submiticon.addClass('d-none');
+    submitspinner.removeClass('d-none');
+  }
+
+  function savefailed() {
+    form.prop('disabled', false);
+    submiticon.removeClass('d-none');
+    submitspinner.addClass('d-none');
+    submitrunning = false;
+  }
+
+  function savesuccess() {
+    $('#customer-submit').removeClass('btn-blue');
+    $('#customer-submit').addClass('btn-success');
+    submitspinner.addClass('d-none');
+    submiticon.removeClass('d-none');
+  }
+
+  function onCheckboxChange(element) {
+    tar = $('#customer-address');
+    if (selectedid > 0) {
+      old = $('#address-' + selectedid);
+      old.prop('checked', false);
+    }
+    if (element.prop('checked')) {
+      selectedid = element.data('id');
+      selectedtext = element.data('title');
+      tar.data('selectedid', element.data('id'));
+      tar.data('selectedtext', element.data('title'));
+      tar.val(element.data('title'));
+      $('#find-address-modal-cancel').addClass('d-none');
+      $('#find-address-modal-select').removeClass('d-none');
+    } else {
+      selectedid = 0;
+      selectedtext = '';
+      tar.data('selectedid', '0');
+      tar.data('selectedtext', '');
+      tar.val('');
+      $('#find-address-modal-cancel').removeClass('d-none');
+      $('#find-address-modal-select').addClass('d-none');
+    }
+  }
+
+  function lookup() {
+    start();
+    var url = searchurl;
+    var postdata = { "keyword": $('#modal-search').val() };
+    simplePost(url, postdata);
+  }
+
+  function start() {
+    modalicon.addClass('d-none');
+    modalspinner.removeClass('d-none');
+  }
+
+  function finish() {
+    modalspinner.addClass('d-none');
+    modalicon.removeClass('d-none');
+  }
+
+  function hideError() {
+    $('#find-address-modal-error').addClass('d-none');
+  }
+
+  function hideResult() {
+    $('#find-address-modal-list').addClass('d-none');
+  }
+
+  function displayError(errorCode, errorMessage) {
+    $('#find-address-modal-error').removeClass('d-none');
+    $('#find-address-modal-error-code').text(errorCode);
+    $('#find-address-modal-error-message').text(errorMessage);
+  }
+
+  function displayResult(records) {
+    $('#find-address-modal-list').removeClass('d-none');
+    $('#find-address-modal-list li:not([data-id="' + selectedid + '"])').remove();
+    for (key in records) {
+      if (key == selectedid)
+        continue;
+      var title = records[key].name + ' (' + records[key].zip + ' ' + records[key].city + ', ' + records[key].country + ')';
+      var element = '<li class="list-group-item" id="listentry-' + key + '" data-id="' + key + '">';
+      element += '<div class="custom-control custom-checkbox">';
+      element += '<input type="checkbox" class="custom-control-input address-checkbox"';
+      element += ' id="address-' + key + '" data-id="' + key + '" data-title="' + title + '">';
+      element += '<label class="custom-control-label" for="address-' + key + '">';
+      element += records[key].name;
+      element += '<span class="small"> (';
+      element += records[key].zip + ' ' + records[key].city;
+      element += ', ' + records[key].country + ')';
+      element += '</span></label></div></li>';
+      $('#find-address-modal-list').append(element);
+      $('#address-' + key).change(function() {
+        onCheckboxChange($(this));
+      });
+      if (Object.keys(records).length == 1 && selectedid == 0) {
+        $('#address-' + key).prop('checked', true);
+        onCheckboxChange($('#address-' + key));
+      }
+
+    }
+  }
+
+  function simplePost(url, postdata) {
+    $.post(url, postdata, function(data) {
+      if (data.Result.Success == true) {
+        hideError();
+        displayResult(data.Records);
+      } else {
+        hideResult();
+        displayError(data.Result.Error.Code, data.Result.Error.Message);
+      }
+      finish();
+    }, "json").fail(function(obj, error, errno) {
+      hideResult();
+      displayError(errno, error);
+      finish();
+    });
+  }

@@ -1,0 +1,47 @@
+
+    <div class="container-fluid ">
+      <div class="px-1 px-md-2 px-lg-3 px-xl-5 pb-3 pt-lg-4">
+        <form>
+          <div class="container mb-3">
+            <div class="row mb-1">
+              <div class="col-12">
+                <ul class="list-group" id="files-ocr-errors">
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="progress bg-dark">
+                  <div class="progress-bar progress-bar-striped bg-success" id="ocr-progress" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar progress-bar-striped bg-danger" id="ocr-progress-failed" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% for File in Page.Files %}
+            {% if File.isFile() %}
+          <div class="form-row" id="file-{{ File.getId() }}" data-pages="{{ File.getPageCount() }}" data-name="{{ File.getPath() }}">
+            <div class="col-12 form-group mb-1">
+              <div class="input-group d-flex flex-nowrap" id="files-ocr-{{ File.getId() }}">
+                <div class="input-group-prepend">
+                  <div class="input-group-text files-ocr-{{ File.getId() }}-actor">
+                    {{ Config.Icons.Unchecked.getIcon('fa-fw mr-1', '', 'files-ocr-'~File.getId()~'-unchecked-icon')|raw }}{{ Config.Icons.Checked.getIcon('fa-fw mr-1 d-none', '', 'files-ocr-'~File.getId()~'-checked-icon')|raw }}
+                  </div>
+                  <div class="input-group-text font-weight-bold files-ocr-{{ File.getId() }}-actor"><a target="_blank" class="files-ocr-{{ File.getId() }}-actor" href="/file/{{ File.getId() }}">#{{ File.getId() }}</a></div>
+                </div>
+                <div class="input-group-text flex-grow-1 text-left rounded-0 files-ocr-{{ File.getId() }}-actor text-truncate">
+                  <a target="_blank" class="files-ocr-{{ File.getId() }}-actor" href="/file/{{ File.getId() }}">{{ File.getName() }}</a>
+                </div>
+                <div class="input-group-append">
+                  <div class="input-group-text files-ocr-{{ File.getId() }}-actor d-none d-lg-flex">{{ File.getPageCount() }} Seite{% if File.getPageCount() != 1 %}n{% endif %}</div>
+                  <div class="input-group-text font-weight-bold files-ocr-{{ File.getId() }}-actor"><span class="mr-1" id="files-ocr-{{ File.getId() }}-completed">0</span> %</div>
+                  <div class="input-group-text font-weight-bold pointer files-ocr-runfile files-ocr-{{ File.getId() }}-actor" data-fileid="{{ File.getId() }}">{{ Config.Icons.Spinner.getIcon('fa-fw fa-spin d-none files-ocr-spinners', '', 'files-ocr-'~File.getId()~'-spinner-icon')|raw }}{{ Config.Icons.Start.getIcon('fa-fw files-ocr-runners', '', 'files-ocr-'~File.getId()~'-runner-icon')|raw }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+            {% endif %}
+          {% endfor %}
+        </form>
+      </div>
+    </div>

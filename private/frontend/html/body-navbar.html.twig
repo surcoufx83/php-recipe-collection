@@ -1,0 +1,42 @@
+
+    <header class="navbar sticky-top navbar-expand navbar-dark bg-dark">
+      <a class="navbar-brand mr-0 mr-md-2" href="/" aria-label="Archive">
+        {{ Config.InpageTitle.getString() }}
+      </a>
+      <div>
+        <ul class="navbar-nav flex-row">
+          {% if Controller.isAuthenticated() == false %}
+            {% if Config.Maintenance.Enabled.getBool() == false %}
+          <li class="nav-item text-uppercase">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+            {% endif %}
+          {% endif %}
+        </ul>
+      </div>
+      {% if Controller.isAuthenticated() == true %}
+      <ul class="navbar-nav ml-md-auto d-none d-md-flex">
+        {% if Controller.isAuthenticated() == true %}
+          {% if Controller.User().may([10, 'tenant:use:search']) %}
+        <li class="nav-item d-none d-md-inline-block mr-5">
+          <input class="form-control form-control-sm mt-2 bg-dark text-light border-top-0 border-left-0 border-right-0 rounded-0 border-light" type="search" placeholder="Suche" aria-label="Suche">
+        </li>
+          {% endif %}
+        {% endif %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-uppercase" href="#" id="navbarDropdown"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{ Controller.User().getUsername() }}
+          </a>
+          <div class="dropdown-menu dropdown-menu-right small p-1" aria-labelledby="navbarDropdown">
+            {% if Controller.User().isGuest() == false %}
+            <a class="dropdown-item" href="/me">Mein account</a>
+            <a class="dropdown-item" href="/me/prefs">Einstellungen</a>
+            <div class="dropdown-divider"></div>
+            {% endif %}
+            <a class="dropdown-item" href="/logout">Logout</a>
+          </div>
+        </li>
+      </ul>
+      {% endif %}
+    </header>

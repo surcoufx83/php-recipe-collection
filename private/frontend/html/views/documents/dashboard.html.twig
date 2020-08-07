@@ -1,0 +1,43 @@
+
+{% macro recursiveCategories(Category, itr) %}
+  {% import _self as self %}
+  {% set nxt = itr + 1 %}
+            <a class="list-group-item list-group-item-action p-1"
+              href="{{ Category.getDocumentsLink() }}"
+              data-id="{{ Category.getId() }}">
+              {% if itr > 0 %}
+                {% for i in 0..itr %}
+              <span class="intend"></span>
+                {% endfor %}
+              {% endif %}
+              <i class="fas fa-fw fa-angle-right"></i> {{ Category.getName() }}
+              <span class="badge border border-secondary text-secondary smaller ml-2 p-1 align-top">14</span>
+            </a>
+  {% for child in Category.getChilds() %}
+    {{ self.recursiveCategories(child, nxt) }}
+  {% endfor %}
+{% endmacro %}
+
+{% from _self import recursiveCategories %}
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-3 d-none d-lg-block">
+          {% for Category in Categories %}
+          <div class="card mb-2 small">
+            <h5 class="card-header">{{ Category.getName() }}</h5>
+            <div class="card-body p-0">
+              <ul class="list-group list-group-flush rounded">
+                {% for child in Category.getChilds() %}
+                  {{ recursiveCategories(child, 0) }}
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="col-12 col-lg-9">
+
+        </div>
+      </div>
+    </div>

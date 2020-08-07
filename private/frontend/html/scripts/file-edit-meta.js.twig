@@ -1,0 +1,174 @@
+
+      var modallen = {{ Config.lsModalEntriesCount.getInt() }};
+      var pageactive = undefined;
+      var viewmode = 'common';
+      var action = 'move';
+
+      var activetargetid = undefined;
+      var isSending = false;
+
+      var iCopyIcon = '{{ Config.Icons.Copy.getIcon('mr-1 fa-fw', '', 'modal-action-icon')|raw }}';
+      var iCopyIcon2 = '{{ Config.Icons.Copy.getIcon('mr-1 fa-fw', '', 'modal-submit-icon')|raw }}';
+      var iMoveIcon = '{{ Config.Icons.Move.getIcon('mr-1 fa-fw', '', 'modal-action-icon')|raw }}';
+      var iMoveIcon2 = '{{ Config.Icons.Move.getIcon('mr-1 fa-fw', '', 'modal-submit-icon')|raw }}';
+
+      $('#file-edit-filename').keyup(delay(function (e) {
+        var field = $(this);
+        var form = $('#' + $(field).data('form-id'));
+        $('.form-editicon-save').addClass('d-none');
+        $('.form-editicon-saving').removeClass('d-none');
+
+        var url="/file-edit/ajax/edit-name/" + form.data('fileid');
+      }, 500));
+
+      $('#file-edit-savename').click(function() {
+
+      });
+
+      {% if Controller.User().may([4, 'files:move']) %}
+      $('#file-edit-movefile').click(function() {
+        var fileid = $('#form-file-edit').data('fileid');
+        action = 'move';
+        $('#modal-action-identifier').text('verschieben');
+        $('#modal-action-actionbutton').text('verschieben');
+        $('#modal-action-icon').replaceWith(iMoveIcon);
+        $('#modal-submit-icon').replaceWith(iMoveIcon2);
+        $.getJSON('/ajax/fsbrowse/common/' + fileid + ',0,' + modallen, function(data) {
+          if (data.Result.Success == false) {
+            modal_seterror(data);
+            return;
+          }
+
+          if (data.Filesystem.TotalEntries > 0) {
+            modal_setcommons(data, fileid);
+          } else {
+            $.getJSON('/ajax/fsbrowse/filetree/' + fileid, function(data) {
+              if (data.Result.Success == false) {
+                modal_seterror(data);
+                return;
+              }
+              modal_setfs(data, fileid);
+            });
+          }
+
+        });
+      });
+
+      $('#file-edit-copyfile').click(function() {
+        var fileid = $('#form-file-edit').data('fileid');
+        action = 'copy';
+        $('#modal-action-identifier').text('kopieren');
+        $('#modal-action-actionbutton').text('kopieren');
+        $('#modal-action-icon').replaceWith(iCopyIcon);
+        $('#modal-submit-icon').replaceWith(iCopyIcon2);
+        $.getJSON('/ajax/fsbrowse/common/' + fileid + ',0,' + modallen, function(data) {
+          if (data.Result.Success == false) {
+            modal_seterror(data);
+            return;
+          }
+
+          if (data.Filesystem.TotalEntries > 0)
+            modal_setcommons(data, fileid);
+          else {
+            $.getJSON('/ajax/fsbrowse/filetree/' + fileid, function(data) {
+              if (data.Result.Success == false) {
+                modal_seterror(data);
+                return;
+              }
+              if (data.Filesystem.TotalEntries > 0)
+                modal_setfs(data, fileid);
+            });
+          }
+
+        });
+      });
+
+      function modal_setcommons(data, fileid) {
+        viewmode = 'common';
+        $('#movefile-modal-errortext-getfiletree').addClass('d-none');
+        $('#movefile-modal-errortext-movefile').addClass('d-none');
+        $('#movefile-modal-error').addClass('d-none');
+        $('.fsrecord-list-item').each(function() {
+          $(document).off('click', '#fsrecord-modal-address-' + $(this).data('id'));
+        });
+        $('#movefile-modal-list').empty();
+        data.Filesystem.Records.Entries.forEach(function(element, index) {
+          var entrystr = '<a href="#" class="list-group-item list-group-item-action flex-column align-items-start pointer fsrecord-list-item" id="fsrecord-modal-address-' + element.Id + '" data-id="' + element.Id + '">';
+          entrystr += '<div class="d-flex w-100 justify-content-between">';
+          entrystr += '<h5 class="mb-1 text-truncate">' + element.Name + '</h5>';
+          entrystr += '<small class="text-nowrap">' + element.When + '</small>';
+          entrystr += '</div>';
+          entrystr += '<small>' + element.Path + '</small>';
+          entrystr += '</a>';
+          $('#movefile-modal-list').append(entrystr);
+          $(document).on('click', '#fsrecord-modal-address-' + element.Id, function() {
+            var item = $(this);
+            if (activetargetid) {
+              $('#fsrecord-modal-address-' + activetargetid).removeClass('list-group-item-success');
+            }
+            activetargetid = item.data('id');
+            $('#fsrecord-modal-address-' + activetargetid).addClass('list-group-item-success');
+            $('#movefile-modal-sendbutton').removeClass('disabled');
+          });
+        });
+        $('#movefile-modal-list').removeClass('d-none');
+        $('#movefile-paginationmode-common').addClass('text-light bg-success');
+        $('#movefile-paginationmode-treeview').removeClass('text-light bg-success');
+        $('#movefile-modal').modal();
+      }
+
+      function modal_setfs(data, fileid) {
+        viewmode = 'filetree';
+        $('#movefile-paginationmode-common').removeClass('text-light bg-success');
+        $('#movefile-paginationmode-treeview').addClass('text-light bg-success');
+        $('#movefile-modal').modal();
+      }
+
+      function modal_seterror(data) {
+        $('#movefile-modal-error-code').text(data.Result.Error.Code);
+        $('#movefile-modal-error-message').text(data.Result.Error.Message);
+        $('#movefile-modal-errortext-getfiletree').removeClass('d-none');
+        $('#movefile-modal-errortext-movefile').addClass('d-none');
+        $('#movefile-modal-error').removeClass('d-none');
+        $('#movefile-modal').modal();
+      }
+
+      $('#movefile-modal-sendbutton').click(function() {
+        var btn = $(this);
+        var fileid = $('#form-file-edit').data('fileid');
+        if (activetargetid == undefined) {
+          btn.addClass('disabled');
+          return;
+        }
+        if (isSending) {
+          return;
+        }
+        var dataobj = {
+          file: fileid,
+          target: activetargetid
+        };
+        isSending = true;
+        $('#movefile-modal-sendbutton').addClass('disabled');
+        $('#modal-submit-icon').addClass('d-none');
+        $('#movefile-modal-sendbutton-spinner').removeClass('d-none');
+        $.post('/ajax/file-edit/common-move-file/' + fileid, dataobj, function(data) {
+          if (data.Result.Success) {
+            $('#file-edit-path').val(data.File.Folder);
+            $('#movefile-modal-errortext-getfiletree').addClass('d-none');
+            $('#movefile-modal-errortext-movefile').addClass('d-none');
+            $('#movefile-modal-error').addClass('d-none');
+            $('#movefile-modal').modal('hide');
+          } else {
+            $('#movefile-modal-error-code').text(data.Result.Error.Code);
+            $('#movefile-modal-error-message').text(data.Result.Error.Message);
+            $('#movefile-modal-errortext-getfiletree').addClass('d-none');
+            $('#movefile-modal-errortext-movefile').removeClass('d-none');
+            $('#movefile-modal-error').removeClass('d-none');
+          }
+          $('#movefile-modal-sendbutton-spinner').addClass('d-none');
+          $('#modal-submit-icon').removeClass('d-none');
+          $('#movefile-modal-sendbutton').removeClass('disabled');
+          isSending = false;
+        });
+      });
+      {% endif %}

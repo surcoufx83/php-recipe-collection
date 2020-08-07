@@ -1,0 +1,87 @@
+
+      <div class="w-100">
+        <ul class="content-list">
+          {% for Folder in Folders %}
+          {% set Obj = Controller.getFolder(Folder) %}
+          <li class="item item-hoverable">
+            <div class="item-flexbox">
+              <div class="item-icon fs-120">
+                <a href="{{ Controller.getLink('private:files:' ~ Obj.getId()) }}">
+                  {{ Config.Icons.Folder.getIcon('fa-fw fa-lg')|raw }}
+                </a>
+              </div>
+              <div class="item-major">
+                <div class="title">
+                  <a href="{{ Controller.getLink('private:files:' ~ Obj.getId()) }}">
+                    {{ Obj.getName() }}
+                  </a>
+                </div>
+                <div class="info">
+                  <span class="d-none d-md-inline">
+                    <a href="{{ Controller.getLink('private:files:' ~ Obj.getId()) }}">
+                      #{{ Obj.getId() }}
+                    </a>
+                  </span>
+                </div>
+              </div>
+              <div class="item-minor">
+
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+          {% for File in Files %}
+          {% set Obj = Controller.getFile(File) %}
+          <li class="item item-hoverable">
+            <div class="item-flexbox">
+              <div class="item-icon fs-120">
+                <a href="{{ Controller.getLink('private:file:' ~ Obj.getId()) }}">
+                {% if Obj.getExtension() == null %}
+                {{ Config.Icons.OcrFile.getIcon('fa-fw fa-lg')|raw }}
+                {% else %}
+                {{ Obj.getExtension().getIcon('fa-fw fa-lg')|raw }}
+                {% endif %}
+                </a>
+              </div>
+              <div class="item-major">
+                <div class="title">
+                  <a href="{{ Controller.getLink('private:file:' ~ Obj.getId()) }}">
+                    {{ Obj.getName() }}
+                  </a>
+                </div>
+                <div class="info">
+                  <span class="d-none d-md-inline">
+                    <a href="{{ Controller.getLink('private:file:' ~ Obj.getId()) }}">
+                      #{{ Obj.getId() }}
+                    </a>
+                  </span>
+                  {% if Obj.getCategory() %} •
+                  <span>
+                    <a href="{{ Controller.getLink('private:category:' ~ Obj.getCategory().getId()) }}">
+                    {{ Config.Icons.Tag.getIcon('fa-fw fa-sm')|raw }}
+                    {{ Obj.getCategory().getName() }}
+                    </a>
+                  </span>
+                  {% endif %}{% if Obj.getDocument() and Obj.getDocument().getType() %} •
+                  <span>
+                    <a href="{{ Controller.getLink('private:type:' ~ Obj.getDocument().getType().getId()) }}">
+                    {{ Config.Icons.Classify.getIcon('fa-fw fa-sm')|raw }}
+                    {{ Obj.getDocument().getType().getName() }}
+                    </a>
+                  </span>
+                  {% endif %}{% if Customer.isBlocked() %} •
+                  <span>
+                    Sperrvermerk vom {{ Customer.getBlockedDate()|date('d.m.Y') }}
+                    durch {{ Customer.getBlockedBy().getName() }}
+                  </span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="item-minor">
+
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>

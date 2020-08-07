@@ -1,0 +1,13 @@
+language: php
+php:
+  - 7.2
+  - 7.4
+branches:
+  only:
+  - master
+  - develop
+before_install:
+  - travis_retry composer self-update
+  - yes | pecl install imagick
+  - composer install
+script: ./vendor/bin/phpunit

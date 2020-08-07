@@ -1,0 +1,15 @@
+book:
+  my: 'Mein Kochbuch'
+
+greetings:
+  hello: 'Hallo %s'
+
+lists:
+  all: 'Alle Listen'
+
+page:
+  admin: 'Administration'
+  home: 'Start'
+  lists: 'Listen'
+  random: 'Zufälliges Rezept'
+  search: 'Suche'

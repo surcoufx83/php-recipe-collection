@@ -1,0 +1,39 @@
+
+    <div class="container-fluid ">
+      <div class="px-1 px-md-2 px-lg-3 px-xl-5 pb-3 pt-lg-4">
+        <div class="card nowrap-hidden mb-1">
+          <div class="card-header">
+            <h4 class="card-title" style="margin-bottom:0!important;">
+              <a href="{{ Page.Folder.getLink() }}">
+                <span class="d-inline d-lg-none">/.../{{ Page.Folder.getName() }}</span><span class="d-none d-lg-inline">{{ Page.Folder.getPath() }}</span>
+              </a>
+            </h4>
+          </div>
+          <ul class="list-group list-group-flush">
+            {% if Page.Folder.getParent != null %}
+            <li class="list-group-item">
+              <a href="{{ Page.Folder.getParent().getLink() }}">{{ Config.Icons.FolderOpen.getIcon('mr-1 fa-fw')|raw }} <b>..</b></a>
+            </li>
+            {% endif %}
+            {% for item in Page.Folder.getChilds() %}
+              {% if item.isDir() %}
+            <li class="list-group-item">
+              <a href="{{ item.getLink() }}">{{ Config.Icons.Folder.getIcon('mr-1 fa-fw')|raw }} <b>{{ item.getName() }}</b></a>
+            </li>
+              {% endif %}
+            {% endfor %}
+            {% for item in Page.Folder.getChilds() %}
+              {% if item.isFile() %}
+            <li class="list-group-item">
+              <a href="{{ item.getLink() }}">{{ item.getExtObject().getIcon('mr-1 fa-fw')|raw }} <b>{{ item.getName() }}</b></a>
+            </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+          {% for File in Page.Folder %}
+            {% if File.isDir() %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>

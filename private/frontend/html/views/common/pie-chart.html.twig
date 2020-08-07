@@ -1,0 +1,5 @@
+
+      <h5 class="mb-0">{{ chart.title }}</h5>
+      <p class="t-22 mb-1">{% if chart.subtitle %}{{ chart.subtitle }}{% else %}&nbsp;{% endif %}</p>
+      <div id="cmchart-{{ chart.index }}" style="height:325px; position: relative;"></div>
+      {% if chart.updated %}<small class="text-muted">Last change: {{ chart.updated }}</small>{% endif %}

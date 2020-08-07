@@ -1,0 +1,15 @@
+book:
+  my: 'My cookbook'
+
+greetings:
+  hello: 'Hello %s'
+
+lists:
+  all: 'All lists'
+
+page:
+  admin: 'Administration'
+  home: 'Home'
+  lists: 'Lists'
+  random: 'Random recipe'
+  search: 'Search'

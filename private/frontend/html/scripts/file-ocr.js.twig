@@ -1,0 +1,112 @@
+
+      var fileid = {{ Page.File.getId() }};
+      var filenumpages = {{ Page.File.getPageCount() }};
+      var runner = null;
+      var running = false;
+      var runningObject = null;
+
+      var deletion = null;
+      var ico = null;
+      var spinner = null;
+
+      var requestsdone = 0;
+      var requestssent = 0;
+      var lastrequest = -1;
+
+      $('.file-view-create').click(function() {
+        if (running)
+          return;
+        running = true;
+
+        try {
+          runner.tooltip('dispose');
+        } catch(ex) {}
+
+        runner = $(this);
+        runningObject = $(this).data('object');
+        deletion = $(this).data('delete');
+        ico = $('#file-view-ocr-' + runningObject + '-runner-icon');
+        spinner = $('#file-view-ocr-' + runningObject + '-spinner-icon');
+        ico.addClass("d-none");
+        spinner.removeClass("d-none");
+
+        if ($('#file-view-ocr-' + runningObject + '-unchecked-icon').hasClass('d-none')) {
+          $('#file-view-ocr-' + runningObject + '-checked-icon').addClass('d-none');
+          $('#file-view-ocr-' + runningObject + '-unchecked-icon').removeClass('d-none');
+        }
+
+        if (deletion != '1') {
+          if (runningObject == 'jpg') {
+            var url = '/ajax/file/generateJpg/' + fileid;
+            simpleRequest(url, true);
+          } else {
+            dogeneration();
+          }
+        }
+
+      })
+
+      function dogeneration() {
+        var dif = requestssent - requestsdone;
+        if (requestsdone < filenumpages) {
+          if (dif < 4 && lastrequest < (filenumpages - 1)) {
+            sendRequest();
+          }
+          setTimeout(dogeneration, 250);
+        }
+        else {
+          finish();
+        }
+      }
+
+      function finish() {
+        spinner.addClass("d-none");
+        ico.removeClass("d-none");
+        runner = null;
+        requestsdone = 0;
+        requestssent = 0;
+        lastrequest = -1;
+        running = false;
+      }
+
+      function sendRequest() {
+        lastrequest += 1;
+        requestssent += 1;
+        var url = '/ajax/file/generate' + runningObject + '/' + fileid + '+' + lastrequest;
+        simpleRequest(url);
+      }
+
+      function simpleRequest(url, callFinish = false) {
+        $.getJSON(url, function(data) {
+          if (data.Result.Success == true) {
+            if (data.Result.Error.Code == 2) {
+              easytooltip(runner, 'Erledigt.', 'info', 'right');
+            } else {
+              easytooltip(runner, 'Erledigt.', 'success', 'right');
+            }
+            if (data) {
+              replaceFromResponse(data)
+            }
+          } else {
+            easytooltip(runner, data.Result.Error.Code + ": " + data.Result.Error.Message, 'error', 'right');
+          }
+          requestsdone += 1;
+          if (callFinish)
+            finish();
+        }).fail(function(obj, error, errno) {
+          easytooltip(runner, errno + ": " + error, 'error', 'right');
+          requestsdone += 1;
+          if (callFinish)
+            finish();
+        });
+      }
+
+      function replaceFromResponse(data) {
+        for (key in data.Replacers) {
+          $('#file-view-ocr-' + runningObject + '-' + key).text(data.Replacers[key]);
+        }
+        if (data.File.ImageCount == data.File.ImageCountTarget) {
+          $('#file-view-ocr-' + runningObject + '-unchecked-icon').addClass('d-none');
+          $('#file-view-ocr-' + runningObject + '-checked-icon').removeClass('d-none');
+        }
+      }

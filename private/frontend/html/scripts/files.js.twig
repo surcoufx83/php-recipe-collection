@@ -1,0 +1,96 @@
+
+      var mountid = null;
+      var running = false;
+      var runningObject = null;
+
+      var runningmounts = [];
+      var runningid = 0;
+      var runningnext = false;
+
+      var deletion = null;
+      var ico = null;
+
+      $('#mounts-scan-all').click(function() {
+        $('.mount').each(function() {
+          registerRunner($(this).data('id'));
+        });
+      });
+
+      $('.mount-scan').click(function() {
+        registerRunner($(this).data('mountid'));
+      })
+
+      function registerRunner(mountid) {
+        if (runningmounts.indexOf(mountid) > -1)
+          return;
+        runningmounts.push(mountid);
+        $('#mount-' + mountid + '-runner-icon').addClass('text-success');
+      }
+
+      function reportError(fileid, runner, errno, error, sev) {
+        var token = 't' + Date.now();
+        $('#mount-errors').append('<li class="list-group-item list-group-item-' + sev + '" id="' + token + '"><b>Mount #' + fileid + ': ' + $('#mount-' + fileid).data('name') + '</b><br />' + errno + ': ' + error + '</li>');
+        $('#error-container').removeClass('d-none');
+      }
+
+      $(function() {
+        standbyRunner();
+      });
+
+      function standbyRunner() {
+        if (runningmounts.length > 0) {
+          workingRunner();
+        }
+        else
+          setTimeout(standbyRunner, 1000);
+      }
+
+      function workingRunner() {
+        if (runningmounts.length > 0) {
+          if (runningid == 0) {
+            runningid = runningmounts[0];
+            runningnext = 'init';
+          }
+          if (runningnext != false)
+            workerStart(runningnext);
+          setTimeout(workingRunner, 250);
+        } else {
+          standbyRunner();
+        }
+      }
+
+      function workerStart(mode) {
+        runningnext = false;
+        if (mode == 'init') {
+          $('#mount-' + runningid + '-runner-icon').removeClass('text-success');
+          $('#mount-' + runningid + '-runner-icon').addClass('fa-spin');
+          workerScan();
+        } else if (mode == 'finish') {
+          $('#mount-' + runningid + '-runner-icon').removeClass('fa-spin');
+          runningmounts.shift();
+          runningid = 0;
+        } else if (mode == 'failed') {
+          $('.mount-' + runningid + '-actor').addClass('bg-danger');
+          $('.mount-' + runningid + '-actor').addClass('text-white');
+          $('#mount-' + runningid + '-runner-icon').removeClass('fa-spin');
+          runningmounts.shift();
+          runningid = 0;
+        }
+      }
+
+      function workerScan() {
+        $.getJSON('/ajax/mount/scan/' + runningid, function(data) {
+          if (data.Result.Success == true) {
+            for (key in data.Replacers) {
+              $('#' + key).text(data.Replacers[key]);
+            }
+            workerStart('finish');
+          } else {
+            reportError(runningid, '/ajax/mount/scan/' + runningid, data.Result.Error.Code, data.Result.Error.Message, 'warning');
+            workerStart('failed');
+          }
+        }).fail(function(obj, error, errno) {
+          reportError(runningid, '/ajax/mount/scan/' + runningid, errno, error, 'danger');
+          workerStart('failed');
+        });
+      }
