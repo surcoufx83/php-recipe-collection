@@ -1,6 +1,9 @@
 book:
   my: 'My cookbook'
 
+breadcrumb:
+  home: 'Home'
+
 greetings:
   hello: 'Hello %s'
 

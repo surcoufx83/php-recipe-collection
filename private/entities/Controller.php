@@ -7,9 +7,6 @@ use Surcouf\PhpArchive\Database\DbConf;
 use Surcouf\PhpArchive\Database\EAggregationType;
 use Surcouf\PhpArchive\Database\EQueryType;
 use Surcouf\PhpArchive\Database\QueryBuilder;
-use Surcouf\PhpArchive\Document\Category;
-use Surcouf\PhpArchive\Document\Type;
-use Surcouf\PhpArchive\File\Extension;
 
 if (!defined('CORE2'))
   exit;
@@ -19,6 +16,7 @@ class Controller implements IController {
   private $database, $currentUser;
   private $config, $dispatcher;
 
+  private $recipes = array();
   private $users = array();
 
   private $changedObjects = array();
@@ -71,6 +69,8 @@ class Controller implements IController {
         return '/maintenance';
       case 'private':
         return $this->getLink_Private($items);
+      case 'recipe':
+        return $this->getLink_Recipe($items);
 
     }
 
@@ -153,6 +153,15 @@ class Controller implements IController {
     }
     return null;
   }
+
+  private function getLink_Recipe(array $params) : ?string {
+    switch($params[1]) {
+      case 'show':
+        return '/r/'.$params[2];
+    }
+    return null;
+  }
+
 /*
   public function getType($filter) : ?Type {
     if (is_integer($filter)) {
@@ -165,6 +174,18 @@ class Controller implements IController {
       return $this->registerType(null, $filter);
     return null;
   }*/
+
+  public function getRecipe($filter) : ?Recipe {
+    if (is_integer($filter)) {
+      if (!array_key_exists($filter, $this->recipes))
+        return $this->loadRecipe($filter);
+      else
+        return $this->recipes[$filter];
+    }
+    if (is_array($filter))
+      return $this->registerRecipe(null, $filter);
+    return null;
+  }
 
   public function getUser($filter=null) : ?User {
     if (is_integer($filter)) {
@@ -245,6 +266,16 @@ class Controller implements IController {
 
   public function isAuthenticated() : bool {
     return !is_null($this->currentUser);
+  }
+
+  private function loadRecipe(int $id) : ?Recipe {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
+    $query->where('recipes', 'recipe_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerRecipe(intval($record['recipe_id']), $record);
+    }
+    return $this->registerRecipe($id);
   }
 
   private function loadUser(int $id) : ?User {
@@ -334,6 +365,19 @@ class Controller implements IController {
 
   public function put(array $params) : void {
     $this->dispatcher->put($params);
+  }
+
+  private function registerRecipe(?int $id, array $record=null) : ?Recipe {
+    if (is_null($id) && is_array($record))
+      $id = intval($record['recipe_id']);
+    if (array_key_exists($id, $this->recipes))
+      return $this->recipes[$id];
+    if (is_null($record)) {
+      $this->recipes[$id] = null;
+      return null;
+    }
+    $this->recipes[$id] = new Recipe($record);
+    return $this->recipes[$id];
   }
 
   private function registerUser(?int $id, array $record=null) : ?User {

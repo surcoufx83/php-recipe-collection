@@ -128,8 +128,15 @@ class QueryBuilder {
     $condexpr = (count($this->conditions) != 0 ? ' WHERE '.join(' ', $this->conditions) : '');
     $groupexpr = (count($this->groups) != 0 ? ' GROUP BY '.join(', ', $this->groups) : '');
     $orderexpr = (count($this->orders) != 0 ? ' ORDER BY '.join(', ', $this->orders) : '');
+    $limitexpr = '';
+    if ($this->limitlen > 0) {
+      if ($this->limitstart > -1)
+        $limitexpr = ' LIMIT '.$this->limitstart.', '.$this->limitlen;
+      else
+        $limitexpr = ' LIMIT '.$this->limitlen;
+    }
 
-    return 'SELECT '.join(', ', $sel).' FROM '.$tbl.$joinsexpr.$condexpr.$groupexpr.$orderexpr;
+    return 'SELECT '.join(', ', $sel).' FROM '.$tbl.$joinsexpr.$condexpr.$groupexpr.$orderexpr.$limitexpr;
   }
 
   private function buildUpdateQuery() : string {

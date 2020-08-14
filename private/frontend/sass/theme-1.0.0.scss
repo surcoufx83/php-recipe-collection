@@ -136,6 +136,37 @@ header.navbar {
   }
 }
 
+div.carousel {
+
+  div.carousel-caption {
+    background-color: rgba(255, 255, 255, 0.6);
+    bottom:0;
+    left: 0;
+    right: 0;
+    padding-left: 15%;
+    padding-right: 15%;
+
+    h4 {
+      margin-bottom: 0;
+      padding-bottom: .5rem;
+      a {
+        color: $text-primary;
+      }
+    }
+    p {
+      color: $text-primary;
+    }
+  }
+
+  div.carousel-item {
+    img {
+      height:550px;
+      object-fit:contain;
+    }
+  }
+
+}
+
 div.page {
   transition: padding-left 0.3s;
   width: 100%;
