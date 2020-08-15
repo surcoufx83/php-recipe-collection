@@ -7,11 +7,12 @@ if (!defined('CORE2'))
 
 class Unit implements IUnit, IDbObject {
 
-  private $id, $namedesn, $namedepl, $nameensn, $nameenpl;
+  private $id, $decimals, $namedesn, $namedepl, $nameensn, $nameenpl;
   private $changes = array();
 
   public function __construct($dr) {
     $this->id = intval($dr['unit_id']);
+    $this->decimals = intval($dr['unit_decimals']);
     $this->namedesn = $dr['unit_name_de_sn'];
     $this->namedepl = $dr['unit_name_de_pl'];
     $this->nameensn = $dr['unit_name_en_sn'];
@@ -22,14 +23,22 @@ class Unit implements IUnit, IDbObject {
     return $this->changes;
   }
 
+  public function getDecimals() : int {
+    return $this->decimals;
+  }
+
   public function getId() : int {
     return $this->id;
   }
 
-  public function getName(string $lang, bool $plural = false) : string {
+  public function getName(string $lang = null, float $amount = 1.0) : string {
+    if (is_null($lang)) {
+      global $Controller;
+      $lang = $Controller->Language();
+    }
     if ($lang == 'de')
-      return (!$plural ? $this->namedesn : $this->namedepl);
-    return (!$plural ? $this->nameensn : $this->nameenpl);
+      return ($amount == 1.0 ? $this->namedesn : $this->namedepl);
+    return ($amount == 1.0 ? $this->nameensn : $this->nameenpl);
   }
 
 }

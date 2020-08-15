@@ -99,6 +99,50 @@ img.avatar-40 {
   color: #3E6F7A;
 }
 
+.w-10 {
+  width: 10% !important;
+}
+
+.w-20 {
+  width: 20% !important;
+}
+
+.w-25 {
+  width: 25% !important;
+}
+
+.w-30 {
+  width: 30% !important;
+}
+
+.w-40 {
+  width: 40% !important;
+}
+
+.w-50 {
+  width: 50% !important;
+}
+
+.w-60 {
+  width: 60% !important;
+}
+
+.w-70 {
+  width: 70% !important;
+}
+
+.w-75 {
+  width: 75% !important;
+}
+
+.w-80 {
+  width: 80% !important;
+}
+
+.w-90 {
+  width: 90% !important;
+}
+
 header.navbar {
   box-shadow: 0 1px 0 0 #343a40;
 }
@@ -107,6 +151,10 @@ header.navbar .navbar-nav .form-control {
 }
 header.navbar .navbar-nav .nav-link {
   color: #e6e8e6 !important;
+}
+
+ul.list-group-sm li.list-group-item {
+  padding: 0.2rem 0.8rem;
 }
 
 div.carousel div.carousel-caption {

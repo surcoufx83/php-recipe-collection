@@ -43,10 +43,10 @@ class Recipe implements IRecipe, IDbObject {
       'Ingredient' => $ingredient,
       'Unit' => $unit,
       'Amount' => floatval($record['entry_amount']),
-      'TitleDe' => $record['entry_title_de'],
-      'TitleEn' => $record['entry_title_en'],
-      'DescriptionDe' => $record['entry_description_de'],
-      'DescriptionEn' => $record['entry_description_en'],
+      'AmountStr' => Formatter::float_format(floatval($record['entry_amount']), (is_null($unit) ? 0 : $unit->getDecimals())),
+      'Title' => $record['entry_title'],
+      'Prefix' => $record['entry_prefix'],
+      'Suffix' => $record['entry_suffix'],
     ];
   }
 
