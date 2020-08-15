@@ -127,9 +127,21 @@ div.carousel div.carousel-caption h4 a {
 div.carousel div.carousel-caption p {
   color: #2C2E3A;
 }
-div.carousel div.carousel-item img {
-  height: 550px;
-  object-fit: contain;
+
+div.carousel:not(.carousel-sm) ol.carousel-indicators {
+  margin-bottom: 0.8rem;
+}
+div.carousel:not(.carousel-sm) div.carousel-caption {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+div.carousel.carousel-sm ol.carousel-indicators {
+  margin-bottom: 0.3rem;
+}
+div.carousel.carousel-sm div.carousel-caption {
+  padding-bottom: 0.4rem;
+  padding-top: 0.4rem;
 }
 
 div.page {
@@ -420,6 +432,16 @@ ul.pagination li.page-item.active a.page-link:hover {
   div.container-home-register {
     border-left: 1px solid #e6e8e6;
   }
+
+  div.carousel:not(.carousel-sm) div.carousel-item img {
+    height: 550px;
+    object-fit: contain;
+  }
+
+  div.carousel.carousel-sm div.carousel-item img {
+    height: 300px;
+    object-fit: cover;
+  }
 }
 @media (min-width: 768px) and (max-width: 1199.98px) {
   div.page {
@@ -471,6 +493,16 @@ ul.pagination li.page-item.active a.page-link:hover {
   div.container-home-register {
     border-top: 1px solid #e6e8e6;
   }
+
+  div.carousel:not(.carousel-sm) div.carousel-item img {
+    height: 350px;
+    object-fit: contain;
+  }
+
+  div.carousel.carousel-sm div.carousel-item img {
+    height: 250px;
+    object-fit: cover;
+  }
 }
 @media (max-width: 768px) {
   div.nav-sidebar:not(.sidebar-opened) {
@@ -500,6 +532,16 @@ ul.pagination li.page-item.active a.page-link:hover {
 
   div.container-home-register {
     border-top: 1px solid #e6e8e6;
+  }
+
+  div.carousel:not(.carousel-sm) div.carousel-item img {
+    height: 250px;
+    object-fit: contain;
+  }
+
+  div.carousel.carousel-sm div.carousel-item img {
+    height: 200px;
+    object-fit: cover;
   }
 }
 

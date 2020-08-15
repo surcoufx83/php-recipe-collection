@@ -22,9 +22,10 @@ final class CarouselHelper implements ICarouselHelper {
     ];
   }
 
-  public static function createNew(string $id) : array {
+  public static function createNew(string $id, bool $smallCarousel = false) : array {
     $carousel = [
       'id' => $id,
+      'small' => $smallCarousel,
       'items' => [],
       'targets' => [],
     ];

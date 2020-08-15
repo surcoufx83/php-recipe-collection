@@ -3,9 +3,11 @@ book:
 
 breadcrumb:
   home: 'Startseite'
+  recipes: 'Rezepte'
 
 greetings:
   hello: 'Hallo %s'
+  recipeFrom: '%s von %s'
 
 lists:
   all: 'Alle Listen'
@@ -16,3 +18,21 @@ page:
   lists: 'Listen'
   random: 'Zufälliges Rezept'
   search: 'Suche'
+
+recipe:
+  about:
+    header: 'Über dieses Rezept'
+    cooked: 'Es wurde bisher %s mal nachgekocht.'
+    cookedAndRated: 'Es wurde bisher %s mal nachgekocht und mit %s Sternen bewertet.'
+    notCooked: 'Es wurde leider noch nicht nachgekocht.'
+    publication: 'Das Rezept wurde am %s von %s veröffentlicht.'
+    unpublished: 'Das Rezept wurde am %s erstellt und bisher nicht für andere User veröffentlicht.'
+  gallery:
+    header: 'Bildergallerie'
+  ingredients:
+    header: 'Zutatenliste'
+  options:
+    header: 'Optionen'
+    publication:
+      publish: 'Veröffentlichen'
+      unpublish: 'Veröffentlichung zurückziehen'

@@ -16,7 +16,13 @@ class Controller implements IController {
   private $database, $currentUser;
   private $config, $dispatcher;
 
+  private $ingredients = array();
+  private $pictures = array();
+  private $ratings = array();
   private $recipes = array();
+  private $steps = array();
+  private $tags = array();
+  private $units = array();
   private $users = array();
 
   private $changedObjects = array();
@@ -48,6 +54,18 @@ class Controller implements IController {
 
   public function get(array $params) : void {
     $this->dispatcher->get($params);
+  }
+
+  public function getIngredient($filter) : ?Ingredient {
+    if (is_integer($filter)) {
+      if (!array_key_exists($filter, $this->ingredients))
+        return $this->loadIngredient($filter);
+      else
+        return $this->ingredients[$filter];
+    }
+    if (is_array($filter))
+      return $this->registerIngredient(null, $filter);
+    return null;
   }
 
   public function getInsertId() : ?int {
@@ -156,24 +174,39 @@ class Controller implements IController {
 
   private function getLink_Recipe(array $params) : ?string {
     switch($params[1]) {
+      case 'publish':
+        return '/r/'.$params[2].'/publish';
       case 'show':
         return '/r/'.$params[2];
+      case 'unpublish':
+        return '/r/'.$params[2].'/unpublish';
     }
     return null;
   }
 
-/*
-  public function getType($filter) : ?Type {
+  public function getPicture($filter) : ?Picture {
     if (is_integer($filter)) {
-      if (!array_key_exists($filter, $this->types))
-        return $this->loadExtension($filter);
+      if (!array_key_exists($filter, $this->pictures))
+        return $this->loadPicture($filter);
       else
-        return $this->types[$filter];
+        return $this->pictures[$filter];
     }
     if (is_array($filter))
-      return $this->registerType(null, $filter);
+      return $this->registerPicture(null, $filter);
     return null;
-  }*/
+  }
+
+  public function getRating($filter) : ?Rating {
+    if (is_integer($filter)) {
+      if (!array_key_exists($filter, $this->ratings))
+        return $this->loadRating($filter);
+      else
+        return $this->ratings[$filter];
+    }
+    if (is_array($filter))
+      return $this->registerRating(null, $filter);
+    return null;
+  }
 
   public function getRecipe($filter) : ?Recipe {
     if (is_integer($filter)) {
@@ -184,6 +217,42 @@ class Controller implements IController {
     }
     if (is_array($filter))
       return $this->registerRecipe(null, $filter);
+    return null;
+  }
+
+  public function getStep($filter) : ?CookingStep {
+    if (is_integer($filter)) {
+      if (!array_key_exists($filter, $this->steps))
+        return $this->loadStep($filter);
+      else
+        return $this->steps[$filter];
+    }
+    if (is_array($filter))
+      return $this->registerStep(null, $filter);
+    return null;
+  }
+
+  public function getTag($filter) : ?Tag {
+    if (is_integer($filter)) {
+      if (!array_key_exists($filter, $this->tags))
+        return $this->loadTag($filter);
+      else
+        return $this->tags[$filter];
+    }
+    if (is_array($filter))
+      return $this->registerTag(null, $filter);
+    return null;
+  }
+
+  public function getUnit($filter) : ?Unit {
+    if (is_integer($filter)) {
+      if (!array_key_exists($filter, $this->units))
+        return $this->loadUnit($filter);
+      else
+        return $this->units[$filter];
+    }
+    if (is_array($filter))
+      return $this->registerUnit(null, $filter);
     return null;
   }
 
@@ -268,6 +337,40 @@ class Controller implements IController {
     return !is_null($this->currentUser);
   }
 
+  public function l(string $key, ...$params) : string {
+    return lang($key, $params);
+  }
+
+  private function loadIngredient(int $id) : ?Ingredient {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'ingredients', DB_ANY);
+    $query->where('ingredients', 'ing_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerIngredient(intval($record['ing_id']), $record);
+    }
+    return $this->registerIngredient($id);
+  }
+
+  private function loadPicture(int $id) : ?Picture {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_pictures', DB_ANY);
+    $query->where('recipe_pictures', 'picture_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerPicture(intval($record['picture_id']), $record);
+    }
+    return $this->registerPicture($id);
+  }
+
+  private function loadRating(int $id) : ?Rating {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
+    $query->where('recipe_ratings', 'entry_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerRating(intval($record['entry_id']), $record);
+    }
+    return $this->registerRating($id);
+  }
+
   private function loadRecipe(int $id) : ?Recipe {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
     $query->where('recipes', 'recipe_id', '=', $id);
@@ -276,6 +379,112 @@ class Controller implements IController {
       return $this->registerRecipe(intval($record['recipe_id']), $record);
     }
     return $this->registerRecipe($id);
+  }
+
+  public function loadRecipeIngredients(Recipe &$recipe) : void {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'ingredients', DB_ANY);
+    $query->select('recipe_ingredients', DB_ANY)
+          ->select('units', DB_ANY)
+          ->join('recipe_ingredients',
+            ['recipe_ingredients', 'ing_id', '=', 'ingredients', 'ing_id'],
+            ['AND', 'recipe_ingredients', 'recipe_id', '=', $recipe->getId()])
+          ->joinLeft('units', ['units', 'unit_id', '=', 'recipe_ingredients', 'unit_id']);
+    $result = $this->select($query);
+    if ($result) {
+      while ($record = $result->fetch_assoc()) {
+        $ingredient = $this->getIngredient($record);
+        if (!is_null($record['unit_id']))
+          $unit = $this->getUnit($record);
+        else
+          $unit = null;
+        $recipe->addIngredients($ingredient, $unit, $record);
+      }
+    }
+  }
+
+  public function loadRecipePictures(Recipe &$recipe) : void {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_pictures', DB_ANY);
+    $query->where('recipe_pictures', 'recipe_id', '=', $recipe->getId());
+    $result = $this->select($query);
+    if ($result) {
+      while ($record = $result->fetch_assoc()) {
+        $picture = $this->getPicture($record);
+        $recipe->addPicture($picture);
+      }
+    }
+  }
+
+  public function loadRecipeRatings(Recipe &$recipe) : void {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
+    $query->where('recipe_ratings', 'recipe_id', '=', $recipe->getId());
+    $result = $this->select($query);
+    if ($result) {
+      while ($record = $result->fetch_assoc()) {
+        $rating = $this->getRating($record);
+        $recipe->addRating($rating);
+      }
+    }
+  }
+
+  public function loadRecipeSteps(Recipe &$recipe) : void {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_steps', DB_ANY);
+    $query->where('recipe_steps', 'recipe_id', '=', $recipe->getId())
+          ->orderBy(['step_no']);
+    $result = $this->select($query);
+    if ($result) {
+      while ($record = $result->fetch_assoc()) {
+        $step = $this->getStep($record);
+        $recipe->addStep($step);
+      }
+    }
+  }
+
+  public function loadRecipeTags(Recipe &$recipe) : void {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_tags');
+    $query->select('tags', DB_ANY)
+          ->select('tags', [['tag_id', EAggregationType::atCOUNT, 'count']])
+          ->join('tags',
+            ['tags', 'tag_id', '=', 'recipe_tags', 'tag_id'],
+            ['AND', 'recipe_tags', 'recipe_id', '=', $recipe->getId()])
+          ->groupBy('tags', ['tag_id', 'tag_name'])
+          ->orderBy2(null, 'count', 'DESC');
+    $result = $this->select($query);
+    if ($result) {
+      while ($record = $result->fetch_assoc()) {
+        $tag = $this->getTag($record);
+        $recipe->addTag($tag, intval($record['count']));
+      }
+    }
+  }
+
+  private function loadStep(int $id) : ?CookingStep {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_steps', DB_ANY);
+    $query->where('recipe_steps', 'step_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerStep(intval($record['step_id']), $record);
+    }
+    return $this->registerStep($id);
+  }
+
+  private function loadTag(int $id) : ?Tag {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'tags', DB_ANY);
+    $query->where('tags', 'tag_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerTag(intval($record['tag_id']), $record);
+    }
+    return $this->registerTag($id);
+  }
+
+  private function loadUnit(int $id) : ?Unit {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'units', DB_ANY);
+    $query->where('units', 'unit_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerUnit(intval($record['unit_id']), $record);
+    }
+    return $this->registerUnit($id);
   }
 
   private function loadUser(int $id) : ?User {
@@ -367,6 +576,45 @@ class Controller implements IController {
     $this->dispatcher->put($params);
   }
 
+  private function registerIngredient(?int $id, array $record=null) : ?Ingredient {
+    if (is_null($id) && is_array($record))
+      $id = intval($record['ing_id']);
+    if (array_key_exists($id, $this->ingredients))
+      return $this->ingredients[$id];
+    if (is_null($record)) {
+      $this->ingredients[$id] = null;
+      return null;
+    }
+    $this->ingredients[$id] = new Ingredient($record);
+    return $this->ingredients[$id];
+  }
+
+  private function registerPicture(?int $id, array $record=null) : ?Picture {
+    if (is_null($id) && is_array($record))
+      $id = intval($record['picture_id']);
+    if (array_key_exists($id, $this->pictures))
+      return $this->pictures[$id];
+    if (is_null($record)) {
+      $this->pictures[$id] = null;
+      return null;
+    }
+    $this->pictures[$id] = new Picture($record);
+    return $this->pictures[$id];
+  }
+
+  private function registerRating(?int $id, array $record=null) : ?Rating {
+    if (is_null($id) && is_array($record))
+      $id = intval($record['entry_id']);
+    if (array_key_exists($id, $this->ratings))
+      return $this->ratings[$id];
+    if (is_null($record)) {
+      $this->ratings[$id] = null;
+      return null;
+    }
+    $this->ratings[$id] = new Rating($record);
+    return $this->ratings[$id];
+  }
+
   private function registerRecipe(?int $id, array $record=null) : ?Recipe {
     if (is_null($id) && is_array($record))
       $id = intval($record['recipe_id']);
@@ -378,6 +626,45 @@ class Controller implements IController {
     }
     $this->recipes[$id] = new Recipe($record);
     return $this->recipes[$id];
+  }
+
+  private function registerStep(?int $id, array $record=null) : ?CookingStep {
+    if (is_null($id) && is_array($record))
+      $id = intval($record['step_id']);
+    if (array_key_exists($id, $this->steps))
+      return $this->steps[$id];
+    if (is_null($record)) {
+      $this->steps[$id] = null;
+      return null;
+    }
+    $this->steps[$id] = new CookingStep($record);
+    return $this->steps[$id];
+  }
+
+  private function registerTag(?int $id, array $record=null) : ?Tag {
+    if (is_null($id) && is_array($record))
+      $id = intval($record['tag_id']);
+    if (array_key_exists($id, $this->tags))
+      return $this->tags[$id];
+    if (is_null($record)) {
+      $this->tags[$id] = null;
+      return null;
+    }
+    $this->tags[$id] = new Tag($record);
+    return $this->tags[$id];
+  }
+
+  private function registerUnit(?int $id, array $record=null) : ?Unit {
+    if (is_null($id) && is_array($record))
+      $id = intval($record['unit_id']);
+    if (array_key_exists($id, $this->units))
+      return $this->units[$id];
+    if (is_null($record)) {
+      $this->units[$id] = null;
+      return null;
+    }
+    $this->units[$id] = new Unit($record);
+    return $this->units[$id];
   }
 
   private function registerUser(?int $id, array $record=null) : ?User {

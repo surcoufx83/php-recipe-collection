@@ -1,0 +1,40 @@
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-lg-6 order-1 order-lg-0">
+          <div class="mt-3 mt-lg-0">
+            <h4>{{Controller.l('recipe_about_header')}}</h4>
+            <p>{% if Recipe.isPublished() %}
+            {{ Controller.l('recipe_about_publication', Recipe.getPublishedDateStr(), Recipe.getUser().getFirstname()) }}
+            <br />{% if Recipe.getCookedCount() > 0 and Recipe.getVotedCount() > 0 %}{{ Controller.l('recipe_about_cookedAndRated', Recipe.getCookedCountStr(), Recipe.getVotingStr()) }}
+            {% elseif Recipe.getCookedCount() > 0 %}{{ Controller.l('recipe_about_cooked', Recipe.getCookedCountStr()) }}
+            {% else %}{{ Controller.l('recipe_about_notCooked') }}
+            {% endif %}
+            {% else %}{{ Controller.l('recipe_about_unpublished', Recipe.getCreationDateStr()) }}
+            {% endif %}</p>
+          </div>
+          <div class="mt-3">
+            <h4>{{Controller.l('recipe_ingredients_header')}}</h4>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6 order-0 order-lg-1">
+          {% if Page.Gallery %}<div>
+            <h5>{{Controller.l('recipe_gallery_header')}}</h5>
+            {{ Page.Gallery|raw }}
+          </div>{% endif %}
+          {% if Recipe.getUserId() == Controller.User.getId() %}<div class="mt-3">
+            <h5>{{Controller.l('recipe_options_header')}}</h5>
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                {% if Recipe.isPublished() %}
+                  <a href="{{ Controller.getLink('recipe:unpublish:' ~ Recipe.getId()) }}">{{Controller.l('recipe_options_publication_unpublish')}}</a>
+                {% else %}
+                  <a href="{{ Controller.getLink('recipe:publish:' ~ Recipe.getId()) }}">{{Controller.l('recipe_options_publication_publish')}}</a>
+                {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>{% endif %}
+        </div>
+      </div>
+    </div>

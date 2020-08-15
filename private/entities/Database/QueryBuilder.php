@@ -268,6 +268,37 @@ class QueryBuilder {
     return $this;
   }
 
+  public function joinLeft(string $table, ...$params) : QueryBuilder {
+    $alias = $this->getTableAlias($table);
+    $expr = 'LEFT JOIN '.$this->maskstr($table, $alias).' ';
+    $expr .= 'ON ';
+    $expr .= $this->maskTablefield($this->getTableAlias($params[0][0]), $params[0][1]);
+    $expr .= ' '.$params[0][2].' ';
+    if ($params[0][2] == 'IN')
+      $expr .= '('.$params[0][3].')';
+    else if (count($params[0]) == 4)
+      $expr .= $params[0][3];
+    else if (count($params[0]) == 5)
+      $expr .= $this->maskTablefield($this->getTableAlias($params[0][3]), $params[0][4]);
+
+    for ($i=1; $i<count($params); $i++) {
+      if ($params[$i][0] != 'AND' && $params[$i][0] != 'OR')
+        throw new \Exception('Invalid join definition.');
+      $expr .= ' '.($i > 0 ? $params[$i][0].' ' : 'ON ');
+      $expr .= $this->maskTablefield($this->getTableAlias($params[$i][1]), $params[$i][2]);
+      $expr .= $params[$i][3];
+      if ($params[$i][3] == 'IN')
+        $expr .= '('.$params[$i][4].')';
+      else if (count($params[$i]) == 5)
+        $expr .= $params[$i][4];
+      else if (count($params[$i]) == 6)
+        $expr .= $this->maskTablefield($this->getTableAlias($params[$i][4]), $params[$i][5]);
+
+    }
+    $this->joinedTables[] = $expr;
+    return $this;
+  }
+
   public function limit(...$params) : QueryBuilder {
     if (count($params) == 1)
       $this->limitlen = intval($params[0]);
@@ -303,6 +334,14 @@ class QueryBuilder {
       else
         $this->orders[] = $this->maskTablefield($alias, $order[$i][0]).' '.$order[$i][1];
     }
+  }
+
+  public function orderBy2(?string $table, string $column, string $direction) : void {
+    if (!is_null($table)) {
+      $alias = $this->getTableAlias($table);
+      $this->orders[] = $this->maskTablefield($alias, $column.' '.$direction);
+    } else
+      $this->orders[] = $this->maskstr($column).' '.$direction;
   }
 
   public function select(...$params) : QueryBuilder {
