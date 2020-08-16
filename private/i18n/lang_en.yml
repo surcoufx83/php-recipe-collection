@@ -43,7 +43,8 @@ newRecipe:
     recipeTagsSelect: 'No tag selected.'
   chapter2:
     header: 'List of ingredients'
-    description: 'List all ingredients required for the recipe below. You can also leave out quantity and unit (e.g. for some salt for seasoning).'
+    description: 'List all ingredients required for the recipe below. You can also omit the quantity and unit (e.g. for some salt for seasoning).'
+    description2: 'The fields for prefix and suffix are optional and can be used for additional helpful information (e.g. ingredient \'lemon rub\' with suffix \'half a lemon\').'
   chapter3:
     header: 'Picture gallery'
     recipePictures: 'Upload pictures'

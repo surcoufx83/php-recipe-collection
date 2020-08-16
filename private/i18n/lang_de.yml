@@ -43,7 +43,8 @@ newRecipe:
     recipeTagsSelect: 'Kein Tag gewählt.'
   chapter2:
     header: 'Zutatenliste'
-    description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Du kannst Menge und Einheit auch weglassen (z.B. für etwas Salz zum Würzen).'
+    description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Mengenangabe und Einheit kannst du auch weglassen (z.B. für etwas Salz zum Würzen).'
+    description2: 'Die Felder für Präfix und Suffix sind optional und können für zusätzliche hilfreiche Angaben verwendet werden (z.B. Zutat \'Zitronenabrieb\' mit Suffix \'einer halben Zitrone\').'
   chapter3:
     header: 'Bildergallerie'
     recipePictures: 'Bilder hochladen'
