@@ -6,5 +6,8 @@ if (!defined('CORE2'))
   exit;
 
 interface IIngredient {
-  public function getName(string $lang, bool $plural = false) : string;
+
+  public function getId() : int;
+  public function getName(float $amount = 1.0, string $lang = null) : string;
+
 }

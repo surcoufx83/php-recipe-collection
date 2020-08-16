@@ -26,10 +26,14 @@ class Ingredient implements IIngredient, IDbObject {
     return $this->id;
   }
 
-  public function getName(string $lang, bool $plural = false) : string {
+  public function getName(float $amount = 1.0, string $lang = null) : string {
+    if (is_null($lang)) {
+      global $Controller;
+      $lang = $Controller->Language();
+    }
     if ($lang == 'de')
-      return (!$plural ? $this->namedesn : $this->namedepl);
-    return (!$plural ? $this->nameensn : $this->nameenpl);
+      return ($amount == 1.0 ? $this->namedesn : $this->namedepl);
+    return ($amount == 1.0 ? $this->nameensn : $this->nameenpl);
   }
 
 }

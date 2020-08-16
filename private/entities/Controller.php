@@ -14,7 +14,7 @@ if (!defined('CORE2'))
 class Controller implements IController {
 
   private $database, $currentUser;
-  private $config, $dispatcher;
+  private $config, $dispatcher, $langcode;
 
   private $ingredients = array();
   private $pictures = array();
@@ -33,6 +33,10 @@ class Controller implements IController {
 
   public function Dispatcher() : Dispatcher {
     return $this->dispatcher;
+  }
+
+  public function Language() : string {
+    return $this->langcode;
   }
 
   public function User() : ?User {
@@ -89,6 +93,8 @@ class Controller implements IController {
         return $this->getLink_Private($items);
       case 'recipe':
         return $this->getLink_Recipe($items);
+      case 'tag':
+        return $this->getLink_Tag($items);
 
     }
 
@@ -175,11 +181,19 @@ class Controller implements IController {
   private function getLink_Recipe(array $params) : ?string {
     switch($params[1]) {
       case 'publish':
-        return '/r/'.$params[2].'/publish';
+        return '/recipe/publish/'.$params[2];
       case 'show':
-        return '/r/'.$params[2];
+        return '/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
       case 'unpublish':
-        return '/r/'.$params[2].'/unpublish';
+        return '/recipe/unpublish/'.$params[2];
+    }
+    return null;
+  }
+
+  private function getLink_Tag(array $params) : ?string {
+    switch($params[1]) {
+      case 'show':
+        return '/tag/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
     }
     return null;
   }
@@ -280,6 +294,8 @@ class Controller implements IController {
       exit;
     if (!$this->init_Dispatcher())
       exit;
+    global $i18n;
+    $this->langcode = $i18n->getAppliedLang();
   }
 
   private function init_Config() : bool {

@@ -36,3 +36,5 @@ recipe:
     publication:
       publish: 'Publish'
       unpublish: 'Reject publication'
+  cookingSteps:
+    header: 'Preparation'
