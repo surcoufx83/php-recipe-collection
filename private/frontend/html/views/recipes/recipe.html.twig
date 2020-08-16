@@ -11,6 +11,12 @@
             {% endif %}
             {% else %}{{ Controller.l('recipe_about_unpublished', Recipe.getCreationDateStr()) }}
             {% endif %}</p>
+            <p>{% for Tag in Recipe.getTags() %}
+              <a class="btn btn-outline-blue btn-sm" href="{{ Controller.getLink('tag:show:' ~ Tag.getId() ~ ':' ~ Tag.getName()) }}">
+                {{ Tag.getName() }}
+                <span class="badge ml-1">{{ Recipe.getTagVotes()[Tag.getId()] }} {{ Config.Icons.Favorite.getIcon('')|raw }}</span>
+              </a>
+            {% endfor %}</p>
           </div>
           <div class="mt-3">
             <h4>{{Controller.l('recipe_ingredients_header')}}</h4>
@@ -24,6 +30,15 @@
                 </li>
               {% endfor %}
             </ul>
+          </div>
+          <div class="mt-3">
+            <h4>{{Controller.l('recipe_cookingSteps_header')}}</h4>
+            {% for Step in Recipe.getSteps() %}
+              <div>
+                <h5>{{ Step.getStepNo() }}. {{ Step.getTitle() }}</h5>
+                {{ Step.getContent()|raw }}
+              </div>
+            {% endfor %}
           </div>
         </div>
         <div class="col-12 col-lg-5 order-0 order-lg-1">

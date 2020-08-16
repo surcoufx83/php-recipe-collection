@@ -36,3 +36,5 @@ recipe:
     publication:
       publish: 'Veröffentlichen'
       unpublish: 'Veröffentlichung zurückziehen'
+  cookingSteps:
+    header: 'Zubereitung'

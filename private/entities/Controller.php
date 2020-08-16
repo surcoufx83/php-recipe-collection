@@ -93,6 +93,8 @@ class Controller implements IController {
         return $this->getLink_Private($items);
       case 'recipe':
         return $this->getLink_Recipe($items);
+      case 'tag':
+        return $this->getLink_Tag($items);
 
     }
 
@@ -184,6 +186,14 @@ class Controller implements IController {
         return '/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
       case 'unpublish':
         return '/recipe/unpublish/'.$params[2];
+    }
+    return null;
+  }
+
+  private function getLink_Tag(array $params) : ?string {
+    switch($params[1]) {
+      case 'show':
+        return '/tag/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
     }
     return null;
   }
