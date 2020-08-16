@@ -72,19 +72,47 @@ img.avatar-40 {
   border-color: #3E5D65;
 }
 
-.fs-80 {
-  font-size: 80%;
-}
-
-.fs-120 {
-  font-size: 120%;
-}
-
 .page-link {
   color: #3E5D65 !important;
 }
 .page-link:hover {
   color: #3E6F7A !important;
+}
+
+.bg-light-dark {
+  background-color: #bcc2c8;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.overflow-x-default {
+  overflow-x: visible;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.overflow-y-default {
+  overflow-y: visible;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
 }
 
 .pointer {
@@ -97,6 +125,22 @@ img.avatar-40 {
 
 .text-blue:hover {
   color: #3E6F7A;
+}
+
+.text-contrast {
+  color: #CC7865;
+}
+
+.text-contrast:hover {
+  color: #C4644E;
+}
+
+.text-large, .fs-120 {
+  font-size: 120%;
+}
+
+.text-small, .fs-80 {
+  font-size: 80%;
 }
 
 .w-10 {
@@ -143,6 +187,10 @@ img.avatar-40 {
   width: 90% !important;
 }
 
+.h-100px {
+  height: 100px !important;
+}
+
 header.navbar {
   box-shadow: 0 1px 0 0 #343a40;
 }
@@ -155,6 +203,16 @@ header.navbar .navbar-nav .nav-link {
 
 ul.list-group-sm li.list-group-item {
   padding: 0.2rem 0.8rem;
+}
+
+div.bootstrap-select button {
+  background-color: #FFF;
+  background-clip: padding-box;
+  border: 1px solid #CED4DA;
+  color: #495057;
+  font-weight: 400;
+  outline: 0;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 div.carousel div.carousel-caption {

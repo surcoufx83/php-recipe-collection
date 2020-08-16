@@ -5,13 +5,18 @@ $bg-light-muted:      rgba(0, 0, 0, 0.05);
 $bg-light-dark:       #bcc2c8;
 $bg-dark:             #343a40;
 
-$text-primary:        #2C2E3A;
-$text-muted:          #3D3E3D;
-$text-link:           #3E5D65;
+$text-contrast:       #CC7865;
+$text-contrast-hover: #C4644E;
+$text-danger:         #ef6461;
 $text-hover:          #3E6F7A;
+$text-input:          #495057;
+$text-link:           #3E5D65;
+$text-muted:          #3D3E3D;
+$text-primary:        #2C2E3A;
 $text-success:        #69995d;
 $text-warning:        #e4b363;
-$text-danger:         #ef6461;
+
+$white:               #FFF;
 
 
 @font-face {
@@ -94,14 +99,6 @@ img.avatar-40 {
   border-color: $text-link;
 }
 
-.fs-80 {
-  font-size: 80%;
-}
-
-.fs-120 {
-  font-size: 120%;
-}
-
 .page-link {
   color: $text-link!important;
   &:hover {
@@ -109,17 +106,24 @@ img.avatar-40 {
   }
 }
 
-.pointer {
-  cursor:pointer;
-}
+.bg-light-dark      { background-color: $bg-light-dark; }
 
-.text-blue {
-  color: $text-link;
-}
+.overflow-x-auto    { overflow-x: auto; }
+.overflow-x-default { overflow-x: visible; }
+.overflow-x-hidden  { overflow-x: hidden; }
+.overflow-x-scroll  { overflow-x: scroll; }
+.overflow-y-auto    { overflow-y: auto; }
+.overflow-y-default { overflow-y: visible; }
+.overflow-y-hidden  { overflow-y: hidden; }
+.overflow-y-scroll  { overflow-y: scroll; }
 
-.text-blue:hover {
-  color: $text-hover;
-}
+.pointer { cursor:pointer; }
+.text-blue { color: $text-link; }
+.text-blue:hover { color: $text-hover; }
+.text-contrast { color: $text-contrast; }
+.text-contrast:hover { color: $text-contrast-hover; }
+.text-large,.fs-120 { font-size: 120%; }
+.text-small,.fs-80 { font-size: 80%; }
 
 .w-10 { width: 10%!important; }
 .w-20 { width: 20%!important; }
@@ -132,6 +136,8 @@ img.avatar-40 {
 .w-75 { width: 75%!important; }
 .w-80 { width: 80%!important; }
 .w-90 { width: 90%!important; }
+
+.h-100px { height: 100px!important; }
 
 header.navbar {
   box-shadow: 0 1px 0 0 $bg-dark;
@@ -150,6 +156,16 @@ header.navbar {
 
 ul.list-group-sm li.list-group-item {
   padding: .2rem .8rem;
+}
+
+div.bootstrap-select button {
+  background-color: $white;
+  background-clip: padding-box;
+  border: 1px solid #CED4DA;
+  color: $text-input;
+  font-weight: 400;
+  outline: 0;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 div.carousel {
