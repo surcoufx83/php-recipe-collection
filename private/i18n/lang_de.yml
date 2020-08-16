@@ -14,6 +14,7 @@ lists:
 
 page:
   admin: 'Administration'
+  createRecipe: 'Neues Rezept'
   home: 'Start'
   lists: 'Listen'
   random: 'Zufälliges Rezept'

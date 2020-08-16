@@ -180,6 +180,8 @@ class Controller implements IController {
 
   private function getLink_Recipe(array $params) : ?string {
     switch($params[1]) {
+      case 'new':
+        return '/recipe/new';
       case 'publish':
         return '/recipe/publish/'.$params[2];
       case 'show':
