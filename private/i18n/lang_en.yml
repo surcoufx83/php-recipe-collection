@@ -43,10 +43,13 @@ newRecipe:
     recipeTagsSelect: 'No tag selected.'
   chapter2:
     header: 'List of ingredients'
+    description: 'List all ingredients required for the recipe below. You can also leave out quantity and unit (e.g. for some salt for seasoning).'
   chapter3:
     header: 'Picture gallery'
     recipePictures: 'Upload pictures'
     recipePicturesDescription: 'Upload one or more pictures from your computer or mobile phone to display them next to the recipe.<br />The first image will always be the preview image.'
+    recipePicturesRemove: 'Remove'
+    recipePicturesUpload: 'Add picture'
   chapter5:
     header: 'Further options'
 

@@ -43,10 +43,13 @@ newRecipe:
     recipeTagsSelect: 'Kein Tag gewählt.'
   chapter2:
     header: 'Zutatenliste'
+    description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Du kannst Menge und Einheit auch weglassen (z.B. für etwas Salz zum Würzen).'
   chapter3:
     header: 'Bildergallerie'
     recipePictures: 'Bilder hochladen'
     recipePicturesDescription: 'Lade ein oder mehrere Bilder von deinem Computer bzw. Handy hoch um diese neben dem Rezept anzuzeigen.<br />Das erste Bild wird immer das Vorschaubild sein.'
+    recipePicturesRemove: 'Entfernen'
+    recipePicturesUpload: 'Hinzufügen'
   chapter5:
     header: 'Weitere Optionen'
 

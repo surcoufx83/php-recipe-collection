@@ -80,5 +80,6 @@ function ui_new_recipe() {
   $OUT['Tags'] = $tags;
   $OUT['Page']['Heading1'] = $Controller->l('newRecipe_header', $Controller->User()->getFirstname());
   $OUT['Page']['Scripts']['FormValidator'] = true;
+  $OUT['Page']['Scripts']['Custom'][] = 'new-recipe-imguploader';
   $OUT['Content'] = $twig->render('views/recipes/new-recipe.html.twig', $OUT);
 } // ui_new_recipe()

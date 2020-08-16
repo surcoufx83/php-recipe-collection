@@ -83,6 +83,10 @@ img.avatar-40 {
   background-color: #bcc2c8;
 }
 
+.bg-light-muted {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
 .overflow-x-auto {
   overflow-x: auto;
 }
@@ -117,6 +121,16 @@ img.avatar-40 {
 
 .pointer {
   cursor: pointer;
+}
+
+.rounded-bottom-0 {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.rounded-top-0 {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
 }
 
 .text-blue {
@@ -187,8 +201,56 @@ img.avatar-40 {
   width: 90% !important;
 }
 
+.h-10 {
+  height: 10% !important;
+}
+
+.h-20 {
+  height: 20% !important;
+}
+
+.h-25 {
+  height: 25% !important;
+}
+
+.h-30 {
+  height: 30% !important;
+}
+
+.h-40 {
+  height: 40% !important;
+}
+
+.h-50 {
+  height: 50% !important;
+}
+
+.h-60 {
+  height: 60% !important;
+}
+
+.h-70 {
+  height: 70% !important;
+}
+
+.h-75 {
+  height: 75% !important;
+}
+
+.h-80 {
+  height: 80% !important;
+}
+
+.h-90 {
+  height: 90% !important;
+}
+
 .h-100px {
   height: 100px !important;
+}
+
+.h-200px {
+  height: 200px !important;
 }
 
 header.navbar {

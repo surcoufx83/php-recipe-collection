@@ -1,0 +1,53 @@
+
+  var lastContainerIndex = null;
+  var currentIndex = null;
+  var dummy = null;
+
+  $(function() {
+    dummy = $('#image-upload-dummy');
+    createCopy(0);
+  });
+
+  function createCopy(index) {
+    var copy = dummy.clone();
+    copy.attr('id', 'image-upload-' + index);
+    copy.data('index', index);
+    var img = copy.find('img');
+    img.attr('id', 'recipe-picture-' + index);
+    var btn = copy.find('button');
+    btn.attr('id', 'image-upload-btn-' + index);
+    btn.data('for', 'recipe-picture-uploader-' + index);
+    btn.data('index', index);
+    var inp = copy.find('input');
+    inp.attr('id', 'recipe-picture-uploader-' + index);
+    lastContainerIndex = index;
+    $('.image-upload-container').append(copy);
+    btn.click(function() {
+      var me = $(this);
+      currentIndex = me.data('index');
+      var uplButton = $('#recipe-picture-uploader-' + currentIndex);
+      if (uplButton.prop('files').length != 0) {
+        $('#image-upload-' + currentIndex).remove();
+        currentIndex = null;
+      } else {
+        uplButton.click();
+      }
+    });
+    inp.change(function() {
+      var input = $(this);
+      var files = !!this.files ? this.files : [];
+      if (!files.length || !window.FileReader) return;
+      if (/^image/.test( files[0].type)) {
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+        reader.onloadend = function() {
+          $('#recipe-picture-' + currentIndex).css("content", "url(" + this.result + ")");
+          var btn = $('#image-upload-btn-' + currentIndex);
+          btn.find('span.span-upload').addClass('d-none');
+          btn.find('span.span-delete').removeClass('d-none');
+          createCopy(currentIndex + 1);
+        }
+      }
+    });
+    copy.removeClass('d-none');
+  }

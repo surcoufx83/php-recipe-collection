@@ -121,11 +121,10 @@
       $(document).ready(function() {
 {% if Page.Scripts.FormValidator %}{% include 'scripts/html-forms-validate.js.twig' %}{% endif %}
       });
-      {% for script in Page.Scripts.Custom %}
-{% include 'scripts/' ~ script ~ '.js.twig' %}
-      {% endfor %}
 
     </script>
+    <script>{% for script in Page.Scripts.Custom %}
+{% include 'scripts/' ~ script ~ '.js.twig' %}{% endfor %}</script>
 
     <div style="position:fixed; bottom:0px; right:0px; text-align:right; font-size: 1rem;" class="d-none d-lg-block p-2">
       {{ time|number_format(2, '.', ',') }}s
