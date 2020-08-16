@@ -3,7 +3,7 @@
 use Surcouf\PhpArchive\Helper\UiHelper\CarouselHelper;
 
 $Controller->get(array(
-  'pattern' => '/r/(?<id>\d+)',
+  'pattern' => '/(?<id>\d+)(/[^/]+)?',
   'fn' => 'ui_recipe'
 ));
 
@@ -11,6 +11,10 @@ function ui_recipe() {
   global $Controller, $OUT, $twig;
 
   $recipe = $Controller->getRecipe($Controller->Dispatcher()->getMatchInt('id'));
+
+  if (!$recipe->isPublished() && $recipe->getUserId() != $Controller->User()->getId())
+    $Controller->Dispatcher()->forward('/');
+
   $recipe->loadComplete();
 
   $OUT['Page']['Breadcrumbs'][] = array(
@@ -38,7 +42,6 @@ function ui_recipe() {
   }
 
   $OUT['Recipe'] = $recipe;
-  $OUT['Page']['Current'] = 'private:home';
   $OUT['Page']['Heading1'] = (!is_null($recipe->getUserId()) ? lang('greetings_recipeFrom', [$recipe->getName(), $recipe->getUser()->getFirstname()]) : $recipe->getName());
   $OUT['Content'] = $twig->render('views/recipes/recipe.html.twig', $OUT);
 } // ui_home()

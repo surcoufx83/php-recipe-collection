@@ -179,11 +179,11 @@ class Controller implements IController {
   private function getLink_Recipe(array $params) : ?string {
     switch($params[1]) {
       case 'publish':
-        return '/r/'.$params[2].'/publish';
+        return '/recipe/publish/'.$params[2];
       case 'show':
-        return '/r/'.$params[2];
+        return '/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
       case 'unpublish':
-        return '/r/'.$params[2].'/unpublish';
+        return '/recipe/unpublish/'.$params[2];
     }
     return null;
   }
