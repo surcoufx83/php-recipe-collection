@@ -91,61 +91,58 @@
         <div class="row mt-3">
           <div class="col-12 col-lg-6">
             <h5>{{ Controller.l('newRecipe_chapter2_header') }} <span class="text-contrast">*</span></h5>
-            <p>{{ Controller.l('newRecipe_chapter2_description')|raw }}<br />
-            {{ Controller.l('newRecipe_chapter2_description2')|raw }}</p>
+            <p>{{ Controller.l('newRecipe_chapter2_description')|raw }}</p>
           </div>
         </div>
         <div class="row mt-2">
           <div class="col-12">
+            <div class="row">
+              <div class="col-4 col-lg-3 mb-2">
+                <b class="ml-4">{{ Controller.l('newRecipe_chapter2_amount_header') }}</b>
+                <span class="ml-4 text-muted text-small text-nowrap">{{ Controller.l('newRecipe_chapter2_amount_placeholder') }}</span>
+              </div>
+              <div class="col-4 col-lg-3 mb-2">
+                <b class="ml-4">{{ Controller.l('newRecipe_chapter2_ingredient_header') }} <span class="text-contrast">*</span></b>
+                <span class="ml-4 text-muted text-small text-nowrap">{{ Controller.l('newRecipe_chapter2_ingredient_placeholder') }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
             <div class="list-group list-group-flush">
               <div class="list-group-item">
-                <div class="form-group row">
-                  <div class="col-4 col-lg-3">
-                    <input type="text" class="form-control" id="inlineFormInput" placeholder="Menge">
+                <div class="row" id="ingredient-0" data-ingindex="0">
+                  <div class="col-4 col-lg-3 px-1 px-md-2">
+                    <input type="text" class="form-control form-control-sm" id="inlineFormInput"
+                      name="ingredient_amount" id="ingredient-amount-0" data-ingindex="0"
+                      placeholder="{{ Controller.l('newRecipe_chapter2_amount_header') }}">
                   </div>
-                  <div class="col-8 col-lg-3">
-                    <input type="text" class="form-control" id="inlineFormInput" placeholder="Einheit">
-                  </div>
-                  <div class="col-12 col-lg-6">
-                    <input type="text" class="form-control" id="inlineFormInput" placeholder="Zutat" required>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <div class="col-12 col-lg-3">
-                    <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Präfix">
-                  </div>
-                  <div class="col-12 col-lg-3">
-                    <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Suffix">
-                  </div>
-                  <div class="col-12 col-lg-6">
-                    <input type="text" class="form-control-plaintext mb-2" id="inlineFormInput" placeholder="M E Präfix Zutat Suffix">
+                  <div class="col-7 col-lg-8 px-1 px-md-2">
+                    <input type="text" class="form-control form-control-sm" id="inlineFormInput"
+                      name="ingredient_description" id="ingredient-description-0" data-ingindex="0"
+                      placeholder="{{ Controller.l('newRecipe_chapter2_ingredient_header') }}" required>
                   </div>
                 </div>
               </div>
-              <a href="#" class="list-group-item list-group-item-action active">
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">List group item heading</h5>
-                  <small>3 days ago</small>
+              <div class="list-group-item" id="ingredient-dummy">
+                <div class="row" id="ingredient-d" data-ingindex="d">
+                  <div class="col-4 col-lg-3 px-1 px-md-2">
+                    <input type="text" class="form-control form-control-sm" id="inlineFormInput"
+                      name="ingredient_amount" id="ingredient-amount-d" data-ingindex="d"
+                      placeholder="{{ Controller.l('newRecipe_chapter2_amount_header') }}">
+                  </div>
+                  <div class="col-7 col-lg-8 px-1 px-md-2">
+                    <input type="text" class="form-control form-control-sm" id="inlineFormInput"
+                      name="ingredient_description" id="ingredient-description-d" data-ingindex="d"
+                      placeholder="{{ Controller.l('newRecipe_chapter2_ingredient_header') }}" required>
+                  </div>
+                  <div class="col-1 px-0 px-md-2">
+                    <button type="button" data-for="ingredient-d" data-ingindex="d" id="ingredient-delete-d"
+                      class="btn btn-blue btn-sm w-100">
+                      {{ Config.Icons.Delete.getIcon('fa-fw')|raw }}
+                    </button>
+                  </div>
                 </div>
-                <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                <small>Donec id elit non mi porta.</small>
-              </a>
-              <a href="#" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">List group item heading</h5>
-                  <small class="text-muted">3 days ago</small>
-                </div>
-                <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                <small class="text-muted">Donec id elit non mi porta.</small>
-              </a>
-              <a href="#" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1">List group item heading</h5>
-                  <small class="text-muted">3 days ago</small>
-                </div>
-                <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-                <small class="text-muted">Donec id elit non mi porta.</small>
-              </a>
+              </div>
             </div>
           </div>
         </div>

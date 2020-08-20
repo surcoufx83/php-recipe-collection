@@ -23,10 +23,7 @@
             <ul class="list-group list-group-flush list-group-sm">
               {% for Ingredient in Recipe.getIngredients() %}
                 <li class="list-group-item">
-                  {% if Ingredient.Amount %}{{ Ingredient.AmountStr }}{% endif %} {{ Ingredient.Unit.getName(null, Ingredient.Amount) }}
-                  {% if Ingredient.Title %}{{ Ingredient.Title }}
-                  {% else %}{{ Ingredient.Prefix }} {{ Ingredient.Ingredient.getName(Ingredient.Amount) }} {{ Ingredient.Suffix }}
-                  {% endif %}
+                  {{ Ingredient.Amount }} {{ Ingredient.Description }}
                 </li>
               {% endfor %}
             </ul>

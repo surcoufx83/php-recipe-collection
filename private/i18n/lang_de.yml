@@ -42,9 +42,14 @@ newRecipe:
     recipeTagsDescription: 'Tags markieren ein Rezept mit kurzen Schlagwörtern. Jedem Rezept können beliebig viele dieser Tags zugeordnet werden (z.B. \'Dinner\' und \'Für Zwei\').; Optional'
     recipeTagsSelect: 'Kein Tag gewählt.'
   chapter2:
+    amount:
+      header: 'Menge'
+      placeholder: 'z.B. 500 g'
+    ingredient:
+      header: 'Zutat'
+      placeholder: 'z.B. Rindergulasch'
     header: 'Zutatenliste'
-    description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Mengenangabe und Einheit kannst du auch weglassen (z.B. für etwas Salz zum Würzen).'
-    description2: 'Die Felder für Präfix und Suffix sind optional und können für zusätzliche hilfreiche Angaben verwendet werden (z.B. Zutat \'Zitronenabrieb\' mit Suffix \'einer halben Zitrone\').'
+    description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Die Mengenangabe kannst du auch weglassen (z.B. für etwas Salz zum Würzen).'
   chapter3:
     header: 'Bildergallerie'
     recipePictures: 'Bilder hochladen'

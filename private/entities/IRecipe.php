@@ -9,7 +9,7 @@ if (!defined('CORE2'))
 
 interface IRecipe {
 
-  public function addIngredients(IIngredient &$ingredient, ?IUnit &$unit, array $record) : void;
+  public function addIngredients(array $record) : void;
   public function getCookedCount() : int;
   public function getCookedCountStr() : string;
   public function getCreationDate() : DateTime;
