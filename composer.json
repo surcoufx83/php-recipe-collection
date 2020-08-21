@@ -9,6 +9,7 @@
         "surcoufx83/php-i18n": ">=4.1",
         "twbs/bootstrap": ">=4.5",
         "twig/twig": ">=3.0",
-        "yzalis/identicon": ">=2.0"
+        "yzalis/identicon": ">=2.0",
+        "select2/select2": ">=4.0"
     }
 }
