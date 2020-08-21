@@ -56,6 +56,9 @@ newRecipe:
     recipePicturesDescription: 'Upload one or more pictures from your computer or mobile phone to display them next to the recipe.<br />The first image will always be the preview image.'
     recipePicturesRemove: 'Remove'
     recipePicturesUpload: 'Add picture'
+  chapter4:
+    description: 'Use this section to describe the steps of the preparation. You can put everything in one block or create several steps using the plus sign.'
+    header: 'Step-by-step instructions'
   chapter5:
     header: 'Further options'
 

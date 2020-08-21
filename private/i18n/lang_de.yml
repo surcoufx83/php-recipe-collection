@@ -56,6 +56,9 @@ newRecipe:
     recipePicturesDescription: 'Lade ein oder mehrere Bilder von deinem Computer bzw. Handy hoch um diese neben dem Rezept anzuzeigen.<br />Das erste Bild wird immer das Vorschaubild sein.'
     recipePicturesRemove: 'Entfernen'
     recipePicturesUpload: 'Hinzufügen'
+  chapter4:
+    description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen.'
+    header: 'Schritt-für-Schritt Anleitung'
   chapter5:
     header: 'Weitere Optionen'
 
