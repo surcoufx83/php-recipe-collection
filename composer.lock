@@ -176,16 +176,16 @@
         },
         {
             "name": "dragonmantank/cron-expression",
-            "version": "v3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dragonmantank/cron-expression.git",
-                "reference": "70c187e8d95c828fc93a2d09d63179c13381482e"
+                "reference": "fa4e95ff5a7f1d62c3fbc05c32729b7f3ca14b52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/70c187e8d95c828fc93a2d09d63179c13381482e",
-                "reference": "70c187e8d95c828fc93a2d09d63179c13381482e",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/fa4e95ff5a7f1d62c3fbc05c32729b7f3ca14b52",
+                "reference": "fa4e95ff5a7f1d62c3fbc05c32729b7f3ca14b52",
                 "shasum": ""
             },
             "require": {
@@ -226,7 +226,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-03-25T18:33:19+00:00"
+            "time": "2020-08-21T02:30:13+00:00"
         },
         {
             "name": "fortawesome/font-awesome",
@@ -1803,7 +1803,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.18.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -1879,7 +1879,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.18.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -2100,20 +2100,20 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2020-08-06T16:22:43+00:00"
+            "time": "2020-05-12T17:44:42+00:00"
         },
         {
             "name": "twig/twig",
-            "version": "v3.0.4",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "582bdbdc173027ebfba3c93dc750a40b8f9ebc02"
+                "reference": "9b76b1535483cdf4edf01bb787b0217b62bd68a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/582bdbdc173027ebfba3c93dc750a40b8f9ebc02",
-                "reference": "582bdbdc173027ebfba3c93dc750a40b8f9ebc02",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/9b76b1535483cdf4edf01bb787b0217b62bd68a5",
+                "reference": "9b76b1535483cdf4edf01bb787b0217b62bd68a5",
                 "shasum": ""
             },
             "require": {
