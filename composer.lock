@@ -2047,16 +2047,16 @@
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v4.5.0",
+            "version": "v4.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "7a6da5e3e7ad7c749dde806546a35d4d4259d965"
+                "reference": "5f2480a90ab911babc53039835fe78c6fc12646d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/7a6da5e3e7ad7c749dde806546a35d4d4259d965",
-                "reference": "7a6da5e3e7ad7c749dde806546a35d4d4259d965",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/5f2480a90ab911babc53039835fe78c6fc12646d",
+                "reference": "5f2480a90ab911babc53039835fe78c6fc12646d",
                 "shasum": ""
             },
             "replace": {
@@ -2164,6 +2164,18 @@
             ],
             "funding": [
                 {
+                    "url": "https://certification.symfony.com/",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://live.symfony.com/",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://symfony.com/cloud/",
+                    "type": "custom"
+                },
+                {
                     "url": "https://github.com/fabpot",
                     "type": "github"
                 },
@@ -2172,7 +2184,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-05T15:13:19+00:00"
+            "time": "2020-07-05T13:18:14+00:00"
         },
         {
             "name": "webmozart/assert",
