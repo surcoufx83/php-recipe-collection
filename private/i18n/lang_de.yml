@@ -3,6 +3,7 @@ book:
 
 breadcrumb:
   home: 'Startseite'
+  newRecipe: 'Neues Rezept'
   recipes: 'Rezepte'
 
 greetings:
@@ -12,8 +13,58 @@ greetings:
 lists:
   all: 'Alle Listen'
 
+newRecipe:
+  header: 'Neues Rezept von %s'
+  intro:
+    header: 'Rezepteingabe'
+    requiredFields: 'Alle mit <b><span class=\'text-contrast\'>*</span></b> markierten Felder müssen befüllt werden. Der Großteil der Angaben ist optional, aber wir freuen uns, wenn du diese trotzdem befüllst.'
+    subject: 'Vielen Dank, dass du ein neues Rezept zu unserer Sammlung beitragen möchtest!<br />Das von dir bereitgestellte Rezept ist anfangs als \'Privat\' markiert. Du bekommst nach dem Speichern die Möglichkeit, dass Rezept zu prüfen und zu veröffentlichen.'
+  chapter1:
+    header: 'Allgemeine Angaben'
+    recipeName: 'Name für dieses Gericht'
+    recipeNameDescription: 'z.B. Vogtländischer Sauerbraten mit Rotkohl und Klößen; Pflichtfeld'
+    recipeNameInvalidFb: 'Bitte das Feld befüllen. Die Angabe eines Names ist zwingend erforderlich.'
+    recipeNamePlaceholder: 'Name für dieses Gericht'
+    recipeDesc: 'Zusatzinformationen und Detailbeschreibung'
+    recipeDescDescription: 'Weitergehende Informationen, Detailbeschreibung, Originalname; Optional'
+    recipeDescPlaceholder: 'Beschreibung'
+    recipeEater: 'Für wie viele Personen?'
+    recipeEaterDescription: 'Gib eine Zahl an, für wie viele die Personen die Menge an Zutaten ausreicht.; Pflichtfeld'
+    recipeEaterInvalidFb: 'Die Anzahl der Personen ist zwingend erforderlich (Min = 1, Max = 100).'
+    recipeEaterPlaceholder: '4'
+    recipeSourceText: 'Quelle'
+    recipeSourceTextDescription: 'Gib gerne an, woher dieses Rezept stammt (z.B. Oma Christines Kochbuch); Optional'
+    recipeSourceTextPlaceholder: 'Quellenbeschreibung'
+    recipeSourceUrl: 'Quelle: Internet'
+    recipeSourceUrlDescription: 'Du hast das Rezept aus dem Internet übernommen? Bitte gib hier die Originaladresse an.; Optional'
+    recipeSourceUrlPlaceholder: 'www.rezepte.de/rezept-1'
+    recipeTags: 'Tags angeben'
+    recipeTagsDescription: 'Tags markieren ein Rezept mit kurzen Schlagwörtern. Jedem Rezept können beliebig viele dieser Tags zugeordnet werden (z.B. \'Dinner\' und \'Für Zwei\').; Optional'
+    recipeTagsSelect: 'Kein Tag gewählt.'
+  chapter2:
+    amount:
+      header: 'Menge'
+      placeholder: 'z.B. 500 g'
+    ingredient:
+      header: 'Zutat'
+      placeholder: 'z.B. Rindergulasch'
+    header: 'Zutatenliste'
+    description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Die Mengenangabe kannst du auch weglassen (z.B. für etwas Salz zum Würzen).'
+  chapter3:
+    header: 'Bildergallerie'
+    recipePictures: 'Bilder hochladen'
+    recipePicturesDescription: 'Lade ein oder mehrere Bilder von deinem Computer bzw. Handy hoch um diese neben dem Rezept anzuzeigen.<br />Das erste Bild wird immer das Vorschaubild sein.'
+    recipePicturesRemove: 'Entfernen'
+    recipePicturesUpload: 'Hinzufügen'
+  chapter4:
+    description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen.'
+    header: 'Schritt-für-Schritt Anleitung'
+  chapter5:
+    header: 'Weitere Optionen'
+
 page:
   admin: 'Administration'
+  createRecipe: 'Neues Rezept'
   home: 'Start'
   lists: 'Listen'
   random: 'Zufälliges Rezept'

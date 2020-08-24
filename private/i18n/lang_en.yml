@@ -3,6 +3,7 @@ book:
 
 breadcrumb:
   home: 'Home'
+  newRecipe: 'New recipe'
   recipes: 'Recipes'
 
 greetings:
@@ -12,8 +13,58 @@ greetings:
 lists:
   all: 'All lists'
 
+newRecipe:
+  header: 'New recipe from %s'
+  intro:
+    header: 'Recipe submission form'
+    requiredFields: 'All fields marked with <b><span class=\'text-contrast\'>*</span></b> must be filled in. Most of the information is optional, but we would be happy if you fill them in anyway.'
+    subject: 'Thank you very much that you would like to contribute a new recipe to our collection!<br />The recipe you provide is initially marked as \'Private\'. After saving the recipe you will get the possibility to check it and publish it.'
+  chapter1:
+    header: 'General information'
+    recipeName: 'Name for this dish'
+    recipeNameDescription: 'e.g. Marinated pot roast with red cabbage and dumplings; mandatory'
+    recipeNameInvalidFb: 'Please fill in the field. The indication of a name is mandatory.'
+    recipeNamePlaceholder: 'Name for this dish'
+    recipeDesc: 'Additional information and detailed description'
+    recipeDescDescription: 'Further information, detailed description, original name; Optional'
+    recipeDescPlaceholder: 'Description'
+    recipeEater: 'For how many people?'
+    recipeEaterDescription: 'Enter a number for how many people the quantity of ingredients is sufficient; mandatory'
+    recipeEaterInvalidFb: 'The number of persons is mandatory (min = 1, max = 100).'
+    recipeEaterPlaceholder: '4'
+    recipeSourceText: 'Origin'
+    recipeSourceTextDescription: 'Feel free to indicate where this recipe comes from (e.g. Grandma Christine's cookbook); Optional'
+    recipeSourceTextPlaceholder: 'Source description'
+    recipeSourceUrl: 'Source: Website'
+    recipeSourceUrlDescription: 'You copied the recipe from the Internet? Please enter the original address here; Optional'
+    recipeSourceUrlPlaceholder: 'www.rezepte.de/rezept-1'
+    recipeTags: 'Specify tags'
+    recipeTagsDescription: 'Tags mark a recipe with short keywords. Any number of these tags can be assigned to each recipe (e.g. \'Dinner\' and \'For two\'); Optional'
+    recipeTagsSelect: 'No tag selected.'
+  chapter2:
+    amount:
+      header: 'Quantity'
+      placeholder: 'z.B. 500 g'
+    ingredient:
+      header: 'Ingredient'
+      placeholder: 'z.B. beef goulash'
+    header: 'List of ingredients'
+    description: 'List all ingredients required for the recipe below. You can also leave out the quantity (e.g. for some salt to season).'
+  chapter3:
+    header: 'Picture gallery'
+    recipePictures: 'Upload pictures'
+    recipePicturesDescription: 'Upload one or more pictures from your computer or mobile phone to display them next to the recipe.<br />The first image will always be the preview image.'
+    recipePicturesRemove: 'Remove'
+    recipePicturesUpload: 'Add picture'
+  chapter4:
+    description: 'Use this section to describe the steps of the preparation. You can put everything in one block or create several steps using the plus sign.'
+    header: 'Step-by-step instructions'
+  chapter5:
+    header: 'Further options'
+
 page:
   admin: 'Administration'
+  createRecipe: 'New recipe'
   home: 'Home'
   lists: 'Lists'
   random: 'Random recipe'

@@ -38,15 +38,10 @@ class Recipe implements IRecipe, IDbObject {
     $this->published = (!is_null($dr['recipe_published']) ? new DateTime($dr['recipe_published']) : null);
   }
 
-  public function addIngredients(IIngredient &$ingredient, ?IUnit &$unit, array $record) : void {
-    $this->ingredients[] = [
-      'Ingredient' => $ingredient,
-      'Unit' => $unit,
-      'Amount' => floatval($record['entry_amount']),
-      'AmountStr' => Formatter::float_format(floatval($record['entry_amount']), (is_null($unit) ? 0 : $unit->getDecimals())),
-      'Title' => $record['entry_title'],
-      'Prefix' => $record['entry_prefix'],
-      'Suffix' => $record['entry_suffix'],
+  public function addIngredients(array $record) : void {
+    $this->ingredients[intval($record['ingredient_id'])] = [
+      'Amount' => $record['ingredient_amount'],
+      'Description' => $record['ingredient_content'],
     ];
   }
 

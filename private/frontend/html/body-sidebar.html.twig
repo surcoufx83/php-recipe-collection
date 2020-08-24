@@ -13,6 +13,11 @@
                   {{ Config.Icons.Home.getIcon('fa-fw mr-2')|raw }} {{ constant('lang::page_home') }}
                 </a>
               </li>
+              <li>
+                <a href="{{ Controller.getLink('recipe:new') }}">
+                  {{ Config.Icons.Add.getIcon('fa-fw mr-2')|raw }} {{ Controller.l('page_createRecipe') }}
+                </a>
+              </li>
               <li{% if Page.Current == 'private:lists' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:lists') }}">
                   {{ Config.Icons.Files.getIcon('fa-fw mr-2')|raw }} {{ constant('lang::page_lists') }}

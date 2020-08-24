@@ -19,7 +19,6 @@ interface IController {
   public function dbescape($value, bool $includeQuotes = true) : string;
   public function delete(QueryBuilder &$qbuilder) : bool;
   public function get(array $params) : void;
-  public function getIngredient($filter) : ?Ingredient;
   public function getInsertId() : ?int;
   public function getLink($filter) : ?string;
   public function getPicture($filter) : ?Picture;
@@ -27,7 +26,6 @@ interface IController {
   public function getRecipe($filter) : ?Recipe;
   public function getStep($filter) : ?CookingStep;
   public function getTag($filter) : ?Tag;
-  public function getUnit($filter) : ?Unit;
   public function getUser($filter) : ?User;
   public function init() : void;
   public function insert(QueryBuilder &$qbuilder) : bool;

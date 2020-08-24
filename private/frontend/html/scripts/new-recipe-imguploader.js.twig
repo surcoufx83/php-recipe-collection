@@ -1,0 +1,89 @@
+
+  var lastContainerIndex = null;
+  var currentIndex = null;
+  var lastIngredientIndex = null;
+  var imgdummy = null;
+  var ingdummy = null;
+
+  $(function() {
+    imgdummy = $('#image-upload-dummy');
+    ingdummy = $('#ingredient-dummy');
+    createImgCopy(0);
+    for (i=1; i<3; i++) {
+      createIngCopy(i);
+    }
+  });
+
+  $('button#ingredient-add-button').click(function() {
+    createIngCopy(lastIngredientIndex + 1);
+  });
+
+  function createImgCopy(index) {
+    var copy = imgdummy.clone();
+    copy.attr('id', 'image-upload-' + index);
+    copy.attr('data-index', index);
+    var img = copy.find('img');
+    img.attr('id', 'recipe-picture-' + index);
+    var btn = copy.find('button');
+    btn.attr('id', 'image-upload-btn-' + index);
+    btn.attr('data-for', 'recipe-picture-uploader-' + index);
+    btn.attr('data-index', index);
+    var inp = copy.find('input');
+    inp.attr('id', 'recipe-picture-uploader-' + index);
+    lastContainerIndex = index;
+    $('.image-upload-container').append(copy);
+    btn.click(function() {
+      var me = $(this);
+      currentIndex = me.data('index');
+      var uplButton = $('#recipe-picture-uploader-' + currentIndex);
+      if (uplButton.prop('files').length != 0) {
+        $('#image-upload-' + currentIndex).remove();
+        currentIndex = null;
+      } else {
+        uplButton.click();
+      }
+    });
+    inp.change(function() {
+      var input = $(this);
+      var files = !!this.files ? this.files : [];
+      if (!files.length || !window.FileReader) return;
+      if (/^image/.test( files[0].type)) {
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+        reader.onloadend = function() {
+          $('#recipe-picture-' + currentIndex).css("content", "url(" + this.result + ")");
+          var btn = $('#image-upload-btn-' + currentIndex);
+          btn.find('span.span-upload').addClass('d-none');
+          btn.find('span.span-delete').removeClass('d-none');
+          createImgCopy(currentIndex + 1);
+        }
+      }
+    });
+    copy.removeClass('d-none');
+  }
+
+  function createIngCopy(index) {
+    var copy = ingdummy.clone();
+    copy.removeAttr('id');
+    var row = copy.find('div.row');
+    row.attr('id', 'ingredient-' + index);
+    row.attr('data-index', index);
+    var inp1 = copy.find('input.ingredient-amount');
+    inp1.attr('id', 'ingredient-amount-' + index);
+    inp1.attr('data-index', index);
+    var inp2 = copy.find('input.ingredient-subject');
+    inp2.attr('id', 'ingredient-description-' + index);
+    inp2.attr('data-index', index);
+    var btn = copy.find('button.ingredient-delete');
+    btn.attr('id', 'ingredient-delete-' + index);
+    btn.attr('data-for', 'ingredient-' + index);
+    btn.attr('data-index', index);
+    $('#ingredients-container div.list-group-item:last').before(copy);
+    lastIngredientIndex = index;
+    btn.click(function() {
+      var me = $(this);
+      var fore = me.data('for');
+      $('#' + fore).parent().remove();
+    });
+    copy.removeClass('d-none');
+  }

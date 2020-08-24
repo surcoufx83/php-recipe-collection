@@ -16,13 +16,11 @@ class Controller implements IController {
   private $database, $currentUser;
   private $config, $dispatcher, $langcode;
 
-  private $ingredients = array();
   private $pictures = array();
   private $ratings = array();
   private $recipes = array();
   private $steps = array();
   private $tags = array();
-  private $units = array();
   private $users = array();
 
   private $changedObjects = array();
@@ -58,18 +56,6 @@ class Controller implements IController {
 
   public function get(array $params) : void {
     $this->dispatcher->get($params);
-  }
-
-  public function getIngredient($filter) : ?Ingredient {
-    if (is_integer($filter)) {
-      if (!array_key_exists($filter, $this->ingredients))
-        return $this->loadIngredient($filter);
-      else
-        return $this->ingredients[$filter];
-    }
-    if (is_array($filter))
-      return $this->registerIngredient(null, $filter);
-    return null;
   }
 
   public function getInsertId() : ?int {
@@ -180,6 +166,10 @@ class Controller implements IController {
 
   private function getLink_Recipe(array $params) : ?string {
     switch($params[1]) {
+      case 'new':
+        return '/recipe/new';
+      case 'postnew':
+        return '/recipe/new';
       case 'publish':
         return '/recipe/publish/'.$params[2];
       case 'show':
@@ -255,18 +245,6 @@ class Controller implements IController {
     }
     if (is_array($filter))
       return $this->registerTag(null, $filter);
-    return null;
-  }
-
-  public function getUnit($filter) : ?Unit {
-    if (is_integer($filter)) {
-      if (!array_key_exists($filter, $this->units))
-        return $this->loadUnit($filter);
-      else
-        return $this->units[$filter];
-    }
-    if (is_array($filter))
-      return $this->registerUnit(null, $filter);
     return null;
   }
 
@@ -357,16 +335,6 @@ class Controller implements IController {
     return lang($key, $params);
   }
 
-  private function loadIngredient(int $id) : ?Ingredient {
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'ingredients', DB_ANY);
-    $query->where('ingredients', 'ing_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
-      return $this->registerIngredient(intval($record['ing_id']), $record);
-    }
-    return $this->registerIngredient($id);
-  }
-
   private function loadPicture(int $id) : ?Picture {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_pictures', DB_ANY);
     $query->where('recipe_pictures', 'picture_id', '=', $id);
@@ -398,22 +366,12 @@ class Controller implements IController {
   }
 
   public function loadRecipeIngredients(Recipe &$recipe) : void {
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'ingredients', DB_ANY);
-    $query->select('recipe_ingredients', DB_ANY)
-          ->select('units', DB_ANY)
-          ->join('recipe_ingredients',
-            ['recipe_ingredients', 'ing_id', '=', 'ingredients', 'ing_id'],
-            ['AND', 'recipe_ingredients', 'recipe_id', '=', $recipe->getId()])
-          ->joinLeft('units', ['units', 'unit_id', '=', 'recipe_ingredients', 'unit_id']);
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ingredients', DB_ANY);
+    $query->where('recipe_ingredients', 'recipe_id', '=', $recipe->getId());
     $result = $this->select($query);
     if ($result) {
       while ($record = $result->fetch_assoc()) {
-        $ingredient = $this->getIngredient($record);
-        if (!is_null($record['unit_id']))
-          $unit = $this->getUnit($record);
-        else
-          $unit = null;
-        $recipe->addIngredients($ingredient, $unit, $record);
+        $recipe->addIngredients($record);
       }
     }
   }
@@ -491,16 +449,6 @@ class Controller implements IController {
       return $this->registerTag(intval($record['tag_id']), $record);
     }
     return $this->registerTag($id);
-  }
-
-  private function loadUnit(int $id) : ?Unit {
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'units', DB_ANY);
-    $query->where('units', 'unit_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
-      return $this->registerUnit(intval($record['unit_id']), $record);
-    }
-    return $this->registerUnit($id);
   }
 
   private function loadUser(int $id) : ?User {
@@ -668,19 +616,6 @@ class Controller implements IController {
     }
     $this->tags[$id] = new Tag($record);
     return $this->tags[$id];
-  }
-
-  private function registerUnit(?int $id, array $record=null) : ?Unit {
-    if (is_null($id) && is_array($record))
-      $id = intval($record['unit_id']);
-    if (array_key_exists($id, $this->units))
-      return $this->units[$id];
-    if (is_null($record)) {
-      $this->units[$id] = null;
-      return null;
-    }
-    $this->units[$id] = new Unit($record);
-    return $this->units[$id];
   }
 
   private function registerUser(?int $id, array $record=null) : ?User {
