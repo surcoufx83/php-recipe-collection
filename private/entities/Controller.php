@@ -3,6 +3,8 @@
 namespace Surcouf\PhpArchive;
 
 use Surcouf\PhpArchive\Config;
+use Surcouf\PhpArchive\Config\Icon;
+use Surcouf\PhpArchive\Config\IconConfig;
 use Surcouf\PhpArchive\Database\DbConf;
 use Surcouf\PhpArchive\Database\EAggregationType;
 use Surcouf\PhpArchive\Database\EQueryType;
@@ -25,7 +27,7 @@ class Controller implements IController {
 
   private $changedObjects = array();
 
-  public function Config() : Config\Configuration {
+  public function Config() : Config {
     return $this->config;
   }
 
@@ -258,36 +260,23 @@ class Controller implements IController {
     if (is_string($filter)) {
       return $this->loadUsername($filter);
     }
-    var_dump($filter);
-    //debug_print_backtrace();
-    exit;
-    // tbd
     return null;
   }
 
   public function init() : void {
+    global $i18n;
+    $this->langcode = $i18n->getAppliedLang();
     if (!$this->init_Database())
       exit;
     if (!$this->init_Config())
       exit;
     if (!$this->init_Dispatcher())
       exit;
-    global $i18n;
-    $this->langcode = $i18n->getAppliedLang();
   }
 
   private function init_Config() : bool {
-    $this->config = new Config\Configuration();
-    $result = null;
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'config', DB_ANY);
-    $query->orderBy(['parent_id', 'config_id']);
-    $result = $this->select($query);
-    if (!$result)
-      return false;
-    while ($record = $result->fetch_assoc()) {
-      $this->config->addChild($record);
-    }
-    define('MAINTENANCE', $this->config->Maintenance->Enabled->getBool());
+    $this->config = new Config();
+    define('MAINTENANCE', $this->config->MaintenanceMode);
     return true;
   }
 
@@ -489,13 +478,13 @@ class Controller implements IController {
   private function loginWithCookies() : bool {
     if (count($_COOKIE) == 0)
       return false;
-    if (!array_key_exists($this->config->Cookies->User->getString(), $_COOKIE) ||
-        !array_key_exists($this->config->Cookies->Session->getString(), $_COOKIE) ||
-        !array_key_exists($this->config->Cookies->Password->getString(), $_COOKIE)) {
+    if (!array_key_exists($this->config->UserCookieName, $_COOKIE) ||
+        !array_key_exists($this->config->SessionCookieName, $_COOKIE) ||
+        !array_key_exists($this->config->PasswordCookieName, $_COOKIE)) {
       return false;
     }
-    $user = $this->loadUsername($_COOKIE[$this->config->Cookies->User->getString()]);
-    if (is_null($user) || !$user->verifySession($_COOKIE[$this->config->Cookies->Session->getString()], $_COOKIE[$this->config->Cookies->Password->getString()])) {
+    $user = $this->loadUsername($_COOKIE[$this->config->UserCookieName]);
+    if (is_null($user) || !$user->verifySession($_COOKIE[$this->config->SessionCookieName], $_COOKIE[$this->config->PasswordCookieName])) {
       $this->removeCookies();
       return false;
     }
@@ -663,12 +652,12 @@ class Controller implements IController {
     $expires = 0;
     if ($longDuration) {
       global $NOW;
-      $expdatetime = $NOW->add($this->config->Cookies->ExpirationLong->getTimespan());
+      $expdatetime = $NOW->add($this->config->SessionLongExpirationTime);
       $expires = $expdatetime->getTimestamp();
     }
-    return ($this->setCookie($this->config->Cookies->User->getString(), $userCookie, $expires)
-      && $this->setCookie($this->config->Cookies->Session->getString(), $tokenCookie, $expires)
-      && $this->setCookie($this->config->Cookies->Password->getString(), $passwordCookie, $expires));
+    return ($this->setCookie($this->config->UserCookieName, $userCookie, $expires)
+      && $this->setCookie($this->config->SessionCookieName, $tokenCookie, $expires)
+      && $this->setCookie($this->config->PasswordCookieName, $passwordCookie, $expires));
   }
 
   public function tearDown() : void {
