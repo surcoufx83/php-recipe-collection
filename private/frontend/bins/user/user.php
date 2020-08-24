@@ -49,12 +49,8 @@ function post_login() {
     $keepSession = ($_POST['keepSession'] == 'true');
   }
 
-  if (array_key_exists('agreedStatement', $_POST)) {
-    $agreedStatement = ($_POST['agreedStatement'] == 'true');
-  }
-
   if ($password != null && $username != null) {
-    if (!$Controller->loginWithPassword($username, $password, $keepSession, $agreedStatement, $response))
+    if (!$Controller->loginWithPassword($username, $password, $keepSession, true, $response))
       $Controller->Dispatcher()->exitJson($response);
   }
 

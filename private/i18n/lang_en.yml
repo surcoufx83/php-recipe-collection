@@ -67,6 +67,23 @@ page:
   createRecipe: 'New recipe'
   home: 'Home'
   lists: 'Lists'
+  login:
+    failed:
+      loginFailed: 'Login failed.'
+    keepSession:
+      description: 'Your login remains valid even after closing the browser.'
+      title: 'Stay logged in.'
+    nameField:
+      invalidFeedback: 'Please enter your user name.'
+      placeholder: 'Username or e-mail address'
+    lostPassword:
+      title: 'Lost your password?'
+    passwordField:
+      invalidFeedback: 'Please enter your password.'
+      placeholder: 'Password'
+    submitButton:
+      title: 'Login'
+    title: 'User Login'
   random: 'Random recipe'
   search: 'Search'
 
@@ -89,3 +106,23 @@ recipe:
       unpublish: 'Reject publication'
   cookingSteps:
     header: 'Preparation'
+
+response:
+  badArgumentsException: 'Bad arguments provided.'
+  badRequestException: 'Bad request.'
+  dbInsertException: 'Error inserting some data into the database.'
+  dbSelectException: 'An error occurred when retrieving records from the database.'
+  dbStmtException: 'Error preparing db statement.'
+  dbUpdateException: 'Error when saving the changes to the database.'
+  functionNotFoundException: 'The page you are trying to access is currently not working: the specified function is not available.'
+  insufficientPermissionException: 'Insufficient permission for this action.'
+  loginFailed: 'Login failed.'
+  loginSuccessfull: 'Login successfull.'
+  maintenanceException: 'Maintenance mode enabled.'
+  noApiKeyException: 'Access requires logon token. Please log in via the website first before attempting API access.'
+  noChanges: 'No changes were detected.'
+  noResults: 'No results for the search query.'
+  notAuthenticatedException: 'User not authenticated.'
+  pageMovedException: 'The requested page has been moved and can no longer be retrieved via web request or CLI.'
+  parameterException: 'No processing is configured for the specified parameters.'
+  undefinedException: 'An unspecified error has occurred in the backend. Your changes were not accepted.'

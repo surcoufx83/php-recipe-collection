@@ -12,8 +12,7 @@
 
         var userok = checkUsernameField();
         var passok = checkPasswordField();
-        var agreok = checkAgreementField();
-        if (!userok || !passok || !agreok)
+        if (!userok || !passok)
           return;
 
         running = true;
@@ -22,13 +21,11 @@
         var username = $('#login-user').val();
         var password = $('#login-password').val();
         var keep = ($('#login-keepsession').prop('checked'));
-        var accept = ($('#login-agreement').prop('checked'));
 
         $.ajax({
           method: 'POST',
           url: '/login',
           data: {
-            'agreedStatement': accept,
             'keepSession': keep,
             'loginPassword': password,
             'loginUsername': username
@@ -38,11 +35,11 @@
             successlogin();
             location.replace('/');
           } else {
-            easytooltip($('#login-submit-button'), 'Anmeldung fehlgeschlagen', 'error');
+            easytooltip($('#login-submit-button'), '{{ Controller.l("page_login_failed_loginFailed") }}', 'error');
           }
           finishlogin();
         }).fail(function(obj, error, errno) {
-          easytooltip($('#login-submit-button'), 'Anmeldung fehlgeschlagen', 'error');
+          easytooltip($('#login-submit-button'), '{{ Controller.l("page_login_failed_loginFailed") }}', 'error');
           finishlogin();
         });
 
@@ -67,19 +64,6 @@
         button.removeClass('btn-secondary');
         button.addClass('btn-success');
         spinner.addClass('d-none');
-      }
-
-      function checkAgreementField() {
-        var obj = $('#login-agreement');
-        if (obj.prop('checked')) {
-          $('#login-agreement-feedback').removeClass('d-block');
-          $('#login-agreement-unchecked').removeClass('text-danger');
-          return true;
-        } else {
-          $('#login-agreement-feedback').addClass('d-block');
-          $('#login-agreement-unchecked').addClass('text-danger');
-          return false;
-        }
       }
 
       function checkPasswordField() {
@@ -112,34 +96,13 @@
         return true;
       }
 
-      $('#login-agreement-checked').click(function() {
-        check_agreement();
-      });
-
       $('#login-keepsession-checked').click(function() {
         check_session();
-      });
-
-      $('#login-agreement-unchecked').click(function() {
-        check_agreement();
       });
 
       $('#login-keepsession-unchecked').click(function() {
         check_session();
       });
-
-      function check_agreement() {
-        var container = $('#login-agreement');
-        if (container.data('value') == 1) {
-          container.data('value', 0);
-          $('#login-agreement-unchecked').removeClass('d-none');
-          $('#login-agreement-checked').addClass('d-none');
-        } else {
-          container.data('value', 1);
-          $('#login-agreement-checked').removeClass('d-none');
-          $('#login-agreement-unchecked').addClass('d-none');
-        }
-      }
 
       function check_session() {
         var container = $('#login-keepSession');

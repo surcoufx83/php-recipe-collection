@@ -2,281 +2,59 @@
     <div class="container">
       <div class="row pb-3">
         <div class="col-12 col-md-6">
-          <h3 class="mb-3 font-weight-bold">Anmeldung</h3>
+          <h3 class="mb-3 font-weight-bold">{{ Controller.l('page_login_title') }}</h3>
           <form id="login-form" action="#">
             <div class="form-group mb-3">
               <div class="input-group mb-2">
                 <div class="input-group-prepend">
-                  <div class="input-group-text">{{ Config.Icons.At.getIcon('fa-fw')|raw }}</div>
+                  <div class="input-group-text">{{ Config.Icons().Authentication('fa-fw')|raw }}</div>
                 </div>
                 <input type="text" class="form-control" id="login-user"
-                  name="login-user" placeholder="Benutzername oder E-Mail-Adresse"
+                  name="login-user" placeholder="{{ Controller.l('page_login_nameField_placeholder') }}"
                   value="" autofocus autocomplete="username" maxlength="32" />
                 <div class="invalid-feedback" style="padding-left:48px;"
                   id="login-user-feedback">
-                  Bitte geben Sie Ihren Benutzernamen an.
+                  {{ Controller.l('page_login_nameField_invalidFeedback') }}
                 </div>
               </div>
             </div>
             <div class="form-group mb-3">
               <div class="input-group mb-2">
                 <div class="input-group-prepend">
-                  <div class="input-group-text">{{ Config.Icons.Secret.getIcon('fa-fw')|raw }}</div>
+                  <div class="input-group-text">{{ Config.Icons.Password('fa-fw')|raw }}</div>
                 </div>
                 <input type="password" class="form-control" id="login-password"
-                  name="login-password" placeholder="Passwort" value=""
+                  name="login-password" placeholder="{{ Controller.l('page_login_passwordField_placeholder') }}" value=""
                   autocomplete="current-password" />
                 <div class="invalid-feedback" style="padding-left:48px;"
                   id="login-password-feedback">
-                  Bitte tragen Sie Ihr Passwort ein.
+                  {{ Controller.l('page_login_passwordField_invalidFeedback') }}
                 </div>
               </div>
             </div>
             <div class="row mb-3">
               <div class="col-6">
                 <input class="ml-0 form-check-input" type="checkbox" value="1"
-                  id="login-keepsession" name="login-keepsession" {% if Config.LoginPage.DefaultStayLoggedin.getBool() %}checked{% endif %} />
+                  id="login-keepsession" name="login-keepsession" />
                 <span class="ml-4 form-check-label" data-toggle="tooltip"
-                  data-placement="right" title="Ihre Anmeldung bleibt auch nach
-                  dem Schließen des Browsers gültig." for="login-keepsession">
-                  Angemeldet bleiben
-                  <sup class="text-blue">{{ Config.Icons.Question.getIcon('fa-fw fa-sm')|raw }}</sup>
+                  data-placement="right" title="{{ Controller.l('page_login_keepSession_description') }}" for="login-keepsession">
+                  {{ Controller.l('page_login_keepSession_title') }}
+                  <sup class="text-blue">{{ Config.Icons.QuestionMark('fa-fw fa-sm')|raw }}</sup>
                 </span>
               </div>
               <div class="col-6 text-right">
-                <a class="small" href="/password-lost">Passwort vergessen?</a>
-              </div>
-            </div>
-            <div class="row mb-3">
-              <div class="col-12">
-                <input class="ml-0 form-check-input" type="checkbox" value="1"
-                  id="login-agreement" name="login-agreement" {% if Config.LoginPage.DefaultCookiesAccepted.getBool() %}checked{% endif %} />
-                <span class="ml-4 form-check-label" for="login-agreement">
-                  Mit der Anmeldung an die Plattform erkläre ich mein Einverständnis
-                  mit der <a href="#agreement">untenstehenden Datenschutzerklärung</a>
-                  und der Verwendung von Cookies.
-                </span>
-                <div class="invalid-feedback" id="login-agreement-feedback">
-                  Bitte lesen und akzeptieren Sie die Datenschutzerklärung.
-                </div>
-                <br /><br />
+                <a class="small" href="/password-lost">{{ Controller.l('page_login_lostPassword_title') }}</a>
               </div>
             </div>
             <div class="row mb-3">
               <div class="col">
                 <button type="submit" id="login-submit-button" class="btn btn-blue font-weight-bold">
-                  {{ Config.Icons.Spinner.getIcon('fa-fw fa-spin d-none', '', 'login-submit-spinner')|raw }}
-                  Anmeldung
+                  {{ Config.Icons.Spinner('fa-fw fa-spin d-none', '', 'login-submit-spinner')|raw }}
+                  {{ Controller.l('page_login_submitButton_title') }}
                 </button>
               </div>
             </div>
           </form>
-        </div>
-      </div>
-      <div class="row py-3 border-top border-bottom">
-        <div class="col-12 col-md-6">
-          <h3 class="mb-3 font-weight-bold">Neu hier?</h3>
-          Diese Webseite kann nur mit einem Benutzeraccount verwendet werden.<br />
-          Sie können sich über den nachfolgenden Button registrieren.
-          <br /><br />
-          <a href="/register" class="btn btn-outline-blue font-weight-bold" role="button">Registrieren</a>
-        </div>
-      </div>
-      <a name="agreement"></a>
-      <div class="row pt-3">
-        <div class="col-12 py-2">
-          <h4>Datenschutzerklärung</h4>
-          <p class="text-muted">Fassung 1.0 vom 23.05.2020</p>
-
-          <h5>Allgemeiner Hinweis und Pflichtinformationen</h5>
-
-          <h5>Benennung der verantwortlichen Stelle</h5>
-          <p>
-            Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:
-            <address>
-              Archive-Service ...<br />
-              Stefan Fuchs<br />
-              .... ..... ...<br />
-              ..... ......<br />
-            </address>
-            Die verantwortliche Stelle entscheidet allein oder gemeinsam mit anderen
-            über die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten
-            (z.B. Namen, Kontaktdaten o. Ä.).
-          </p>
-
-          <h5>Widerruf Ihrer Einwilligung zur Datenverarbeitung</h5>
-          <p>
-            Nur mit Ihrer ausdrücklichen Einwilligung sind einige Vorgänge der
-            Datenverarbeitung möglich. Ein Widerruf Ihrer bereits erteilten Einwilligung
-            ist jederzeit möglich. Für den Widerruf genügt eine formlose Mitteilung
-            per E-Mail. Die Rechtmäßigkeit der bis zum Widerruf erfolgten
-            Datenverarbeitung bleibt vom Widerruf unberührt.
-          </p>
-
-          <h5>Recht auf Beschwerde bei der zuständigen Aufsichtsbehörde</h5>
-          <p>
-            Als Betroffener steht Ihnen im Falle eines datenschutzrechtlichen
-            Verstoßes ein Beschwerderecht bei der zuständigen Aufsichtsbehörde
-            zu. Zuständige Aufsichtsbehörde bezüglich datenschutzrechtlicher
-            Fragen ist der Landesdatenschutzbeauftragte des Bundeslandes, in dem
-            sich der Sitz unseres Unternehmens befindet. Der folgende Link stellt
-            eine Liste der Datenschutzbeauftragten sowie deren Kontaktdaten
-            bereit: <a href="https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html"
-              target="_blank">https://www.bfdi.bund.de/DE/Infothek/Anschriften_Links/anschriften_links-node.html</a>.
-          </p>
-
-          <h5>Recht auf Datenübertragbarkeit</h5>
-          <p>
-            Ihnen steht das Recht zu, Daten, die wir auf Grundlage Ihrer Einwilligung
-            oder in Erfüllung eines Vertrags automatisiert verarbeiten, an sich
-            oder an Dritte aushändigen zu lassen. Die Bereitstellung erfolgt in
-            einem maschinenlesbaren Format. Sofern Sie die direkte Übertragung der
-            Daten an einen anderen Verantwortlichen verlangen, erfolgt dies nur,
-            soweit es technisch machbar ist.
-          </p>
-
-          <h5>Recht auf Auskunft, Berichtigung, Sperrung, Löschung</h5>
-          <p>
-            Sie haben jederzeit im Rahmen der geltenden gesetzlichen Bestimmungen
-            das Recht auf unentgeltliche Auskunft über Ihre gespeicherten personenbezogenen
-            Daten, Herkunft der Daten, deren Empfänger und den Zweck der Datenverarbeitung
-            und ggf. ein Recht auf Berichtigung, Sperrung oder Löschung dieser Daten.
-            Diesbezüglich und auch zu weiteren Fragen zum Thema personenbezogene
-            Daten können Sie sich jederzeit über die im Impressum aufgeführten
-            Kontaktmöglichkeiten an uns wenden.
-          </p>
-
-          <h5>SSL- bzw. TLS-Verschlüsselung</h5>
-          <p>
-            Aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher
-            Inhalte, die Sie an uns als Seitenbetreiber senden, nutzt unsere
-            Website eine SSL- bzw. TLS-Verschlüsselung. Damit sind Daten, die Sie
-            über diese Website übermitteln, für Dritte nicht mitlesbar. Sie erkennen
-            eine verschlüsselte Verbindung an der „https://“ Adresszeile Ihres
-            Browsers und am Schloss-Symbol in der Browserzeile.
-          </p>
-
-          <h5>Server-Log-Dateien</h5>
-          <p>
-            In Server-Log-Dateien erhebt und speichert der Provider der Website
-            automatisch Informationen, die Ihr Browser automatisch an uns übermittelt.
-            Dies sind:<br />
-            <ul>
-              <li>Besuchte Seite auf unserer Domain</li>
-              <li>Datum und Uhrzeit der Serveranfrage</li>
-              <li>Browsertyp und Browserversion</li>
-              <li>Verwendetes Betriebssystem</li>
-              <li>Referrer URL</li>
-              <li>Hostname des zugreifenden Rechners</li>
-              <li>IP-Adresse</li>
-            </ul>
-            Es findet keine Zusammenführung dieser Daten mit anderen Datenquellen
-            statt. Grundlage der Datenverarbeitung bildet Art. 6 Abs. 1 lit. b
-            DSGVO, der die Verarbeitung von Daten zur Erfüllung eines Vertrags
-            oder vorvertraglicher Maßnahmen gestattet.
-          </p>
-
-          <h5>Registrierung auf dieser Website</h5>
-          <p>
-            Zur Nutzung bestimmter Funktionen können Sie sich auf unserer Website
-            registrieren. Die übermittelten Daten dienen ausschließlich zum Zwecke
-            der Nutzung des jeweiligen Angebotes oder Dienstes. Bei der Registrierung
-            abgefragte Pflichtangaben sind vollständig anzugeben. Andernfalls
-            werden wir die Registrierung ablehnen.
-          </p>
-          <p>
-            Im Falle wichtiger Änderungen, etwa aus technischen Gründen, informieren
-            wir Sie per E-Mail. Die E-Mail wird an die Adresse versendet, die bei
-            der Registrierung angegeben wurde.
-          </p>
-          <p>
-            Die Verarbeitung der bei der Registrierung eingegebenen Daten erfolgt
-            auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Ein
-            Widerruf Ihrer bereits erteilten Einwilligung ist jederzeit möglich.
-            Für den Widerruf genügt eine formlose Mitteilung per E-Mail. Die
-            Rechtmäßigkeit der bereits erfolgten Datenverarbeitung bleibt vom
-            Widerruf unberührt.
-          </p>
-          <p>
-            Wir speichern die bei der Registrierung erfassten Daten während des
-            Zeitraums, den Sie auf unserer Website registriert sind. Ihren Daten
-            werden gelöscht, sollten Sie Ihre Registrierung aufheben. Gesetzliche
-            Aufbewahrungsfristen bleiben unberührt.
-          </p>
-
-          <h5>Kontaktformular</h5>
-          <p>
-            Per Kontaktformular übermittelte Daten werden einschließlich Ihrer
-            Kontaktdaten gespeichert, um Ihre Anfrage bearbeiten zu können oder
-            um für Anschlussfragen bereitzustehen. Eine Weitergabe dieser Daten
-            findet ohne Ihre Einwilligung nicht statt.
-          </p>
-          <p>
-            Die Verarbeitung der in das Kontaktformular eingegebenen Daten erfolgt
-            ausschließlich auf Grundlage Ihrer Einwilligung (Art. 6 Abs. 1 lit.
-            a DSGVO). Ein Widerruf Ihrer bereits erteilten Einwilligung ist
-            jederzeit möglich. Für den Widerruf genügt eine formlose Mitteilung
-            per E-Mail. Die Rechtmäßigkeit der bis zum Widerruf erfolgten
-            Datenverarbeitungsvorgänge bleibt vom Widerruf unberührt.
-          </p>
-          <p>
-            Über das Kontaktformular übermittelte Daten verbleiben bei uns, bis
-            Sie uns zur Löschung auffordern, Ihre Einwilligung zur Speicherung
-            widerrufen oder keine Notwendigkeit der Datenspeicherung mehr besteht.
-            Zwingende gesetzliche Bestimmungen - insbesondere Aufbewahrungsfristen -
-            bleiben unberührt.
-          </p>
-
-          <h5>Speicherdauer von Beiträgen und Kommentaren</h5>
-          <p>
-            Beiträge und Kommentare sowie damit in Verbindung stehende Daten,
-            wie beispielsweise IP-Adressen, werden gespeichert. Der Inhalt verbleibt
-            auf unserer Website, bis er vollständig gelöscht wurde oder aus
-            rechtlichen Gründen gelöscht werden musste.
-          </p>
-          <p>
-            Die Speicherung der Beiträge und Kommentare erfolgt auf Grundlage
-            Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Ein Widerruf Ihrer
-            bereits erteilten Einwilligung ist jederzeit möglich. Für den Widerruf
-            genügt eine formlose Mitteilung per E-Mail. Die Rechtmäßigkeit bereits
-            erfolgter Datenverarbeitungsvorgänge bleibt vom Widerruf unberührt.
-          </p>
-
-          <h5>Cookies</h5>
-          <p>
-            Unsere Website verwendet Cookies. Das sind kleine Textdateien, die Ihr
-            Webbrowser auf Ihrem Endgerät speichert. Cookies helfen uns dabei,
-            unser Angebot nutzerfreundlicher, effektiver und sicherer zu machen.
-          </p>
-          <p>
-            Einige Cookies sind “Session-Cookies”. Solche Cookies werden nach
-            Ende Ihrer Browser-Sitzung von selbst gelöscht. Wenn Sie die Option
-            <i>"Angemeldet bleiben"</i>
-            angekreuzt haben, bleiben diese auf Ihrem Endgerät bestehen, bis Sie
-            diese selbst löschen. Solche Cookies helfen uns, Sie bei Rückkehr
-            auf unserer Website wiederzuerkennen.
-          </p>
-          <p>
-            Mit einem modernen Webbrowser können Sie das Setzen von Cookies
-            überwachen, einschränken oder unterbinden. Viele Webbrowser lassen
-            sich so konfigurieren, dass Cookies mit dem Schließen des Programms
-            von selbst gelöscht werden. Die Deaktivierung von Cookies kann eine
-            eingeschränkte Funktionalität unserer Website zur Folge haben.
-          </p>
-          <p>
-            Das Setzen von Cookies, die zur Ausübung elektronischer
-            Kommunikationsvorgänge oder der Bereitstellung bestimmter, von Ihnen
-            erwünschter Funktionen (z.B. Warenkorb) notwendig sind, erfolgt auf
-            Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Als Betreiber dieser Website
-            haben wir ein berechtigtes Interesse an der Speicherung von Cookies
-            zur technisch fehlerfreien und reibungslosen Bereitstellung unserer
-            Dienste. Sofern die Setzung anderer Cookies (z.B. für Analyse-Funktionen)
-            erfolgt, werden diese in dieser Datenschutzerklärung separat behandelt.
-          </p>
-
-          <p></p>
-          <p><small>Quelle: Datenschutz-Konfigurator von <a href="http://www.mein-datenschutzbeauftragter.de" target="_blank">mein-datenschutzbeauftragter.de</a></small></p>
-
         </div>
       </div>
     </div>

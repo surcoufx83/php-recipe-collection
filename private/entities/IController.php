@@ -12,7 +12,7 @@ if (!defined('CORE2'))
 
 interface IController {
 
-  public function Config() : Config\Configuration;
+  public function Config() : Config;
   public function Dispatcher() : Dispatcher;
   public function User() : ?User;
 

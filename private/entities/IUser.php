@@ -20,8 +20,6 @@ interface IUser {
   public function getName() : string;
   public function getSession() : ?Session;
   public function getUsername() : string;
-  public function loadFiles(int $folder, $tenant = null) : array;
-  public function loadFolders(int $parent, $tenant = null) : array;
   public function verify($password) : bool;
   public function verifySession(string $session_token, string $session_password) : bool;
 
