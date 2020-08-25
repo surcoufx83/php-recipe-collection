@@ -148,8 +148,8 @@ class Controller implements IController {
     switch($params[1]) {
       case 'avatar':
         return '/pictures/avatars/'.$params[2];
-      case 'lists':
-        return '/lists';
+      case 'books':
+        return '/books';
       case 'login':
         return '/login';
       case 'logout':

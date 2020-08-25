@@ -42,12 +42,16 @@ newRecipe:
     recipeTagsDescription: 'Tags mark a recipe with short keywords. Any number of these tags can be assigned to each recipe (e.g. \'Dinner\' and \'For two\'); Optional'
     recipeTagsSelect: 'No tag selected.'
   chapter2:
+    addButton:
+      title: 'Click to add more ingredients.'
     amount:
       header: 'Quantity'
-      placeholder: 'z.B. 500 g'
+      placeholder: 'eg. 500 g'
+    delButton:
+      title: 'Click to remove this line.'
     ingredient:
       header: 'Ingredient'
-      placeholder: 'z.B. beef goulash'
+      placeholder: 'eg. beef goulash'
     header: 'List of ingredients'
     description: 'List all ingredients required for the recipe below. You can also leave out the quantity (e.g. for some salt to season).'
   chapter3:
@@ -57,10 +61,30 @@ newRecipe:
     recipePicturesRemove: 'Remove'
     recipePicturesUpload: 'Add picture'
   chapter4:
+    addButton:
+      title: 'Click to insert another work step.'
     description: 'Use this section to describe the steps of the preparation. You can put everything in one block or create several steps using the plus sign.'
     header: 'Step-by-step instructions'
+    step:
+      preparation:
+        description: 'Instructions'
+        invalidFeedback: 'Please provide some information about the preparation.'
+        placeholder: 'Please fill in a detailed description of the preparation here.'
+      title:
+        description: 'Headline for this section'
+        placeholder: 'Fill in a short headline here.'
   chapter5:
     header: 'Further options'
+
+navigation:
+  topbar:
+    search:
+      placeholder: 'Search'
+    user:
+      account: 'My account'
+      login: 'Login'
+      logout: 'Logout'
+      settings: 'My preferences'
 
 page:
   admin: 'Administration'

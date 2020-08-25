@@ -42,9 +42,13 @@ newRecipe:
     recipeTagsDescription: 'Tags markieren ein Rezept mit kurzen Schlagwörtern. Jedem Rezept können beliebig viele dieser Tags zugeordnet werden (z.B. \'Dinner\' und \'Für Zwei\').; Optional'
     recipeTagsSelect: 'Kein Tag gewählt.'
   chapter2:
+    addButton:
+      title: 'Anklicken um weitere Zutaten hinzuzufügen.'
     amount:
       header: 'Menge'
       placeholder: 'z.B. 500 g'
+    delButton:
+      title: 'Anklicken um diese Zeile zu entfernen.'
     ingredient:
       header: 'Zutat'
       placeholder: 'z.B. Rindergulasch'
@@ -57,16 +61,36 @@ newRecipe:
     recipePicturesRemove: 'Entfernen'
     recipePicturesUpload: 'Hinzufügen'
   chapter4:
+    addButton:
+      title: 'Anklicken um einen weiteren Arbeitsschritt einzufügen.'
     description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen.'
     header: 'Schritt-für-Schritt Anleitung'
+    step:
+      preparation:
+        description: 'Anweisungen'
+        invalidFeedback: 'Bitte gib einige Informationen über die Zubereitung an.'
+        placeholder: 'Bitte fülle hier eine detaillierte Beschreibung der Vorbereitung aus.'
+      title:
+        description: 'Überschrift für diesen Abschnitt'
+        placeholder: 'Trage hier eine kurze Überschrift ein.'
   chapter5:
     header: 'Weitere Optionen'
 
+navigation:
+  topbar:
+    search:
+      placeholder: 'Suche'
+    user:
+      account: 'Account'
+      login: 'Anmelden'
+      logout: 'Abmelden'
+      settings: 'Einstellungen'
+
 page:
   admin: 'Administration'
+  books: 'Meine Kochbücher'
   createRecipe: 'Neues Rezept'
   home: 'Start'
-  lists: 'Listen'
   login:
     failed:
       loginFailed: 'Anmeldung fehlgeschlagen.'

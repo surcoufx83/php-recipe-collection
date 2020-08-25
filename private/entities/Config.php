@@ -68,7 +68,11 @@ final class Config {
     ];
   }
 
-  public function __get($propertyName) {
+  public function __call(string $methodName, array $params) {
+    return array_key_exists($methodName, $this->config) ? $this->config[$methodName] : null;
+  }
+
+  public function __get(string $propertyName) {
     return array_key_exists($propertyName, $this->config) ? $this->config[$propertyName] : null;
   }
 

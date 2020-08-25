@@ -3,6 +3,7 @@
 namespace Surcouf\PhpArchive;
 
 use \DateTime;
+use Surcouf\PhpArchive\IRecipe;
 use Surcouf\PhpArchive\Database\EAggregationType;
 use Surcouf\PhpArchive\Database\EQueryType;
 use Surcouf\PhpArchive\Database\QueryBuilder;
@@ -212,6 +213,46 @@ class Recipe implements IRecipe, IDbObject {
     $Controller->loadRecipeRatings($this);
     $Controller->loadRecipeSteps($this);
     $Controller->loadRecipeTags($this);
+  }
+
+  public function setDescription(string $newDescription) : IRecipe {
+    global $Controller;
+    $this->description = $newDescription;
+    $this->changes['recipe_description'] = $newDescription;
+    $Controller->updateDbObject($this);
+    return $this;
+  }
+
+  public function setEaterCount(int $newCount) : IRecipe {
+    global $Controller;
+    $this->eater = $newCount;
+    $this->changes['recipe_eater'] = $newCount;
+    $Controller->updateDbObject($this);
+    return $this;
+  }
+
+  public function setName(string $newName) : IRecipe {
+    global $Controller;
+    $this->name = $newName;
+    $this->changes['recipe_name'] = $newName;
+    $Controller->updateDbObject($this);
+    return $this;
+  }
+
+  public function setSourceDescription(string $newDescription) : IRecipe {
+    global $Controller;
+    $this->sourcedesc = $newDescription;
+    $this->changes['recipe_source_desc'] = $newDescription;
+    $Controller->updateDbObject($this);
+    return $this;
+  }
+
+  public function setSourceUrl(string $newUrl) : IRecipe {
+    global $Controller;
+    $this->sourceurl = $newUrl;
+    $this->changes['recipe_source_url'] = $newUrl;
+    $Controller->updateDbObject($this);
+    return $this;
   }
 
 }

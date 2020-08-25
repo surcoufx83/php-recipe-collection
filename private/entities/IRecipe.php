@@ -41,5 +41,10 @@ interface IRecipe {
   public function getVotingStr() : string;
   public function isPublished() : bool;
   public function loadComplete() : void;
+  public function setDescription(string $newDescription) : IRecipe;
+  public function setEaterCount(int $newCount) : IRecipe;
+  public function setName(string $newName) : IRecipe;
+  public function setSourceDescription(string $newDescription) : IRecipe;
+  public function setSourceUrl(string $newUrl) : IRecipe;
 
 }

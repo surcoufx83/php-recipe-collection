@@ -1,5 +1,7 @@
     <div class="container">
-      <form action="{{ Controller.getlink('recipe:postnew') }}" class="needs-validation" method="post" autocomplete="off" novalidate>
+      <form action="{{ Controller.getlink('recipe:postnew') }}"
+        class="needs-validation" method="post" autocomplete="off" novalidate
+        enctype="multipart/form-data">
         <div class="row justify-content-between">
           <div class="col-12">
             <h4>{{ Controller.l('newRecipe_intro_header') }}</h4>
@@ -80,7 +82,7 @@
                       <span class="span-upload">{{ Controller.l('newRecipe_chapter3_recipePicturesUpload')|raw }}</span>
                       <span class="span-delete d-none">{{ Controller.l('newRecipe_chapter3_recipePicturesRemove')|raw }}</span>
                     </button>
-                    <input type="file" name="pictures" id="recipe-picture-uploader-d" value="Upload Photo"
+                    <input type="file" name="pictures[]" id="recipe-picture-uploader-d" value="Upload Photo"
                       class="image-upload-input" style="width: 0px;height: 0px;overflow: hidden;">
                   </div>
                 </div>
@@ -111,37 +113,38 @@
                   </div>
                 </div>
               </div>
-              <div class="list-group-item">
-                <div class="row" id="ingredient-0" data-index="0">
-                  <div class="col-4 col-lg-3 px-1 px-md-2">
-                    <input type="text" class="form-control form-control-sm"
-                      name="ingredient_amount" id="ingredient-amount-0" data-index="0"
-                      placeholder="{{ Controller.l('newRecipe_chapter2_amount_header') }}">
-                  </div>
-                  <div class="col-7 col-lg-8 px-1 px-md-2">
-                    <input type="text" class="form-control form-control-sm"
-                      name="ingredient_description" id="ingredient-description-0" data-index="0"
-                      placeholder="{{ Controller.l('newRecipe_chapter2_ingredient_header') }}" required>
-                  </div>
-                </div>
-              </div>
               <div class="list-group-item d-none" id="ingredient-dummy">
                 <div class="row" id="ingredient-d" data-index="d">
                   <div class="col-4 col-lg-3 px-1 px-md-2">
                     <input type="text" class="form-control form-control-sm ingredient-amount"
-                      name="ingredient_amount" id="ingredient-amount-d" data-index="d"
+                      name="ingredient_amount[]" id="ingredient-amount-d" data-index="d"
                       placeholder="{{ Controller.l('newRecipe_chapter2_amount_header') }}">
                   </div>
                   <div class="col-7 col-lg-8 px-1 px-md-2">
                     <input type="text" class="form-control form-control-sm ingredient-subject"
-                      name="ingredient_description" id="ingredient-description-d" data-index="d"
+                      name="ingredient_description[]" id="ingredient-description-d" data-index="d"
                       placeholder="{{ Controller.l('newRecipe_chapter2_ingredient_header') }}">
                   </div>
                   <div class="col-1 px-0 px-md-2">
                     <button type="button" data-for="ingredient-d" data-index="d" id="ingredient-delete-d"
-                      class="btn btn-blue btn-sm w-100 ingredient-delete">
-                      {{ Config.Icons.Delete.getIcon('fa-fw')|raw }}
+                      class="btn btn-blue btn-sm w-100 ingredient-delete"
+                      title="{{ Controller.l('newRecipe_chapter2_delButton_title') }}">
+                      {{ Config.Icons.Delete('fa-fw')|raw }}
                     </button>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row" id="ingredient-0" data-index="0">
+                  <div class="col-4 col-lg-3 px-1 px-md-2">
+                    <input type="text" class="form-control form-control-sm"
+                      name="ingredient_amount[]" id="ingredient-amount-0" data-index="0"
+                      placeholder="{{ Controller.l('newRecipe_chapter2_amount_header') }}">
+                  </div>
+                  <div class="col-7 col-lg-8 px-1 px-md-2">
+                    <input type="text" class="form-control form-control-sm"
+                      name="ingredient_description[]" id="ingredient-description-0" data-index="0"
+                      placeholder="{{ Controller.l('newRecipe_chapter2_ingredient_header') }}" required>
                   </div>
                 </div>
               </div>
@@ -149,8 +152,9 @@
                 <div class="row" id="ingredient-add">
                   <div class="col-2 col-lg-1 px-0 px-md-2">
                     <button type="button" id="ingredient-add-button"
-                      class="btn btn-blue btn-sm w-100 ingredient-add">
-                      {{ Config.Icons.Add.getIcon('fa-fw')|raw }}
+                      class="btn btn-blue btn-sm w-100 ingredient-add"
+                      title="{{ Controller.l('newRecipe_chapter2_addButton_title') }}">
+                      {{ Config.Icons.Add('fa-fw')|raw }}
                     </button>
                   </div>
                 </div>
@@ -170,31 +174,58 @@
         <div class="row mb-3">
           <div class="col-12">
             <div class="list-group list-group-flush" id="steps-container">
-              <div class="list-group-item">
+              <div class="list-group-item d-none" id="step-dummy">
                 <div class="form-group row">
-                  <label for="recipe-eater" class="col-form-label-sm col-12 col-lg-3">
-                    <b>Überschrift Abschnitt 1</b>
+                  <label for="step-title-d" class="col-form-label-sm col-12 col-lg-3 step-title-label">
+                    <b>{{ Controller.l('newRecipe_chapter4_step_title_description') }}</b>
                   </label>
                   <div class="col-12 col-lg-8">
-                    <input class="form-control form-control-sm" id="step-title-d" name="step_title"
-                      placeholder="Title for this chapter"
-                      aria-describedby="step-d-invalidFeedback"
-                      required>
-                      <div class="invalid-feedback" id="step-d-invalidFeedback">
-                        {{ Controller.l('newRecipe_chapter1_recipeEaterInvalidFb') }}
-                      </div>
+                    <input class="form-control form-control-sm step-title-input" id="step-title-d" name="step_title[]"
+                      placeholder="{{ Controller.l('newRecipe_chapter4_step_title_placeholder') }}">
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="recipe-eater" class="col-form-label-sm col-12 col-lg-3">
-                    <b>Detaillierte Beschreibung</b>
+                  <label for="step-description-d" class="col-form-label-sm col-12 col-lg-3 step-desc-label">
+                    <b>{{ Controller.l('newRecipe_chapter4_step_preparation_description') }}</b>
                   </label>
                   <div class="col-12 col-lg-8">
-                    <textarea class="form-control form-control-sm h-100px" id="recipe-description" name="description"
-                      placeholder="Ausführliche Beschreibung" required></textarea>
-                      <div class="invalid-feedback" id="step-d-invalidFeedback">
-                        {{ Controller.l('newRecipe_chapter1_recipeEaterInvalidFb') }}
+                    <textarea class="form-control form-control-sm h-100px step-description-input" id="step-description-d" name="step_description[]"
+                      placeholder="{{ Controller.l('newRecipe_chapter4_step_preparation_placeholder') }}"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="form-group row">
+                  <label for="step-title-0" class="col-form-label-sm col-12 col-lg-3">
+                    <b>{{ Controller.l('newRecipe_chapter4_step_title_description') }}</b>
+                  </label>
+                  <div class="col-12 col-lg-8">
+                    <input class="form-control form-control-sm" id="step-title-0" name="step_title[]"
+                      placeholder="{{ Controller.l('newRecipe_chapter4_step_title_placeholder') }}">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="step-description-0" class="col-form-label-sm col-12 col-lg-3">
+                    <b>{{ Controller.l('newRecipe_chapter4_step_preparation_description') }} <span class="text-contrast">*</span></b>
+                  </label>
+                  <div class="col-12 col-lg-8">
+                    <textarea class="form-control form-control-sm h-100px" id="step-description-0" name="step_description[]"
+                      placeholder="{{ Controller.l('newRecipe_chapter4_step_preparation_placeholder') }}" required
+                      aria-describedby="step-0-invalidFeedback"></textarea>
+                      <div class="invalid-feedback" id="step-0-invalidFeedback">
+                        {{ Controller.l('newRecipe_chapter4_step_preparation_invalidFeedback') }}
                       </div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item">
+                <div class="row" id="step-add">
+                  <div class="col-2 col-lg-1 px-0 px-md-2">
+                    <button type="button" id="step-add-button"
+                      class="btn btn-blue btn-sm w-100 step-add"
+                      title="{{ Controller.l('newRecipe_chapter4_addButton_title') }}">
+                      {{ Config.Icons.Add('fa-fw')|raw }}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -224,7 +255,7 @@
                   <b>{{ Controller.l('newRecipe_chapter1_recipeSourceUrl') }}</b><br />
                   <span class="text-muted text-small">{{ Controller.l('newRecipe_chapter1_recipeSourceUrlDescription') }}</span>
                 </label>
-                <input class="form-control form-control-sm" type="text" id="recipe-sourceurl" name="sourceUrl"
+                <input class="form-control form-control-sm" type="url" id="recipe-sourceurl" name="sourceUrl"
                   placeholder="{{ Controller.l('newRecipe_chapter1_recipeSourceUrlPlaceholder') }}">
               </div>
             </div>
@@ -234,7 +265,7 @@
                   <b>{{ Controller.l('newRecipe_chapter1_recipeTags') }}</b><br />
                   <span class="text-muted text-small">{{ Controller.l('newRecipe_chapter1_recipeTagsDescription') }}</span>
                 </label>
-                <select class="form-control form-select2 form-control-sm text-small" name="tags"
+                <select class="form-control form-select2 form-control-sm text-small" name="tags[]"
                    multiple id="recipe-tags"
                   title="{{ Controller.l('newRecipe_chapter1_recipeTagsSelect') }}">{% for Tag in Tags %}
                   <option value="{{ Tag.getId() }}">{{ Tag.getName() }}</option>
