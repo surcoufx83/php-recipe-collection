@@ -106,6 +106,19 @@ navigation:
       settings: 'My preferences'
 
 page:
+  activation:
+    description: 'Thank you for confirming your e-mail address, <b>%s</b>. One last step is still necessary: Please choose a password to protect your account. Only then can you log in and use the digital cookbook.'
+    title: 'Activation of your account'
+    password:
+      label1: 'Your new password:'
+      label2: 'Please enter the password repeatedly:'
+      placeholder1: 'Password'
+      placeholder2: 'Repeat password'
+      feedback1: 'Please enter an arbitrary password.'
+      feedback2: 'Please enter the same password as in the first field.'
+    submit: 'Save and log in'
+    alreadyActivated:
+      description: 'The user account is already activated or the link is outdated. Please log in with your account to open your cookbook.'
   admin: 'Administration'
   createRecipe: 'New recipe'
   home: 'Home'
@@ -117,8 +130,8 @@ page:
       description: 'Your login remains valid even after closing the browser.'
       title: 'Stay logged in.'
     nameField:
-      invalidFeedback: 'Please enter your user name.'
-      placeholder: 'Username or e-mail address'
+      invalidFeedback: 'Please enter your email address.'
+      placeholder: 'Email address'
     lostPassword:
       title: 'Lost your password?'
     passwordField:
@@ -169,3 +182,16 @@ response:
   pageMovedException: 'The requested page has been moved and can no longer be retrieved via web request or CLI.'
   parameterException: 'No processing is configured for the specified parameters.'
   undefinedException: 'An unspecified error has occurred in the backend. Your changes were not accepted.'
+
+sendmail:
+  registration:
+    activationMail:
+      subject: 'Cookbook - Activation of your account'
+      title: 'Welcome to our cookery book!'
+      chapter1: 'Your email address was used to create a user account on <a href='https://%s'>%s</a>. If this registration is not yours, you can simply delete this email. Your address will be deleted from our database after 14 days.'
+      chapter2: 'We would be happy if you would become part of our small cookbook community and share your favorite recipes with us. To do so, you have to complete your registration by clicking on the following link. Only then you will get access to the cookbook.'
+      chapter3: 'If you are unsure or have any questions, please contact %s.'
+      chapter4:
+        subject: 'Please click on the following link: '
+        linktitle: 'Confirm registration'
+      chapter5: 'We wish you all the best!'

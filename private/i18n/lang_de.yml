@@ -106,6 +106,19 @@ navigation:
       settings: 'Einstellungen'
 
 page:
+  activation:
+    description: 'Vielen Dank für die Bestätigung deiner E-Mailadresse, <b>%s</b>. Ein letzter Schritt ist noch nötig: Bitte wähle ein Kennwort um dein Benutzerkonto zu schützen. Erst damit kannst du dich anmelden und das digitale Kochbuch verwenden.'
+    title: 'Aktivierung deines Accounts'
+    password:
+      label1: 'Dein neues Passwort:'
+      label2: 'Bitte das Passwort wiederholt eingeben:'
+      placeholder1: 'Passwort'
+      placeholder2: 'Passwort wiederholen'
+      feedback1: 'Bitte gib ein beliebiges Kennwort an.'
+      feedback2: 'Bitte gib das gleiche Kennwort wie im ersten Feld an.'
+    submit: 'Speichern und Anmelden'
+    alreadyActivated:
+      description: 'Das Benutzerkonto ist bereits aktiviert oder der Link ist veraltet. Bitte melde dich mit deinem Konto an, um dein Kochbuch zu öffnen.'
   admin: 'Administration'
   books: 'Meine Kochbücher'
   createRecipe: 'Neues Rezept'
@@ -117,8 +130,8 @@ page:
       description: 'Deine Anmeldung bleibt auch nach dem Schließen des Webbrowsers gültig.'
       title: 'Angemeldet bleiben.'
     nameField:
-      invalidFeedback: 'Bitte gib deinen Benutzernamen ein.'
-      placeholder: 'Benutzername oder E-Mail-Adresse'
+      invalidFeedback: 'Bitte gib deine E-Mailadresse ein.'
+      placeholder: 'E-Mailadresse'
     lostPassword:
       title: 'Passwort verloren?'
     passwordField:
@@ -169,3 +182,16 @@ response:
   pageMovedException: 'Die angeforderte Seite wurde verschoben und kann nicht mehr per Webanforderung oder CLI abgerufen werden.'
   parameterException: 'Für die angegebenen Parameter ist keine Verarbeitung konfiguriert.'
   undefinedException: 'Im Backend ist ein nicht spezifizierter Fehler aufgetreten. Ihre Änderungen wurden nicht akzeptiert.'
+
+sendmail:
+  registration:
+    activationMail:
+      subject: 'Kochbuch - Aktivierung deines Accounts'
+      title: 'Herzlich Willkommen zu unserem Kochbuch!'
+      chapter1: 'Deine E-Mailadresse wurde verwendet, um einen Benutzeraccount auf <a href='https://%s'>%s</a> anzulegen. Wenn diese Anmeldung nicht von dir stammt, kannst du diese E-Mail einfach löschen. Deine Adresse wird nach 14 Tagen aus unserer Datenbank gelöscht.'
+      chapter2: 'Wir freuen uns, wenn du Teil unserer kleinen Kochbuch-Gemeinschaft wirst und deine Lieblingsrezepte mit uns teilst. Dafür musst du über den folgenden Link deine Anmeldung abschließen. Erst danach erhältst du Zugriff auf das Kochbuch.'
+      chapter3: 'Solltest du dir unsicher sein oder irgend welche Fragen, wende dich bitte an %s.'
+      chapter4:
+        subject: 'Bitte klicke auf den folgenden Link: '
+        linktitle: 'Anmeldung bestätigen'
+      chapter5: 'Wir wünschen dir Alles Gute!'

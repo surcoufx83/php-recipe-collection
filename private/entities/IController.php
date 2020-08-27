@@ -39,7 +39,7 @@ interface IController {
   public function loadRecipePictures(Recipe &$recipe) : void;
   public function loadRecipeRatings(Recipe &$recipe) : void;
   public function loadRecipeSteps(Recipe &$recipe) : void;
-  public function loginWithPassword(string $username, string $password, bool $keepSession, bool $agreedStatement, Array &$response = null) : bool;
+  public function loginWithPassword(string $email, string $password, bool $keepSession, array &$response = null) : bool;
   public function logout() : void;
   public function on(string $method, array $params) : void;
   public function post(array $params) : void;

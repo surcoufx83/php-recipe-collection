@@ -4,6 +4,7 @@ namespace Surcouf\Cookbook;
 
 use Surcouf\Cookbook;
 use Surcouf\Cookbook\Controller;
+use Surcouf\Cookbook\Mail;
 use Surcouf\Cookbook\Helper\AvatarsHelper;
 use Surcouf\Cookbook\Helper\HashHelper;
 use Surcouf\Cookbook\IUser;
@@ -17,8 +18,7 @@ if (!defined('CORE2'))
 
 class User implements IUser, IDbObject, IHashable {
 
-  private $controller = null;
-  private $id, $firstname, $lastname, $name, $initials, $loginname, $passwordhash, $mailadress, $hash, $avatar;
+  private $id, $firstname, $lastname, $name, $initials, $passwordhash, $mailadress, $hash, $avatar;
   private $mailvalidationcode, $mailvalidated, $lastactivity, $adconsent = false;
 
   private $changes = array();
@@ -29,10 +29,9 @@ class User implements IUser, IDbObject, IHashable {
     $this->lastname = $dr['user_lastname'];
     $this->name = $dr['user_fullname'];
     $this->initials = strtoupper(substr($this->firstname, 0, 1).substr($this->lastname, 0, 1));
-    $this->loginname = $dr['user_name'];
     $this->passwordhash = $dr['user_password'];
     $this->mailadress = $dr['user_email'];
-    $this->mailvalidationsent = (!is_null($dr['user_email_validation']) ? $dr['user_email_validation'] : '');
+    $this->mailvalidationcode = (!is_null($dr['user_email_validation']) ? $dr['user_email_validation'] : '');
     $this->mailvalidated = (!is_null($dr['user_email_validated']) ? new DateTime($dr['user_email_validated']) : '');
     $this->lastactivity = (!is_null($dr['user_last_activity']) ? new DateTime($dr['user_last_activity']) : '');
     $this->adconsent = (!is_null($dr['user_adconsent']) ? new DateTime($dr['user_adconsent']) : false);
@@ -55,7 +54,6 @@ class User implements IUser, IDbObject, IHashable {
       $this->firstname,
       $this->lastname,
       $this->initials,
-      $this->loginname,
       $this->mailadress,
     ];
     $this->hash = HashHelper::hash(join($data));
@@ -66,18 +64,15 @@ class User implements IUser, IDbObject, IHashable {
 
   public function createNewSession($keepSession) : bool {
     global $Controller;
-
     $session_token = HashHelper::generate_token(16);
     $session_password = HashHelper::generate_token(24);
-
     $session_password4hash = HashHelper::hash(substr($session_token, 0, 16), $Controller->Config()->HashProvider);
     $session_password4hash .= $session_password;
     $session_password4hash .= HashHelper::hash(substr($session_token, 16), $Controller->Config()->HashProvider);
-
     $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => 12]);
     $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => 12]);
 
-    if ($Controller->setSessionCookies($this->loginname, $session_token, $session_password, $keepSession)) {
+    if ($Controller->setSessionCookies($this->mailadress, $session_token, $session_password, $keepSession)) {
       $query = new QueryBuilder(EQueryType::qtINSERT, 'user_logins');
       $query->columns(['user_id', 'login_type', 'login_token', 'login_password', 'login_keep'])
             ->values([$this->id, 1, $hash_token, $hash_password, $keepSession]);
@@ -102,10 +97,9 @@ class User implements IUser, IDbObject, IHashable {
         $this->firstname,
         $this->lastname,
         $this->initials,
-        $this->loginname,
         $this->mailadress,
       ];
-      $this->avatar = AvatarsHelper::createAvatar(join($data), 'u');
+      $this->avatar = AvatarsHelper::createAvatar(join($data), $this->id);
       $this->changes['user_avatar'] = $this->avatar;
       $Controller->updateDbObject($this);
     }
@@ -154,17 +148,27 @@ class User implements IUser, IDbObject, IHashable {
     return $this->session;
   }
 
-  public function getUsername() : string {
-    return $this->loginname;
+  public function getValidationCode() : string {
+    return $this->mailvalidationcode;
   }
 
   public function hasHash() : bool {
     return !is_null($this->hash);
   }
 
-  public function verify($password) : bool {
+  public function setPassword(string $newPassword, string $oldPassword) : bool {
     global $Controller;
-    $start = microtime(true);
+    if ($this->passwordhash == '********' || password_verify($oldPassword, $this->passwordhash)) {
+      $this->passwordhash = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => 12]);
+      $this->changes['user_password'] = $this->passwordhash;
+      $Controller->updateDbObject($this);
+      return true;
+    }
+    return false;
+  }
+
+  public function verify(string $password) : bool {
+    global $Controller;
     if (password_verify($password, $this->passwordhash)) {
       if (password_needs_rehash($this->passwordhash, PASSWORD_ARGON2I, ['threads' => 12])) {
         $this->passwordhash = password_hash($password, PASSWORD_ARGON2I, ['threads' => 12]);

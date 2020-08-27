@@ -1,0 +1,17 @@
+    <p>
+      {{ Controller.l('sendmail_registration_activationMail_chapter1', Config.PublicUrl(), Config.PublicUrl())|raw }}
+    </p>
+    <p>
+      {{ Controller.l('sendmail_registration_activationMail_chapter2')|raw }}
+      {{ Controller.l('sendmail_registration_activationMail_chapter3', Config.PublicContact())|raw }}
+    </p>
+    <br clear="all" />
+    <p>
+      {{ Controller.l('sendmail_registration_activationMail_chapter4_subject')|raw }}
+      <a href="{{ ActivationLink }}">{{ Controller.l('sendmail_registration_activationMail_chapter4_linktitle')|raw }}</a>
+    </p>
+    <br clear="all" />
+    <p>
+      {{ Controller.l('sendmail_registration_activationMail_chapter5')|raw }}<br />
+      {{ Config.PublicSignature() }}
+    </p>

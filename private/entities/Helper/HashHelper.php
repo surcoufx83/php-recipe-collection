@@ -9,7 +9,7 @@ if (!defined('CORE2'))
 
 class HashHelper implements IHashHelper {
 
-  public static function generate_token($length = 32) : ?string {
+  public static function generate_token(int $length = 32) : ?string {
       if(!isset($length) || intval($length) <= 8 ){
         $length = 32;
       }

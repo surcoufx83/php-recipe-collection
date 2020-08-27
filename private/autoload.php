@@ -7,6 +7,7 @@ require_once DIR_BACKEND    .'/I18N.php';
 
 // Functions without classes yet
 require_once DIR_BACKEND    .'/conf.mysql.php';
+require_once DIR_BACKEND    .'/conf.sendmail.php';
 
 spl_autoload_register(function($className)
 {

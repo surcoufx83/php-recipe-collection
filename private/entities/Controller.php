@@ -162,6 +162,10 @@ class Controller implements IController {
 
   private function getLink_Private(array $params) : ?string {
     switch($params[1]) {
+      case 'activation':
+        return ($this->Config()->PageForceHttps() ? 'https://' : 'http://').$this->Config()->PublicUrl().'/activate/'.$params[2];
+      case 'activatePassword':
+        return '/activate-account/'.$params[2];
       case 'avatar':
         return '/pictures/avatars/'.$params[2];
       case 'books':
@@ -287,9 +291,10 @@ class Controller implements IController {
       else
         return $this->users[$filter];
     }
-    if (is_string($filter)) {
+    if (is_string($filter))
       return $this->loadUsername($filter);
-    }
+    if (is_array($filter))
+      return $this->registerUser(null, $filter);
     return null;
   }
 
@@ -502,10 +507,7 @@ class Controller implements IController {
 
   private function loadUsername(string $name) : ?User {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
-    if (strpos($name, '@') > 0)
-      $query->where('users', 'user_email', 'LIKE', $name);
-    else
-      $query->where('users', 'user_name', 'LIKE', $name);
+    $query->where('users', 'user_email', 'LIKE', $name);
     $result = $this->select($query);
     if ($record = $result->fetch_assoc()) {
       return $this->registerUser(intval($record['user_id']), $record);
@@ -542,12 +544,12 @@ class Controller implements IController {
     return true;
   }
 
-  public function loginWithPassword(string $username, string $password, bool $keepSession, bool $agreedStatement, Array &$response = null) : bool {
-    if ($password == '' || $username == '' || !$agreedStatement) {
+  public function loginWithPassword(string $email, string $password, bool $keepSession, array &$response = null) : bool {
+    if ($email == '' || $password == '') {
       $response = $this->config->getResponseArray(30);
       return false;
     }
-    $user = $this->loadUsername($username);
+    $user = $this->getUser($email);
     if (is_null($user) || !$user->verify($password)) {
       $response = $this->config->getResponseArray(30);
       return false;
@@ -729,11 +731,19 @@ class Controller implements IController {
   }
 
   public function tearDown() : void {
-    
+
+    /*$demo = new BlankUser('gammel', 'bot', 'pirate1983@gmail.com');
+    if ($demo->save()) {
+      $demo->sendActivationMail();
+    } else
+      var_dump($this->database);
+    var_dump($demo);*/
+
     foreach ($this->changedObjects as $key => $object) {
 
       switch(get_class($object)) {
 
+        case 'Surcouf\Cookbook\BlankUser':
         case 'Surcouf\Cookbook\User':
           if (count($object->getDbChanges()) == 0)
             break;

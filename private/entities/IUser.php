@@ -20,8 +20,9 @@ interface IUser {
   public function getMail() : string;
   public function getName() : string;
   public function getSession() : ?Session;
-  public function getUsername() : string;
-  public function verify($password) : bool;
+  public function getValidationCode() : string;
+  public function setPassword(string $newPassword, string $oldPassword) : bool;
+  public function verify(string $password) : bool;
   public function verifySession(string $session_token, string $session_password) : bool;
 
 }

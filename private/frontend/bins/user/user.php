@@ -1,5 +1,23 @@
 <?php
 
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Helper\ConverterHelper;
+use Surcouf\Cookbook\Response\EOutputMode;
+
+$Controller->get(array(
+  'pattern' => '/activate/(?<token>[0-9a-z]{12,})',
+  'requiresAuthentication' => false,
+  'fn' => 'ui_activation'
+));
+
+$Controller->post(array(
+  'pattern' => '/activate-account/(?<token>[0-9a-z]{12,})',
+  'requiresAuthentication' => false,
+  'fn' => 'post_activation',
+  'outputMode' => EOutputMode::JSON
+));
+
 $Controller->get(array(
   'pattern' => '/login',
   'requiresAuthentication' => false,
@@ -23,11 +41,68 @@ $Controller->get(array(
   'fn' => 'ui_settings'
 ));
 
+function ui_activation() {
+  global $Controller, $OUT, $twig;
+
+  $token = $Controller->Dispatcher()->getMatchString('token');
+  $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
+  $query->where('users', 'user_email_validation', 'LIKE', $token)
+        ->andWhere('users', 'user_email_validated', 'IS NULL');
+  $result = $Controller->select($query);
+  if (is_null($result) || $result->num_rows == 0) {
+    $OUT['Page']['Scripts']['Custom'][] = 'auth-login';
+    $OUT['Content'] = $twig->render('views/user/activation-not-required.html.twig', $OUT);
+    return;
+  }
+
+  $user = $Controller->getUser($result->fetch_assoc());
+
+  $OUT['User'] = $user;
+  $OUT['Page']['Scripts']['FormValidator'] = true;
+  $OUT['Page']['Scripts']['Custom'][] = 'activation';
+  $OUT['Content'] = $twig->render('views/user/activation.html.twig', $OUT);
+} // ui_activation()
+
 function ui_login() {
   global $OUT, $twig;
   $OUT['Page']['Scripts']['Custom'][] = 'auth-login';
   $OUT['Content'] = $twig->render('views/user/login.html.twig', $OUT);
 } // ui_login()
+
+function post_activation() {
+  global $Controller;
+
+  $token = $Controller->Dispatcher()->getMatchString('token');
+  $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
+  $query->where('users', 'user_email_validation', 'LIKE', $token)
+        ->andWhere('users', 'user_email_validated', 'IS NULL');
+  $result = $Controller->select($query);
+  if (is_null($result) || $result->num_rows == 0)
+    return $Controller->Config()->getResponseArray(11);
+
+  $payload = $Controller->Dispatcher()->getPayload();
+  $user = $Controller->getUser($result->fetch_assoc());
+
+  if (!array_key_exists('user', $payload) || intval($payload['user'] != $user->getId()))
+    return $Controller->Config()->getResponseArray(11);
+
+  if (!array_key_exists('password1', $payload) || !array_key_exists('password2', $payload) ||
+    $payload['password1'] != $payload['password2'])
+    return $Controller->Config()->getResponseArray(11);
+
+  $keepSession = false;
+  if (array_key_exists('keepSession', $payload))
+    $keepSession = ConverterHelper::to_bool($payload['keepSession']);
+
+  $response = null;
+  if ($user->setPassword($payload['password1'], ''))
+    $Controller->loginWithPassword($user->getMail(), $payload['password1'], $keepSession, $response);
+  else
+    $response = $Controller->Config()->getResponseArray(30);
+  $response['isLoggedIn'] = $Controller->isAuthenticated();
+  return $response;
+
+} // post_activation()
 
 function post_login() {
   global $Controller;
@@ -50,7 +125,7 @@ function post_login() {
   }
 
   if ($password != null && $username != null) {
-    if (!$Controller->loginWithPassword($username, $password, $keepSession, true, $response))
+    if (!$Controller->loginWithPassword($username, $password, $keepSession, $response))
       $Controller->Dispatcher()->exitJson($response);
   }
 
