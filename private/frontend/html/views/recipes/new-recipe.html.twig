@@ -1,7 +1,7 @@
     <div class="container">
       <form action="{{ Controller.getlink('recipe:postnew') }}"
         class="needs-validation" method="post" autocomplete="off" novalidate
-        enctype="multipart/form-data">
+        enctype="multipart/form-data" id="new-recipe-form">
         <div class="row justify-content-between">
           <div class="col-12">
             <h4>{{ Controller.l('newRecipe_intro_header') }}</h4>
@@ -121,7 +121,7 @@
                 <div class="row" id="ingredient-d" data-index="d">
                   <div class="col-5 col-md-2 px-1 px-md-2 mb-2 mb-md-0">
                     <input type="text" class="form-control form-control-sm ingredient-quantity"
-                      name="ingredient_quantity[]" id="ingredient-quantity-d" data-index="d"
+                      name="ingredient_quantity[]"
                       placeholder="{{ Controller.l('newRecipe_chapter2_quantity_header') }}">
                   </div>
                   <div class="col-5 col-md-3 px-1 px-md-2 mb-2 mb-md-0">
@@ -133,7 +133,7 @@
                   </div>
                   <div class="col-10 col-md-6 px-1 px-md-2">
                     <input type="text" class="form-control form-control-sm ingredient-subject"
-                      name="ingredient_description[]" id="ingredient-description-d" data-index="d"
+                      name="ingredient_description[]"
                       placeholder="{{ Controller.l('newRecipe_chapter2_ingredient_header') }}">
                   </div>
                   <div class="col-2 col-md-1 px-0 px-md-2">
@@ -197,7 +197,7 @@
                   </label>
                   <div class="col-12 col-lg-8">
                     <input class="form-control form-control-sm step-title-input" id="step-title-d" name="step_title[]"
-                      placeholder="{{ Controller.l('newRecipe_chapter4_step_title_placeholder') }}">
+                      type="text" placeholder="{{ Controller.l('newRecipe_chapter4_step_title_placeholder') }}">
                   </div>
                 </div>
                 <div class="form-group row">
@@ -236,7 +236,7 @@
                     <b>{{ Controller.l('newRecipe_chapter4_step_title_description') }}</b>
                   </label>
                   <div class="col-12 col-lg-8">
-                    <input class="form-control form-control-sm" name="step_title[]"
+                    <input class="form-control form-control-sm" name="step_title[]" type="text"
                       placeholder="{{ Controller.l('newRecipe_chapter4_step_title_placeholder') }}">
                   </div>
                 </div>
@@ -324,14 +324,40 @@
                 <select class="form-control form-select2-multi form-control-sm text-small" name="tags[]"
                    multiple id="recipe-tags"
                   title="{{ Controller.l('newRecipe_chapter1_recipeTagsSelect') }}">{% for Tag in Tags %}
-                  <option value="{{ Tag.getId() }}">{{ Tag.getName() }}</option>
+                  <option value="{{ Tag.getName() }}">{{ Tag.getName() }}</option>
                   {% endfor %}
                 </select>
               </div>
             </div>
           </div>
         </div>
-
-        <button class="btn btn-primary" type="submit">Submit form</button>
+        <button class="btn btn-blue" type="submit">{{ Controller.l('newRecipe_submitButton_title') }}</button>
       </form>
+    </div>
+
+    <div class="modal fade" id="new-recipe-modal"
+      data-backdrop="static" data-keyboard="false" tabindex="-1"
+      aria-labelledby="new-recipe-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="new-recipe-modal-title">{{ Controller.l('newRecipe_modal_title') }}</h5>
+          </div>
+          <div class="modal-body" id="new-recipe-modal-description">
+            {{ Controller.l('newRecipe_modal_description') }}
+          </div>
+          <div class="modal-body bg-warning d-none" id="new-recipe-modal-error">
+            {{ Controller.l('newRecipe_modal_error')|raw }}
+          </div>
+          <div class="modal-body bg-success text-light d-none" id="new-recipe-modal-success">
+            {{ Controller.l('newRecipe_modal_success')|raw }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="new-recipe-modal-spinner" class="btn btn-blue" disabled>{{ Config.Icons.Spinner('fa-fw fa-pulse')|raw }}</button>
+            <button type="button" id="new-recipe-modal-close" class="btn btn-blue d-none" data-dismiss="modal">{{ Controller.l('newRecipe_modal_backButton') }}</button>
+            <button type="button" id="new-recipe-modal-new" class="btn btn-outline-blue d-none" data-dismiss="modal">{{ Controller.l('newRecipe_modal_newButton') }}</button>
+            <button type="button" id="new-recipe-modal-forward" class="btn btn-success d-none" data-dismiss="modal">{{ Controller.l('newRecipe_modal_forwardButton') }}</button>
+          </div>
+        </div>
+      </div>
     </div>

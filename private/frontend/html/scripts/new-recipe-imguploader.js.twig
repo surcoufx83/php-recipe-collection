@@ -109,3 +109,37 @@
     lastStepIndex = index;
     copy.removeClass('d-none');
   }
+
+  $('#new-recipe-form').submit(function(event) {
+    event.preventDefault();
+    var frm = $(this);
+    var invalid = $(':invalid');
+    if (invalid.length > 0)
+      return;
+    $('#new-recipe-modal').modal('show');
+    $.ajax({
+      contentType: false,
+      data: new FormData($('form#new-recipe-form')[0]),
+      dataType: 'json',
+      processData: false,
+      type: 'POST',
+      url: frm.attr('action')
+    }).done(function(data) {
+      if (data.success) {
+        $('#new-recipe-modal-description').addClass('d-none');
+        $('#new-recipe-modal-spinner').addClass('d-none');
+        $('#new-recipe-modal-success').removeClass('d-none');
+        $('#new-recipe-modal-new').removeClass('d-none');
+        $('#new-recipe-modal-forward').removeClass('d-none');
+        $('#new-recipe-modal-forward').click(function() {
+          location.href = data.ForwardTo;
+        });
+        $('#new-recipe-modal-new').click(function() {
+          location.href = data.ForwardNew;
+        });
+        setTimeout(function () {
+          location.href = data.ForwardTo;
+        }, 10000);
+      }
+    });
+  });

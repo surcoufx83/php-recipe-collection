@@ -12,6 +12,7 @@ use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\Helper\FilesystemHelper;
 use Surcouf\Cookbook\Helper\UiHelper\CarouselHelper;
+use Surcouf\Cookbook\Response\EOutputMode;
 
 $Controller->get(array(
   'pattern' => '/(?<id>\d+)(/[^/]+)?',
@@ -25,7 +26,8 @@ $Controller->get(array(
 
 $Controller->post(array(
   'pattern' => '/recipe/new',
-  'fn' => 'ui_post_new_recipe'
+  'fn' => 'ui_post_new_recipe',
+  'outputMode' => EOutputMode::JSON,
 ));
 
 function ui_recipe() {
@@ -149,28 +151,32 @@ function ui_post_new_recipe() {
      ));
   }
 
-  $picindex = 0;
-  for ($i=1; $i<count($_FILES['pictures']['type']); $i++) {
-    if ($_FILES['pictures']['error'][$i] != 0 || $_FILES['pictures']['size'][$i] == 0)
-      continue;
-    if (
-      $_FILES['pictures']['type'][$i] != 'image/jpeg' &&
-      $_FILES['pictures']['type'][$i] != 'image/jpg' &&
-      $_FILES['pictures']['type'][$i] != 'image/png')
-      continue;
-    $recipe->addNewPicture(new BlankPicture(
-      $picindex,
-      $_FILES['pictures']['name'][$i],
-      $_FILES['pictures']['tmp_name'][$i],
-    ));
-    $picindex++;
+  if (count($_FILES) > 0) {
+    $picindex = 0;
+    for ($i=1; $i<count($_FILES['pictures']['type']); $i++) {
+      if ($_FILES['pictures']['error'][$i] != 0 || $_FILES['pictures']['size'][$i] == 0)
+        continue;
+      if (
+        $_FILES['pictures']['type'][$i] != 'image/jpeg' &&
+        $_FILES['pictures']['type'][$i] != 'image/jpg' &&
+        $_FILES['pictures']['type'][$i] != 'image/png')
+        continue;
+      $recipe->addNewPicture(new BlankPicture(
+        $picindex,
+        $_FILES['pictures']['name'][$i],
+        $_FILES['pictures']['tmp_name'][$i],
+      ));
+      $picindex++;
+    }
   }
 
-  for ($i=0; $i<count($payload['tags']); $i++) {
-    $tag = $Controller->getTag($payload['tags'][$i]);
-    if (is_null($tag))
-      $tag = new BlankTag($payload['tags'][$i]);
-    $recipe->addNewTag($tag);
+  if (array_key_exists('tags', $payload)) {
+    for ($i=0; $i<count($payload['tags']); $i++) {
+      $tag = $Controller->getTag($payload['tags'][$i]);
+      if (is_null($tag))
+        $tag = new BlankTag($payload['tags'][$i]);
+      $recipe->addNewTag($tag);
+    }
   }
 
   if ($Controller->startTransaction()) {
@@ -202,7 +208,7 @@ function ui_post_new_recipe() {
       for ($i=0; $i<$recipe->getIngredientsCount(); $i++) {
         $obj = $recipe->getIngredients()[$i];
         $unit = $obj->getUnit();
-        if (get_class($unit) == 'Surcouf\Cookbook\BlankUnit') {
+        if (!is_null($unit) && get_class($unit) == 'Surcouf\Cookbook\BlankUnit') {
           if (array_key_exists($unit->getName(), $insertedUnits))
             $unit->setId($insertedUnits[$unit->getName()]);
           else {
@@ -222,7 +228,7 @@ function ui_post_new_recipe() {
         $res = $Controller->insertSimple(
           'recipe_ingredients',
           ['recipe_id', 'unit_id', 'ingredient_quantity', 'ingredient_description'],
-          [$id, $unit->getId(), $obj->getQuantity(), $obj->getDescription()]
+          [$id, (!is_null($unit) ? $unit->getId() : null), $obj->getQuantity(), $obj->getDescription()]
         );
         if ($res == -1) {
           $failed = true;
@@ -316,20 +322,20 @@ function ui_post_new_recipe() {
       }
     }
 
-    if (!$failed) {
+    if ($failed) {
+      $Controller->cancelTransaction();
+      $response = $Controller->Config()->getResponseArray(10);
+    } else {
       $Controller->finishTransaction();
-      $Controller->Dispatcher()->forward(
-        $Controller->getLink('recipe:show:'.$id)
-      );
+      $response = $Controller->Config()->getResponseArray(1);
+      $response['ForwardTo'] = $Controller->getLink('recipe:show:'.$id);
+      $response['ForwardNew'] = $Controller->getLink('recipe:new');
     }
+
+    return $response;
 
   }
 
-  var_dump($recipe);
+  return $Controller->Config()->getResponseArray(10);
 
-  var_dump($Controller->Dispatcher()->getPayload());
-  var_dump($_FILES);
-  var_dump(file_exists($_FILES['pictures']['tmp_name'][1]));
-
-  exit;
 } // ui_post_new_recipe()

@@ -10,7 +10,7 @@ class BlankIngredient implements IIngredient, IDbObject {
   private $id, $recipeid, $unit, $quantity, $description;
   private $changes = array();
 
-  public function __construct(float $quantity, IUnit $unit, string $description) {
+  public function __construct(float $quantity, ?IUnit $unit, string $description) {
     $this->unit = $unit;
     $this->quantity = ($quantity != 0.0 ? $quantity : null);
     $this->description = $description;

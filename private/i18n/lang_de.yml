@@ -84,6 +84,16 @@ newRecipe:
         placeholder: 'Trage hier eine kurze Überschrift ein.'
   chapter5:
     header: 'Weitere Optionen'
+  modal:
+    backButton: 'Zurück'
+    description: 'Einen Moment bitte. Die Rezeptdaten werden gerade ins Kochbuch geschrieben.'
+    error: 'Das hätte nicht passieren sollen, aber beim Speichern ist ein Fehler aufgetreten &#x1F613;. Fehlerinformationen wurden an Stefan gesendet.'
+    forwardButton: 'Zum Rezept'
+    newButton: 'Noch ein Rezept eintragen'
+    success: 'Das Rezept ist gespeichert. Du wirst gleich weitergeleitet...'
+    title: 'Rezept wird gespeichert...'
+  submitButton:
+    title: 'Rezept speichern'
 
 navigation:
   topbar:

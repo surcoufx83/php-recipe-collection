@@ -84,6 +84,16 @@ newRecipe:
         placeholder: 'Fill in a short headline here.'
   chapter5:
     header: 'Further options'
+  modal:
+    backButton: 'Back'
+    description: 'One moment please. The recipe data is currently being written into the cookbook.'
+    error: 'This should not have happened, but an error occurred while saving &#x1F613;. Error information was sent to Stefan.'
+    forwardButton: 'Go to the recipe'
+    newButton: 'Add another recipe'
+    success: 'The recipe is saved. You'll be redirected...'
+    title: 'Saving recipe...'
+  submitButton:
+    title: 'Submit recipe'
 
 navigation:
   topbar:

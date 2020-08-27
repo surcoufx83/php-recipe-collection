@@ -101,6 +101,8 @@ class QueryBuilder {
           $valline[] = $this->values[$i][$j];
         else if (is_bool($this->values[$i][$j]))
           $valline[] = intval($this->values[$i][$j]);
+        else if (is_null($this->values[$i][$j]))
+          $valline[] = 'NULL';
         else
           throw new \Exception('NYI.');
       }
