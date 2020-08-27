@@ -2,8 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Surcouf\PhpArchive\Helper\AvatarsHelper;
-use Surcouf\PhpArchive\Helper\FilesystemHelper;
+use Surcouf\Cookbook\Helper\AvatarsHelper;
+use Surcouf\Cookbook\Helper\FilesystemHelper;
 
 require_once realpath(__DIR__.'/../private/entities/Helper/IFilesystemHelper.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/FilesystemHelper.php');

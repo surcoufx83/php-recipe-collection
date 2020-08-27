@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 use \DateTime;
 
@@ -10,6 +10,10 @@ if (!defined('CORE2'))
 interface IRecipe {
 
   public function addIngredients(array $record) : void;
+  public function addPicture(IPicture &$picture) : void;
+  public function addRating(IRating &$rating) : void;
+  public function addStep(ICookingStep &$step) : void;
+  public function addTag(ITag &$tag, int $votes) : void;
   public function getCookedCount() : int;
   public function getCookedCountStr() : string;
   public function getCreationDate() : DateTime;

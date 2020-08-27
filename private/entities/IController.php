@@ -1,11 +1,11 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
-use Surcouf\PhpArchive\Database\QueryBuilder;
-use Surcouf\PhpArchive\Document\Category;
-use Surcouf\PhpArchive\Document\Type;
-use Surcouf\PhpArchive\File\Extension;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Document\Category;
+use Surcouf\Cookbook\Document\Type;
+use Surcouf\Cookbook\File\Extension;
 
 if (!defined('CORE2'))
   exit;
@@ -16,8 +16,10 @@ interface IController {
   public function Dispatcher() : Dispatcher;
   public function User() : ?User;
 
+  public function cancelTransaction() : bool;
   public function dbescape($value, bool $includeQuotes = true) : string;
   public function delete(QueryBuilder &$qbuilder) : bool;
+  public function finishTransaction() : bool;
   public function get(array $params) : void;
   public function getInsertId() : ?int;
   public function getLink($filter) : ?string;
@@ -26,6 +28,7 @@ interface IController {
   public function getRecipe($filter) : ?Recipe;
   public function getStep($filter) : ?CookingStep;
   public function getTag($filter) : ?Tag;
+  public function getUnit($filter) : ?Unit;
   public function getUser($filter) : ?User;
   public function init() : void;
   public function insert(QueryBuilder &$qbuilder) : bool;
@@ -44,6 +47,7 @@ interface IController {
   public function select(QueryBuilder &$qbuilder) : ?\mysqli_result;
   public function selectCountSimple(string $table, string $filterColumn=null, string $filterValue=null) : int;
   public function setSessionCookies(string $userCookie, string $tokenCookie, string $passwordCookie, bool $longDuration) : bool;
+  public function startTransaction() : bool;
   public function tearDown() : void;
   public function update(QueryBuilder &$qbuilder) : bool;
   public function updateDbObject(IDbObject &$object) : void;

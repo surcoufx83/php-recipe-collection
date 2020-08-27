@@ -1,14 +1,14 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 use \DateTime;
-use Surcouf\PhpArchive\IRecipe;
-use Surcouf\PhpArchive\Database\EAggregationType;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
-use Surcouf\PhpArchive\Helper\ConverterHelper;
-use Surcouf\PhpArchive\Helper\Formatter;
+use Surcouf\Cookbook\IRecipe;
+use Surcouf\Cookbook\Database\EAggregationType;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Helper\ConverterHelper;
+use Surcouf\Cookbook\Helper\Formatter;
 
 if (!defined('CORE2'))
   exit;
@@ -40,10 +40,7 @@ class Recipe implements IRecipe, IDbObject {
   }
 
   public function addIngredients(array $record) : void {
-    $this->ingredients[intval($record['ingredient_id'])] = [
-      'Amount' => $record['ingredient_amount'],
-      'Description' => $record['ingredient_content'],
-    ];
+    $this->ingredients[intval($record['ingredient_id'])] = new Ingredient($record);
   }
 
   public function addPicture(IPicture &$picture) : void {

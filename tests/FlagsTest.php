@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Surcouf\PhpArchive\Helper\Flags;
+use Surcouf\Cookbook\Helper\Flags;
 
 
 require_once realpath(__DIR__.'/../private/entities/Helper/IFlags.php');

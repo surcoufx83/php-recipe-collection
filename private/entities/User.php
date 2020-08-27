@@ -1,15 +1,15 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
-use Surcouf\PhpArchive;
-use Surcouf\PhpArchive\Controller;
-use Surcouf\PhpArchive\Helper\AvatarsHelper;
-use Surcouf\PhpArchive\Helper\HashHelper;
-use Surcouf\PhpArchive\IUser;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
-use Surcouf\PhpArchive\User\Session;
+use Surcouf\Cookbook;
+use Surcouf\Cookbook\Controller;
+use Surcouf\Cookbook\Helper\AvatarsHelper;
+use Surcouf\Cookbook\Helper\HashHelper;
+use Surcouf\Cookbook\IUser;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\User\Session;
 use \DateTime;
 
 if (!defined('CORE2'))

@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive\Helper;
+namespace Surcouf\Cookbook\Helper;
 
 use \DateInterval;
 use \DateTime;

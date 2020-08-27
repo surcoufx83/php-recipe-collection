@@ -1,14 +1,14 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
-use Surcouf\PhpArchive\Config;
-use Surcouf\PhpArchive\Config\Icon;
-use Surcouf\PhpArchive\Config\IconConfig;
-use Surcouf\PhpArchive\Database\DbConf;
-use Surcouf\PhpArchive\Database\EAggregationType;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
+use Surcouf\Cookbook\Config;
+use Surcouf\Cookbook\Config\Icon;
+use Surcouf\Cookbook\Config\IconConfig;
+use Surcouf\Cookbook\Database\DbConf;
+use Surcouf\Cookbook\Database\EAggregationType;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
 
 if (!defined('CORE2'))
   exit;
@@ -23,6 +23,7 @@ class Controller implements IController {
   private $recipes = array();
   private $steps = array();
   private $tags = array();
+  private $units = array();
   private $users = array();
 
   private $changedObjects = array();
@@ -43,6 +44,12 @@ class Controller implements IController {
     return $this->currentUser;
   }
 
+  public function cancelTransaction() : bool {
+    $ret = $this->database->rollback();
+    $this->database->autocommit(true);
+    return $ret;
+  }
+
   public function dbescape($value, bool $includeQuotes = true) : string {
     $value = $this->database->real_escape_string($value);
     if ($includeQuotes && !is_integer($value))
@@ -54,6 +61,15 @@ class Controller implements IController {
     $query = $qbuilder->buildQuery();
     $result = $this->database->query($query);
     return $result;
+  }
+
+  public function finishTransaction() : bool {
+    $ret = $this->database->commit();
+    if ($ret == false) {
+      $this->database->rollback();
+    }
+    $this->database->autocommit(true);
+    return $ret;
   }
 
   public function get(array $params) : void {
@@ -247,6 +263,20 @@ class Controller implements IController {
     }
     if (is_array($filter))
       return $this->registerTag(null, $filter);
+    if (is_string($filter))
+      return $this->loadTagByName($filter);
+    return null;
+  }
+
+  public function getUnit($filter) : ?Unit {
+    if (is_integer($filter)) {
+      if (!array_key_exists($filter, $this->units))
+        return $this->loadUnit($filter);
+      else
+        return $this->units[$filter];
+    }
+    if (is_array($filter))
+      return $this->registerUnit(null, $filter);
     return null;
   }
 
@@ -440,6 +470,26 @@ class Controller implements IController {
     return $this->registerTag($id);
   }
 
+  private function loadTagByName(string $name) : ?Tag {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'tags', DB_ANY);
+    $query->where('tags', 'tag_name', 'LIKE', $name);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerTag(intval($record['tag_id']), $record);
+    }
+    return null;
+  }
+
+  private function loadUnit(int $id) : ?Unit {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'units', DB_ANY);
+    $query->where('units', 'unit_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerUnit(intval($record['unit_id']), $record);
+    }
+    return $this->registerUnit($id);
+  }
+
   private function loadUser(int $id) : ?User {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
     $query->where('users', 'user_id', '=', $id);
@@ -607,6 +657,19 @@ class Controller implements IController {
     return $this->tags[$id];
   }
 
+  private function registerUnit(?int $id, array $record=null) : ?Unit {
+    if (is_null($id) && is_array($record))
+      $id = intval($record['unit_id']);
+    if (array_key_exists($id, $this->units))
+      return $this->units[$id];
+    if (is_null($record)) {
+      $this->units[$id] = null;
+      return null;
+    }
+    $this->units[$id] = new Unit($record);
+    return $this->units[$id];
+  }
+
   private function registerUser(?int $id, array $record=null) : ?User {
     if (is_null($id) && is_array($record))
       $id = intval($record['user_id']);
@@ -660,12 +723,17 @@ class Controller implements IController {
       && $this->setCookie($this->config->PasswordCookieName, $passwordCookie, $expires));
   }
 
+  public function startTransaction() : bool {
+    $this->database->autocommit(false);
+    return $this->database->begin_transaction();
+  }
+
   public function tearDown() : void {
     foreach ($this->changedObjects as $key => $object) {
 
       switch(get_class($object)) {
 
-        case 'Surcouf\PhpArchive\User':
+        case 'Surcouf\Cookbook\User':
           if (count($object->getDbChanges()) == 0)
             break;
           $query = new QueryBuilder(EQueryType::qtUPDATE, 'users');

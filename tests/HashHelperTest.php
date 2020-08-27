@@ -2,8 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Surcouf\PhpArchive\Controller;
-use Surcouf\PhpArchive\Helper\HashHelper;
+use Surcouf\Cookbook\Controller;
+use Surcouf\Cookbook\Helper\HashHelper;
 
 require_once realpath(__DIR__.'/../private/entities/IController.php');
 require_once realpath(__DIR__.'/../private/entities/Controller.php');

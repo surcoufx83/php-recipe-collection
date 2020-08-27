@@ -5,17 +5,15 @@ namespace Surcouf\Cookbook;
 if (!defined('CORE2'))
   exit;
 
-class Ingredient implements IIngredient, IDbObject {
+class BlankIngredient implements IIngredient, IDbObject {
 
-  private $id, $recipeid, $unitid, $quantity, $description;
+  private $id, $recipeid, $unit, $quantity, $description;
   private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['ingredient_id']);
-    $this->recipeid = intval($dr['recipe_id']);
-    $this->unitid = intval($dr['unit_id']);
-    $this->quantity = (!is_null($dr['ingredient_quantity']) ? floatval($dr['ingredient_quantity']) : null);
-    $this->description = $dr['ingredient_description'];
+  public function __construct(float $quantity, IUnit $unit, string $description) {
+    $this->unit = $unit;
+    $this->quantity = ($quantity != 0.0 ? $quantity : null);
+    $this->description = $description;
   }
 
   public function getDbChanges() : array {
@@ -44,12 +42,11 @@ class Ingredient implements IIngredient, IDbObject {
   }
 
   public function getUnit() : ?IUnit {
-    global $Controller;
-    return $Controller->getUnit($this->unitid);
+    return $this->unit;
   }
 
   public function getUnitId() : ?int {
-    return $this->unitid;
+    return $this->unit->getId();
   }
 
 }

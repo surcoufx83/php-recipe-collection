@@ -44,14 +44,18 @@ newRecipe:
   chapter2:
     addButton:
       title: 'Anklicken um weitere Zutaten hinzuzufügen.'
-    amount:
-      header: 'Menge'
-      placeholder: 'z.B. 500 g'
     delButton:
       title: 'Anklicken um diese Zeile zu entfernen.'
+    quantity:
+      header: 'Menge'
+      placeholder: 'z.B. 6'
+    unit:
+      header: 'Einheit'
+      noUnit: 'Keine Einheit'
+      placeholder: 'z.B. EL'
     ingredient:
       header: 'Zutat'
-      placeholder: 'z.B. Rindergulasch'
+      placeholder: 'z.B. Olivenöl'
     header: 'Zutatenliste'
     description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Die Mengenangabe kannst du auch weglassen (z.B. für etwas Salz zum Würzen).'
   chapter3:
@@ -63,9 +67,14 @@ newRecipe:
   chapter4:
     addButton:
       title: 'Anklicken um einen weiteren Arbeitsschritt einzufügen.'
-    description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen.'
+    description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen. Optional kannst du für jeden Schritt auch noch angeben, wie lange Vorbereitung, Ruhezeit, und das Kochen dauern.'
     header: 'Schritt-für-Schritt Anleitung'
     step:
+      duration:
+        cooking: 'Kochdauer'
+        description: 'Zeitaufwand (Minuten)'
+        preparation: 'Vorbereitung'
+        rest: 'Ruhezeit'
       preparation:
         description: 'Anweisungen'
         invalidFeedback: 'Bitte gib einige Informationen über die Zubereitung an.'

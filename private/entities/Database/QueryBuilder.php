@@ -1,9 +1,9 @@
 <?php
 
-namespace Surcouf\PhpArchive\Database;
+namespace Surcouf\Cookbook\Database;
 
-use Surcouf\PhpArchive\Helper\Flags;
-use Surcouf\PhpArchive\IController;
+use Surcouf\Cookbook\Helper\Flags;
+use Surcouf\Cookbook\IController;
 
 if (!defined('CORE2'))
   exit;

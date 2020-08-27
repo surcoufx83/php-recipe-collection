@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive\Mail;
+namespace Surcouf\Cookbook\Mail;
 
 if (!defined('CORE2'))
   exit;

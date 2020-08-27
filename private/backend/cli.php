@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 use \Ahc\Cli\Application;
 use Ahc\Cli\IO\Interactor;

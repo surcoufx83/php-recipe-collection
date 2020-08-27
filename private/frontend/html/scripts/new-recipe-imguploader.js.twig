@@ -76,12 +76,7 @@
     var row = copy.find('div.row');
     row.attr('id', 'ingredient-' + index);
     row.attr('data-index', index);
-    var inp1 = copy.find('input.ingredient-amount');
-    inp1.attr('id', 'ingredient-amount-' + index);
-    inp1.attr('data-index', index);
-    var inp2 = copy.find('input.ingredient-subject');
-    inp2.attr('id', 'ingredient-description-' + index);
-    inp2.attr('data-index', index);
+    var sel = copy.find('select');
     var btn = copy.find('button.ingredient-delete');
     btn.attr('id', 'ingredient-delete-' + index);
     btn.attr('data-for', 'ingredient-' + index);
@@ -94,6 +89,9 @@
       $('#' + fore).parent().remove();
     });
     copy.removeClass('d-none');
+    sel.select2({
+      tags: true
+    });
   }
 
   function createStepCopy(index) {

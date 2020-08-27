@@ -44,14 +44,18 @@ newRecipe:
   chapter2:
     addButton:
       title: 'Click to add more ingredients.'
-    amount:
-      header: 'Quantity'
-      placeholder: 'eg. 500 g'
     delButton:
       title: 'Click to remove this line.'
+    quantity:
+      header: 'Quantity'
+      placeholder: 'eg. 6'
+    unit:
+      header: 'Unit'
+      noUnit: 'No unit'
+      placeholder: 'eg. tbsp.'
     ingredient:
       header: 'Ingredient'
-      placeholder: 'eg. beef goulash'
+      placeholder: 'eg. Olive oil'
     header: 'List of ingredients'
     description: 'List all ingredients required for the recipe below. You can also leave out the quantity (e.g. for some salt to season).'
   chapter3:
@@ -63,9 +67,14 @@ newRecipe:
   chapter4:
     addButton:
       title: 'Click to insert another work step.'
-    description: 'Use this section to describe the steps of the preparation. You can put everything in one block or create several steps using the plus sign.'
+    description: 'Use this section to describe the preparation steps. You can put everything in one block or create several steps using the plus sign. Optionally, for each step you can also specify how long the preparation, rest period, and cooking will take.'
     header: 'Step-by-step instructions'
     step:
+      duration:
+        cooking: 'Cooking'
+        description: 'Time required (minutes)'
+        preparation: 'Preparation'
+        rest: 'Rest period'
       preparation:
         description: 'Instructions'
         invalidFeedback: 'Please provide some information about the preparation.'

@@ -1,7 +1,7 @@
 <?php
 
-use Surcouf\PhpArchive\Config\EConfigurationType;
-use Surcouf\PhpArchive\Helper\Formatter;
+use Surcouf\Cookbook\Config\EConfigurationType;
+use Surcouf\Cookbook\Helper\Formatter;
 
 class BenchmarkCommand extends Ahc\Cli\Input\Command
 {
@@ -88,7 +88,7 @@ class BenchmarkCommand extends Ahc\Cli\Input\Command
     for ($i=0; $i<$iterations; $i++) {
       $Config = array();
       $start = microtime(true);
-      Surcouf\PhpArchive\load_config();
+      Surcouf\Cookbook\load_config();
       $sum += microtime(true) - $start;
       if ($i % 10 == 0)
         $writer->write('.');

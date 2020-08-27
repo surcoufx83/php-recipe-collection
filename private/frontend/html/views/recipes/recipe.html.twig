@@ -23,7 +23,9 @@
             <ul class="list-group list-group-flush list-group-sm">
               {% for Ingredient in Recipe.getIngredients() %}
                 <li class="list-group-item">
-                  {{ Ingredient.Amount }} {{ Ingredient.Description }}
+                  {{ Ingredient.getQuantity() }}
+                  {% if Ingredient.getUnit() %}{{ Ingredient.getUnit().getName() }}{% endif %}
+                  {{ Ingredient.getDescription() }}
                 </li>
               {% endfor %}
             </ul>

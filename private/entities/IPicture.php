@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 if (!defined('CORE2'))
   exit;
@@ -9,7 +9,7 @@ interface IPicture {
 
   public function getDescription() : string;
   public function getFilename() : string;
-  public function getHash(bool $calculateIfNull = true) : ?string;
+  public function getFullpath() : string;
   public function getId() : int;
   public function getIndex() : int;
   public function getName() : string;

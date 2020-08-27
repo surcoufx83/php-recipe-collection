@@ -1,9 +1,9 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 use \DateInterval;
-use Surcouf\PhpArchive\Config\IconConfig;
+use Surcouf\Cookbook\Config\IconConfig;
 
 if (!defined('CORE2'))
   exit;
@@ -31,10 +31,12 @@ final class Config {
       'HashProvider'                => 'crc32b',
       'LogCleanupTime'              => new DateInterval('P1M'),
       'MaintenanceMode'             => file_exists(ROOT.DIRECTORY_SEPARATOR.'.maintenance.tmp'),
+      'PageForceHttps'              => false,
       'PageHeader'                  => 'Kochbuch',
       'PageTitle'                   => 'Kochbuch',
       'PageUrls'                    => [
                                         'kochbuch.mogul.network',
+                                        'localhost',
                                         '127.0.0.1',
                                        ],
       'PasswordCookieName'          => 'kbpasstoken',

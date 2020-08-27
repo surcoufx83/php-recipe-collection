@@ -1,8 +1,8 @@
 <?php
 
-namespace Surcouf\PhpArchive\Helper;
+namespace Surcouf\Cookbook\Helper;
 
-use Surcouf\PhpArchive\Controller;
+use Surcouf\Cookbook\Controller;
 
 if (!defined('CORE2'))
   exit;

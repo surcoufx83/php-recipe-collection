@@ -1,8 +1,8 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
-use Surcouf\PhpArchive\User\Session;
+use Surcouf\Cookbook\User\Session;
 
 if (!defined('CORE2'))
   exit;
