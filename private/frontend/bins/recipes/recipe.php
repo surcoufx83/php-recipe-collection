@@ -164,7 +164,7 @@ function ui_post_new_recipe() {
       $recipe->addNewPicture(new BlankPicture(
         $picindex,
         $_FILES['pictures']['name'][$i],
-        $_FILES['pictures']['tmp_name'][$i],
+        $_FILES['pictures']['tmp_name'][$i]
       ));
       $picindex++;
     }
