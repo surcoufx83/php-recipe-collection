@@ -27,7 +27,7 @@ $Controller->get(array(
 $Controller->post(array(
   'pattern' => '/recipe/new',
   'fn' => 'ui_post_new_recipe',
-  'outputMode' => EOutputMode::JSON,
+  'outputMode' => EOutputMode::JSON
 ));
 
 function ui_recipe() {

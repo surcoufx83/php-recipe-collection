@@ -1,0 +1,46 @@
+
+  $('#new-user-form').submit(function(event) {
+    event.preventDefault();
+    var frm = $(this);
+    var invalid = $(':invalid');
+    if (invalid.length > 0)
+      return;
+    $('#new-user-modal-close').addClass('d-none');
+    $('#new-user-modal-description').removeClass('d-none');
+    $('#new-user-modal-error').addClass('d-none');
+    $('#new-user-modal-error-msg').text('');
+    $('#new-user-modal-success').addClass('d-none');
+    $('#new-user-modal-success-userid').text('');
+    $('#new-user-modal').modal('show');
+    $.ajax({
+      method: 'POST',
+      url: frm.attr('action'),
+      data: {
+        'firstname': $('#user-firstname').val(),
+        'lastname': $('#user-lastname').val(),
+        'email': $('#user-email').val()
+      }
+    }).done(function(data) {
+
+      if (data.success) {
+        $('#new-user-modal-description').addClass('d-none');
+        $('#new-user-modal-spinner').addClass('d-none');
+        $('#new-user-modal-success').removeClass('d-none');
+        $('#new-user-modal-success-userid').text(data.userid);
+        $('#new-user-modal-new').removeClass('d-none');
+        $('#new-recipe-modal-new').click(function() {
+          location.reload();
+        });
+        setTimeout(function () {
+          location.href = '{{ Controller.getlink('admin:users') }}';
+        }, 10000);
+      } else {
+        $('#new-user-modal-description').addClass('d-none');
+        $('#new-user-modal-spinner').addClass('d-none');
+        $('#new-user-modal-error').removeClass('d-none');
+        $('#new-user-modal-error-msg').text(data.message);
+        $('#new-user-modal-close').removeClass('d-none');
+      }
+    });
+
+  });

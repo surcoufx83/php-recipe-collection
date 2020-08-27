@@ -27,8 +27,8 @@ class Mail {
     $this->mailprovider->isHTML(true);
   }
 
-  public function send(string $toName, string $toMail, string $subject, array $content) : bool {
-    global $twig;
+  public function send(string $toName, string $toMail, string $subject, array $content, array &$response) : bool {
+    global $Controller, $twig;
     $body = $twig->render('mails/body.html.twig', $content);
     $this->mailprovider->addAddress($toMail, $toName);
     $this->mailprovider->Subject = $subject;
@@ -37,6 +37,8 @@ class Mail {
       $this->mailprovider->send();
       return true;
     } catch (Exception $e) {
+      $response = $Controller->Config()->getResponseArray(210);
+      $response['message'] .= $this->mailprovider->ErrorInfo;
       return false;
     }
   }

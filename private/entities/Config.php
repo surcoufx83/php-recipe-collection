@@ -71,6 +71,7 @@ final class Config {
       202 => ['code' => 202, 'message' => $Controller->l('response_dbInsertException'), 'success' => false],
       203 => ['code' => 203, 'message' => $Controller->l('response_dbUpdateException'), 'success' => false],
       204 => ['code' => 204, 'message' => $Controller->l('response_dbSelectException'), 'success' => false],
+      210 => ['code' => 210, 'message' => $Controller->l('response_sendMailFailed'), 'success' => false],
     ];
   }
 

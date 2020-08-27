@@ -2,6 +2,10 @@ book:
   my: 'My cookbook'
 
 breadcrumb:
+  admin:
+    home: 'Administration'
+    newUser: 'Setup new user'
+    user: 'User administration'
   home: 'Home'
   newRecipe: 'New recipe'
   recipes: 'Recipes'
@@ -119,7 +123,11 @@ page:
     submit: 'Save and log in'
     alreadyActivated:
       description: 'The user account is already activated or the link is outdated. Please log in with your account to open your cookbook.'
-  admin: 'Administration'
+  admin:
+    user:
+      btnCreate: 'Add user'
+      title: 'User administration'
+    title: 'Administration'
   createRecipe: 'New recipe'
   home: 'Home'
   lists: 'Lists'
@@ -181,6 +189,7 @@ response:
   notAuthenticatedException: 'User not authenticated.'
   pageMovedException: 'The requested page has been moved and can no longer be retrieved via web request or CLI.'
   parameterException: 'No processing is configured for the specified parameters.'
+  sendMailFailed: 'The mail could not be sent: '
   undefinedException: 'An unspecified error has occurred in the backend. Your changes were not accepted.'
 
 sendmail:

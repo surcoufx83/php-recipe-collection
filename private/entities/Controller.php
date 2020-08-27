@@ -50,6 +50,10 @@ class Controller implements IController {
     return $ret;
   }
 
+  public function dberror() : string {
+    return $this->database->error;
+  }
+
   public function dbescape($value, bool $includeQuotes = true) : string {
     $value = $this->database->real_escape_string($value);
     if ($includeQuotes && !is_integer($value))
@@ -87,10 +91,6 @@ class Controller implements IController {
     switch($items[0]) {
       case 'admin':
         return $this->getLink_Admin($items);
-      case 'ajax':
-        return $this->getLink_Ajax($items);
-      case 'dropzone':
-        return $this->getLink_Dropzone($items);
       case 'maintenance':
         return '/maintenance';
       case 'private':
@@ -105,57 +105,24 @@ class Controller implements IController {
     return null;
   }
 
-  private function getLink_Ajax(array $params) : ?string {
-    switch($params[1]) {
-      case 'admin':
-      return $this->getLink_AjaxAdmin($params);
-      break;
-    }
-    return null;
-  }
-
-  private function getLink_AjaxAdmin(array $params) : ?string {
-    switch($params[2]) {
-      case 'address':
-        switch($params[3]) {
-          case 'create':
-            return '/ajax/admin/address/create';
-          case 'search':
-            return '/ajax/admin/search/address';
-        }
-        return null;
-    }
-    return null;
-  }
-
   private function getLink_Admin(array $params) : ?string {
     switch($params[1]) {
-      case 'address':
-        return '/admin/address/'.$params[2];
-      case 'addresses':
-        return '/admin/addresses';
       case 'cronjobs':
         return '/admin/cronjobs';
       case 'logs':
         return '/admin/logs';
       case 'main':
         return '/admin';
+      case 'new-user':
+        return '/admin/new-user';
+      case 'new-user-post':
+        return '/admin/new-user';
       case 'settings':
         return '/admin/settings';
-      case 'storage':
-        return '/admin/storage';
       case 'user':
         return '/admin/user/'.$params[2];
       case 'users':
         return '/admin/users';
-    }
-    return null;
-  }
-
-  private function getLink_Dropzone(array $params) : ?string {
-    switch($params[1]) {
-      case 'main':
-        return '/dropzone';
     }
     return null;
   }
@@ -731,13 +698,6 @@ class Controller implements IController {
   }
 
   public function tearDown() : void {
-
-    /*$demo = new BlankUser('gammel', 'bot', 'pirate1983@gmail.com');
-    if ($demo->save()) {
-      $demo->sendActivationMail();
-    } else
-      var_dump($this->database);
-    var_dump($demo);*/
 
     foreach ($this->changedObjects as $key => $object) {
 

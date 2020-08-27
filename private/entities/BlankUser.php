@@ -100,7 +100,7 @@ class BlankUser implements IUser, IDbObject, IHashable {
     return false;
   }
 
-  public function sendActivationMail() : bool {
+  public function sendActivationMail(array &$response) : bool {
     global $Controller, $twig, $OUT;
     $mail = new Mail();
     $this->mailvalidationcode = HashHelper::generate_token(12);
@@ -109,7 +109,7 @@ class BlankUser implements IUser, IDbObject, IHashable {
       'Headline' => $Controller->l('sendmail_registration_activationMail_title'),
       'Content' => $twig->render('mails/activation-mail.html.twig', $OUT),
     ];
-    if ($mail->send($this->name, $this->mailadress, $Controller->l('sendmail_registration_activationMail_subject'),  $data)) {
+    if ($mail->send($this->name, $this->mailadress, $Controller->l('sendmail_registration_activationMail_subject'),  $data, $response)) {
       $this->changes['user_email_validation'] = $this->mailvalidationcode;
       $Controller->updateDbObject($this);
       return true;
@@ -117,7 +117,11 @@ class BlankUser implements IUser, IDbObject, IHashable {
     return false;
   }
 
-  public function save() : bool {
+  public function setPassword(string $newPassword, string $oldPassword) : bool {
+    return false;
+  }
+
+  public function save(array &$response) : bool {
     global $Controller;
     $result = $Controller->insertSimple('users',
       ['user_firstname', 'user_lastname', 'user_fullname', 'user_password', 'user_email'],
@@ -127,6 +131,8 @@ class BlankUser implements IUser, IDbObject, IHashable {
       $this->id = $result;
       return true;
     }
+    $response = $Controller->Config()->getResponseArray(202);
+    $response['message'] = $Controller->dberror();
     return false;
   }
 

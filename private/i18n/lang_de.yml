@@ -2,6 +2,10 @@ book:
   my: 'Mein Kochbuch'
 
 breadcrumb:
+  admin:
+    home: 'Administration'
+    newUser: 'Neuer Benutzer'
+    user: 'Benutzerverwaltung'
   home: 'Startseite'
   newRecipe: 'Neues Rezept'
   recipes: 'Rezepte'
@@ -120,7 +124,38 @@ page:
     alreadyActivated:
       description: 'Das Benutzerkonto ist bereits aktiviert oder der Link ist veraltet. Bitte melde dich mit deinem Konto an, um dein Kochbuch zu öffnen.'
   admin:
-
+    newUser:
+      dataprivacy: 'Wichtig: Im Sinne des Datenschutzes kläre bitte vor dem Eintragen von Benutzern immer mit diesen persönlich ab, ob sie mit der Registrierung und damit der Speicherung persönlicher Daten (Name und E-Mailadresse) einverstanden sind.'
+      header: 'Benutzerregistrierung'
+      requiredFields: 'Alle mit <b><span class=\'text-contrast\'>*</span></b> markierten Felder müssen befüllt werden.'
+      subject: 'Mit diesem Formular wird ein neuer Benutzer für das Kochbuch registriert. Nach erfolgreichem Speichern erhält er eine E-Mail für den Abschluss der Registrierung. Das Passwort für den Login wird durch den Benutzer selbst vergeben.'
+      title: 'Neuen Benutzer registrieren'
+      chapter1:
+        firstname:
+          header: 'Vorname'
+          placeholder: 'z.B. Stefan'
+          feedback: 'Der Vorname muss angegeben werden.'
+        lastname:
+          header: 'Nachname'
+          placeholder: 'z.B. Zimmermann'
+          feedback: 'Der Nachname muss angegeben werden.'
+        email:
+          header: 'E-Mailadresse'
+          placeholder: 'z.B. foobar@example.com'
+          feedback: 'Die E-Mailadresse muss angegeben werden.'
+        submitButton:
+          title: 'Benutzerdaten speichern'
+        header: 'Allgemeine Angaben'
+      modal:
+        backButton: 'Zurück'
+        description: 'Einen Moment bitte. Benutzerdaten werden gespeichert und die Benachrichtigungsmail wird versendet.'
+        error: 'Das hätte nicht passieren sollen, aber beim Speichern ist ein Fehler aufgetreten &#x1F613;. Fehler: '
+        newButton: 'Weiterer Benutzer'
+        success: 'Der Benutzer wurde gespeichert und benachrichtigt. User Id: '
+        title: 'Wird gespeichert...'
+    user:
+      btnCreate: 'Neuer Benutzer'
+      title: 'Benutzerverwaltung'
     title: 'Administration'
   books: 'Meine Kochbücher'
   createRecipe: 'Neues Rezept'
@@ -183,6 +218,7 @@ response:
   notAuthenticatedException: 'Benutzer nicht eingeloggt.'
   pageMovedException: 'Die angeforderte Seite wurde verschoben und kann nicht mehr per Webanforderung oder CLI abgerufen werden.'
   parameterException: 'Für die angegebenen Parameter ist keine Verarbeitung konfiguriert.'
+  sendMailFailed: 'Die Mail konnte nicht gesendet werden: '
   undefinedException: 'Im Backend ist ein nicht spezifizierter Fehler aufgetreten. Ihre Änderungen wurden nicht akzeptiert.'
 
 sendmail:
