@@ -6,6 +6,7 @@ use Surcouf\Cookbook;
 use Surcouf\Cookbook\Controller;
 use Surcouf\Cookbook\Mail;
 use Surcouf\Cookbook\Helper\AvatarsHelper;
+use Surcouf\Cookbook\Helper\ConverterHelper;
 use Surcouf\Cookbook\Helper\HashHelper;
 use Surcouf\Cookbook\IUser;
 use Surcouf\Cookbook\Database\EQueryType;
@@ -18,7 +19,7 @@ if (!defined('CORE2'))
 
 class User implements IUser, IDbObject, IHashable {
 
-  private $id, $firstname, $lastname, $name, $initials, $passwordhash, $mailadress, $hash, $avatar;
+  private $id, $firstname, $lastname, $name, $initials, $passwordhash, $mailadress, $hash, $avatar, $isadmin;
   private $mailvalidationcode, $mailvalidated, $lastactivity, $adconsent = false;
 
   private $changes = array();
@@ -31,6 +32,7 @@ class User implements IUser, IDbObject, IHashable {
     $this->initials = strtoupper(substr($this->firstname, 0, 1).substr($this->lastname, 0, 1));
     $this->passwordhash = $dr['user_password'];
     $this->mailadress = $dr['user_email'];
+    $this->isadmin = (ConverterHelper::to_bool($dr['user_isadmin']) && !is_null($dr['user_email_validated']));
     $this->mailvalidationcode = (!is_null($dr['user_email_validation']) ? $dr['user_email_validation'] : '');
     $this->mailvalidated = (!is_null($dr['user_email_validated']) ? new DateTime($dr['user_email_validated']) : '');
     $this->lastactivity = (!is_null($dr['user_last_activity']) ? new DateTime($dr['user_last_activity']) : '');
@@ -156,11 +158,28 @@ class User implements IUser, IDbObject, IHashable {
     return !is_null($this->hash);
   }
 
+  public function isAdmin() : bool {
+    return $this->isadmin;
+  }
+
   public function setPassword(string $newPassword, string $oldPassword) : bool {
     global $Controller;
     if ($this->passwordhash == '********' || password_verify($oldPassword, $this->passwordhash)) {
       $this->passwordhash = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => 12]);
       $this->changes['user_password'] = $this->passwordhash;
+      $Controller->updateDbObject($this);
+      return true;
+    }
+    return false;
+  }
+
+  public function validateEmail(string $token) : bool {
+    global $Controller;
+    if ($this->mailvalidationcode == $token) {
+      $this->mailvalidationcode = '';
+      $this->mailvalidated = new DateTime();
+      $this->changes['user_email_validation'] = '';
+      $this->changes['user_email_validated'] = $this->mailvalidated->format(DTF_SQL);
       $Controller->updateDbObject($this);
       return true;
     }

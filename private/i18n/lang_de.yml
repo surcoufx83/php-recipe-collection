@@ -119,7 +119,9 @@ page:
     submit: 'Speichern und Anmelden'
     alreadyActivated:
       description: 'Das Benutzerkonto ist bereits aktiviert oder der Link ist veraltet. Bitte melde dich mit deinem Konto an, um dein Kochbuch zu öffnen.'
-  admin: 'Administration'
+  admin:
+
+    title: 'Administration'
   books: 'Meine Kochbücher'
   createRecipe: 'Neues Rezept'
   home: 'Start'

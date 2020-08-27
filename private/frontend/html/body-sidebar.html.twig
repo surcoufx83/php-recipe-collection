@@ -39,10 +39,10 @@
                 <a href="{{ Controller.getLink('private:random') }}">
                   {{ Config.Icons.Random('fa-fw mr-2')|raw }} {{ Controller.l('page_random') }}
                 </a>
-              </li>
+              </li>{% if Controller.User().isAdmin() %}
               <li{% if Page.Current == 'admin:main' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('admin:main') }}">
-                {{ Config.Icons.Settings('fa-fw mr-2')|raw }} {{ Controller.l('page_admin') }}
+                {{ Config.Icons.Settings('fa-fw mr-2')|raw }} {{ Controller.l('page_admin_title') }}
                 </a>
                 {% if Page.Current == 'admin:main' %}
                 <ul class="nav-sidebar-level2">
@@ -58,12 +58,12 @@
                   <li{% if Page.CurrentSub == 'admin:logs' %} class="active"{% endif %}>
                     <a href="{{ Controller.getLink('admin:logs') }}">Server-Logs</a>
                   </li>
-                <li{% if Page.CurrentSub == 'admin:user' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('admin:user') }}">User</a>
+                <li{% if Page.CurrentSub == 'admin:users' %} class="active"{% endif %}>
+                    <a href="{{ Controller.getLink('admin:users') }}">User</a>
                   </li>
                 </ul>
                 {% endif %}
-              </li>
+              </li>{% endif %}
               <a class="sidebar-toggle-nav" role="button" type="button" href="#">
                 {{ Config.Icons.DoubleAngleRight.getIcon('fa-fw mr-2 sidebar-toggle-icon-open')|raw }}
                 {{ Config.Icons.DoubleAngleLeft.getIcon('fa-fw mr-2 sidebar-toggle-icon-close')|raw }}

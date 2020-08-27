@@ -18,7 +18,7 @@ if (!defined('CORE2'))
 
 class BlankUser implements IUser, IDbObject, IHashable {
 
-  private $id, $firstname, $lastname, $name, $initials, $passwordhash, $mailadress, $hash, $avatar;
+  private $id, $firstname, $lastname, $name, $initials, $passwordhash, $mailadress, $hash, $avatar, $isadmin;
   private $mailvalidationcode, $mailvalidated, $lastactivity, $adconsent = false;
 
   private $changes = array();
@@ -96,6 +96,10 @@ class BlankUser implements IUser, IDbObject, IHashable {
     return !is_null($this->hash);
   }
 
+  public function isAdmin() : bool {
+    return false;
+  }
+
   public function sendActivationMail() : bool {
     global $Controller, $twig, $OUT;
     $mail = new Mail();
@@ -123,6 +127,10 @@ class BlankUser implements IUser, IDbObject, IHashable {
       $this->id = $result;
       return true;
     }
+    return false;
+  }
+
+  public function validateEmail(string $token) : bool {
     return false;
   }
 

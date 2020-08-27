@@ -95,8 +95,10 @@ function post_activation() {
     $keepSession = ConverterHelper::to_bool($payload['keepSession']);
 
   $response = null;
-  if ($user->setPassword($payload['password1'], ''))
+  if ($user->setPassword($payload['password1'], '')) {
+    $user->validateEmail($token);
     $Controller->loginWithPassword($user->getMail(), $payload['password1'], $keepSession, $response);
+  }
   else
     $response = $Controller->Config()->getResponseArray(30);
   $response['isLoggedIn'] = $Controller->isAuthenticated();

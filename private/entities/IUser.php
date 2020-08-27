@@ -21,7 +21,9 @@ interface IUser {
   public function getName() : string;
   public function getSession() : ?Session;
   public function getValidationCode() : string;
+  public function isAdmin() : bool;
   public function setPassword(string $newPassword, string $oldPassword) : bool;
+  public function validateEmail(string $token) : bool;
   public function verify(string $password) : bool;
   public function verifySession(string $session_token, string $session_password) : bool;
 
