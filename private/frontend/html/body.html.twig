@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="/style/fontawesome-all-5.14.0.min.css">
     <link rel="stylesheet" href="/style/icofont.min.css">
     <link rel="stylesheet" href="/style/theme-1.0.0.css">
+    {% if Controller.User().agreedToAds() and Config.AdToken() %}
+<script data-ad-client="ca-pub-5505338479507158" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>{% endif %}
     {{ Header.JS|raw }}
     <title>{{ Config.PageTitle }}</title>
   </head>

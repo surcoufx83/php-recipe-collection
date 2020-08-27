@@ -9,6 +9,7 @@ if (!defined('CORE2'))
 
 interface IUser {
 
+  public function agreedToAds() : bool;
   public function createNewSession($keepSession) : bool;
   public function getAvatarUrl() : string;
   public function getFirstname() : string;

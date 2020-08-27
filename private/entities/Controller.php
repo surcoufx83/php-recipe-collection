@@ -729,6 +729,7 @@ class Controller implements IController {
   }
 
   public function tearDown() : void {
+    
     foreach ($this->changedObjects as $key => $object) {
 
       switch(get_class($object)) {

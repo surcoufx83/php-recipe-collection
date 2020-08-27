@@ -19,7 +19,7 @@ class User implements IUser, IDbObject, IHashable {
 
   private $controller = null;
   private $id, $firstname, $lastname, $name, $initials, $loginname, $passwordhash, $mailadress, $hash, $avatar;
-  private $mailvalidationcode, $mailvalidated, $lastactivity;
+  private $mailvalidationcode, $mailvalidated, $lastactivity, $adconsent = false;
 
   private $changes = array();
 
@@ -35,8 +35,17 @@ class User implements IUser, IDbObject, IHashable {
     $this->mailvalidationsent = (!is_null($dr['user_email_validation']) ? $dr['user_email_validation'] : '');
     $this->mailvalidated = (!is_null($dr['user_email_validated']) ? new DateTime($dr['user_email_validated']) : '');
     $this->lastactivity = (!is_null($dr['user_last_activity']) ? new DateTime($dr['user_last_activity']) : '');
+    $this->adconsent = (!is_null($dr['user_adconsent']) ? new DateTime($dr['user_adconsent']) : false);
     $this->hash = $dr['user_hash'];
     $this->avatar = $dr['user_avatar'];
+    if (is_null($this->hash))
+      $this->calculateHash();
+    if (is_null($this->avatar))
+      $this->getAvatarUrl();
+  }
+
+  public function agreedToAds() : bool {
+    return ($this->adconsent !== false);
   }
 
   public function calculateHash() : string {
