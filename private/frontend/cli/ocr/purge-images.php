@@ -1,6 +1,6 @@
 <?php
 
-use Surcouf\PhpArchive\Helper\Formatter;
+use Surcouf\Cookbook\Helper\Formatter;
 
 class OcrPurgeImagesCommand extends Ahc\Cli\Input\Command
 {

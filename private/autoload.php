@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 require_once DIR_BACKEND    .'/core.php';
 require_once DIR_BACKEND    .'/I18N.php';

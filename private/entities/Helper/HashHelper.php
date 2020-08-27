@@ -1,8 +1,8 @@
 <?php
 
-namespace Surcouf\PhpArchive\Helper;
+namespace Surcouf\Cookbook\Helper;
 
-use Surcouf\PhpArchive\Controller;
+use Surcouf\Cookbook\Controller;
 
 if (!defined('CORE2'))
   exit;
@@ -27,7 +27,7 @@ class HashHelper implements IHashHelper {
 
   public static function getHashAlgo() : string {
     global $Controller;
-    return $Controller->Config()->Checksum->Algorithm->getString();
+    return $Controller->Config()->ChecksumProvider;
   }
 
   public static function hash(string $input, ?string $algorithm = null) : string {

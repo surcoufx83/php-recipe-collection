@@ -5,14 +5,13 @@ namespace Surcouf\Cookbook;
 if (!defined('CORE2'))
   exit;
 
-class Tag implements ITag, IDbObject {
+class BlankTag implements ITag, IDbObject {
 
   private $id, $name;
   private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['tag_id']);
-    $this->name = $dr['tag_name'];
+  public function __construct($name) {
+    $this->name = $name;
   }
 
   public function getDbChanges() : array {
@@ -25,6 +24,11 @@ class Tag implements ITag, IDbObject {
 
   public function getName() : string {
     return $this->name;
+  }
+
+  public function setId(int $newId) : ITag {
+    $this->id = $newId;
+    return $this;
   }
 
 }

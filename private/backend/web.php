@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 use Twig\Environment;
 use Twig\Extension\DebugExtension;

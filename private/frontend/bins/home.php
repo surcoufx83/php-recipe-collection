@@ -1,9 +1,9 @@
 <?php
 
-use Surcouf\PhpArchive\Database\EAggregationType;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
-use Surcouf\PhpArchive\Helper\UiHelper\CarouselHelper;
+use Surcouf\Cookbook\Database\EAggregationType;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Helper\UiHelper\CarouselHelper;
 
 $Controller->get(array(
   'pattern' => '/',

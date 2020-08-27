@@ -5,21 +5,18 @@ namespace Surcouf\Cookbook;
 if (!defined('CORE2'))
   exit;
 
-class CookingStep implements ICookingStep, IDbObject {
+class BlankCookingStep extends CookingStep {
 
   private $id, $recipeid, $stepno, $title, $content;
   private $timeprep, $timecook, $timechill;
-  private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['step_id']);
-    $this->recipeid = intval($dr['recipe_id']);
-    $this->stepno = intval($dr['step_no']);
-    $this->title = $dr['step_title'];
-    $this->content = $dr['step_data'];
-    $this->timeprep = (!is_null($dr['step_time_preparation']) ? intval($dr['step_time_preparation']) : -1);
-    $this->timecook = (!is_null($dr['step_time_cooking']) ? intval($dr['step_time_cooking']) : -1);
-    $this->timechill = (!is_null($dr['step_time_chill']) ? intval($dr['step_time_chill']) : -1);
+  public function __construct(int $step, string $title, string $content, string $preptime, string $chilltime, string $cookingtime) {
+    $this->stepno = $step;
+    $this->title = $title;
+    $this->content = $content;
+    $this->timeprep = ($preptime != '' ? intval($preptime) : -1);
+    $this->timecook = ($chilltime != '' ? intval($chilltime) : -1);
+    $this->timechill = ($cookingtime != '' ? intval($cookingtime) : -1);
   }
 
   public function getContent() : string {
@@ -32,10 +29,6 @@ class CookingStep implements ICookingStep, IDbObject {
 
   public function getCookingTime() : int {
     return $this->timeprep;
-  }
-
-  public function getDbChanges() : array {
-    return $this->changes;
   }
 
   public function getId() : int {

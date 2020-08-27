@@ -2,12 +2,15 @@
   var lastContainerIndex = null;
   var currentIndex = null;
   var lastIngredientIndex = null;
+  var lastStepIndex = null;
   var imgdummy = null;
   var ingdummy = null;
+  var stepdummy = null;
 
   $(function() {
     imgdummy = $('#image-upload-dummy');
     ingdummy = $('#ingredient-dummy');
+    stepdummy = $('#step-dummy');
     createImgCopy(0);
     for (i=1; i<3; i++) {
       createIngCopy(i);
@@ -16,6 +19,11 @@
 
   $('button#ingredient-add-button').click(function() {
     createIngCopy(lastIngredientIndex + 1);
+    createIngCopy(lastIngredientIndex + 1);
+  });
+
+  $('button#step-add-button').click(function() {
+    createStepCopy(lastStepIndex + 1);
   });
 
   function createImgCopy(index) {
@@ -68,12 +76,7 @@
     var row = copy.find('div.row');
     row.attr('id', 'ingredient-' + index);
     row.attr('data-index', index);
-    var inp1 = copy.find('input.ingredient-amount');
-    inp1.attr('id', 'ingredient-amount-' + index);
-    inp1.attr('data-index', index);
-    var inp2 = copy.find('input.ingredient-subject');
-    inp2.attr('id', 'ingredient-description-' + index);
-    inp2.attr('data-index', index);
+    var sel = copy.find('select');
     var btn = copy.find('button.ingredient-delete');
     btn.attr('id', 'ingredient-delete-' + index);
     btn.attr('data-for', 'ingredient-' + index);
@@ -86,4 +89,57 @@
       $('#' + fore).parent().remove();
     });
     copy.removeClass('d-none');
+    sel.select2({
+      tags: true
+    });
   }
+
+  function createStepCopy(index) {
+    var copy = stepdummy.clone();
+    copy.removeAttr('id');
+    var lbl1 = copy.find('label.step-title-label');
+    lbl1.attr('for', 'step-title-' + index);
+    var inp1 = copy.find('input.step-title-input');
+    inp1.attr('id', 'step-title-' + index);
+    var lbl2 = copy.find('label.step-desc-label');
+    lbl2.attr('for', 'step-description-' + index);
+    var inp2 = copy.find('input.step-description-input');
+    inp2.attr('id', 'step-description-' + index);
+    $('#steps-container div.list-group-item:last').before(copy);
+    lastStepIndex = index;
+    copy.removeClass('d-none');
+  }
+
+  $('#new-recipe-form').submit(function(event) {
+    event.preventDefault();
+    var frm = $(this);
+    var invalid = $(':invalid');
+    if (invalid.length > 0)
+      return;
+    $('#new-recipe-modal').modal('show');
+    $.ajax({
+      contentType: false,
+      data: new FormData($('form#new-recipe-form')[0]),
+      dataType: 'json',
+      processData: false,
+      type: 'POST',
+      url: frm.attr('action')
+    }).done(function(data) {
+      if (data.success) {
+        $('#new-recipe-modal-description').addClass('d-none');
+        $('#new-recipe-modal-spinner').addClass('d-none');
+        $('#new-recipe-modal-success').removeClass('d-none');
+        $('#new-recipe-modal-new').removeClass('d-none');
+        $('#new-recipe-modal-forward').removeClass('d-none');
+        $('#new-recipe-modal-forward').click(function() {
+          location.href = data.ForwardTo;
+        });
+        $('#new-recipe-modal-new').click(function() {
+          location.href = data.ForwardNew;
+        });
+        setTimeout(function () {
+          location.href = data.ForwardTo;
+        }, 10000);
+      }
+    });
+  });

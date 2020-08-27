@@ -2,12 +2,12 @@
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Surcouf\PhpArchive\IController;
-use Surcouf\PhpArchive\Helper\HashHelper;
-use Surcouf\PhpArchive\IUser;
-use Surcouf\PhpArchive\User;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
+use Surcouf\Cookbook\IController;
+use Surcouf\Cookbook\Helper\HashHelper;
+use Surcouf\Cookbook\IUser;
+use Surcouf\Cookbook\User;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
 
 require_once realpath(__DIR__.'/../private/entities/Database/EQueryType.php');
 require_once realpath(__DIR__.'/../private/entities/Database/QueryBuilder.php');

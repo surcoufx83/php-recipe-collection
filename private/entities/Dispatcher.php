@@ -1,13 +1,13 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
-use Surcouf\PhpArchive\Config\EConfigParamKind;
-use Surcouf\PhpArchive\Helper\ConverterHelper;
-use Surcouf\PhpArchive\Request\ERequestMethod;
-use Surcouf\PhpArchive\Response\EOutputMode;
-use Surcouf\PhpArchive\Controller;
-use Surcouf\PhpArchive\User;
+use Surcouf\Cookbook\Config\EConfigParamKind;
+use Surcouf\Cookbook\Helper\ConverterHelper;
+use Surcouf\Cookbook\Request\ERequestMethod;
+use Surcouf\Cookbook\Response\EOutputMode;
+use Surcouf\Cookbook\Controller;
+use Surcouf\Cookbook\User;
 
 if (!defined('CORE2'))
   exit;
@@ -160,7 +160,7 @@ class Dispatcher {
 
   /**
   * This function returns the ERequestMethod enumeration value for the current HTTP request method.
-  * @return Surcouf\PhpArchive\Request\ERequestMethod
+  * @return Surcouf\Cookbook\Request\ERequestMethod
   */
   private function getHttpRequestMethod() {
     switch($_SERVER['REQUEST_METHOD']) {
@@ -184,7 +184,7 @@ class Dispatcher {
 
   /**
   * This function is called to register a function call for a URL. In the array $params various switches can be set, at least "pattern" is required.
-  * @param  string $method    The request method for which this function is allowed (according to Surcouf\PhpArchive\Request\ERequestMethod)
+  * @param  string $method    The request method for which this function is allowed (according to Surcouf\Cookbook\Request\ERequestMethod)
   * @param  array $params     An associative array to configure the function call.
   */
   function on(string $method, array $params) : void {

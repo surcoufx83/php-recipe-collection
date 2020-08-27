@@ -1,16 +1,15 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
-use Surcouf\PhpArchive;
-use Surcouf\PhpArchive\Controller;
-use Surcouf\PhpArchive\IController;
-use Surcouf\PhpArchive\Helper\AvatarsHelper;
-use Surcouf\PhpArchive\Helper\HashHelper;
-use Surcouf\PhpArchive\IUser;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
-use Surcouf\PhpArchive\User\Session;
+use Surcouf\Cookbook;
+use Surcouf\Cookbook\Controller;
+use Surcouf\Cookbook\Helper\AvatarsHelper;
+use Surcouf\Cookbook\Helper\HashHelper;
+use Surcouf\Cookbook\IUser;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\User\Session;
 use \DateTime;
 
 if (!defined('CORE2'))
@@ -62,9 +61,9 @@ class User implements IUser, IDbObject, IHashable {
     $session_token = HashHelper::generate_token(16);
     $session_password = HashHelper::generate_token(24);
 
-    $session_password4hash = hash('crc32b', substr($session_token, 0, 16));
+    $session_password4hash = HashHelper::hash(substr($session_token, 0, 16), $Controller->Config()->HashProvider);
     $session_password4hash .= $session_password;
-    $session_password4hash .= hash('crc32b', substr($session_token, 16));
+    $session_password4hash .= HashHelper::hash(substr($session_token, 16), $Controller->Config()->HashProvider);
 
     $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => 12]);
     $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => 12]);
@@ -77,7 +76,7 @@ class User implements IUser, IDbObject, IHashable {
         $this->session = new Session($this, array(
           'login_id' => 0,
           'user_id' => $this->id,
-          'login_time' => (new \DateTime())->format('Y-m-d H:i:s'),
+          'login_time' => (new DateTime())->format('Y-m-d H:i:s'),
           'login_keep' => $keepSession,
         ));
         return true;
@@ -142,10 +141,6 @@ class User implements IUser, IDbObject, IHashable {
     return $this->name;
   }
 
-  public function getProfileLink() : string {
-    return '/user/'.$this->id;
-  }
-
   public function getSession() : ?Session {
     return $this->session;
   }
@@ -156,49 +151,6 @@ class User implements IUser, IDbObject, IHashable {
 
   public function hasHash() : bool {
     return !is_null($this->hash);
-  }
-
-  public function loadFiles(int $folder, $tenant = null) : array {
-    global $Controller;
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'files', DB_ANY);
-    $query
-          ->select('categories', DB_ANY)
-          ->select('files', DB_ANY)
-          ->select('documents', DB_ANY)
-          ->select('types', DB_ANY)
-          ->select('folders', DB_ANY)
-          ->select('mounts', DB_ANY)
-          ->join('categories', ['categories', 'category_id', '=', 'files', 'category_id'])
-          ->join('documents', ['documents', 'document_id', '=', 'files', 'document_id'])
-          ->join('types', ['types', 'type_id', '=', 'documents', 'doctype_id'])
-          ->join('folders', ['folders', 'folder_id', '=', 'files', 'folder_id'])
-          ->join('mounts', ['mounts', 'mount_id', '=', 'folders', 'mount_id'])
-          ->where('files', 'folder_id', '=', $folder)
-          ->andWhere('mounts', 'user_id', '=', $this->id)
-          ->orderBy('files', 'file_name');
-    $result = $Controller->select($query);
-    $files = array();
-    while ($record = $result->fetch_assoc()) {
-      $files[] = $Controller->getFile($record)->getId();
-    }
-    return $files;
-  }
-
-  public function loadFolders(int $parent, $tenant = null) : array {
-    global $Controller;
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'folders', DB_ANY);
-    $query
-          ->select('mounts', DB_ANY)
-          ->join('mounts', ['mounts', 'mount_id', '=', 'folders', 'mount_id'])
-          ->where('folders', 'parent_id', '=', $parent)
-          ->andWhere('mounts', 'user_id', '=', $this->id)
-          ->orderBy('folders', 'folder_name');
-    $result = $Controller->select($query);
-    $folders = array();
-    while ($record = $result->fetch_assoc()) {
-      $folders[] = $Controller->getFolder($record)->getId();
-    }
-    return $folders;
   }
 
   public function verify($password) : bool {
@@ -223,9 +175,10 @@ class User implements IUser, IDbObject, IHashable {
     if ($result = $Controller->select($query)) {
       while ($record = $result->fetch_assoc()) {
         if (password_verify($session_token, $record['login_token'])) {
-          $pwdhash = hash('crc32b', substr($session_token, 0, 16));
+          $pwdhash = HashHelper::hash(substr($session_token, 0, 16), $Controller->Config()->HashProvider);
           $pwdhash .= $session_password;
-          $pwdhash .= hash('crc32b', substr($session_token, 16));
+          $pwdhash .= HashHelper::hash(substr($session_token, 16), $Controller->Config()->HashProvider);
+
           if (password_verify($pwdhash, $record['login_password'])) {
             $uptime = new DateTime();
 

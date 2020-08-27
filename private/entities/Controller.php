@@ -1,12 +1,14 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
-use Surcouf\PhpArchive\Config;
-use Surcouf\PhpArchive\Database\DbConf;
-use Surcouf\PhpArchive\Database\EAggregationType;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
+use Surcouf\Cookbook\Config;
+use Surcouf\Cookbook\Config\Icon;
+use Surcouf\Cookbook\Config\IconConfig;
+use Surcouf\Cookbook\Database\DbConf;
+use Surcouf\Cookbook\Database\EAggregationType;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
 
 if (!defined('CORE2'))
   exit;
@@ -21,11 +23,12 @@ class Controller implements IController {
   private $recipes = array();
   private $steps = array();
   private $tags = array();
+  private $units = array();
   private $users = array();
 
   private $changedObjects = array();
 
-  public function Config() : Config\Configuration {
+  public function Config() : Config {
     return $this->config;
   }
 
@@ -41,6 +44,12 @@ class Controller implements IController {
     return $this->currentUser;
   }
 
+  public function cancelTransaction() : bool {
+    $ret = $this->database->rollback();
+    $this->database->autocommit(true);
+    return $ret;
+  }
+
   public function dbescape($value, bool $includeQuotes = true) : string {
     $value = $this->database->real_escape_string($value);
     if ($includeQuotes && !is_integer($value))
@@ -52,6 +61,15 @@ class Controller implements IController {
     $query = $qbuilder->buildQuery();
     $result = $this->database->query($query);
     return $result;
+  }
+
+  public function finishTransaction() : bool {
+    $ret = $this->database->commit();
+    if ($ret == false) {
+      $this->database->rollback();
+    }
+    $this->database->autocommit(true);
+    return $ret;
   }
 
   public function get(array $params) : void {
@@ -146,8 +164,8 @@ class Controller implements IController {
     switch($params[1]) {
       case 'avatar':
         return '/pictures/avatars/'.$params[2];
-      case 'lists':
-        return '/lists';
+      case 'books':
+        return '/books';
       case 'login':
         return '/login';
       case 'logout':
@@ -245,6 +263,20 @@ class Controller implements IController {
     }
     if (is_array($filter))
       return $this->registerTag(null, $filter);
+    if (is_string($filter))
+      return $this->loadTagByName($filter);
+    return null;
+  }
+
+  public function getUnit($filter) : ?Unit {
+    if (is_integer($filter)) {
+      if (!array_key_exists($filter, $this->units))
+        return $this->loadUnit($filter);
+      else
+        return $this->units[$filter];
+    }
+    if (is_array($filter))
+      return $this->registerUnit(null, $filter);
     return null;
   }
 
@@ -258,36 +290,23 @@ class Controller implements IController {
     if (is_string($filter)) {
       return $this->loadUsername($filter);
     }
-    var_dump($filter);
-    //debug_print_backtrace();
-    exit;
-    // tbd
     return null;
   }
 
   public function init() : void {
+    global $i18n;
+    $this->langcode = $i18n->getAppliedLang();
     if (!$this->init_Database())
       exit;
     if (!$this->init_Config())
       exit;
     if (!$this->init_Dispatcher())
       exit;
-    global $i18n;
-    $this->langcode = $i18n->getAppliedLang();
   }
 
   private function init_Config() : bool {
-    $this->config = new Config\Configuration();
-    $result = null;
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'config', DB_ANY);
-    $query->orderBy(['parent_id', 'config_id']);
-    $result = $this->select($query);
-    if (!$result)
-      return false;
-    while ($record = $result->fetch_assoc()) {
-      $this->config->addChild($record);
-    }
-    define('MAINTENANCE', $this->config->Maintenance->Enabled->getBool());
+    $this->config = new Config();
+    define('MAINTENANCE', $this->config->MaintenanceMode);
     return true;
   }
 
@@ -451,6 +470,26 @@ class Controller implements IController {
     return $this->registerTag($id);
   }
 
+  private function loadTagByName(string $name) : ?Tag {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'tags', DB_ANY);
+    $query->where('tags', 'tag_name', 'LIKE', $name);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerTag(intval($record['tag_id']), $record);
+    }
+    return null;
+  }
+
+  private function loadUnit(int $id) : ?Unit {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'units', DB_ANY);
+    $query->where('units', 'unit_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerUnit(intval($record['unit_id']), $record);
+    }
+    return $this->registerUnit($id);
+  }
+
   private function loadUser(int $id) : ?User {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
     $query->where('users', 'user_id', '=', $id);
@@ -489,13 +528,13 @@ class Controller implements IController {
   private function loginWithCookies() : bool {
     if (count($_COOKIE) == 0)
       return false;
-    if (!array_key_exists($this->config->Cookies->User->getString(), $_COOKIE) ||
-        !array_key_exists($this->config->Cookies->Session->getString(), $_COOKIE) ||
-        !array_key_exists($this->config->Cookies->Password->getString(), $_COOKIE)) {
+    if (!array_key_exists($this->config->UserCookieName, $_COOKIE) ||
+        !array_key_exists($this->config->SessionCookieName, $_COOKIE) ||
+        !array_key_exists($this->config->PasswordCookieName, $_COOKIE)) {
       return false;
     }
-    $user = $this->loadUsername($_COOKIE[$this->config->Cookies->User->getString()]);
-    if (is_null($user) || !$user->verifySession($_COOKIE[$this->config->Cookies->Session->getString()], $_COOKIE[$this->config->Cookies->Password->getString()])) {
+    $user = $this->loadUsername($_COOKIE[$this->config->UserCookieName]);
+    if (is_null($user) || !$user->verifySession($_COOKIE[$this->config->SessionCookieName], $_COOKIE[$this->config->PasswordCookieName])) {
       $this->removeCookies();
       return false;
     }
@@ -618,6 +657,19 @@ class Controller implements IController {
     return $this->tags[$id];
   }
 
+  private function registerUnit(?int $id, array $record=null) : ?Unit {
+    if (is_null($id) && is_array($record))
+      $id = intval($record['unit_id']);
+    if (array_key_exists($id, $this->units))
+      return $this->units[$id];
+    if (is_null($record)) {
+      $this->units[$id] = null;
+      return null;
+    }
+    $this->units[$id] = new Unit($record);
+    return $this->units[$id];
+  }
+
   private function registerUser(?int $id, array $record=null) : ?User {
     if (is_null($id) && is_array($record))
       $id = intval($record['user_id']);
@@ -663,12 +715,17 @@ class Controller implements IController {
     $expires = 0;
     if ($longDuration) {
       global $NOW;
-      $expdatetime = $NOW->add($this->config->Cookies->ExpirationLong->getTimespan());
+      $expdatetime = $NOW->add($this->config->SessionLongExpirationTime);
       $expires = $expdatetime->getTimestamp();
     }
-    return ($this->setCookie($this->config->Cookies->User->getString(), $userCookie, $expires)
-      && $this->setCookie($this->config->Cookies->Session->getString(), $tokenCookie, $expires)
-      && $this->setCookie($this->config->Cookies->Password->getString(), $passwordCookie, $expires));
+    return ($this->setCookie($this->config->UserCookieName, $userCookie, $expires)
+      && $this->setCookie($this->config->SessionCookieName, $tokenCookie, $expires)
+      && $this->setCookie($this->config->PasswordCookieName, $passwordCookie, $expires));
+  }
+
+  public function startTransaction() : bool {
+    $this->database->autocommit(false);
+    return $this->database->begin_transaction();
   }
 
   public function tearDown() : void {
@@ -676,7 +733,7 @@ class Controller implements IController {
 
       switch(get_class($object)) {
 
-        case 'Surcouf\PhpArchive\User':
+        case 'Surcouf\Cookbook\User':
           if (count($object->getDbChanges()) == 0)
             break;
           $query = new QueryBuilder(EQueryType::qtUPDATE, 'users');

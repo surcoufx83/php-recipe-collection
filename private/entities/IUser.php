@@ -1,8 +1,8 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
-use Surcouf\PhpArchive\User\Session;
+use Surcouf\Cookbook\User\Session;
 
 if (!defined('CORE2'))
   exit;
@@ -20,8 +20,6 @@ interface IUser {
   public function getName() : string;
   public function getSession() : ?Session;
   public function getUsername() : string;
-  public function loadFiles(int $folder, $tenant = null) : array;
-  public function loadFolders(int $parent, $tenant = null) : array;
   public function verify($password) : bool;
   public function verifySession(string $session_token, string $session_password) : bool;
 

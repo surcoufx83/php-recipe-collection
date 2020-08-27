@@ -1,12 +1,12 @@
 <?php
 
-namespace Surcouf\PhpArchive\User;
+namespace Surcouf\Cookbook\User;
 
 use \DateTime;
-use Surcouf\PhpArchive\User;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
-use Surcouf\PhpArchive\Helper\ConverterHelper;
+use Surcouf\Cookbook\User;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Helper\ConverterHelper;
 
 if (!defined('CORE2'))
   exit;

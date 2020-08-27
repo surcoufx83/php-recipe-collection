@@ -1,6 +1,6 @@
 <?php
 
-use Surcouf\PhpArchive\Config\EConfigurationType;
+use Surcouf\Cookbook\Config\EConfigurationType;
 
 class AlgoBenchmarkCommand extends Ahc\Cli\Input\Command
 {

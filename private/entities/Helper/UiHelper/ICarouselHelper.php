@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive\Helper\UiHelper;
+namespace Surcouf\Cookbook\Helper\UiHelper;
 
 if (!defined('CORE2'))
   exit;

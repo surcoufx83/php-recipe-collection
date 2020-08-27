@@ -42,12 +42,20 @@ newRecipe:
     recipeTagsDescription: 'Tags markieren ein Rezept mit kurzen Schlagwörtern. Jedem Rezept können beliebig viele dieser Tags zugeordnet werden (z.B. \'Dinner\' und \'Für Zwei\').; Optional'
     recipeTagsSelect: 'Kein Tag gewählt.'
   chapter2:
-    amount:
+    addButton:
+      title: 'Anklicken um weitere Zutaten hinzuzufügen.'
+    delButton:
+      title: 'Anklicken um diese Zeile zu entfernen.'
+    quantity:
       header: 'Menge'
-      placeholder: 'z.B. 500 g'
+      placeholder: 'z.B. 6'
+    unit:
+      header: 'Einheit'
+      noUnit: 'Keine Einheit'
+      placeholder: 'z.B. EL'
     ingredient:
       header: 'Zutat'
-      placeholder: 'z.B. Rindergulasch'
+      placeholder: 'z.B. Olivenöl'
     header: 'Zutatenliste'
     description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Die Mengenangabe kannst du auch weglassen (z.B. für etwas Salz zum Würzen).'
   chapter3:
@@ -57,16 +65,68 @@ newRecipe:
     recipePicturesRemove: 'Entfernen'
     recipePicturesUpload: 'Hinzufügen'
   chapter4:
-    description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen.'
+    addButton:
+      title: 'Anklicken um einen weiteren Arbeitsschritt einzufügen.'
+    description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen. Optional kannst du für jeden Schritt auch noch angeben, wie lange Vorbereitung, Ruhezeit, und das Kochen dauern.'
     header: 'Schritt-für-Schritt Anleitung'
+    step:
+      duration:
+        cooking: 'Kochdauer'
+        description: 'Zeitaufwand (Minuten)'
+        preparation: 'Vorbereitung'
+        rest: 'Ruhezeit'
+      preparation:
+        description: 'Anweisungen'
+        invalidFeedback: 'Bitte gib einige Informationen über die Zubereitung an.'
+        placeholder: 'Bitte fülle hier eine detaillierte Beschreibung der Vorbereitung aus.'
+      title:
+        description: 'Überschrift für diesen Abschnitt'
+        placeholder: 'Trage hier eine kurze Überschrift ein.'
   chapter5:
     header: 'Weitere Optionen'
+  modal:
+    backButton: 'Zurück'
+    description: 'Einen Moment bitte. Die Rezeptdaten werden gerade ins Kochbuch geschrieben.'
+    error: 'Das hätte nicht passieren sollen, aber beim Speichern ist ein Fehler aufgetreten &#x1F613;. Fehlerinformationen wurden an Stefan gesendet.'
+    forwardButton: 'Zum Rezept'
+    newButton: 'Noch ein Rezept eintragen'
+    success: 'Das Rezept ist gespeichert. Du wirst gleich weitergeleitet...'
+    title: 'Rezept wird gespeichert...'
+  submitButton:
+    title: 'Rezept speichern'
+
+navigation:
+  topbar:
+    search:
+      placeholder: 'Suche'
+    user:
+      account: 'Account'
+      login: 'Anmelden'
+      logout: 'Abmelden'
+      settings: 'Einstellungen'
 
 page:
   admin: 'Administration'
+  books: 'Meine Kochbücher'
   createRecipe: 'Neues Rezept'
   home: 'Start'
-  lists: 'Listen'
+  login:
+    failed:
+      loginFailed: 'Anmeldung fehlgeschlagen.'
+    keepSession:
+      description: 'Deine Anmeldung bleibt auch nach dem Schließen des Webbrowsers gültig.'
+      title: 'Angemeldet bleiben.'
+    nameField:
+      invalidFeedback: 'Bitte gib deinen Benutzernamen ein.'
+      placeholder: 'Benutzername oder E-Mail-Adresse'
+    lostPassword:
+      title: 'Passwort verloren?'
+    passwordField:
+      invalidFeedback: 'Bitte gib dein Passwort ein.'
+      placeholder: 'Passwort'
+    submitButton:
+      title: 'Anmelden'
+    title: 'Benutzer Anmeldung'
   random: 'Zufälliges Rezept'
   search: 'Suche'
 
@@ -89,3 +149,23 @@ recipe:
       unpublish: 'Veröffentlichung zurückziehen'
   cookingSteps:
     header: 'Zubereitung'
+
+response:
+  badArgumentsException: 'Ungültige Argumente angegeben.'
+  badRequestException: 'Ungültige Anfrage.'
+  dbInsertException: 'Fehler beim Einfügen von Daten in die Datenbank.'
+  dbSelectException: 'Beim Abrufen von Datensätzen aus der Datenbank ist ein Fehler aufgetreten.'
+  dbStmtException: 'Fehler bei der Vorbereitung der Datenbank-Anweisung.'
+  dbUpdateException: 'Fehler beim Speichern der Änderungen in der Datenbank.'
+  functionNotFoundException: 'Die Seite, auf die Sie zuzugreifen versuchen, funktioniert derzeit nicht: die angegebene Funktion ist nicht verfügbar.'
+  insufficientPermissionException: 'Unzureichende Berechtigung für diese Aktion.'
+  loginFailed: 'Anmeldung fehlgeschlagen.'
+  loginSuccessfull: 'Anmeldung erfolgreich.'
+  maintenanceException: 'Wartungsmodus ist aktiviert.'
+  noApiKeyException: 'Der Zugriff erfordert ein Anmelde-Token. Bitte melden Sie sich zuerst über die Website an, bevor Sie den API-Zugang versuchen.'
+  noChanges: 'Es wurden keine Änderungen erkannt.'
+  noResults: 'Die Suche hat keine Ergebnisse zurückgeliefert.'
+  notAuthenticatedException: 'Benutzer nicht eingeloggt.'
+  pageMovedException: 'Die angeforderte Seite wurde verschoben und kann nicht mehr per Webanforderung oder CLI abgerufen werden.'
+  parameterException: 'Für die angegebenen Parameter ist keine Verarbeitung konfiguriert.'
+  undefinedException: 'Im Backend ist ein nicht spezifizierter Fehler aufgetreten. Ihre Änderungen wurden nicht akzeptiert.'

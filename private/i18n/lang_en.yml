@@ -42,12 +42,20 @@ newRecipe:
     recipeTagsDescription: 'Tags mark a recipe with short keywords. Any number of these tags can be assigned to each recipe (e.g. \'Dinner\' and \'For two\'); Optional'
     recipeTagsSelect: 'No tag selected.'
   chapter2:
-    amount:
+    addButton:
+      title: 'Click to add more ingredients.'
+    delButton:
+      title: 'Click to remove this line.'
+    quantity:
       header: 'Quantity'
-      placeholder: 'z.B. 500 g'
+      placeholder: 'eg. 6'
+    unit:
+      header: 'Unit'
+      noUnit: 'No unit'
+      placeholder: 'eg. tbsp.'
     ingredient:
       header: 'Ingredient'
-      placeholder: 'z.B. beef goulash'
+      placeholder: 'eg. Olive oil'
     header: 'List of ingredients'
     description: 'List all ingredients required for the recipe below. You can also leave out the quantity (e.g. for some salt to season).'
   chapter3:
@@ -57,16 +65,68 @@ newRecipe:
     recipePicturesRemove: 'Remove'
     recipePicturesUpload: 'Add picture'
   chapter4:
-    description: 'Use this section to describe the steps of the preparation. You can put everything in one block or create several steps using the plus sign.'
+    addButton:
+      title: 'Click to insert another work step.'
+    description: 'Use this section to describe the preparation steps. You can put everything in one block or create several steps using the plus sign. Optionally, for each step you can also specify how long the preparation, rest period, and cooking will take.'
     header: 'Step-by-step instructions'
+    step:
+      duration:
+        cooking: 'Cooking'
+        description: 'Time required (minutes)'
+        preparation: 'Preparation'
+        rest: 'Rest period'
+      preparation:
+        description: 'Instructions'
+        invalidFeedback: 'Please provide some information about the preparation.'
+        placeholder: 'Please fill in a detailed description of the preparation here.'
+      title:
+        description: 'Headline for this section'
+        placeholder: 'Fill in a short headline here.'
   chapter5:
     header: 'Further options'
+  modal:
+    backButton: 'Back'
+    description: 'One moment please. The recipe data is currently being written into the cookbook.'
+    error: 'This should not have happened, but an error occurred while saving &#x1F613;. Error information was sent to Stefan.'
+    forwardButton: 'Go to the recipe'
+    newButton: 'Add another recipe'
+    success: 'The recipe is saved. You'll be redirected...'
+    title: 'Saving recipe...'
+  submitButton:
+    title: 'Submit recipe'
+
+navigation:
+  topbar:
+    search:
+      placeholder: 'Search'
+    user:
+      account: 'My account'
+      login: 'Login'
+      logout: 'Logout'
+      settings: 'My preferences'
 
 page:
   admin: 'Administration'
   createRecipe: 'New recipe'
   home: 'Home'
   lists: 'Lists'
+  login:
+    failed:
+      loginFailed: 'Login failed.'
+    keepSession:
+      description: 'Your login remains valid even after closing the browser.'
+      title: 'Stay logged in.'
+    nameField:
+      invalidFeedback: 'Please enter your user name.'
+      placeholder: 'Username or e-mail address'
+    lostPassword:
+      title: 'Lost your password?'
+    passwordField:
+      invalidFeedback: 'Please enter your password.'
+      placeholder: 'Password'
+    submitButton:
+      title: 'Login'
+    title: 'User Login'
   random: 'Random recipe'
   search: 'Search'
 
@@ -89,3 +149,23 @@ recipe:
       unpublish: 'Reject publication'
   cookingSteps:
     header: 'Preparation'
+
+response:
+  badArgumentsException: 'Bad arguments provided.'
+  badRequestException: 'Bad request.'
+  dbInsertException: 'Error inserting some data into the database.'
+  dbSelectException: 'An error occurred when retrieving records from the database.'
+  dbStmtException: 'Error preparing db statement.'
+  dbUpdateException: 'Error when saving the changes to the database.'
+  functionNotFoundException: 'The page you are trying to access is currently not working: the specified function is not available.'
+  insufficientPermissionException: 'Insufficient permission for this action.'
+  loginFailed: 'Login failed.'
+  loginSuccessfull: 'Login successfull.'
+  maintenanceException: 'Maintenance mode enabled.'
+  noApiKeyException: 'Access requires logon token. Please log in via the website first before attempting API access.'
+  noChanges: 'No changes were detected.'
+  noResults: 'No results for the search query.'
+  notAuthenticatedException: 'User not authenticated.'
+  pageMovedException: 'The requested page has been moved and can no longer be retrieved via web request or CLI.'
+  parameterException: 'No processing is configured for the specified parameters.'
+  undefinedException: 'An unspecified error has occurred in the backend. Your changes were not accepted.'

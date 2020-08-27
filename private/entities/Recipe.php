@@ -1,13 +1,14 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 use \DateTime;
-use Surcouf\PhpArchive\Database\EAggregationType;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
-use Surcouf\PhpArchive\Helper\ConverterHelper;
-use Surcouf\PhpArchive\Helper\Formatter;
+use Surcouf\Cookbook\IRecipe;
+use Surcouf\Cookbook\Database\EAggregationType;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Helper\ConverterHelper;
+use Surcouf\Cookbook\Helper\Formatter;
 
 if (!defined('CORE2'))
   exit;
@@ -39,10 +40,7 @@ class Recipe implements IRecipe, IDbObject {
   }
 
   public function addIngredients(array $record) : void {
-    $this->ingredients[intval($record['ingredient_id'])] = [
-      'Amount' => $record['ingredient_amount'],
-      'Description' => $record['ingredient_content'],
-    ];
+    $this->ingredients[intval($record['ingredient_id'])] = new Ingredient($record);
   }
 
   public function addPicture(IPicture &$picture) : void {
@@ -212,6 +210,46 @@ class Recipe implements IRecipe, IDbObject {
     $Controller->loadRecipeRatings($this);
     $Controller->loadRecipeSteps($this);
     $Controller->loadRecipeTags($this);
+  }
+
+  public function setDescription(string $newDescription) : IRecipe {
+    global $Controller;
+    $this->description = $newDescription;
+    $this->changes['recipe_description'] = $newDescription;
+    $Controller->updateDbObject($this);
+    return $this;
+  }
+
+  public function setEaterCount(int $newCount) : IRecipe {
+    global $Controller;
+    $this->eater = $newCount;
+    $this->changes['recipe_eater'] = $newCount;
+    $Controller->updateDbObject($this);
+    return $this;
+  }
+
+  public function setName(string $newName) : IRecipe {
+    global $Controller;
+    $this->name = $newName;
+    $this->changes['recipe_name'] = $newName;
+    $Controller->updateDbObject($this);
+    return $this;
+  }
+
+  public function setSourceDescription(string $newDescription) : IRecipe {
+    global $Controller;
+    $this->sourcedesc = $newDescription;
+    $this->changes['recipe_source_desc'] = $newDescription;
+    $Controller->updateDbObject($this);
+    return $this;
+  }
+
+  public function setSourceUrl(string $newUrl) : IRecipe {
+    global $Controller;
+    $this->sourceurl = $newUrl;
+    $this->changes['recipe_source_url'] = $newUrl;
+    $Controller->updateDbObject($this);
+    return $this;
   }
 
 }
