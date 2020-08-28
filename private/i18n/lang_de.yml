@@ -153,6 +153,14 @@ page:
       btnCreate: 'Neuer Benutzer'
       title: 'Benutzerverwaltung'
     title: 'Administration'
+  books:
+    allbooks:
+      overview: 'Übersicht'
+      recipes: 'Meine Rezepte'
+      title: 'Meine Kochbücher'
+    recipes:
+      img:
+        title: 'Rezeptbild %s'
   createRecipe: 'Neues Rezept'
   home: 'Start'
   login:

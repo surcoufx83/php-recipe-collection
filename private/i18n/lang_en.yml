@@ -126,12 +126,12 @@ page:
     title: 'Administration'
   books:
     allbooks:
-      overview: 'Übersicht'
-      recipes: 'Meine Rezepte'
-      title: 'Meine Kochbücher'
+      overview: 'Overview'
+      recipes: 'My recipes'
+      title: 'My cookery books'
     recipes:
       img:
-        title: 'Rezeptbild %s'
+        title: 'Recipe image %s'
   createRecipe: 'New recipe'
   home: 'Home'
   lists: 'Lists'
