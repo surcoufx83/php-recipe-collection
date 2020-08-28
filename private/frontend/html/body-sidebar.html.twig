@@ -4,7 +4,7 @@
               <a title="{{ Controller.l('book_my') }}"
                 href="{{ Controller.getLink('private:home') }}">
                 <img class="avatar avatar-40" src="{{ Controller.User().getAvatarUrl() }}" />
-                <div class="nav-sidebar-hideable">{{ Controller.l('book_my') }}</div>
+                <div class="nav-sidebar-hideable">{{ Controller.User().getFirstname() }}</div>
               </a>
             </div>
             <ul class="nav-sidebar-level1">
@@ -20,12 +20,15 @@
               </li>
             <li{% if Page.Current == 'private:books' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:books') }}">
-                  {{ Config.Icons.Books('fa-fw mr-2')|raw }} {{ Controller.l('page_books') }}
+                  {{ Config.Icons.Books('fa-fw mr-2')|raw }} {{ Controller.l('page_books_allbooks_title') }}
                 </a>
-                {% if Page.Current == 'private:lists' %}
+                {% if Page.Current == 'private:books' %}
                 <ul class="nav-sidebar-level2">
-                  <li{% if Page.CurrentSub == 'private:lists' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('private:lists') }}">{{ Controller.l('lists_all') }}</a>
+                  <li{% if Page.CurrentSub == 'private:books' %} class="active"{% endif %}>
+                    <a href="{{ Controller.getLink('private:books') }}">{{ Controller.l('page_books_allbooks_overview') }}</a>
+                  </li>
+                <li{% if Page.CurrentSub == 'private:recipes' %} class="active"{% endif %}>
+                    <a href="{{ Controller.getLink('private:recipes') }}">{{ Controller.l('page_books_allbooks_recipes') }}</a>
                   </li>
                 </ul>
                 {% endif %}

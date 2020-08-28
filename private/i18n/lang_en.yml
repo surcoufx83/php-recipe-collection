@@ -1,11 +1,10 @@
-book:
-  my: 'My cookbook'
-
 breadcrumb:
   admin:
     home: 'Administration'
     newUser: 'Setup new user'
     user: 'User administration'
+  books:
+    home: 'My cookery books'
   home: 'Home'
   newRecipe: 'New recipe'
   recipes: 'Recipes'
@@ -13,9 +12,6 @@ breadcrumb:
 greetings:
   hello: 'Hello %s'
   recipeFrom: '%s from %s'
-
-lists:
-  all: 'All lists'
 
 newRecipe:
   header: 'New recipe from %s'
@@ -128,6 +124,14 @@ page:
       btnCreate: 'Add user'
       title: 'User administration'
     title: 'Administration'
+  books:
+    allbooks:
+      overview: 'Übersicht'
+      recipes: 'Meine Rezepte'
+      title: 'Meine Kochbücher'
+    recipes:
+      img:
+        title: 'Rezeptbild %s'
   createRecipe: 'New recipe'
   home: 'Home'
   lists: 'Lists'

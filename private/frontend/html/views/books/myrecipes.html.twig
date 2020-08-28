@@ -1,0 +1,55 @@
+
+      <div class="w-100">
+        <ul class="content-list">
+          {% for Recipe in Recipes %}
+          <li class="item item-hoverable">
+            <div class="item-flexbox">
+              <div class="item-icon">{% if Recipe.hasPictures() %}
+                {% set Picture = Recipe.getPictures()[0] %}
+                <a href="{{ Controller.getLink('recipe:show:' ~ Recipe.getId() ~ ':' ~ Recipe.getName()) }}">
+                  <img src="/pictures/cbimages/{{ Picture.getFilename() }}" style="max-height:60px;"
+                    title="{{ Controller.l('page_books_recipes_img_title', Recipe.getName()) }}" />
+                </a>{% endif %}
+              </div>
+              <div class="item-major">
+                <div class="title">
+                  <a href="{{ Controller.getLink('recipe:show:' ~ Recipe.getId() ~ ':' ~ Recipe.getName()) }}">
+                    {{ Recipe.getName() }}
+                  </a>
+                </div>
+                <div class="info">
+                  <span class="d-none d-md-inline">
+                    <a href="{{ Controller.getLink('recipe:show:' ~ Recipe.getId() ~ ':' ~ Recipe.getName()) }}">
+                      #{{ Recipe.getId() }}
+                    </a>
+                  </span>
+                  {% if Obj.getCategory() %} •
+                  <span>
+                    <a href="{{ Controller.getLink('private:category:' ~ Obj.getCategory().getId()) }}">
+                    {{ Config.Icons.Tag.getIcon('fa-fw fa-sm')|raw }}
+                    {{ Obj.getCategory().getName() }}
+                    </a>
+                  </span>
+                  {% endif %}{% if Obj.getDocument() and Obj.getDocument().getType() %} •
+                  <span>
+                    <a href="{{ Controller.getLink('private:type:' ~ Obj.getDocument().getType().getId()) }}">
+                    {{ Config.Icons.Classify.getIcon('fa-fw fa-sm')|raw }}
+                    {{ Obj.getDocument().getType().getName() }}
+                    </a>
+                  </span>
+                  {% endif %}{% if Customer.isBlocked() %} •
+                  <span>
+                    Sperrvermerk vom {{ Customer.getBlockedDate()|date('d.m.Y') }}
+                    durch {{ Customer.getBlockedBy().getName() }}
+                  </span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="item-minor">
+
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>

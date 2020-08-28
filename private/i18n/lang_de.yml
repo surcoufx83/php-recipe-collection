@@ -1,11 +1,10 @@
-book:
-  my: 'Mein Kochbuch'
-
 breadcrumb:
   admin:
     home: 'Administration'
     newUser: 'Neuer Benutzer'
     user: 'Benutzerverwaltung'
+  books:
+    home: 'Meine Kochbücher'
   home: 'Startseite'
   newRecipe: 'Neues Rezept'
   recipes: 'Rezepte'
@@ -13,9 +12,6 @@ breadcrumb:
 greetings:
   hello: 'Hallo %s'
   recipeFrom: '%s von %s'
-
-lists:
-  all: 'Alle Listen'
 
 newRecipe:
   header: 'Neues Rezept von %s'
@@ -157,7 +153,6 @@ page:
       btnCreate: 'Neuer Benutzer'
       title: 'Benutzerverwaltung'
     title: 'Administration'
-  books: 'Meine Kochbücher'
   createRecipe: 'Neues Rezept'
   home: 'Start'
   login:

@@ -203,6 +203,10 @@ class Recipe implements IRecipe, IDbObject {
     return $this->ispublic;
   }
 
+  public function hasPictures() : bool {
+    return count($this->pictures) > 0;
+  }
+
   public function loadComplete() : void {
     global $Controller;
     $Controller->loadRecipeIngredients($this);

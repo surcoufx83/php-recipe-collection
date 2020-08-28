@@ -145,6 +145,8 @@ class Controller implements IController {
         return '/';
       case 'random':
         return '/random';
+      case 'recipes':
+        return '/myrecipes';
       case 'search':
         return '/search';
       case 'settings':
