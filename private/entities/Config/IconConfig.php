@@ -18,6 +18,7 @@ final class IconConfig {
       'Back'              => ['space' => 'fas', 'icon' => 'arrow-left'],
       'Ban'               => ['space' => 'fas', 'icon' => 'ban'],
       'Books'             => ['space' => 'fas', 'icon' => 'book'],
+      'Copy'              => ['space' => 'fas', 'icon' => 'copy'],
       'Delete'            => ['space' => 'far', 'icon' => 'trash-alt'],
       'DoubleAngleLeft'   => ['space' => 'fas', 'icon' => 'angle-double-left'],
       'DoubleAngleRight'  => ['space' => 'fas', 'icon' => 'angle-double-right'],

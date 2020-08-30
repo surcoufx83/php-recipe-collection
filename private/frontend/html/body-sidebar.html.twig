@@ -13,12 +13,12 @@
                   {{ Config.Icons.Home('fa-fw mr-2')|raw }} {{ Controller.l('page_home') }}
                 </a>
               </li>
-              <li>
+              <li{% if Page.Current == 'recipe:new' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('recipe:new') }}">
                   {{ Config.Icons.Add('fa-fw mr-2')|raw }} {{ Controller.l('page_createRecipe') }}
                 </a>
               </li>
-            <li{% if Page.Current == 'private:books' %} class="active"{% endif %}>
+              <li{% if Page.Current == 'private:books' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:books') }}">
                   {{ Config.Icons.Books('fa-fw mr-2')|raw }} {{ Controller.l('page_books_allbooks_title') }}
                 </a>
@@ -27,8 +27,17 @@
                   <li{% if Page.CurrentSub == 'private:books' %} class="active"{% endif %}>
                     <a href="{{ Controller.getLink('private:books') }}">{{ Controller.l('page_books_allbooks_overview') }}</a>
                   </li>
+                </ul>
+                {% endif %}
+              </li>
+              <li{% if Page.Current == 'private:recipes' %} class="active"{% endif %}>
+                <a href="{{ Controller.getLink('private:recipes') }}">
+                  {{ Config.Icons.Copy('fa-fw mr-2')|raw }} {{ Controller.l('page_recipes_myrecipes') }}
+                </a>
+                {% if Page.Current == 'private:recipes' %}
+                <ul class="nav-sidebar-level2">
                 <li{% if Page.CurrentSub == 'private:recipes' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('private:recipes') }}">{{ Controller.l('page_books_allbooks_recipes') }}</a>
+                    <a href="{{ Controller.getLink('private:recipes') }}">{{ Controller.l('page_recipes_myrecipes') }}</a>
                   </li>
                 </ul>
                 {% endif %}

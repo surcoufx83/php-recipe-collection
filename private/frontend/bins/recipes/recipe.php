@@ -20,6 +20,11 @@ $Controller->get(array(
 ));
 
 $Controller->get(array(
+  'pattern' => '/myrecipes',
+  'fn' => 'ui_myrecipes'
+));
+
+$Controller->get(array(
   'pattern' => '/recipe/new',
   'fn' => 'ui_new_recipe'
 ));
@@ -29,6 +34,32 @@ $Controller->post(array(
   'fn' => 'ui_post_new_recipe',
   'outputMode' => EOutputMode::JSON
 ));
+
+function ui_myrecipes() {
+  global $Controller, $OUT, $twig;
+
+  $OUT['Page']['Breadcrumbs'][] = array(
+    'text' => lang('page_recipes_myrecipes'),
+    'url' => $Controller->getLink('private:recipes'),
+  );
+
+  $recipes = [];
+  $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
+  $query->where('recipes', 'user_id', '=', $Controller->User()->getId());
+  $result = $Controller->select($query);
+  while ($record = $result->fetch_assoc()) {
+    $recipe = $Controller->getRecipe($record);
+    $Controller->loadRecipePictures($recipe);
+    $Controller->loadRecipeRatings($recipe);
+    $Controller->loadRecipeTags($recipe);
+    $recipes[] = $recipe;
+  }
+
+  $OUT['Recipes'] = $recipes;
+  $OUT['Page']['Current'] = 'private:recipes';
+  $OUT['Page']['Heading1'] = lang('page_recipes_myrecipes');
+  $OUT['Content'] = $twig->render('views/books/myrecipes.html.twig', $OUT);
+} // ui_myrecipes()
 
 function ui_recipe() {
   global $Controller, $OUT, $twig;
@@ -104,6 +135,7 @@ function ui_new_recipe() {
 
   $OUT['Tags'] = $tags;
   $OUT['Units'] = $units;
+  $OUT['Page']['Current'] = 'recipe:new';
   $OUT['Page']['Heading1'] = $Controller->l('newRecipe_header', $Controller->User()->getFirstname());
   $OUT['Page']['Scripts']['FormValidator'] = true;
   $OUT['Page']['Scripts']['Custom'][] = 'new-recipe-imguploader';

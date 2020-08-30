@@ -7,7 +7,7 @@ breadcrumb:
     home: 'My cookery books'
   home: 'Home'
   newRecipe: 'New recipe'
-  recipes: 'Recipes'
+  recipes: 'My recipes'
 
 greetings:
   hello: 'Hello %s'
@@ -156,11 +156,7 @@ page:
   books:
     allbooks:
       overview: 'Overview'
-      recipes: 'My recipes'
       title: 'My cookery books'
-    recipes:
-      img:
-        title: 'Recipe image %s'
   createRecipe: 'New recipe'
   home: 'Home'
   lists: 'Lists'
@@ -182,6 +178,11 @@ page:
       title: 'Login'
     title: 'User Login'
   random: 'Random recipe'
+  recipes:
+    img:
+      title: 'Recipe image %s'
+    myrecipes: 'My recipes'
+    overview: 'Overview'
   search: 'Search'
 
 recipe:
