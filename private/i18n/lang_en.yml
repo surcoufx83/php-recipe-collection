@@ -120,6 +120,35 @@ page:
     alreadyActivated:
       description: 'The user account is already activated or the link is outdated. Please log in with your account to open your cookbook.'
   admin:
+    newUser:
+      dataprivacy: 'Important: In terms of data protection, please always clarify with users personally whether they agree to the registration and thus the storage of personal data (name and e-mail address) before registering.'
+      header: 'User registration'
+      requiredFields: 'All fields marked with <b><span class=\'text-contrast\'>*</span></b> must be filled.'
+      subject: 'With this form a new user is registered for the cookbook. After successful saving he will receive an e-mail to complete the registration. The password for the login is assigned by the user himself.'
+      title: 'Register new user'
+      chapter1:
+        firstname:
+          header: 'First name'
+          placeholder: 'z.B. Stefan'
+          feedback: 'The first name must be given.'
+        lastname:
+          header: 'Last name'
+          placeholder: 'z.B. Zimmermann'
+          feedback: 'The last name must be specified.'
+        email:
+          header: 'E-mail address'
+          placeholder: 'z.B. foobar@example.com'
+          feedback: 'The e-mail address must be entered.'
+        submitButton:
+          title: 'Save user data'
+        header: 'General information'
+      modal:
+        backButton: 'Back'
+        description: 'One moment please. User data will be saved and the notification mail will be sent.'
+        error: 'This should not have happened, but an error occurred while saving &#x1F613;. error: '
+        newButton: 'Another user'
+        success: 'The user has been saved and notified. User Id: '
+        title: 'Is saved...'
     user:
       btnCreate: 'Add user'
       title: 'User administration'

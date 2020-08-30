@@ -325,7 +325,8 @@ class Controller implements IController {
   }
 
   public function l(string $key, ...$params) : string {
-    return lang($key, $params);
+    $outval = lang($key, $params);
+    return ($outval == '' ? 'MISSING translation: '.$key : $outval);
   }
 
   private function loadPicture(int $id) : ?Picture {
