@@ -35,7 +35,7 @@
             {% for Step in Recipe.getSteps() %}
               <div>
                 <h5>{{ Step.getStepNo() }}. {{ Step.getTitle() }}</h5>
-                {{ Step.getContent()|raw }}
+                <p>{{ Step.getHtmlContent()|raw }}</p>
               </div>
             {% endfor %}
           </div>

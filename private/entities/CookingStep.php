@@ -38,6 +38,10 @@ class CookingStep implements ICookingStep, IDbObject {
     return $this->changes;
   }
 
+  public function getHtmlContent() : string {
+    return str_replace("\r\n", '<br />', $this->content);
+  }
+
   public function getId() : int {
     return $this->id;
   }
