@@ -82,8 +82,8 @@ class User implements IUser, IDbObject, IHashable {
     if ($Controller->setSessionCookies($this->mailadress, $session_token, $session_password, $keepSession)) {
       $tokenstr = (!is_null($token) ? json_encode($token->jsonSerialize()) : NULL);
       $query = new QueryBuilder(EQueryType::qtINSERT, 'user_logins');
-      $query->columns(['user_id', 'login_type', 'login_token', 'login_password', 'login_keep', 'login_oauthdata'])
-            ->values([$this->id, 1, $hash_token, $hash_password, $keepSession, $tokenstr]);
+      $query->columns(['user_id', 'login_token', 'login_password', 'login_keep', 'login_oauthdata'])
+            ->values([$this->id, $hash_token, $hash_password, $keepSession, $tokenstr]);
       if ($Controller->insert($query)) {
         $this->session = new Session($this, array(
           'login_id' => 0,
