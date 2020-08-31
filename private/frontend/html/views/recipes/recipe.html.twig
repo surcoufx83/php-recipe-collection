@@ -51,9 +51,15 @@
               <div class="row">
                 <div class="col">
                 {% if Recipe.isPublished() %}
-                  <a href="{{ Controller.getLink('recipe:unpublish:' ~ Recipe.getId()) }}">{{Controller.l('recipe_options_publication_unpublish')}}</a>
+                  <a href="{{ Controller.getLink('recipe:unpublish:' ~ Recipe.getId()) }}">
+                    {{ Config.Icons.Lock('fa-fw mr-2')|raw }}
+                    {{ Controller.l('recipe_options_publication_unpublish') }}
+                  </a>
                 {% else %}
-                  <a href="{{ Controller.getLink('recipe:publish:' ~ Recipe.getId()) }}">{{Controller.l('recipe_options_publication_publish')}}</a>
+                  <a href="{{ Controller.getLink('recipe:publish:' ~ Recipe.getId()) }}">
+                    {{ Config.Icons.Unlock('fa-fw mr-2')|raw }}
+                    {{ Controller.l('recipe_options_publication_publish') }}
+                  </a>
                 {% endif %}
                 </div>
               </div>

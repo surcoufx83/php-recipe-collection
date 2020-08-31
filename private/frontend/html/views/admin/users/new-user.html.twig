@@ -58,11 +58,25 @@
                 </div>
               </div>
             </div>
+            <div class="form-row">
+              <div class="form-group col-12">
+                <label for="user-name" class="col-form-label-sm">
+                  <b>{{ Controller.l('page_admin_newUser_chapter1_name_header') }} <span class="text-contrast">*</span></b>
+                </label>
+                <input class="form-control form-control-sm" type="text" id="user-name" name="name"
+                  placeholder="{{ Controller.l('page_admin_newUser_chapter1_name_placeholder') }}"
+                  aria-describedby="user-name-invalidFeedback"
+                  required>
+                <div class="invalid-feedback" id="user-name-invalidFeedback">
+                  {{ Controller.l('page_admin_newUser_chapter1_name_feedback') }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row mt-3">
           <div class="col-12">
-            <button class="btn btn-blue" type="submit">{{ Controller.l('page_admin_newUser_chapter1_submitButton_title') }}</button>
+            <button class="btn btn-blue" id="submitButton" type="submit">{{ Controller.l('page_admin_newUser_chapter1_submitButton_title') }}</button>
           </div>
         </div>
       </form>

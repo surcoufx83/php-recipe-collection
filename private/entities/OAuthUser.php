@@ -8,6 +8,7 @@ use Surcouf\Cookbook\Mail;
 use Surcouf\Cookbook\Helper\AvatarsHelper;
 use Surcouf\Cookbook\Helper\HashHelper;
 use Surcouf\Cookbook\IUser;
+use Surcouf\Cookbook\OAuth2Conf;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\User\Session;
@@ -18,24 +19,21 @@ use League\OAuth2\Client\Token\AccessToken;
 if (!defined('CORE2'))
   exit;
 
-class BlankUser implements IUser, IDbObject, IHashable {
+class OAuthUser implements IUser, IDbObject, IHashable {
 
   private $id, $firstname, $lastname, $name, $username, $oauthname, $initials, $passwordhash, $mailadress, $hash, $avatar, $isadmin;
   private $mailvalidationcode, $mailvalidated, $lastactivity, $registrationCompleted, $adconsent = false;
 
   private $changes = array();
 
-  public function __construct(string $firstname, string $lastname, string $username, string $email) {
-    $this->firstname = $firstname;
-    $this->lastname = $lastname;
-    $this->name = $firstname.' '.$lastname;
-    $this->mailadress = $email;
-    $this->username = $username;
-    $this->registrationCompleted = new DateTime();
+  public function __construct(string $userid) {
+    $this->username = 'OAuth2::'.$userid.'@'.OAuth2Conf::OATH_PROVIDER;
+    $this->mailadress = 'OAuth2::'.$userid.'@'.OAuth2Conf::OATH_PROVIDER;
+    $this->oauthname = $userid;
   }
 
   public function agreedToAds() : bool {
-    return ($this->adconsent !== false);
+    return false;
   }
 
   public function calculateHash() : string {
@@ -43,6 +41,31 @@ class BlankUser implements IUser, IDbObject, IHashable {
   }
 
   public function createNewSession(bool $keepSession, ?AccessToken $token=null) : bool {
+    global $Controller;
+    $session_token = HashHelper::generate_token(16);
+    $session_password = HashHelper::generate_token(24);
+    $session_password4hash = HashHelper::hash(substr($session_token, 0, 16), $Controller->Config()->HashProvider);
+    $session_password4hash .= $session_password;
+    $session_password4hash .= HashHelper::hash(substr($session_token, 16), $Controller->Config()->HashProvider);
+    $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => 12]);
+    $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => 12]);
+
+    if ($Controller->setSessionCookies($this->mailadress, $session_token, $session_password, $keepSession)) {
+      $tokenstr = (!is_null($token) ? json_encode($token->jsonSerialize()) : NULL);
+      $query = new QueryBuilder(EQueryType::qtINSERT, 'user_logins');
+      $query->columns(['user_id', 'login_type', 'login_token', 'login_password', 'login_keep', 'login_oauthdata'])
+            ->values([$this->id, 1, $hash_token, $hash_password, $keepSession, $tokenstr]);
+      if ($Controller->insert($query)) {
+        $this->session = new Session($this, array(
+          'login_id' => 0,
+          'user_id' => $this->id,
+          'login_time' => (new DateTime())->format('Y-m-d H:i:s'),
+          'login_keep' => $keepSession,
+          'login_oauthdata' => $tokenstr,
+        ));
+        return true;
+      }
+    }
     return false;
   }
 
@@ -117,23 +140,6 @@ class BlankUser implements IUser, IDbObject, IHashable {
     return !is_null($this->oauthname);
   }
 
-  public function sendActivationMail(array &$response) : bool {
-    global $Controller, $twig, $OUT;
-    $mail = new Mail();
-    $this->mailvalidationcode = HashHelper::generate_token(12);
-    $OUT['ActivationLink'] = $Controller->getLink('private:activation:'.$this->mailvalidationcode);
-    $data = [
-      'Headline' => $Controller->l('sendmail_registration_activationMail_title'),
-      'Content' => $twig->render('mails/activation-mail.html.twig', $OUT),
-    ];
-    if ($mail->send($this->name, $this->mailadress, $Controller->l('sendmail_registration_activationMail_subject'),  $data, $response)) {
-      $this->changes['user_email_validation'] = $this->mailvalidationcode;
-      $Controller->updateDbObject($this);
-      return true;
-    }
-    return false;
-  }
-
   public function setPassword(string $newPassword, string $oldPassword) : bool {
     return false;
   }
@@ -141,8 +147,8 @@ class BlankUser implements IUser, IDbObject, IHashable {
   public function save(array &$response) : bool {
     global $Controller;
     $result = $Controller->insertSimple('users',
-      ['user_name', 'user_firstname', 'user_lastname', 'user_fullname', 'user_password', 'user_email', 'user_registration_completed'],
-      [$this->username, $this->firstname, $this->lastname, $this->name, '********', $this->mailadress, $this->registrationCompleted->format(DTF_SQL)]
+      ['user_name', 'oauth_user_name', 'user_email', 'user_email_validated'],
+      [$this->username, $this->oauthname, $this->mailadress, (new \DateTime())->format(DTF_SQL)]
     );
     if ($result > -1) {
       $this->id = $result;

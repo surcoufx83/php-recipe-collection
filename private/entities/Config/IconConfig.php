@@ -18,6 +18,7 @@ final class IconConfig {
       'Back'              => ['space' => 'fas', 'icon' => 'arrow-left'],
       'Ban'               => ['space' => 'fas', 'icon' => 'ban'],
       'Books'             => ['space' => 'fas', 'icon' => 'book'],
+      'Cloud'             => ['space' => 'fas', 'icon' => 'cloud'],
       'Copy'              => ['space' => 'fas', 'icon' => 'copy'],
       'Delete'            => ['space' => 'far', 'icon' => 'trash-alt'],
       'DoubleAngleLeft'   => ['space' => 'fas', 'icon' => 'angle-double-left'],
@@ -28,6 +29,7 @@ final class IconConfig {
       'Favorite'          => ['space' => 'fas', 'icon' => 'heart'],
       'Group'             => ['space' => 'fas', 'icon' => 'users'],
       'Home'              => ['space' => 'fas', 'icon' => 'home'],
+      'Lock'              => ['space' => 'fas', 'icon' => 'lock'],
       'Login'             => ['space' => 'fas', 'icon' => 'key'],
       'LoginError'        => ['space' => 'fas', 'icon' => 'skull-crossbones'],
       'Logout'            => ['space' => 'fas', 'icon' => 'sign-out-alt'],
@@ -39,6 +41,7 @@ final class IconConfig {
       'Search'            => ['space' => 'fas', 'icon' => 'search'],
       'Settings'          => ['space' => 'fas', 'icon' => 'cog'],
       'Spinner'           => ['space' => 'fas', 'icon' => 'spinner'],
+      'Unlock'            => ['space' => 'fas', 'icon' => 'lock-open'],
     ];
   }
 

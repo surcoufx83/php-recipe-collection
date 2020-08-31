@@ -65,7 +65,10 @@ function ui_admin_post_newuser() {
   if (!array_key_exists('email', $payload) || $payload['email'] == '' || is_null($payload['email']))
     return $Controller->Config()->getResponseArray(80);
 
-  $user = new BlankUser($payload['firstname'], $payload['lastname'], $payload['email']);
+  if (!array_key_exists('username', $payload) || $payload['username'] == '' || is_null($payload['username']))
+    return $Controller->Config()->getResponseArray(80);
+
+  $user = new BlankUser($payload['firstname'], $payload['lastname'], $payload['username'], $payload['email']);
   $response = [];
   if (!$user->save($response))
     return $response;

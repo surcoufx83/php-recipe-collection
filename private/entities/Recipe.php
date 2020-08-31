@@ -240,6 +240,11 @@ class Recipe implements IRecipe, IDbObject {
     return $this;
   }
 
+  public function setPublic(bool $public) : IRecipe {
+    global $Controller;
+    
+  }
+
   public function setSourceDescription(string $newDescription) : IRecipe {
     global $Controller;
     $this->sourcedesc = $newDescription;

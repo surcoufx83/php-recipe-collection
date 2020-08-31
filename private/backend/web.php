@@ -9,6 +9,9 @@ use Twig\Loader\FilesystemLoader;
 if (!defined('CORE2'))
   exit;
 
+if (file_exists(DIR_BACKEND.'/conf.oauth2.php'))
+    require_once DIR_BACKEND.DIRECTORY_SEPARATOR.'conf.oauth2.php';
+
 $loader = new FilesystemLoader(DIR_FRONTEND.'/html');
 $twig = new Environment($loader, array(
     'cache' => (DEBUG ? false : DIR_CACHE),

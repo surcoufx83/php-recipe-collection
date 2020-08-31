@@ -30,7 +30,7 @@ interface IController {
   public function getStep($filter) : ?CookingStep;
   public function getTag($filter) : ?Tag;
   public function getUnit($filter) : ?Unit;
-  public function getUser($filter) : ?User;
+  public function getUser($filter=null) : ?User;
   public function init() : void;
   public function insert(QueryBuilder &$qbuilder) : bool;
   public function insertSimple(string $table, array $columns, array $data) : int;

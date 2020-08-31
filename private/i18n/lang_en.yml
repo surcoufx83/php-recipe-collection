@@ -129,19 +129,27 @@ page:
       chapter1:
         firstname:
           header: 'First name'
-          placeholder: 'z.B. Stefan'
+          placeholder: 'eg. Stefan'
           feedback: 'The first name must be given.'
         lastname:
           header: 'Last name'
-          placeholder: 'z.B. Zimmermann'
+          placeholder: 'eg. Zimmermann'
           feedback: 'The last name must be specified.'
         email:
           header: 'E-mail address'
-          placeholder: 'z.B. foobar@example.com'
+          placeholder: 'eg. foobar@example.com'
           feedback: 'The e-mail address must be entered.'
+          serverFeedback: 'The e-mail address %s has already been registered.'
+        name:
+          header: 'Username'
+          placeholder: 'eg. stefan'
+          feedback: 'A user name must be assigned.'
+          serverFeedback: 'The username %s is already in use.'
         submitButton:
           title: 'Save user data'
         header: 'General information'
+        serverFeedback: 'For the information %s the validation has not yet been completed.'
+        validationFailed: 'The check could not be performed.'
       modal:
         backButton: 'Back'
         description: 'One moment please. User data will be saved and the notification mail will be sent.'
@@ -161,6 +169,11 @@ page:
   home: 'Home'
   lists: 'Lists'
   login:
+    cloud:
+      description: 'Have you ever used our Nextcloud? Then use this account to log in here. Simple and secure!'
+      failed: 'Login via the Nextcloud failed.'
+      header: 'Login with Nextcloud account'
+      submit: 'Login with Nextcloud account'
     failed:
       loginFailed: 'Login failed.'
     keepSession:
@@ -174,6 +187,9 @@ page:
     passwordField:
       invalidFeedback: 'Please enter your password.'
       placeholder: 'Password'
+    regular:
+      description: 'If you have a dedicated user account for this website, you can login here with an email address and your password.'
+      header: 'Registration with e-mail address'
     submitButton:
       title: 'Login'
     title: 'User Login'
@@ -225,6 +241,8 @@ response:
   parameterException: 'No processing is configured for the specified parameters.'
   sendMailFailed: 'The mail could not be sent: '
   undefinedException: 'An unspecified error has occurred in the backend. Your changes were not accepted.'
+  validationSucceeded: 'The verification was successful. No errors were found.'
+  validationFailed: 'The following errors have occurred: '
 
 sendmail:
   registration:

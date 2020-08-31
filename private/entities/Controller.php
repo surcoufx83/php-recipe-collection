@@ -10,6 +10,8 @@ use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 
+use League\OAuth2\Client\Token\AccessToken;
+
 if (!defined('CORE2'))
   exit;
 
@@ -107,6 +109,10 @@ class Controller implements IController {
 
   private function getLink_Admin(array $params) : ?string {
     switch($params[1]) {
+      case 'ajax':
+        switch($params[2]) {
+          case 'testEntity': return '/admin/test/entity';
+        }
       case 'cronjobs':
         return '/admin/cronjobs';
       case 'logs':
@@ -117,6 +123,17 @@ class Controller implements IController {
         return '/admin/new-user';
       case 'new-user-post':
         return '/admin/new-user';
+      case 'oauth':
+        if (!$this->config->OAuth2Enabled())
+          return null;
+        switch($params[2]) {
+          case 'auth': return OAuth2Conf::OATH_AUTHURL;
+          case 'redirect' : return $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/oauth2/callback';
+          case 'token': return OAuth2Conf::OATH_TOKENURL;
+          //case 'user': return 'https://cloud.mogul.network/apps/oauth2/api/v1/userinfo';
+          // case 'user': return 'https://cloud.mogul.network/ocs/v2.php/apps/serverinfo/api/v1/info';
+          case 'user': return OAuth2Conf::OATH_DATAURL;
+        }
       case 'settings':
         return '/admin/settings';
       case 'user':
@@ -139,6 +156,8 @@ class Controller implements IController {
         return '/books';
       case 'login':
         return '/login';
+      case 'login-oauth2':
+        return '/oauth2/login';
       case 'logout':
         return '/logout';
       case 'home':
@@ -149,6 +168,8 @@ class Controller implements IController {
         return '/myrecipes';
       case 'search':
         return '/search';
+      case 'self-register':
+        return '/self-register';
       case 'settings':
         return '/settings';
     }
@@ -177,6 +198,17 @@ class Controller implements IController {
         return '/tag/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
     }
     return null;
+  }
+
+  public function getOAuthProvider() : \League\OAuth2\Client\Provider\GenericProvider {
+    return new \League\OAuth2\Client\Provider\GenericProvider([
+      'clientId'                => OAuth2Conf::OATH_CLIENTID,    // The client ID assigned to you by the provider
+      'clientSecret'            => OAuth2Conf::OATH_CLIENT_SECRET,   // The client password assigned to you by the provider
+      'redirectUri'             => $this->getLink('admin:oauth:redirect'),
+      'urlAuthorize'            => $this->getLink('admin:oauth:auth'),
+      'urlAccessToken'          => $this->getLink('admin:oauth:token'),
+      'urlResourceOwnerDetails' => $this->getLink('admin:oauth:user'),
+    ]);
   }
 
   public function getPicture($filter) : ?Picture {
@@ -477,12 +509,13 @@ class Controller implements IController {
 
   private function loadUsername(string $name) : ?User {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
-    $query->where('users', 'user_email', 'LIKE', $name);
+    $query->where('users', 'user_email', 'LIKE', $name)
+          ->orWhere('users', 'user_name', 'LIKE', $name);
     $result = $this->select($query);
     if ($record = $result->fetch_assoc()) {
       return $this->registerUser(intval($record['user_id']), $record);
     }
-    return $this->registerUser($id);
+    return null;
   }
 
   private function login() : bool {
@@ -505,12 +538,31 @@ class Controller implements IController {
         !array_key_exists($this->config->PasswordCookieName, $_COOKIE)) {
       return false;
     }
-    $user = $this->loadUsername($_COOKIE[$this->config->UserCookieName]);
+    $uname = $_COOKIE[$this->config->UserCookieName];
+    $user = $this->loadUsername($uname);
     if (is_null($user) || !$user->verifySession($_COOKIE[$this->config->SessionCookieName], $_COOKIE[$this->config->PasswordCookieName])) {
       $this->removeCookies();
       return false;
     }
     $this->currentUser = $user;
+    $this->renewSession();
+    return true;
+  }
+
+  public function loginWithOAuth(AccessToken $token, bool &$userCreated) : bool {
+    $values = $token->getValues();
+    if (!array_key_exists('user_id', $values))
+      return false;
+    $user = $this->getUser($values['user_id'], true);
+    if (is_null($user)) {
+      $user = new OAuthUser($values['user_id']);
+      $response = [];
+      if (!$user->save($response))
+        return false;
+      $userCreated = true;
+    }
+    $this->currentUser =& $user;
+    $this->currentUser->createNewSession(true, $token);
     return true;
   }
 
@@ -663,6 +715,19 @@ class Controller implements IController {
     }
   }
 
+  private function renewSession() : void {
+    $session = $this->currentUser->getSession();
+    $expires = 0;
+    if ($session->keep()) {
+      global $NOW;
+      $expdatetime = $NOW->add($this->config->SessionLongExpirationTime);
+      $expires = $expdatetime->getTimestamp();
+    }
+    $this->setCookie($this->config->UserCookieName, $_COOKIE[$this->config->UserCookieName], $expires);
+    $this->setCookie($this->config->SessionCookieName, $_COOKIE[$this->config->SessionCookieName], $expires);
+    $this->setCookie($this->config->PasswordCookieName, $_COOKIE[$this->config->PasswordCookieName], $expires);
+  }
+
   public function select(QueryBuilder &$qbuilder) : ?\mysqli_result {
     $query = $qbuilder->buildQuery();
     $result = $this->database->query($query);
@@ -713,6 +778,15 @@ class Controller implements IController {
           $query = new QueryBuilder(EQueryType::qtUPDATE, 'users');
           $query->update($object->getDbChanges());
           $query->where('users', 'user_id', '=', $object->getId());
+          $this->update($query);
+          break;
+
+        case 'Surcouf\Cookbook\User\Session':
+          if (count($object->getDbChanges()) == 0)
+            break;
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'user_logins');
+          $query->update($object->getDbChanges());
+          $query->where('user_logins', 'login_id', '=', $object->getId());
           $this->update($query);
           break;
 

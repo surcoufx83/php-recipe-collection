@@ -31,6 +31,18 @@ $Controller->post(array(
 ));
 
 $Controller->get(array(
+  'pattern' => '/oauth2/login(\?)?',
+  'requiresAuthentication' => false,
+  'fn' => 'ui_oauth2_login'
+));
+
+$Controller->get(array(
+  'pattern' => '/oauth2/callback\?[^/]+',
+  'requiresAuthentication' => false,
+  'fn' => 'ui_oauth2_callback'
+));
+
+$Controller->get(array(
   'pattern' => '/logout',
   'requiresAuthentication' => false,
   'fn' => 'ui_logout'
@@ -136,6 +148,24 @@ function post_login() {
 
 } // post_login()
 
+function ui_oauth2_login() {
+  global $Controller;
+  $Controller->Dispatcher()->startOAuthLogin();
+  exit;
+} // ui_oauth2_login()
+
+function ui_oauth2_callback() {
+  global $Controller, $OUT, $twig;
+
+  // if login successfull, dispatcher will forward the user
+  $Controller->Dispatcher()->finishOAuthLogin();
+
+  $OUT['LoginFailed'] = true;
+
+  $OUT['Page']['Scripts']['Custom'][] = 'auth-login';
+  $OUT['Content'] = $twig->render('views/user/login.html.twig', $OUT);
+} // ui_oauth2_callback()
+
 function ui_logout() {
   global $Controller;
   $Controller->logout();
@@ -143,7 +173,8 @@ function ui_logout() {
 } // ui_logout()
 
 function ui_settings() {
-  global $OUT, $twig;
+  global $Controller, $OUT, $twig;
+
   $OUT['Page']['Current'] = 'private:home';
   $OUT['Page']['CurrentSub'] = 'private:settings';
   $OUT['Page']['Heading1'] = 'Meine Einstellungen';

@@ -139,9 +139,17 @@ page:
           header: 'E-Mailadresse'
           placeholder: 'z.B. foobar@example.com'
           feedback: 'Die E-Mailadresse muss angegeben werden.'
+          serverFeedback: 'Die E-Mailadresse %s wurde bereits registriert.'
+        name:
+          header: 'Benutzername'
+          placeholder: 'z.B. stefan'
+          feedback: 'Es muss ein Benutzername vergeben werden.'
+          serverFeedback: 'Der Benutzername %s wird bereits verwendet.'
         submitButton:
           title: 'Benutzerdaten speichern'
         header: 'Allgemeine Angaben'
+        serverFeedback: 'Für die Information %s wurde die Validierung noch nicht fertiggestellt.'
+        validationFailed: 'Die Überprüfung konnte nicht ausgeführt werden.'
       modal:
         backButton: 'Zurück'
         description: 'Einen Moment bitte. Benutzerdaten werden gespeichert und die Benachrichtigungsmail wird versendet.'
@@ -160,6 +168,11 @@ page:
   createRecipe: 'Neues Rezept'
   home: 'Start'
   login:
+    cloud:
+      description: 'Du hast schon mal unsere Nextcloud verwendet? Dann nutze dieses Konto um dich hier anzumelden. Einfach und sicher!'
+      failed: 'Die Anmeldung über die Nextcloud ist fehlgeschlagen.'
+      header: 'Anmeldung mit Nextcloud-Konto'
+      submit: 'Mit Nextcloud-Konto anmelden'
     failed:
       loginFailed: 'Anmeldung fehlgeschlagen.'
     keepSession:
@@ -173,6 +186,9 @@ page:
     passwordField:
       invalidFeedback: 'Bitte gib dein Passwort ein.'
       placeholder: 'Passwort'
+    regular:
+      description: 'Sofern du einen dedizierten Benutzeraccount für diese Webseite hast, kannst du dich hier mit einer E-Mailadresse und deinem Passwort anmelden.'
+      header: 'Anmeldung mit E-Mailadresse'
     submitButton:
       title: 'Anmelden'
     title: 'Benutzer Anmeldung'
@@ -223,6 +239,8 @@ response:
   parameterException: 'Für die angegebenen Parameter ist keine Verarbeitung konfiguriert.'
   sendMailFailed: 'Die Mail konnte nicht gesendet werden: '
   undefinedException: 'Im Backend ist ein nicht spezifizierter Fehler aufgetreten. Ihre Änderungen wurden nicht akzeptiert.'
+  validationSucceeded: 'Die Überprüfung war erfolgreich. Es wurden keine Fehler festgestellt.'
+  validationFailed: 'Es sind folgende Fehler aufgetreten: '
 
 sendmail:
   registration:

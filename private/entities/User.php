@@ -14,13 +14,15 @@ use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\User\Session;
 use \DateTime;
 
+use League\OAuth2\Client\Token\AccessToken;
+
 if (!defined('CORE2'))
   exit;
 
 class User implements IUser, IDbObject, IHashable {
 
-  private $id, $firstname, $lastname, $name, $initials, $passwordhash, $mailadress, $hash, $avatar, $isadmin;
-  private $mailvalidationcode, $mailvalidated, $lastactivity, $adconsent = false;
+  private $id, $firstname, $lastname, $name, $username, $oauthname, $initials, $passwordhash, $mailadress, $hash, $avatar, $isadmin;
+  private $mailvalidationcode, $mailvalidated, $lastactivity, $registrationCompleted, $adconsent = false;
 
   private $changes = array();
 
@@ -29,6 +31,8 @@ class User implements IUser, IDbObject, IHashable {
     $this->firstname = $dr['user_firstname'];
     $this->lastname = $dr['user_lastname'];
     $this->name = $dr['user_fullname'];
+    $this->username = $dr['user_name'];
+    $this->oauthname = $dr['oauth_user_name'];
     $this->initials = strtoupper(substr($this->firstname, 0, 1).substr($this->lastname, 0, 1));
     $this->passwordhash = $dr['user_password'];
     $this->mailadress = $dr['user_email'];
@@ -36,6 +40,7 @@ class User implements IUser, IDbObject, IHashable {
     $this->mailvalidationcode = (!is_null($dr['user_email_validation']) ? $dr['user_email_validation'] : '');
     $this->mailvalidated = (!is_null($dr['user_email_validated']) ? new DateTime($dr['user_email_validated']) : '');
     $this->lastactivity = (!is_null($dr['user_last_activity']) ? new DateTime($dr['user_last_activity']) : '');
+    $this->registrationCompleted = (!is_null($dr['user_registration_completed']) ? new DateTime($dr['user_registration_completed']) : null);
     $this->adconsent = (!is_null($dr['user_adconsent']) ? new DateTime($dr['user_adconsent']) : false);
     $this->hash = $dr['user_hash'];
     $this->avatar = $dr['user_avatar'];
@@ -64,7 +69,7 @@ class User implements IUser, IDbObject, IHashable {
     return $this->hash;
   }
 
-  public function createNewSession($keepSession) : bool {
+  public function createNewSession(bool $keepSession, ?AccessToken $token=null) : bool {
     global $Controller;
     $session_token = HashHelper::generate_token(16);
     $session_password = HashHelper::generate_token(24);
@@ -75,15 +80,17 @@ class User implements IUser, IDbObject, IHashable {
     $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => 12]);
 
     if ($Controller->setSessionCookies($this->mailadress, $session_token, $session_password, $keepSession)) {
+      $tokenstr = (!is_null($token) ? json_encode($token->jsonSerialize()) : NULL);
       $query = new QueryBuilder(EQueryType::qtINSERT, 'user_logins');
-      $query->columns(['user_id', 'login_type', 'login_token', 'login_password', 'login_keep'])
-            ->values([$this->id, 1, $hash_token, $hash_password, $keepSession]);
+      $query->columns(['user_id', 'login_type', 'login_token', 'login_password', 'login_keep', 'login_oauthdata'])
+            ->values([$this->id, 1, $hash_token, $hash_password, $keepSession, $tokenstr]);
       if ($Controller->insert($query)) {
         $this->session = new Session($this, array(
           'login_id' => 0,
           'user_id' => $this->id,
           'login_time' => (new DateTime())->format('Y-m-d H:i:s'),
           'login_keep' => $keepSession,
+          'login_oauthdata' => $tokenstr,
         ));
         return true;
       }
@@ -150,6 +157,10 @@ class User implements IUser, IDbObject, IHashable {
     return $this->session;
   }
 
+  public function getUsername() : string {
+    return (!is_null($this->username) ? $this->username : $this->oauthname);
+  }
+
   public function getValidationCode() : string {
     return $this->mailvalidationcode;
   }
@@ -158,8 +169,16 @@ class User implements IUser, IDbObject, IHashable {
     return !is_null($this->hash);
   }
 
+  public function hasRegistrationCompleted() : bool {
+    return !is_null($this->registrationCompleted);
+  }
+
   public function isAdmin() : bool {
     return $this->isadmin;
+  }
+
+  public function isOAuthUser() : bool {
+    return !is_null($this->oauthname);
   }
 
   public function setPassword(string $newPassword, string $oldPassword) : bool {
@@ -204,25 +223,26 @@ class User implements IUser, IDbObject, IHashable {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'user_logins', DB_ANY);
     $query->where('user_logins', 'user_id', '=', $this->id)
           ->orderBy([['login_time', 'DESC']]);
-    if ($result = $Controller->select($query)) {
-      while ($record = $result->fetch_assoc()) {
-        if (password_verify($session_token, $record['login_token'])) {
-          $pwdhash = HashHelper::hash(substr($session_token, 0, 16), $Controller->Config()->HashProvider);
-          $pwdhash .= $session_password;
-          $pwdhash .= HashHelper::hash(substr($session_token, 16), $Controller->Config()->HashProvider);
+    $result = $Controller->select($query);
+    if (!$result || $result->num_rows == 0)
+      return false;
+    while ($record = $result->fetch_assoc()) {
+      if (password_verify($session_token, $record['login_token'])) {
+        $pwdhash = HashHelper::hash(substr($session_token, 0, 16), $Controller->Config()->HashProvider);
+        $pwdhash .= $session_password;
+        $pwdhash .= HashHelper::hash(substr($session_token, 16), $Controller->Config()->HashProvider);
 
-          if (password_verify($pwdhash, $record['login_password'])) {
-            $uptime = new DateTime();
+        if (password_verify($pwdhash, $record['login_password'])) {
+          $uptime = new DateTime();
 
-            $query = new QueryBuilder(EQueryType::qtUPDATE, 'user_logins');
-            $query->update(['login_time' => $uptime->format('Y-m-d H:i:s')]);
-            $query->where('user_logins', 'login_id', '=', intval($record['login_id']));
-            $Controller->update($query);
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'user_logins');
+          $query->update(['login_time' => $uptime->format('Y-m-d H:i:s')]);
+          $query->where('user_logins', 'login_id', '=', intval($record['login_id']));
+          $Controller->update($query);
 
-            $record['login_time'] = $uptime->format('Y-m-d H:i:s');
-            $this->session = new Session($this, $record);
-            return true;
-          }
+          $record['login_time'] = $uptime->format('Y-m-d H:i:s');
+          $this->session = new Session($this, $record);
+          return true;
         }
       }
     }

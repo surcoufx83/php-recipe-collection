@@ -25,6 +25,11 @@ $Controller->get(array(
 ));
 
 $Controller->get(array(
+  'pattern' => '/recipe/publish/(?<id>\d+)(/[^/]+)?',
+  'fn' => 'ui_recipe_publish'
+));
+
+$Controller->get(array(
   'pattern' => '/recipe/new',
   'fn' => 'ui_new_recipe'
 ));
@@ -33,6 +38,11 @@ $Controller->post(array(
   'pattern' => '/recipe/new',
   'fn' => 'ui_post_new_recipe',
   'outputMode' => EOutputMode::JSON
+));
+
+$Controller->get(array(
+  'pattern' => '/recipe/unpublish/(?<id>\d+)(/[^/]+)?',
+  'fn' => 'ui_recipe_unpublish'
 ));
 
 function ui_myrecipes() {
@@ -99,6 +109,24 @@ function ui_recipe() {
   $OUT['Page']['Heading1'] = (!is_null($recipe->getUserId()) ? lang('greetings_recipeFrom', [$recipe->getName(), $recipe->getUser()->getFirstname()]) : $recipe->getName());
   $OUT['Content'] = $twig->render('views/recipes/recipe.html.twig', $OUT);
 } // ui_recipe()
+
+function ui_recipe_publish() {
+  global $Controller, $OUT, $twig;
+
+  $recipe = $Controller->getRecipe($Controller->Dispatcher()->getMatchInt('id'));
+
+  if (is_null($recipe))
+    $Controller->Dispatcher()->forward('/');
+
+  if ($recipe->getUserId() != $Controller->User()->getId())
+    $Controller->Dispatcher()->forward('/');
+
+  if ($recipe->isPublished() == false)
+    $recipe->setPublic(true);
+
+  $Controller->Dispatcher()->forward($Controller->getLink('recipe:show:'.$recipe->getId().':'.$recipe->getName()));
+
+} // ui_recipe_publish()
 
 function ui_new_recipe() {
   global $Controller, $OUT, $twig;

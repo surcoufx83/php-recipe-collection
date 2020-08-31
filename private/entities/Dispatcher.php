@@ -132,6 +132,32 @@ class Dispatcher {
     exit;
   }
 
+  public function finishOAuthLogin() : bool {
+    global $Controller;
+    $provider = $Controller->getOAuthProvider();
+    session_start();
+
+    if (!array_key_exists('state', $_GET) || !array_key_exists('oauth2state', $_SESSION) || $_SESSION['oauth2state'] != $_GET['state']) {
+      unset($_SESSION['oauth2state']);
+      session_destroy();
+      return false;
+    }
+    try {
+      $accessToken = $provider->getAccessToken('authorization_code', [
+        'code' => $_GET['code']
+      ]);
+      $isUserCreated = false;
+      if ($Controller->loginWithOAuth($accessToken, $isUserCreated)) {
+        if ($isUserCreated)
+          $this->forward($Controller->getLink('private:self-register'));
+        $this->forward($Controller->getLink('private:home'));
+      }
+      return false;
+    } catch(\Exception $e) {
+      return false;
+    }
+  }
+
   /**
   * This function sends a forwarding header to the client, or a corresponding error message to the CLI.
   * @param  string $moveTo   The URL that is referred to.
@@ -264,6 +290,15 @@ class Dispatcher {
 
   public function getPayload() : array {
     return $_POST;
+  }
+
+  public function startOAuthLogin() : void {
+    global $Controller;
+    $provider = $Controller->getOAuthProvider();
+    $authorizationUrl = $provider->getAuthorizationUrl();
+    session_start();
+    $_SESSION['oauth2state'] = $provider->getState();
+    $this->forward($authorizationUrl);
   }
 
 }
