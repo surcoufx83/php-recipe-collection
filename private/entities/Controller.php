@@ -553,7 +553,8 @@ class Controller implements IController {
     $values = $token->getValues();
     if (!array_key_exists('user_id', $values))
       return false;
-    $user = $this->getUser($values['user_id'], true);
+    $userid = 'OAuth2::'.$values['user_id'].'@'.OAuth2Conf::OATH_PROVIDER;
+    $user = $this->getUser($userid, true);
     if (is_null($user)) {
       $user = new OAuthUser($values['user_id']);
       $response = [];
