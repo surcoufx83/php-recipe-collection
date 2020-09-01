@@ -49,6 +49,12 @@ $Controller->get(array(
 ));
 
 $Controller->get(array(
+  'pattern' => '/self-register',
+  'isSelfregistration' => true,
+  'fn' => 'ui_self_register'
+));
+
+$Controller->get(array(
   'pattern' => '/settings',
   'fn' => 'ui_settings'
 ));
@@ -171,6 +177,12 @@ function ui_logout() {
   $Controller->logout();
   $Controller->Dispatcher()->forward('/');
 } // ui_logout()
+
+function ui_self_register() {
+  global $Controller, $OUT, $twig;
+  if ($Controller->Dispatcher()->queryOAuthUserData())
+    $Controller->Dispatcher()->forward($Controller->getLink('private:home'));
+} // ui_self_register()
 
 function ui_settings() {
   global $Controller, $OUT, $twig;

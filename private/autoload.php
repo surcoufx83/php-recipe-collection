@@ -9,6 +9,9 @@ require_once DIR_BACKEND    .'/I18N.php';
 require_once DIR_BACKEND    .'/conf.mysql.php';
 require_once DIR_BACKEND    .'/conf.sendmail.php';
 
+if (file_exists(DIR_BACKEND.DIRECTORY_SEPARATOR.'conf.oauth2.php'))
+    require_once DIR_BACKEND.DIRECTORY_SEPARATOR.'conf.oauth2.php';
+
 spl_autoload_register(function($className)
 {
   $className = str_replace(__NAMESPACE__.'\\', '', $className);

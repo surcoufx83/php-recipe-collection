@@ -48,6 +48,14 @@ class Session implements IDbObject {
     return $this->id;
   }
 
+  public function getToken() : ?AccessToken {
+    return $this->oauthToken;
+  }
+
+  public function isExpired() : bool {
+    return ($this->isOAuthSession() && $this->oauthToken->hasExpired());
+  }
+
   public function isOAuthSession() : bool {
     return !is_null($this->oauthToken);
   }
@@ -60,12 +68,18 @@ class Session implements IDbObject {
     global $Controller;
     if ($this->oauthToken->hasExpired()) {
       $provider = $Controller->getOAuthProvider();
-      $newToken = $provider->getAccessToken('refresh_token', [
-        'refresh_token' => $this->oauthToken->getRefreshToken()
-      ]);
-      $this->oauthToken = $newToken;
-      $this->changes['login_oauthdata'] = json_encode($newToken->jsonSerialize());
-      $Controller->updateDbObject($this);
+      try {
+        $newToken = $provider->getAccessToken('refresh_token', [
+          'refresh_token' => $this->oauthToken->getRefreshToken()
+        ]);
+        $this->oauthToken = $newToken;
+        $this->changes['login_oauthdata'] = json_encode($newToken->jsonSerialize());
+        $Controller->updateDbObject($this);
+      } catch (\Exception $e) {
+        var_dump('Exception refreshing OAuth token!', $e);
+        exit;
+        $Controller->Dispatcher()->forward($Controller->getLink('private:login-oauth2'));
+      }
     }
   }
 

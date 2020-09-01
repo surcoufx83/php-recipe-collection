@@ -24,12 +24,12 @@
     {% include 'body-navbar.html.twig' %}
 
     <main>
-      <div class="page" {% if Controller.isAuthenticated() == false %}style="padding-left:0!important;"{% endif %}>
-      {% if Controller.isAuthenticated() %}
+  <div class="page" {% if Controller.isAuthenticated() == false or Controller.User().hasRegistrationCompleted() == false %}style="padding-left:0!important;"{% endif %}>
+      {% if Controller.isAuthenticated() and Controller.User().hasRegistrationCompleted() %}
         {% include 'body-sidebar.html.twig' %}
       {% endif %}
         <div class="page-wrapper">
-          {% if Controller.isAuthenticated() %}
+          {% if Controller.isAuthenticated() and Controller.User().hasRegistrationCompleted() %}
           <div class="page-overlay"></div>
           <div class="page-header">
             {% include 'body-header.html.twig' %}

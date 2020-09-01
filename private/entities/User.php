@@ -181,6 +181,49 @@ class User implements IUser, IDbObject, IHashable {
     return !is_null($this->oauthname);
   }
 
+  public function setFirstname(string $newValue) : void {
+    global $Controller;
+    $this->firstname = $newValue;
+    $this->changes['user_firstname'] = $this->firstname;
+    $Controller->updateDbObject($this);
+  }
+
+  public function setLastname(string $newValue) : void {
+    global $Controller;
+    $this->lastname = $newValue;
+    $this->changes['user_lastname'] = $this->lastname;
+    $Controller->updateDbObject($this);
+  }
+
+  public function setMail(string $newValue) : void {
+    global $Controller;
+    $this->mailadress = $newValue;
+    $this->changes['user_email'] = $this->mailadress;
+    $Controller->updateDbObject($this);
+  }
+
+  public function setName(string $newValue) : void {
+    global $Controller;
+    $this->name = $newValue;
+    $this->changes['user_fullname'] = $this->name;
+    $parts = explode(' ', $this->name);
+    if (count($parts) == 1)
+      $this->setFirstname($parts[0]);
+    elseif (count($parts) == 2) {
+      $this->setFirstname($parts[0]);
+      $this->setLastname($parts[1]);
+    }
+    elseif (count($parts) == 3) {
+      $this->setFirstname(implode(' ', [$parts[0], $parts[1]]));
+      $this->setLastname($parts[2]);
+    }
+    elseif (count($parts) == 3) {
+      $this->setFirstname(implode(' ', [$parts[0], $parts[1]]));
+      $this->setLastname(implode(' ', [$parts[2], $parts[3]]));
+    }
+    $Controller->updateDbObject($this);
+  }
+
   public function setPassword(string $newPassword, string $oldPassword) : bool {
     global $Controller;
     if ($this->passwordhash == '********' || password_verify($oldPassword, $this->passwordhash)) {
@@ -190,6 +233,13 @@ class User implements IUser, IDbObject, IHashable {
       return true;
     }
     return false;
+  }
+
+  public function setRegistrationCompleted() : void {
+    global $Controller;
+    $this->registrationCompleted = new \DateTime();
+    $this->changes['user_registration_completed'] = $this->registrationCompleted->format(DTF_SQL);
+    $Controller->updateDbObject($this);
   }
 
   public function validateEmail(string $token) : bool {

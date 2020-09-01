@@ -7,7 +7,10 @@ use Surcouf\Cookbook\Helper\ConverterHelper;
 use Surcouf\Cookbook\Request\ERequestMethod;
 use Surcouf\Cookbook\Response\EOutputMode;
 use Surcouf\Cookbook\Controller;
+use Surcouf\Cookbook\OAuth2Conf;
 use Surcouf\Cookbook\User;
+use Laravie\Parser\Xml\Reader;
+use Laravie\Parser\Xml\Document;
 
 if (!defined('CORE2'))
   exit;
@@ -19,6 +22,7 @@ class Dispatcher {
 
   private $matched = false, $matchedGroups = array(), $matchedHandler, $matchedPattern;
 
+  private $fnSelfRegistration = false;
   private $fnIgnoresMaintenanceMode = false;
   private $fnOutputMethod = EOutputMode::Default;
   private $fnRequiredPermission = array();
@@ -43,6 +47,12 @@ class Dispatcher {
 
     if ($this->fnRequiresAuthentication && !$this->controller->isAuthenticated())
       $this->exitError(111, null, null, null, '/login');
+
+    if (!$this->fnSelfRegistration &&
+        $this->controller->isAuthenticated() &&
+        !$this->controller->User()->hasRegistrationCompleted() &&
+        !$this->controller->User()->getSession()->isExpired())
+      $this->forward($this->controller->getLink('private:self-register'));
 
     $response = null;
 
@@ -237,6 +247,9 @@ class Dispatcher {
         if (array_key_exists('requiredPayload', $params)) {
           $this->fnRequiredPayload = $params['requiredPayload'];
         }
+        if (array_key_exists('isSelfregistration', $params)) {
+          $this->fnSelfRegistration = $params['isSelfregistration'];
+        }
 
         if (!$this->evaluateDispatch()) {
           $this->matchedPattern = null;
@@ -290,6 +303,37 @@ class Dispatcher {
 
   public function getPayload() : array {
     return $_POST;
+  }
+
+  public function queryOAuthUserData() : bool {
+    global $Controller;
+    $provider = $Controller->getOAuthProvider();
+    try {
+      $request = $provider->getAuthenticatedRequest(
+        'GET',
+        $Controller->getLink('admin:oauth:user'),
+        $Controller->User()->getSession()->getToken()
+      );
+      $client = new \GuzzleHttp\Client();
+      $response = $client->sendRequest($request);
+      if ($response->getStatusCode() == 200 && $response->getHeader('content-type')[0]) {
+        $xml = (new Reader(new Document()))->extract((string)$response->getBody());
+        $meta = $xml->parse([
+          'statuscode' => ['uses' => 'meta.statuscode']
+        ]);
+        if ($meta['statuscode'] == '100') {
+          $userdata = $xml->parse([
+            'email' => ['uses' => 'data.email'],
+            'fullname' => ['uses' => 'data.display-name']
+          ]);
+          $Controller->User()->setMail($userdata['email']);
+          $Controller->User()->setName($userdata['fullname']);
+          $Controller->User()->setRegistrationCompleted();
+          return true;
+        }
+      }
+    } catch (\Exception $e) { }
+    return false;
   }
 
   public function startOAuthLogin() : void {

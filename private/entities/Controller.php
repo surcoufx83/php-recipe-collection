@@ -9,6 +9,7 @@ use Surcouf\Cookbook\Database\DbConf;
 use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\OAuth2Conf;
 
 use League\OAuth2\Client\Token\AccessToken;
 
@@ -130,8 +131,6 @@ class Controller implements IController {
           case 'auth': return OAuth2Conf::OATH_AUTHURL;
           case 'redirect' : return $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/oauth2/callback';
           case 'token': return OAuth2Conf::OATH_TOKENURL;
-          //case 'user': return 'https://cloud.mogul.network/apps/oauth2/api/v1/userinfo';
-          // case 'user': return 'https://cloud.mogul.network/ocs/v2.php/apps/serverinfo/api/v1/info';
           case 'user': return OAuth2Conf::OATH_DATAURL;
         }
       case 'settings':

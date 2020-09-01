@@ -12,6 +12,7 @@
         "yzalis/identicon": ">=2.0",
         "select2/select2": ">=4.0",
         "phpmailer/phpmailer": "^6.1",
-        "league/oauth2-client": "^2.5"
+        "league/oauth2-client": "^2.5",
+        "laravie/parser": "^2.0"
     }
 }

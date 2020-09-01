@@ -198,6 +198,10 @@ page:
     img:
       title: 'Rezeptbild %s'
   search: 'Suche'
+  selfRegister:
+    description: 'Dein Nextcloud-Konto wurde bisher noch nicht für das Kochbuch verwendet. Bitte teile uns noch deinen Namen mit, damit wir wissen, wie wir dich ansprechen.'
+    header: 'Anmeldung mit Nextcloud-Konto'
+    title: 'Registrierung mit Nextcloud-Konto'
 
 recipe:
   about:
