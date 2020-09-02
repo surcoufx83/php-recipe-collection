@@ -23,7 +23,7 @@ interface IController {
   public function finishTransaction() : bool;
   public function get(array $params) : void;
   public function getInsertId() : ?int;
-  public function getLink($filter) : ?string;
+  public function getLink(string $filter, ...$args) : ?string;
   public function getPicture($filter) : ?Picture;
   public function getRating($filter) : ?Rating;
   public function getRecipe($filter) : ?Recipe;

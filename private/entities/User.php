@@ -112,7 +112,7 @@ class User implements IUser, IDbObject, IHashable {
       $this->changes['user_avatar'] = $this->avatar;
       $Controller->updateDbObject($this);
     }
-    return $Controller->getLink('private:avatar:'.$this->avatar);
+    return $Controller->getLink('private:avatar', $this->avatar);
   }
 
   public function getDbChanges() : array {

@@ -6,7 +6,7 @@
           <p>
             {{ Config.Icons().Books('fa-fw mr-2')|raw }} {{ Controller.l('page_activation_description', User.getFirstname())|raw }}
           </p>
-          <form id="activation-form" action="{{ Controller.getlink('private:activatePassword:' ~ User.getValidationCode()) }}"
+          <form id="activation-form" action="{{ Controller.getlink('private:activatePassword', User.getValidationCode()) }}"
             class="needs-validation" method="post" autocomplete="off" novalidate>
             <div class="form-group mb-3">
               <label for="password" class="col-form-label-sm">

@@ -6,20 +6,20 @@
             <div class="item-flexbox">
               <div class="item-icon">{% if Recipe.hasPictures() %}
                 {% set Picture = Recipe.getPictures()[0] %}
-                <a href="{{ Controller.getLink('recipe:show:' ~ Recipe.getId() ~ ':' ~ Recipe.getName()) }}">
-                  <img src="/pictures/cbimages/{{ Picture.getFilename() }}" style="max-height:60px;"
+                <a href="{{ Controller.getLink('recipe:show', Recipe.getId(), Recipe.getName()) }}">
+                  <img src="{{ Controller.getLink('recipe:picture:link', Picture.getFilename()) }}" style="max-height:60px;"
                     title="{{ Controller.l('page_books_recipes_img_title', Recipe.getName()) }}" />
                 </a>{% endif %}
               </div>
               <div class="item-major">
                 <div class="title">
-                  <a href="{{ Controller.getLink('recipe:show:' ~ Recipe.getId() ~ ':' ~ Recipe.getName()) }}">
+                  <a href="{{ Controller.getLink('recipe:show', Recipe.getId(), Recipe.getName()) }}">
                     {{ Recipe.getName() }}
                   </a>
                 </div>
                 <div class="info">
                   <span class="d-none d-md-inline">
-                    <a href="{{ Controller.getLink('recipe:show:' ~ Recipe.getId() ~ ':' ~ Recipe.getName()) }}">
+                    <a href="{{ Controller.getLink('recipe:show', Recipe.getId(), Recipe.getName()) }}">
                       #{{ Recipe.getId() }}
                     </a>
                   </span>
