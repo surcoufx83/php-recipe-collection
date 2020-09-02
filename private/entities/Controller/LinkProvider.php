@@ -2,7 +2,6 @@
 
 namespace Surcouf\Cookbook\Controller;
 
-use Surcouf\Cookbook\Config;
 use Surcouf\Cookbook\OAuth2Conf;
 
 if (!defined('CORE2'))
@@ -25,7 +24,7 @@ class LinkProvider {
         'new-user-post' => '/admin/new-user',
         'oauth' => [
           'auth' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_AUTHURL : null,
-          'redirect' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/oauth2/callback' : null,
+          'redirect' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/oauth2/callback',
           'token' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_TOKENURL : null,
           'user' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_DATAURL : null,
         ],
@@ -71,7 +70,7 @@ class LinkProvider {
   }
 
   public function __get(string $propertyName) : ?string {
-    $splitname = explode('_', $methodName);
+    $splitname = explode('_', $propertyName);
     return $this->findRecord($splitname, $this->routes, []);
   }
 
@@ -82,7 +81,9 @@ class LinkProvider {
       if (is_array($item)) {
         return $this->findRecord($keys, $item, $args);
       }
-      return vsprintf($item, $args);
+      try {
+        return vsprintf($item, $args);
+      } catch (\Exception $e) { }
     }
     return null;
   }
