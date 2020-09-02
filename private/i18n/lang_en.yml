@@ -200,6 +200,10 @@ page:
     myrecipes: 'My recipes'
     overview: 'Overview'
   search: 'Search'
+  selfRegister:
+    description: 'Your Nextcloud account has not yet been used for the cookbook. Please let us know your name so we know how to contact you.'
+    header: 'Login with Nextcloud account'
+    title: 'Register with Nextcloud account'
 
 recipe:
   about:
