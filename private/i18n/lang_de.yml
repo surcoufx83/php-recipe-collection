@@ -210,6 +210,7 @@ recipe:
     cookedAndRated: 'Es wurde bisher %s mal nachgekocht und mit %s Sternen bewertet.'
     notCooked: 'Es wurde leider noch nicht nachgekocht.'
     publication: 'Das Rezept wurde am %s von %s veröffentlicht.'
+    publicationAnonymous: 'Das Rezept wurde am %s veröffentlicht.'
     unpublished: 'Das Rezept wurde am %s erstellt und bisher nicht für andere User veröffentlicht.'
   gallery:
     header: 'Bildergallerie'

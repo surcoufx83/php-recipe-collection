@@ -212,6 +212,7 @@ recipe:
     cookedAndRated: 'It has been recooked %s times and awarded %s stars.'
     notCooked: 'Unfortunately, it has not yet been recooked.'
     publication: 'On %s this recipe was pubished by %s.'
+    publicationAnonymous: 'On %s this recipe was pubished.'
     unpublished: 'The recipe was created on %s and has not yet been published for other users.'
   gallery:
     header: 'Picture gallery'

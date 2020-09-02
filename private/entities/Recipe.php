@@ -28,7 +28,7 @@ class Recipe implements IRecipe, IDbObject {
 
   public function __construct($dr) {
     $this->id = intval($dr['recipe_id']);
-    $this->userid = intval($dr['user_id']);
+    $this->userid = (!is_null($dr['user_id']) ? intval($dr['user_id']) : null);
     $this->ispublic = ConverterHelper::to_bool($dr['recipe_public']);
     $this->name = $dr['recipe_name'];
     $this->description = $dr['recipe_description'];
@@ -242,7 +242,7 @@ class Recipe implements IRecipe, IDbObject {
 
   public function setPublic(bool $public) : IRecipe {
     global $Controller;
-    
+
   }
 
   public function setSourceDescription(string $newDescription) : IRecipe {
