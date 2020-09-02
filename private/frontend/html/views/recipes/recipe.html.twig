@@ -13,7 +13,7 @@
             {% else %}{{ Controller.l('recipe_about_unpublished', Recipe.getCreationDateStr()) }}
             {% endif %}</p>
             <p>{% for Tag in Recipe.getTags() %}
-              <a class="btn btn-outline-blue btn-sm" href="{{ Controller.getLink('tag:show:' ~ Tag.getId() ~ ':' ~ Tag.getName()) }}">
+              <a class="btn btn-outline-blue btn-sm" href="{{ Controller.getLink('tag:show', Tag.getId(), Tag.getName()) }}">
                 {{ Tag.getName() }}
                 <span class="badge ml-1">{{ Recipe.getTagVotes()[Tag.getId()] }} {{ Config.Icons.Favorite.getIcon('')|raw }}</span>
               </a>
@@ -52,12 +52,12 @@
               <div class="row">
                 <div class="col">
                 {% if Recipe.isPublished() %}
-                  <a href="{{ Controller.getLink('recipe:unpublish:' ~ Recipe.getId()) }}">
+                  <a href="{{ Controller.getLink('recipe:unpublish', Recipe.getId(), Recipe.getName()) }}">
                     {{ Config.Icons.Lock('fa-fw mr-2')|raw }}
                     {{ Controller.l('recipe_options_publication_unpublish') }}
                   </a>
                 {% else %}
-                  <a href="{{ Controller.getLink('recipe:publish:' ~ Recipe.getId()) }}">
+                  <a href="{{ Controller.getLink('recipe:publish', Recipe.getId(), Recipe.getName()) }}">
                     {{ Config.Icons.Unlock('fa-fw mr-2')|raw }}
                     {{ Controller.l('recipe_options_publication_publish') }}
                   </a>

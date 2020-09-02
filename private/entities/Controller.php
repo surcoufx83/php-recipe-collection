@@ -19,7 +19,7 @@ if (!defined('CORE2'))
 class Controller implements IController {
 
   private $database, $currentUser;
-  private $config, $dispatcher, $langcode;
+  private $config, $dispatcher, $langcode, $linkProvider;
 
   private $pictures = array();
   private $ratings = array();
@@ -87,116 +87,9 @@ class Controller implements IController {
     return $this->database->insert_id;
   }
 
-  public function getLink($filter) : ?string {
-
-    $items = explode(':', $filter);
-
-    switch($items[0]) {
-      case 'admin':
-        return $this->getLink_Admin($items);
-      case 'maintenance':
-        return '/maintenance';
-      case 'private':
-        return $this->getLink_Private($items);
-      case 'recipe':
-        return $this->getLink_Recipe($items);
-      case 'tag':
-        return $this->getLink_Tag($items);
-
-    }
-
-    return null;
-  }
-
-  private function getLink_Admin(array $params) : ?string {
-    switch($params[1]) {
-      case 'ajax':
-        switch($params[2]) {
-          case 'testEntity': return '/admin/test/entity';
-        }
-      case 'cronjobs':
-        return '/admin/cronjobs';
-      case 'logs':
-        return '/admin/logs';
-      case 'main':
-        return '/admin';
-      case 'new-user':
-        return '/admin/new-user';
-      case 'new-user-post':
-        return '/admin/new-user';
-      case 'oauth':
-        if (!$this->config->OAuth2Enabled())
-          return null;
-        switch($params[2]) {
-          case 'auth': return OAuth2Conf::OATH_AUTHURL;
-          case 'redirect' : return $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/oauth2/callback';
-          case 'token': return OAuth2Conf::OATH_TOKENURL;
-          case 'user': return OAuth2Conf::OATH_DATAURL;
-        }
-      case 'settings':
-        return '/admin/settings';
-      case 'user':
-        return '/admin/user/'.$params[2];
-      case 'users':
-        return '/admin/users';
-    }
-    return null;
-  }
-
-  private function getLink_Private(array $params) : ?string {
-    switch($params[1]) {
-      case 'activation':
-        return ($this->Config()->PageForceHttps() ? 'https://' : 'http://').$this->Config()->PublicUrl().'/activate/'.$params[2];
-      case 'activatePassword':
-        return '/activate-account/'.$params[2];
-      case 'avatar':
-        return '/pictures/avatars/'.$params[2];
-      case 'books':
-        return '/books';
-      case 'login':
-        return '/login';
-      case 'login-oauth2':
-        return '/oauth2/login';
-      case 'logout':
-        return '/logout';
-      case 'home':
-        return '/';
-      case 'random':
-        return '/random';
-      case 'recipes':
-        return '/myrecipes';
-      case 'search':
-        return '/search';
-      case 'self-register':
-        return '/self-register';
-      case 'settings':
-        return '/settings';
-    }
-    return null;
-  }
-
-  private function getLink_Recipe(array $params) : ?string {
-    switch($params[1]) {
-      case 'new':
-        return '/recipe/new';
-      case 'postnew':
-        return '/recipe/new';
-      case 'publish':
-        return '/recipe/publish/'.$params[2];
-      case 'show':
-        return '/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
-      case 'unpublish':
-        return '/recipe/unpublish/'.$params[2];
-    }
-    return null;
-  }
-
-  private function getLink_Tag(array $params) : ?string {
-    switch($params[1]) {
-      case 'show':
-        return '/tag/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
-    }
-    return null;
+  public function getLink(string $filter, ...$args) : ?string {
+    $filter2 = str_replace(':', '_', $filter);
+    return $this->linkProvider->$filter2($args);
   }
 
   public function getOAuthProvider() : \League\OAuth2\Client\Provider\GenericProvider {
@@ -301,6 +194,7 @@ class Controller implements IController {
   public function init() : void {
     global $i18n;
     $this->langcode = $i18n->getAppliedLang();
+    $this->linkProvider = new Controller\LinkProvider();
     if (!$this->init_Database())
       exit;
     if (!$this->init_Config())

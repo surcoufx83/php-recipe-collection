@@ -88,7 +88,7 @@ function ui_recipe() {
 
   $OUT['Page']['Breadcrumbs'][] = array(
     'text' => $recipe->getName(),
-    'url' => $Controller->getLink('recipe:show:'.$recipe->getId()),
+    'url' => $Controller->getLink('recipe:show', $recipe->getId(), $recipe->getName()),
   );
 
   $pics = $recipe->getPictures();
@@ -124,7 +124,7 @@ function ui_recipe_publish() {
   if ($recipe->isPublished() == false)
     $recipe->setPublic(true);
 
-  $Controller->Dispatcher()->forward($Controller->getLink('recipe:show:'.$recipe->getId().':'.$recipe->getName()));
+  $Controller->Dispatcher()->forward($Controller->getLink('recipe:show', $recipe->getId(), $recipe->getName()));
 
 } // ui_recipe_publish()
 
@@ -388,7 +388,7 @@ function ui_post_new_recipe() {
     } else {
       $Controller->finishTransaction();
       $response = $Controller->Config()->getResponseArray(1);
-      $response['ForwardTo'] = $Controller->getLink('recipe:show:'.$id);
+      $response['ForwardTo'] = $Controller->getLink('recipe:show', $id);
       $response['ForwardNew'] = $Controller->getLink('recipe:new');
     }
 

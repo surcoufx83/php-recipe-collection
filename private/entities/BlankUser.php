@@ -121,7 +121,7 @@ class BlankUser implements IUser, IDbObject, IHashable {
     global $Controller, $twig, $OUT;
     $mail = new Mail();
     $this->mailvalidationcode = HashHelper::generate_token(12);
-    $OUT['ActivationLink'] = $Controller->getLink('private:activation:'.$this->mailvalidationcode);
+    $OUT['ActivationLink'] = $Controller->getLink('private:activation', $this->mailvalidationcode);
     $data = [
       'Headline' => $Controller->l('sendmail_registration_activationMail_title'),
       'Content' => $twig->render('mails/activation-mail.html.twig', $OUT),
