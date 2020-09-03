@@ -29,11 +29,11 @@ class CookingStep implements CookingStepInterface, DbObjectInterface {
   }
 
   public function getChillTime() : int {
-    return $this->timeprep;
+    return $this->timechill;
   }
 
   public function getCookingTime() : int {
-    return $this->timeprep;
+    return $this->timecook;
   }
 
   public function getDbChanges() : array {
