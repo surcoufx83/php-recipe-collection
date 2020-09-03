@@ -20,12 +20,12 @@ final class Formatter implements IFormatter {
     return Formatter::float_format($floatval, ($precission > -1 ? $precission : (Formatter::$ByteSymbols[$exp] == 'B' ? 0 : 1))).' '.Formatter::$ByteSymbols[$exp];
   }
 
-  public static function date_format(DateTime $dt) : string {
+  public static function date_format(DateTime $dt, ?string $format = null) : string {
     global $Config;
-    if (!is_null($Config)) {
+    if (!is_null($Config) && is_null($format)) {
       return $dt->format($Config->DateFormat->UiFormat->getString());
     }
-    return $dt->format('d. F Y');
+    return $dt->format($format ?? 'd. F Y');
   }
 
   public static function float_format(float $value, int $precission = -1) : string {

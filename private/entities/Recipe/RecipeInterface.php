@@ -58,6 +58,7 @@ interface RecipeInterface {
   public function setDescription(string $newDescription) : RecipeInterface;
   public function setEaterCount(int $newCount) : RecipeInterface;
   public function setName(string $newName) : RecipeInterface;
+  public function setPublic(bool $newValue) : RecipeInterface;
   public function setSourceDescription(string $newDescription) : RecipeInterface;
   public function setSourceUrl(string $newUrl) : RecipeInterface;
 

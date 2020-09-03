@@ -259,6 +259,16 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     return $this;
   }
 
+  public function setPublic(bool $newValue) : RecipeInterface {
+    global $Controller;
+    $this->ispublic = $newValue;
+    $this->published = ($newValue ? new DateTime() : null);
+    $this->changes['recipe_public'] = intval($newValue);
+    $this->changes['recipe_published'] = $this->ispublic ? Formatter::date_format($this->published, DTF_SQL) : null;
+    $Controller->updateDbObject($this);
+    return $this;
+  }
+
   public function setSourceDescription(string $newDescription) : RecipeInterface {
     global $Controller;
     $this->sourcedesc = $newDescription;

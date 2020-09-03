@@ -25,7 +25,7 @@ $Controller->get(array(
 ));
 
 $Controller->get(array(
-  'pattern' => '/recipe/publish/(?<id>\d+)(/[^/]+)?',
+  'pattern' => '/recipe/(un)?publish/(?<id>\d+)(/[^/]+)?',
   'fn' => 'ui_recipe_publish'
 ));
 
@@ -38,11 +38,6 @@ $Controller->post(array(
   'pattern' => '/recipe/new',
   'fn' => 'ui_post_new_recipe',
   'outputMode' => EOutputMode::JSON
-));
-
-$Controller->get(array(
-  'pattern' => '/recipe/unpublish/(?<id>\d+)(/[^/]+)?',
-  'fn' => 'ui_recipe_unpublish'
 ));
 
 function ui_myrecipes() {
@@ -121,8 +116,7 @@ function ui_recipe_publish() {
   if ($recipe->getUserId() != $Controller->User()->getId())
     $Controller->Dispatcher()->forward('/');
 
-  if ($recipe->isPublished() == false)
-    $recipe->setPublic(true);
+  $recipe->setPublic(!$recipe->isPublished());
 
   $Controller->Dispatcher()->forward($Controller->getLink('recipe:show', $recipe->getId(), $recipe->getName()));
 

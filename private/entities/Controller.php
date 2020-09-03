@@ -710,6 +710,15 @@ class Controller implements ControllerInterface {
 
       switch(get_class($object)) {
 
+        case 'Surcouf\Cookbook\Recipe\Recipe':
+          if (count($object->getDbChanges()) == 0)
+            break;
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipes');
+          $query->update($object->getDbChanges());
+          $query->where('recipes', 'recipe_id', '=', $object->getId());
+          $this->update($query);
+          break;
+
         case 'Surcouf\Cookbook\User\BlankUser':
         case 'Surcouf\Cookbook\User\User':
           if (count($object->getDbChanges()) == 0)
