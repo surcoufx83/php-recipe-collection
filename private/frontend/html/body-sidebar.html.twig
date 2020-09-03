@@ -1,8 +1,7 @@
         <div class="nav-sidebar">
           <div class="nav-sidebar-inner-scroll">
             <div class="nav-sidebar-header">
-              <a title="{{ Controller.l('book_my') }}"
-                href="{{ Controller.getLink('private:home') }}">
+              <a href="{{ Controller.getLink('private:home') }}">
                 <img class="avatar avatar-40" src="{{ Controller.User().getAvatarUrl() }}" />
                 <div class="nav-sidebar-hideable">{{ Controller.User().getFirstname() }}</div>
               </a>
