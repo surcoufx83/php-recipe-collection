@@ -82,7 +82,9 @@ function ui_activation() {
 } // ui_activation()
 
 function ui_login() {
-  global $OUT, $twig;
+  global $Controller, $OUT, $twig;
+  if ($Controller->isAuthenticated())
+    $Controller->Dispatcher()->forward($Controller->getLink('private:home'));
   $OUT['Page']['Scripts']['Custom'][] = 'auth-login';
   $OUT['Content'] = $twig->render('views/user/login.html.twig', $OUT);
 } // ui_login()
@@ -156,6 +158,8 @@ function post_login() {
 
 function ui_oauth2_login() {
   global $Controller;
+  if ($Controller->isAuthenticated())
+    $Controller->Dispatcher()->forward($Controller->getLink('private:home'));
   $Controller->Dispatcher()->startOAuthLogin();
   exit;
 } // ui_oauth2_login()
