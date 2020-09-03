@@ -157,6 +157,8 @@ class QueryBuilder {
         $update[] = $this->maskstr($key).'='.$value;
       else if (is_bool($value))
         $update[] = $this->maskstr($key).'='.intval($value);
+      else if (is_null($value))
+        $update[] = $this->maskstr($key).'=NULL';
       else
         throw new \Exception('NYI.');
     }
