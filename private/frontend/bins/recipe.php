@@ -262,7 +262,7 @@ function ui_post_new_recipe() {
       for ($i=0; $i<$recipe->getIngredientsCount(); $i++) {
         $obj = $recipe->getIngredients()[$i];
         $unit = $obj->getUnit();
-        if (!is_null($unit) && get_class($unit) == 'Surcouf\Cookbook\BlankUnit') {
+        if (!is_null($unit) && get_class($unit) == 'Surcouf\Cookbook\Recipe\Ingredients\BlankUnit') {
           if (array_key_exists($unit->getName(), $insertedUnits))
             $unit->setId($insertedUnits[$unit->getName()]);
           else {
@@ -321,7 +321,7 @@ function ui_post_new_recipe() {
       $insertedTags = [];
       for ($i=0; $i<$recipe->getTagsCount(); $i++) {
         $obj = $recipe->getTags()[$i];
-        if (get_class($obj) == 'Surcouf\Cookbook\BlankTag') {
+        if (get_class($obj) == 'Surcouf\Cookbook\Recipe\Social\Tags\BlankTag') {
           if (array_key_exists($obj->getName(), $insertedTags))
             $obj->setId($insertedTags[$obj->getName()]);
           else {
