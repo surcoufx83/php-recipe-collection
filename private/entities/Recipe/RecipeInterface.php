@@ -49,6 +49,8 @@ interface RecipeInterface {
   public function getTagVotes() : array;
   public function getUser() : ?UserInterface;
   public function getUserId() : ?int;
+  public function getViewedCount() : int;
+  public function getViewedCountStr() : string;
   public function getVotedCount() : int;
   public function getVotedCountStr() : string;
   public function getVoting() : ?float;

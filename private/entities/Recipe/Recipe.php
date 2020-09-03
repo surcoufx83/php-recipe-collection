@@ -19,7 +19,7 @@ if (!defined('CORE2'))
 class Recipe implements RecipeInterface, DbObjectInterface {
 
   protected $id, $userid, $ispublic, $name, $description, $eater, $sourcedesc, $sourceurl, $created, $published;
-  protected $countcooked = 0, $countvoted = 0, $countrated = 0;
+  protected $countcooked = 0, $countrated = 0, $countviewed = 0, $countvoted = 0;
   protected $sumvoted = 0, $sumrated = 0;
   protected $ingredients = array();
   protected $pictures = array();
@@ -54,13 +54,15 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     $this->ratings[] = $rating;
     if ($rating->hasCooked())
       $this->countcooked++;
-    if ($rating->hasVoted()) {
-      $this->countvoted++;
-      $this->sumvoted += $rating->getVoting();
-    }
     if ($rating->hasRated()) {
       $this->countrated++;
       $this->sumrated += $rating->getRating();
+    }
+    if ($rating->hasViewed())
+      $this->countviewed++;
+    if ($rating->hasVoted()) {
+      $this->countvoted++;
+      $this->sumvoted += $rating->getVoting();
     }
   }
 
@@ -196,6 +198,14 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function getUserId() : ?int {
     return $this->userid;
+  }
+
+  public function getViewedCount() : int {
+    return $this->countviewed;
+  }
+
+  public function getViewedCountStr() : string {
+    return Formatter::int_format($this->countviewed);
   }
 
   public function getVotedCount() : int {

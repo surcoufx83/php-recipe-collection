@@ -13,6 +13,7 @@ if (!defined('CORE2'))
 class Rating implements RatingInterface, DbObjectInterface {
 
   protected $id, $recipeid, $userid, $comment;
+  protected $vieweddate;
   protected $cookeddate;
   protected $voteddate, $voting;
   protected $rateddate, $rating;
@@ -23,6 +24,7 @@ class Rating implements RatingInterface, DbObjectInterface {
     $this->recipeid = intval($dr['recipe_id']);
     $this->userid = intval($dr['user_id']);
     $this->comment = $dr['entry_comment'];
+    $this->vieweddate = (!is_null($dr['entry_viewed']) ? new DateTime($dr['entry_viewed']) : null);
     $this->cookeddate = (!is_null($dr['entry_cooked']) ? new DateTime($dr['entry_cooked']) : null);
     $this->voteddate = (!is_null($dr['entry_voted']) ? new DateTime($dr['entry_voted']) : null);
     $this->rateddate = (!is_null($dr['entry_rated']) ? new DateTime($dr['entry_rated']) : null);
@@ -84,12 +86,16 @@ class Rating implements RatingInterface, DbObjectInterface {
     return !is_null($this->cookeddate);
   }
 
-  public function hasVoted() : bool {
-    return !is_null($this->voteddate);
-  }
-
   public function hasRated() : bool {
     return !is_null($this->rateddate);
+  }
+
+  public function hasViewed() : bool {
+    return !is_null($this->vieweddate);
+  }
+
+  public function hasVoted() : bool {
+    return !is_null($this->voteddate);
   }
 
 }

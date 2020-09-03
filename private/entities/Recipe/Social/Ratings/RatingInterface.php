@@ -23,7 +23,8 @@ interface RatingInterface {
   public function getVotedDate() : ?DateTime;
   public function getVoting() : int;
   public function hasCooked() : bool;
-  public function hasVoted() : bool;
   public function hasRated() : bool;
+  public function hasViewed() : bool;
+  public function hasVoted() : bool;
 
 }
