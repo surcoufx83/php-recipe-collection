@@ -428,6 +428,12 @@ class QueryBuilder {
       $expr = $this->maskstr($field).' ';
     if ($operator == 'IS NULL' && is_null($value))
       $expr .= $operator;
+    else if ($operator == 'IN' && is_array($value)) {
+      for ($i=0; $i<count($value); $i++) {
+        $value[$i] = $Controller->dbescape($value[$i]);
+      }
+      $expr .= $operator.' ('.implode(', ', $value).')';
+    }
     else {
       $expr .= $operator.' ';
       $expr .= $Controller->dbescape($value);
@@ -445,6 +451,12 @@ class QueryBuilder {
       $expr .= $this->maskstr($field).' ';
     if ($operator == 'IS NULL' && is_null($value))
       $expr .= $operator;
+    else if ($operator == 'IN' && is_array($value)) {
+      for ($i=0; $i<count($value); $i++) {
+        $value[$i] = $Controller->dbescape($value[$i]);
+      }
+      $expr .= $operator.' ('.implode(', ', $value).')';
+    }
     else {
       $expr .= $operator.' ';
       $expr .= $Controller->dbescape($value);
@@ -462,6 +474,12 @@ class QueryBuilder {
       $expr .= $this->maskstr($field).' ';
     if ($operator == 'IS NULL' && is_null($value))
       $expr .= $operator;
+    else if ($operator == 'IN' && is_array($value)) {
+      for ($i=0; $i<count($value); $i++) {
+        $value[$i] = $Controller->dbescape($value[$i]);
+      }
+      $expr .= $operator.' ('.implode(', ', $value).')';
+    }
     else {
       $expr .= $operator.' ';
       $expr .= $Controller->dbescape($value);
