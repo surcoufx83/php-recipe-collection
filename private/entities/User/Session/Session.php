@@ -82,9 +82,12 @@ class Session implements SessionInterface, DbObjectInterface {
         $this->changes['login_oauthdata'] = json_encode($newToken->jsonSerialize());
         $Controller->updateDbObject($this);
       } catch (\Exception $e) {
-        var_dump('Exception refreshing OAuth token!', $e);
+        /* todo: fix missing refresh */
+        /*
+        var_dump('Exception refreshing OAuth token!', $this->oauthToken->getRefreshToken(), $e->getMessage(), $e);
         exit;
         $Controller->Dispatcher()->forward($Controller->getLink('private:login-oauth2'));
+        */
       }
     }
   }
