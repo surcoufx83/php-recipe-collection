@@ -9,6 +9,12 @@ breadcrumb:
   newRecipe: 'New recipe'
   recipes: 'My recipes'
 
+common:
+  no: 'no'
+  noUc: 'No'
+  yes: 'yes'
+  yesUc: 'Yes'
+
 greetings:
   hello: 'Hello %s'
   recipeFrom: '%s from %s'
@@ -214,17 +220,27 @@ recipe:
     publication: 'On %s this recipe was pubished by %s.'
     publicationAnonymous: 'On %s this recipe was pubished.'
     unpublished: 'The recipe was created on %s and has not yet been published for other users.'
+    source: 'Origin'
   gallery:
     header: 'Picture gallery'
   ingredients:
     header: 'List of ingredients'
+  cookingSteps:
+    header: 'Preparation'
+    placeholder: 'step'
   options:
     header: 'Options'
     publication:
       publish: 'Publish'
       unpublish: 'Reject publication'
-  cookingSteps:
-    header: 'Preparation'
+  rate:
+    header: 'Dieses Rezept bewerten'
+  stats:
+    header: 'Statistics'
+    cooked:
+      times: '&times; boiled'
+    views:
+      times: '&times; viewed'
 
 response:
   badArgumentsException: 'Bad arguments provided.'

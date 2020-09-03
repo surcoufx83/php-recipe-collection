@@ -33,6 +33,7 @@ final class IconConfig {
       'Login'             => ['space' => 'fas', 'icon' => 'key'],
       'LoginError'        => ['space' => 'fas', 'icon' => 'skull-crossbones'],
       'Logout'            => ['space' => 'fas', 'icon' => 'sign-out-alt'],
+      'Meal'              => ['space' => 'fas', 'icon' => 'utensils'],
       'Menu'              => ['space' => 'fas', 'icon' => 'bars'],
       'Password'          => ['space' => 'fas', 'icon' => 'key'],
       'QuestionMark'      => ['space' => 'far', 'icon' => 'question-circle'],
@@ -41,7 +42,9 @@ final class IconConfig {
       'Search'            => ['space' => 'fas', 'icon' => 'search'],
       'Settings'          => ['space' => 'fas', 'icon' => 'cog'],
       'Spinner'           => ['space' => 'fas', 'icon' => 'spinner'],
+      'Star'              => ['space' => 'fas', 'icon' => 'star'],
       'Unlock'            => ['space' => 'fas', 'icon' => 'lock-open'],
+      'View'              => ['space' => 'far', 'icon' => 'eye'],
     ];
   }
 

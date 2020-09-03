@@ -4,6 +4,7 @@ namespace Surcouf\Cookbook\Recipe\Social\Ratings;
 
 use \DateTime;
 use Surcouf\Cookbook\DbObjectInterface;
+use Surcouf\Cookbook\Helper\ConverterHelper;
 use Surcouf\Cookbook\Recipe\RecipeInterface;
 use Surcouf\Cookbook\User\UserInterface;
 
@@ -12,11 +13,7 @@ if (!defined('CORE2'))
 
 class Rating implements RatingInterface, DbObjectInterface {
 
-  protected $id, $recipeid, $userid, $comment;
-  protected $vieweddate;
-  protected $cookeddate;
-  protected $voteddate, $voting;
-  protected $rateddate, $rating;
+  protected $id, $recipeid, $userid, $comment, $date, $viewed, $cooked, $voting, $rating;
   private $changes = array();
 
   public function __construct($dr) {
@@ -24,20 +21,19 @@ class Rating implements RatingInterface, DbObjectInterface {
     $this->recipeid = intval($dr['recipe_id']);
     $this->userid = intval($dr['user_id']);
     $this->comment = $dr['entry_comment'];
-    $this->vieweddate = (!is_null($dr['entry_viewed']) ? new DateTime($dr['entry_viewed']) : null);
-    $this->cookeddate = (!is_null($dr['entry_cooked']) ? new DateTime($dr['entry_cooked']) : null);
-    $this->voteddate = (!is_null($dr['entry_voted']) ? new DateTime($dr['entry_voted']) : null);
-    $this->rateddate = (!is_null($dr['entry_rated']) ? new DateTime($dr['entry_rated']) : null);
-    $this->voting = (!is_null($dr['vote_value']) ? intval($dr['vote_value']) : -1);
-    $this->rating = (!is_null($dr['rating_value']) ? intval($dr['rating_value']) : -1);
+    $this->date = $dr['entry_datetime'];
+    $this->viewed = (!is_null($dr['entry_viewed']) ? ConverterHelper::to_bool($dr['entry_viewed']) : null);
+    $this->cooked = (!is_null($dr['entry_cooked']) ? ConverterHelper::to_bool($dr['entry_cooked']) : null);
+    $this->voting = (!is_null($dr['entry_vote']) ? intval($dr['entry_vote']) : null);
+    $this->rating = (!is_null($dr['entry_rate']) ? intval($dr['entry_rate']) : null);
   }
 
   public function getComment() : string {
     return $this->comment;
   }
 
-  public function getCookedDate() : ?DateTime {
-    return $this->cookeddate;
+  public function getDate() : DateTime {
+    return $this->date;
   }
 
   public function getDbChanges() : array {
@@ -46,10 +42,6 @@ class Rating implements RatingInterface, DbObjectInterface {
 
   public function getId() : int {
     return $this->id;
-  }
-
-  public function getRatedDate() : ?DateTime {
-    return $this->rateddate;
   }
 
   public function getRating() : int {
@@ -74,28 +66,24 @@ class Rating implements RatingInterface, DbObjectInterface {
     return $this->userid;
   }
 
-  public function getVotedDate() : ?DateTime {
-    return $this->voteddate;
-  }
-
   public function getVoting() : int {
     return $this->voting;
   }
 
   public function hasCooked() : bool {
-    return !is_null($this->cookeddate);
+    return ($this->cooked == true);
   }
 
   public function hasRated() : bool {
-    return !is_null($this->rateddate);
+    return !is_null($this->rating);
   }
 
   public function hasViewed() : bool {
-    return !is_null($this->vieweddate);
+    return ($this->viewed == true);
   }
 
   public function hasVoted() : bool {
-    return !is_null($this->voteddate);
+    return !is_null($this->voting);
   }
 
 }

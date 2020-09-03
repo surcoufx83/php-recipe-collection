@@ -12,15 +12,13 @@ if (!defined('CORE2'))
 interface RatingInterface {
 
   public function getComment() : string;
-  public function getCookedDate() : ?DateTime;
+  public function getDate() : DateTime;
   public function getId() : int;
-  public function getRatedDate() : ?DateTime;
   public function getRating() : int;
   public function getRecipe() : RecipeInterface;
   public function getRecipeId() : int;
   public function getUser() : ?UserInterface;
   public function getUserId() : ?int;
-  public function getVotedDate() : ?DateTime;
   public function getVoting() : int;
   public function hasCooked() : bool;
   public function hasRated() : bool;

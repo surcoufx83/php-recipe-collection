@@ -1,0 +1,104 @@
+
+  var ratingButton = null;
+  var ratingButtonIcon = null;
+  var ratingRunning = false;
+  var ratingCompleted = false;
+  var ratingModal = null;
+
+  var ratingCooked = -1;
+  var ratingRated = -1;
+  var ratingVoted = -1;
+
+  $(function() {
+    ratingModal = $('#recipe-rating-modal');
+    ratingButton = $('#recipe-rate-button');
+    ratingButtonIcon = $('#recipe-rate-icon');
+    var options = {
+      max_value: 5,
+      step_size: 1,
+      cursor: 'pointer'
+    }
+    $('#recipe-rating-rated').rate(options);
+  });
+
+  $('#recipe-rate-button').hover(
+    function() {
+      ratingButtonIcon.addClass('far fa-spin');
+      ratingButtonIcon.removeClass('fas');
+    },
+    function() {
+      ratingButtonIcon.addClass('fas');
+      ratingButtonIcon.removeClass('far fa-spin');
+    }
+  );
+
+  $('#recipe-rate-button').click(function() {
+    ratingModal.modal('toggle');
+  });
+
+  $('#recipe-rating-modal-save').click(function() {
+    if (ratingCompleted || ratingRunning)
+      return;
+    if (ratingCooked > -1 || ratingRated > -1 || ratingVoted > 0) {
+      ratingRunning = true;
+      $('#recipe-rating-modal-save').addClass('d-none');
+      $('#recipe-rating-modal-close').addClass('d-none');
+      $('#recipe-rating-modal-spinner').removeClass('d-none');
+      $('#recipe-rating-modal-mainbody').addClass('d-none');
+      $('#recipe-rating-modal-error').addClass('d-none');
+      $('#recipe-rating-modal-submitted').addClass('d-none');
+      $('#recipe-rating-modal-submitting').removeClass('d-none');
+
+      $.ajax({
+        method: 'POST',
+        url: '{{ Controller.getLink('recipe:sendVoting', Recipe.getId(), Recipe.getName()|url_encode) }}',
+        data: {
+          'cooked': ratingCooked,
+          'rated': ratingRated,
+          'voted': ratingVoted
+        }
+      }).done(function(data) {
+        if (data.success) {
+          $('#recipe-rating-modal-submitting').addClass('d-none');
+          $('#recipe-rating-modal-submitted').removeClass('d-none');
+          $('#recipe-rating-modal-spinner').addClass('d-none');
+          $('#recipe-rating-modal-close').removeClass('d-none btn-outline-blue');
+          $('#recipe-rating-modal-close').addClass('btn-blue');
+          ratingCompleted = true;
+          ratingRunning = false;
+          location.reload();
+        } else {
+          $('#recipe-rating-modal-submitting').addClass('d-none');
+          $('#recipe-rating-modal-error').removeClass('d-none');
+          $('#recipe-rating-modal-error-message').text(data.message);
+          $('#recipe-rating-modal-spinner').addClass('d-none');
+          $('#recipe-rating-modal-save').removeClass('d-none');
+          $('#recipe-rating-modal-close').removeClass('d-none');
+          $('#recipe-rating-modal-mainbody').removeClass('d-none');
+          ratingRunning = false;
+        }
+        console.log(data);
+      }).fail(function(jqXHR, textStatus) {
+        $('#recipe-rating-modal-submitting').addClass('d-none');
+        $('#recipe-rating-modal-error').removeClass('d-none');
+        $('#recipe-rating-modal-error-message').text(textStatus);
+        $('#recipe-rating-modal-spinner').addClass('d-none');
+        $('#recipe-rating-modal-save').removeClass('d-none');
+        $('#recipe-rating-modal-close').removeClass('d-none');
+        $('#recipe-rating-modal-mainbody').removeClass('d-none');
+        ratingRunning = false;
+      });
+
+    }
+  });
+
+  $('#recipe-rating-cooked-yes').change(function() { if(this.checked) { ratingCooked = 1; } });
+  $('#recipe-rating-cooked-no').change(function() { if(this.checked) { ratingCooked = 0; } });
+  $('#recipe-rating-cooked-none').change(function() { if(this.checked) { ratingCooked = -1; } });
+
+  $('#recipe-rating-rated-easy').change(function() { if(this.checked) { ratingRated = 1; } });
+  $('#recipe-rating-rated-medium').change(function() { if(this.checked) { ratingRated = 2; } });
+  $('#recipe-rating-rated-hard').change(function() { if(this.checked) { ratingRated = 3; } });
+  $('#recipe-rating-rated-none').change(function() { if(this.checked) { ratingRated = -1; } });
+
+  $('#recipe-rating-rated').on("change", function(ev, data) { ratingVoted = data.to; });

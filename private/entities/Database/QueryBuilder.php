@@ -343,7 +343,7 @@ class QueryBuilder {
   public function orderBy2(?string $table, string $column, string $direction) : QueryBuilder {
     if (!is_null($table)) {
       $alias = $this->getTableAlias($table);
-      $this->orders[] = $this->maskTablefield($alias, $column.' '.$direction);
+      $this->orders[] = $this->maskTablefield($alias, $column).' '.$direction;
     } else
       $this->orders[] = $this->maskstr($column).' '.$direction;
     return $this;

@@ -45,6 +45,8 @@ final class Config {
       'PublicContact'               => 'Elias und Stefan',
       'PublicSignature'             => 'Kochbuch-Team',
       'PublicUrl'                   => 'kochbuch.mogul.network',
+      'RecipeRatingClearance'       => new DateInterval('P30D'),
+      'RecipeVisitedClearance'      => new DateInterval('P3D'),
       'SessionCookieName'           => 'kbsessiontoken',
       'SessionCleanupTime'          => new DateInterval('PT15M'),
       'SessionLongExpirationTime'   => new DateInterval('P1Y'),

@@ -11,6 +11,7 @@ use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\Helper\FilesystemHelper;
+use Surcouf\Cookbook\Helper\Formatter;
 use Surcouf\Cookbook\Helper\UiHelper\CarouselHelper;
 use Surcouf\Cookbook\Response\EOutputMode;
 
@@ -37,6 +38,12 @@ $Controller->get(array(
 $Controller->post(array(
   'pattern' => '/recipe/new',
   'fn' => 'ui_post_new_recipe',
+  'outputMode' => EOutputMode::JSON
+));
+
+$Controller->post(array(
+  'pattern' => '/recipe/vote/(?<id>\d+)(/[^/]+)?',
+  'fn' => 'ui_post_vote_recipe',
   'outputMode' => EOutputMode::JSON
 ));
 
@@ -76,10 +83,56 @@ function ui_recipe() {
 
   $recipe->loadComplete();
 
+  if ($recipe->getUserId() != $Controller->User()->getId()) {
+    $maxage = (new DateTime())->sub($Controller->Config()->RecipeVisitedClearance());
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
+    $query->where('recipe_ratings', 'entry_datetime', '>=', Formatter::date_format($maxage, DTF_SQL))
+          ->andWhere('recipe_ratings', 'recipe_id', '=', $recipe->getId())
+          ->andWhere('recipe_ratings', 'user_id', '=', $Controller->User()->getId())
+          ->andWhere('recipe_ratings', 'entry_viewed', '=', '1');
+    $result = $Controller->select($query);
+    if ($result && $result->num_rows > 0) {
+      $keys = [];
+      while ($record = $result->fetch_assoc()) {
+        $keys[] = intval($record['entry_id']);
+      }
+      $query = new QueryBuilder(EQueryType::qtDELETE, 'recipe_ratings');
+      $query->where('recipe_ratings', 'entry_id', 'IN', $keys)
+            ->limit(count($keys));
+      $Controller->delete($query);
+    }
+    $Controller->insertSimple(
+      'recipe_ratings',
+      ['user_id', 'recipe_id', 'entry_viewed'],
+      [$Controller->User()->getId(), $recipe->getId(), 1]
+    );
+  }
+
+  $maxage = (new DateTime())->sub($Controller->Config()->RecipeRatingClearance());
+  $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
+  $query->where('recipe_ratings', 'entry_datetime', '>=', Formatter::date_format($maxage, DTF_SQL))
+        ->andWhere('recipe_ratings', 'recipe_id', '=', $recipe->getId())
+        ->andWhere('recipe_ratings', 'user_id', '=', $Controller->User()->getId())
+        ->andWhere('recipe_ratings', 'entry_comment', 'IS NULL')
+        ->andWhere('recipe_ratings', 'entry_viewed', 'IS NULL')
+        ->orderBy2('recipe_ratings', 'entry_datetime', 'DESC')
+        ->limit(1);
+  $result = $Controller->select($query);
+  $myvote = false;
+  if ($result && $result->num_rows > 0)
+    $myvote = $Controller->getRating($result->fetch_assoc());
+
   $OUT['Page']['Breadcrumbs'][] = array(
     'text' => lang('breadcrumb_recipes'),
     'url' => $Controller->getLink('private:home'),
   );
+
+  if (!is_null($recipe->getUserId())) {
+    $OUT['Page']['Breadcrumbs'][] = array(
+      'text' => $recipe->getUser()->getName(),
+      'url' => $Controller->getLink('user:recipes', $recipe->getUserId(), $recipe->getUser()->getFirstname()),
+    );
+  }
 
   $OUT['Page']['Breadcrumbs'][] = array(
     'text' => $recipe->getName(),
@@ -100,8 +153,11 @@ function ui_recipe() {
     $OUT['Page']['Gallery'] = CarouselHelper::render($carousel);
   }
 
+  $OUT['MyVote'] = $myvote;
   $OUT['Recipe'] = $recipe;
   $OUT['Page']['Heading1'] = (!is_null($recipe->getUserId()) ? lang('greetings_recipeFrom', [$recipe->getName(), $recipe->getUser()->getFirstname()]) : $recipe->getName());
+  $OUT['Page']['Scripts']['Custom'][] = 'recipe-show';
+  $OUT['Page']['Scripts']['StarRating'] = true;
   $OUT['Content'] = $twig->render('views/recipes/recipe.html.twig', $OUT);
 } // ui_recipe()
 
@@ -393,3 +449,72 @@ function ui_post_new_recipe() {
   return $Controller->Config()->getResponseArray(10);
 
 } // ui_post_new_recipe()
+
+function ui_post_vote_recipe() {
+  global $Controller;
+
+  $recipe = $Controller->getRecipe($Controller->Dispatcher()->getMatchInt('id'));
+
+  if (is_null($recipe))
+    return $Controller->Config()->getResponseArray(80);
+
+  if ($recipe->getUserId() == $Controller->User()->getId())
+    return $Controller->Config()->getResponseArray(80);
+
+  $payload = $Controller->Dispatcher()->getPayload();
+  if (!array_key_exists('cooked', $payload) ||
+      !array_key_exists('rated', $payload) ||
+      !array_key_exists('voted', $payload))
+    return $Controller->Config()->getResponseArray(80);
+
+  $cooked = intval($payload['cooked']);
+  $rated = intval($payload['rated']);
+  $voted = intval($payload['voted']);
+
+  if ($cooked < -1 && $cooked > 1)
+    return $Controller->Config()->getResponseArray(80);
+
+  if ($rated < -1 && $rated > 3)
+    return $Controller->Config()->getResponseArray(80);
+
+  if ($voted < 0 && $voted > 5)
+    return $Controller->Config()->getResponseArray(80);
+
+  if ($cooked == -1 && $rated == -1 && $voted == 0)
+    return $Controller->Config()->getResponseArray(80);
+
+  $maxage = (new DateTime())->sub($Controller->Config()->RecipeRatingClearance());
+  $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
+  $query->where('recipe_ratings', 'entry_datetime', '>=', Formatter::date_format($maxage, DTF_SQL))
+        ->andWhere('recipe_ratings', 'recipe_id', '=', $recipe->getId())
+        ->andWhere('recipe_ratings', 'user_id', '=', $Controller->User()->getId())
+        ->andWhere('recipe_ratings', 'entry_comment', 'IS NULL')
+        ->andWhere('recipe_ratings', 'entry_viewed', 'IS NULL');
+  $result = $Controller->select($query);
+  if ($result && $result->num_rows > 0) {
+    $keys = [];
+    while ($record = $result->fetch_assoc()) {
+      $keys[] = intval($record['entry_id']);
+    }
+    $query = new QueryBuilder(EQueryType::qtDELETE, 'recipe_ratings');
+    $query->where('recipe_ratings', 'entry_id', 'IN', $keys)
+          ->limit(count($keys));
+    $Controller->delete($query);
+  }
+
+  $result = $Controller->insertSimple(
+    'recipe_ratings',
+    ['user_id', 'recipe_id', 'entry_cooked', 'entry_vote', 'entry_rate'],
+    [$Controller->User()->getId(),
+     $recipe->getId(),
+     $cooked > -1 ? $cooked : null,
+     $voted > -1 ? $voted : null,
+     $rated > -1 ? $rated : null]
+  );
+
+  if ($result != -1)
+    return $Controller->Config()->getResponseArray(1);
+
+  return $Controller->Config()->getResponseArray(202);
+
+} // ui_post_vote_recipe()

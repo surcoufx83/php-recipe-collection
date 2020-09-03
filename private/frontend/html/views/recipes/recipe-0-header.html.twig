@@ -1,0 +1,24 @@
+          <div class="mt-3 mt-lg-0">
+            <h4>{{Controller.l('recipe_about_header')}}</h4>
+            <p>{% if Recipe.isPublished() %}{% if Recipe.getUserId != null %}
+              {{ Controller.l('recipe_about_publication', Recipe.getPublishedDateStr(), Recipe.getUser().getFirstname()) }}{% else %}
+              {{ Controller.l('recipe_about_publicationAnonymous', Recipe.getPublishedDateStr()) }}{% endif %}
+            <br />{% if Recipe.getCookedCount() > 0 and Recipe.getVotedCount() > 0 %}{{ Controller.l('recipe_about_cookedAndRated', Recipe.getCookedCountStr(), Recipe.getVotingStr()) }}
+            {% elseif Recipe.getCookedCount() > 0 %}{{ Controller.l('recipe_about_cooked', Recipe.getCookedCountStr()) }}
+            {% else %}{{ Controller.l('recipe_about_notCooked') }}
+            {% endif %}
+            {% else %}{{ Controller.l('recipe_about_unpublished', Recipe.getCreationDateStr()) }}
+            {% endif %}</p>{% if Page.Gallery == null %}
+            <p>{% for Tag in Recipe.getTags() %}
+              <a class="btn btn-outline-blue btn-sm" href="{{ Controller.getLink('tag:show', Tag.getId(), Tag.getName()) }}">
+                {{ Tag.getName() }}
+                <span class="badge ml-1">{{ Recipe.getTagVotes()[Tag.getId()] }} {{ Config.Icons.Favorite.getIcon('')|raw }}</span>
+              </a>
+            {% endfor %}</p>{% endif %}{% if Recipe.getSourceDescription() != '' or Recipe.getSourceUrl() != '' %}
+            <p>
+              {{ Controller.l('recipe_about_source') }}: {% if Recipe.getSourceDescription() != '' and Recipe.getSourceUrl() != '' %}
+              <a target="_blank" href="{{ Recipe.getSourceUrl() }}">{{ Recipe.getSourceDescription() }}</a>{% elseif Recipe.getSourceDescription() != '' %}
+              {{ Recipe.getSourceDescription() }}{% else %}
+              <a target="_blank" href="{{ Recipe.getSourceUrl() }}">{{ Recipe.getSourceUrl() }}</a>{% endif %}
+            </p>{% endif %}
+          </div>

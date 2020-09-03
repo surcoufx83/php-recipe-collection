@@ -1,71 +1,95 @@
     <div class="container">
       <div class="row">
+        {% if Page.Gallery %}<div class="col-12 col-lg-5 order-0 order-lg-1">
+          {% include 'views/recipes/recipe-4-gallery.html.twig' %}
+          {% include 'views/recipes/recipe-6a-rating.html.twig' %}
+          {% include 'views/recipes/recipe-5a-options.html.twig' %}
+        </div>{% endif %}
         <div class="col-12 col-lg-7 order-1 order-lg-0">
-          <div class="mt-3 mt-lg-0">
-            <h4>{{Controller.l('recipe_about_header')}}</h4>
-            <p>{% if Recipe.isPublished() %}{% if Recipe.getUserId != null %}
-              {{ Controller.l('recipe_about_publication', Recipe.getPublishedDateStr(), Recipe.getUser().getFirstname()) }}{% else %}
-              {{ Controller.l('recipe_about_publicationAnonymous', Recipe.getPublishedDateStr()) }}{% endif %}
-            <br />{% if Recipe.getCookedCount() > 0 and Recipe.getVotedCount() > 0 %}{{ Controller.l('recipe_about_cookedAndRated', Recipe.getCookedCountStr(), Recipe.getVotingStr()) }}
-            {% elseif Recipe.getCookedCount() > 0 %}{{ Controller.l('recipe_about_cooked', Recipe.getCookedCountStr()) }}
-            {% else %}{{ Controller.l('recipe_about_notCooked') }}
-            {% endif %}
-            {% else %}{{ Controller.l('recipe_about_unpublished', Recipe.getCreationDateStr()) }}
-            {% endif %}</p>
-            <p>{% for Tag in Recipe.getTags() %}
-              <a class="btn btn-outline-blue btn-sm" href="{{ Controller.getLink('tag:show', Tag.getId(), Tag.getName()) }}">
-                {{ Tag.getName() }}
-                <span class="badge ml-1">{{ Recipe.getTagVotes()[Tag.getId()] }} {{ Config.Icons.Favorite.getIcon('')|raw }}</span>
-              </a>
-            {% endfor %}</p>
-          </div>
-          <div class="mt-3">
-            <h4>{{Controller.l('recipe_ingredients_header')}}</h4>
-            <ul class="list-group list-group-flush list-group-sm">
-              {% for Ingredient in Recipe.getIngredients() %}
-                <li class="list-group-item">
-                  {{ Ingredient.getQuantity() }}
-                  {% if Ingredient.getUnit() %}{{ Ingredient.getUnit().getName() }}{% endif %}
-                  {{ Ingredient.getDescription() }}
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-          <div class="mt-3">
-            <h4>{{Controller.l('recipe_cookingSteps_header')}}</h4>
-            {% for Step in Recipe.getSteps() %}
-              <div>
-                <h5>{{ Step.getStepNo() }}. {{ Step.getTitle() }}</h5>
-                <p>{{ Step.getHtmlContent()|raw }}</p>
-              </div>
-            {% endfor %}
-          </div>
+          {% include 'views/recipes/recipe-0-header.html.twig' %}
+          {% include 'views/recipes/recipe-1-ingredients.html.twig' %}
         </div>
-        <div class="col-12 col-lg-5 order-0 order-lg-1">
-          {% if Page.Gallery %}<div>
-            <h5>{{Controller.l('recipe_gallery_header')}}</h5>
-            {{ Page.Gallery|raw }}
-          </div>{% endif %}
-          {% if Recipe.getUserId() == Controller.User.getId() %}<div class="mt-3">
-            <h5>{{Controller.l('recipe_options_header')}}</h5>
-            <div class="container">
-              <div class="row">
-                <div class="col">
-                {% if Recipe.isPublished() %}
-                  <a href="{{ Controller.getLink('recipe:unpublish', Recipe.getId(), Recipe.getName()) }}">
-                    {{ Config.Icons.Lock('fa-fw mr-2')|raw }}
-                    {{ Controller.l('recipe_options_publication_unpublish') }}
-                  </a>
-                {% else %}
-                  <a href="{{ Controller.getLink('recipe:publish', Recipe.getId(), Recipe.getName()) }}">
-                    {{ Config.Icons.Unlock('fa-fw mr-2')|raw }}
-                    {{ Controller.l('recipe_options_publication_publish') }}
-                  </a>
-                {% endif %}
-                </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-lg-7">
+          {% include 'views/recipes/recipe-2-steps.html.twig' %}
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="recipe-rating-modal"
+      aria-labelledby="recipe-rating-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="recipe-rating-modal-title">{{ Controller.l('recipe_rate_modal_title') }}</h5>
+          </div>
+          <div class="modal-body d-none" id="recipe-rating-modal-submitting">
+            {{ Controller.l('recipe_rate_modal_submitting')|raw }}
+          </div>
+          <div class="modal-body d-none" id="recipe-rating-modal-submitted">
+            {{ Controller.l('recipe_rate_modal_submitted')|raw }}
+          </div>
+          <div class="modal-body bg-warning d-none" id="recipe-rating-modal-error">
+            {{ Controller.l('recipe_rate_modal_error')|raw }}<br />
+            <span id="recipe-rating-modal-error-message"></span>
+          </div>
+          <div class="modal-body" id="recipe-rating-modal-mainbody">
+            <span class="text-muted text-small">
+              {{ Controller.l('recipe_rate_modal_description') }} {{ Controller.l('recipe_rate_modal_description2') }}
+            </span>
+            <h5 class="pt-3">{{ Controller.l('recipe_rate_modal_cooked_title') }}</h5>
+            <div class="pl-3 pb-3">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="recipe-rating-cooked" id="recipe-rating-cooked-yes" value="1">
+                <label class="form-check-label" for="recipe-rating-cooked-yes">{{ Controller.l('common_yesUc') }}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="recipe-rating-cooked" id="recipe-rating-cooked-no" value="0">
+                <label class="form-check-label" for="recipe-rating-cooked-no">{{ Controller.l('common_noUc') }}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="recipe-rating-cooked" id="recipe-rating-cooked-none" value="" checked>
+                <label class="form-check-label" for="recipe-rating-cooked-none">{{ Controller.l('recipe_rate_modal_cooked_none') }}</label>
               </div>
             </div>
-          </div>{% endif %}
+            <h5>{{ Controller.l('recipe_rate_modal_rating_title') }}</h5>
+            <span class="text-muted text-small">
+              {{ Controller.l('recipe_rate_modal_rating_description') }}
+            </span>
+            <div class="pl-3 pb-3 mt-1">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="recipe-rating-rated" id="recipe-rating-rated-easy" value="1">
+                <label class="form-check-label" for="recipe-rating-rated-easy">{{ Controller.l('recipe_rate_modal_rating_easy') }}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="recipe-rating-rated" id="recipe-rating-rated-medium" value="2">
+                <label class="form-check-label" for="recipe-rating-rated-medium">{{ Controller.l('recipe_rate_modal_rating_medium') }}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="recipe-rating-rated" id="recipe-rating-rated-hard" value="3">
+                <label class="form-check-label" for="recipe-rating-rated-hard">{{ Controller.l('recipe_rate_modal_rating_hard') }}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="recipe-rating-rated" id="recipe-rating-rated-none" value="" checked>
+                <label class="form-check-label" for="recipe-rating-rated-none">{{ Controller.l('recipe_rate_modal_rating_none') }}</label>
+              </div>
+            </div>
+            <h5>{{ Controller.l('recipe_rate_modal_voting_title') }}</h5>
+            <span class="text-muted text-small">
+              {{ Controller.l('recipe_rate_modal_voting_description') }}
+            </span>
+            <div class="pl-3 mt-1">
+              <div class="form-check form-check-inline">
+                <div class="rating text-blue" style="font-size:160%;" id="recipe-rating-rated" data-rate-value=0></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="recipe-rating-modal-spinner" class="btn btn-blue d-none" disabled>{{ Config.Icons.Spinner('fa-fw fa-pulse')|raw }}</button>
+            <button type="button" id="recipe-rating-modal-save" class="btn btn-blue">{{ Controller.l('recipe_rate_modal_save') }}</button>
+            <button type="button" id="recipe-rating-modal-close" class="btn btn-outline-blue" data-dismiss="modal">{{ Controller.l('recipe_rate_modal_close') }}</button>
+          </div>
         </div>
       </div>
     </div>

@@ -7,7 +7,13 @@ breadcrumb:
     home: 'Meine Kochbücher'
   home: 'Startseite'
   newRecipe: 'Neues Rezept'
-  recipes: 'Meine Rezepte'
+  recipes: 'Rezepte'
+
+common:
+  no: 'nein'
+  noUc: 'Nein'
+  yes: 'ja'
+  yesUc: 'Ja'
 
 greetings:
   hello: 'Hallo %s'
@@ -212,17 +218,54 @@ recipe:
     publication: 'Das Rezept wurde am %s von %s veröffentlicht.'
     publicationAnonymous: 'Das Rezept wurde am %s veröffentlicht.'
     unpublished: 'Das Rezept wurde am %s erstellt und bisher nicht für andere User veröffentlicht.'
+    source: 'Herkunft'
   gallery:
     header: 'Bildergallerie'
   ingredients:
     header: 'Zutatenliste'
+  cookingSteps:
+    header: 'Zubereitung'
+    placeholder: 'Schritt'
   options:
     header: 'Optionen'
     publication:
       publish: 'Veröffentlichen'
       unpublish: 'Veröffentlichung zurückziehen'
-  cookingSteps:
-    header: 'Zubereitung'
+  rate:
+    button: 'Bewertung abgeben'
+    header: 'Rezept bewerten'
+    subject: 'Wenn du das Rezept nachgekocht hast, würden wir uns freuen, wenn du deine Meinung dazu teilst.'
+    voted:
+      subject: 'Du hast bereits eine Bewertung abgegeben. Du kannst das Rezept erst in einigen Tagen erneut bewerten.'
+      
+    modal:
+      title: 'Rezeptbewertung'
+      description: 'Mit der Beantwortung der folgenden kurzen Fragen gibst du eine direkte Rückmeldung an den Autoren des Rezepts.'
+      description2: 'Du kannst jederzeit abbrechen. Erst durch einen Klick auf den Button Speichern wird deine Bewertung übernommen.'
+      cooked:
+        title: 'Hast du das Rezept nachgekocht?'
+        none: 'Keine Angabe'
+      rating:
+        title: 'Wie schwierig war es?'
+        description: 'Wie schwer fandest du es, dass Rezept nachzukochen? War alles beschrieben was du benötigst oder haben sich dir viele Fragezeichen aufgetan?'
+        easy: 'Einfach'
+        medium: 'Mittel'
+        hard: 'Schwer'
+        none: 'Keine Angabe'
+      voting:
+        title: 'Wieviel Sterne hat das Gericht verdient?'
+        description: 'Bewerte mit 1 (schlecht) bis 5 (sehr gut) Sternen, wie gut dir das Gericht geschmeckt hat.'
+      submitting: 'Die Bewertung wird gerade an den Server geschickt. Das sollte nicht länger als eine Sekunde dauern ...'
+      submitted: 'Deine Bewertung wurde gespeichert. Vielen Dank!'
+      error: 'Es gab einen Fehler bei der Datenübertragung &#x1F613;'
+      save: 'Bewertung speichern'
+      close: 'Zurück'
+  stats:
+    header: 'Statistiken'
+    cooked:
+      times: '&times; gekocht'
+    views:
+      times: '&times; angesehen'
 
 response:
   badArgumentsException: 'Ungültige Argumente angegeben.'
