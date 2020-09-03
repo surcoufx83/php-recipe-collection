@@ -200,8 +200,8 @@ function ui_post_new_recipe() {
         $payload['step_title'][$i],
         $payload['step_description'][$i],
         $payload['step_duration_preparation'][$i],
-        $payload['step_duration_rest'][$i],
-        $payload['step_duration_cooking'][$i]
+        $payload['step_duration_cooking'][$i],
+        $payload['step_duration_rest'][$i]
      ));
   }
 
