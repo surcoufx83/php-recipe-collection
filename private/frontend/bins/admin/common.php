@@ -1,6 +1,6 @@
 <?php
 
-use Surcouf\Cookbook\BlankUser;
+use Surcouf\Cookbook\User\BlankUser;
 use Surcouf\Cookbook\Response\EOutputMode;
 
 $Controller->post(array(

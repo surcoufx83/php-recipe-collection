@@ -5,22 +5,44 @@ namespace Surcouf\Cookbook;
 use Surcouf\Cookbook\Config;
 use Surcouf\Cookbook\Config\Icon;
 use Surcouf\Cookbook\Config\IconConfig;
+use Surcouf\Cookbook\Controller\Dispatcher;
 use Surcouf\Cookbook\Database\DbConf;
 use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\DbObjectInterface;
 use Surcouf\Cookbook\OAuth2Conf;
+use Surcouf\Cookbook\Recipe\Cooking\CookingStep;
+use Surcouf\Cookbook\Recipe\Cooking\CookingStepInterface;
+use Surcouf\Cookbook\Recipe\Ingredients\Ingredient;
+use Surcouf\Cookbook\Recipe\Ingredients\IngredientInterface;
+use Surcouf\Cookbook\Recipe\Ingredients\Units\Unit;
+use Surcouf\Cookbook\Recipe\Ingredients\Units\UnitInterface;
+use Surcouf\Cookbook\Recipe\Pictures\Picture;
+use Surcouf\Cookbook\Recipe\Pictures\PictureInterface;
+use Surcouf\Cookbook\Recipe\Recipe;
+use Surcouf\Cookbook\Recipe\RecipeInterface;
+use Surcouf\Cookbook\Recipe\Social\Ratings\Rating;
+use Surcouf\Cookbook\Recipe\Social\Ratings\RatingInterface;
+use Surcouf\Cookbook\Recipe\Social\Tags\Tag;
+use Surcouf\Cookbook\Recipe\Social\Tags\TagInterface;
+use Surcouf\Cookbook\User\BlankUser;
+use Surcouf\Cookbook\User\OAuthUser;
+use Surcouf\Cookbook\User\User;
+use Surcouf\Cookbook\User\UserInterface;
 
-use League\OAuth2\Client\Token\AccessToken;
+use \League\OAuth2\Client\Token\AccessToken;
+use \League\OAuth2\Client\Provider\GenericProvider;
 
 if (!defined('CORE2'))
   exit;
 
-class Controller implements IController {
+class Controller implements ControllerInterface {
 
   private $database, $currentUser;
   private $config, $dispatcher, $langcode, $linkProvider;
 
+  private $ingredients = array();
   private $pictures = array();
   private $ratings = array();
   private $recipes = array();
@@ -43,7 +65,7 @@ class Controller implements IController {
     return $this->langcode;
   }
 
-  public function User() : ?User {
+  public function User() : ?UserInterface {
     return $this->currentUser;
   }
 
@@ -83,6 +105,18 @@ class Controller implements IController {
     $this->dispatcher->get($params);
   }
 
+  public function getIngredient($filter) : ?IngredientInterface {
+    if (is_integer($filter)) {
+      if (!array_key_exists($filter, $this->ingredients))
+        return $this->loadIngredient($filter);
+      else
+        return $this->ingredients[$filter];
+    }
+    if (is_array($filter))
+      return $this->registerIngredient(null, $filter);
+    return null;
+  }
+
   public function getInsertId() : ?int {
     return $this->database->insert_id;
   }
@@ -92,8 +126,8 @@ class Controller implements IController {
     return $this->linkProvider->$filter2($args);
   }
 
-  public function getOAuthProvider() : \League\OAuth2\Client\Provider\GenericProvider {
-    return new \League\OAuth2\Client\Provider\GenericProvider([
+  public function getOAuthProvider() : GenericProvider {
+    return new GenericProvider([
       'clientId'                => OAuth2Conf::OATH_CLIENTID,    // The client ID assigned to you by the provider
       'clientSecret'            => OAuth2Conf::OATH_CLIENT_SECRET,   // The client password assigned to you by the provider
       'redirectUri'             => $this->getLink('admin:oauth:redirect'),
@@ -103,7 +137,7 @@ class Controller implements IController {
     ]);
   }
 
-  public function getPicture($filter) : ?Picture {
+  public function getPicture($filter) : ?PictureInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->pictures))
         return $this->loadPicture($filter);
@@ -115,7 +149,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getRating($filter) : ?Rating {
+  public function getRating($filter) : ?RatingInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->ratings))
         return $this->loadRating($filter);
@@ -127,7 +161,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getRecipe($filter) : ?Recipe {
+  public function getRecipe($filter) : ?RecipeInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->recipes))
         return $this->loadRecipe($filter);
@@ -139,7 +173,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getStep($filter) : ?CookingStep {
+  public function getStep($filter) : ?CookingStepInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->steps))
         return $this->loadStep($filter);
@@ -151,7 +185,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getTag($filter) : ?Tag {
+  public function getTag($filter) : ?TagInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->tags))
         return $this->loadTag($filter);
@@ -165,7 +199,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getUnit($filter) : ?Unit {
+  public function getUnit($filter) : ?UnitInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->units))
         return $this->loadUnit($filter);
@@ -177,7 +211,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getUser($filter=null) : ?User {
+  public function getUser($filter=null) : ?UserInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->users))
         return $this->loadUser($filter);
@@ -254,7 +288,17 @@ class Controller implements IController {
     return ($outval == '' ? 'MISSING translation: '.$key : $outval);
   }
 
-  private function loadPicture(int $id) : ?Picture {
+  private function loadIngredient(int $id) : ?IngredientInterface {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ingredients', DB_ANY);
+    $query->where('recipe_ingredients', 'ingredient_id', '=', $id);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerIngredient(intval($record['ingredient_id']), $record);
+    }
+    return $this->registerIngredient($id);
+  }
+
+  private function loadPicture(int $id) : ?PictureInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_pictures', DB_ANY);
     $query->where('recipe_pictures', 'picture_id', '=', $id);
     $result = $this->select($query);
@@ -264,7 +308,7 @@ class Controller implements IController {
     return $this->registerPicture($id);
   }
 
-  private function loadRating(int $id) : ?Rating {
+  private function loadRating(int $id) : ?RatingInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
     $query->where('recipe_ratings', 'entry_id', '=', $id);
     $result = $this->select($query);
@@ -274,7 +318,7 @@ class Controller implements IController {
     return $this->registerRating($id);
   }
 
-  private function loadRecipe(int $id) : ?Recipe {
+  private function loadRecipe(int $id) : ?RecipeInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
     $query->where('recipes', 'recipe_id', '=', $id);
     $result = $this->select($query);
@@ -284,18 +328,19 @@ class Controller implements IController {
     return $this->registerRecipe($id);
   }
 
-  public function loadRecipeIngredients(Recipe &$recipe) : void {
+  public function loadRecipeIngredients(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ingredients', DB_ANY);
     $query->where('recipe_ingredients', 'recipe_id', '=', $recipe->getId());
     $result = $this->select($query);
     if ($result) {
       while ($record = $result->fetch_assoc()) {
-        $recipe->addIngredients($record);
+        $ingredient = $this->getIngredient($record);
+        $recipe->addIngredients($ingredient);
       }
     }
   }
 
-  public function loadRecipePictures(Recipe &$recipe) : void {
+  public function loadRecipePictures(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_pictures', DB_ANY);
     $query->where('recipe_pictures', 'recipe_id', '=', $recipe->getId());
     $result = $this->select($query);
@@ -307,7 +352,7 @@ class Controller implements IController {
     }
   }
 
-  public function loadRecipeRatings(Recipe &$recipe) : void {
+  public function loadRecipeRatings(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
     $query->where('recipe_ratings', 'recipe_id', '=', $recipe->getId());
     $result = $this->select($query);
@@ -319,7 +364,7 @@ class Controller implements IController {
     }
   }
 
-  public function loadRecipeSteps(Recipe &$recipe) : void {
+  public function loadRecipeSteps(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_steps', DB_ANY);
     $query->where('recipe_steps', 'recipe_id', '=', $recipe->getId())
           ->orderBy(['step_no']);
@@ -332,7 +377,7 @@ class Controller implements IController {
     }
   }
 
-  public function loadRecipeTags(Recipe &$recipe) : void {
+  public function loadRecipeTags(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_tags');
     $query->select('tags', DB_ANY)
           ->select('tags', [['tag_id', EAggregationType::atCOUNT, 'count']])
@@ -350,7 +395,7 @@ class Controller implements IController {
     }
   }
 
-  private function loadStep(int $id) : ?CookingStep {
+  private function loadStep(int $id) : ?CookingStepInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_steps', DB_ANY);
     $query->where('recipe_steps', 'step_id', '=', $id);
     $result = $this->select($query);
@@ -360,7 +405,7 @@ class Controller implements IController {
     return $this->registerStep($id);
   }
 
-  private function loadTag(int $id) : ?Tag {
+  private function loadTag(int $id) : ?TagInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'tags', DB_ANY);
     $query->where('tags', 'tag_id', '=', $id);
     $result = $this->select($query);
@@ -370,7 +415,7 @@ class Controller implements IController {
     return $this->registerTag($id);
   }
 
-  private function loadTagByName(string $name) : ?Tag {
+  private function loadTagByName(string $name) : ?TagInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'tags', DB_ANY);
     $query->where('tags', 'tag_name', 'LIKE', $name);
     $result = $this->select($query);
@@ -380,7 +425,7 @@ class Controller implements IController {
     return null;
   }
 
-  private function loadUnit(int $id) : ?Unit {
+  private function loadUnit(int $id) : ?UnitInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'units', DB_ANY);
     $query->where('units', 'unit_id', '=', $id);
     $result = $this->select($query);
@@ -390,7 +435,7 @@ class Controller implements IController {
     return $this->registerUnit($id);
   }
 
-  private function loadUser(int $id) : ?User {
+  private function loadUser(int $id) : ?UserInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
     $query->where('users', 'user_id', '=', $id);
     $result = $this->select($query);
@@ -400,7 +445,7 @@ class Controller implements IController {
     return $this->registerUser($id);
   }
 
-  private function loadUsername(string $name) : ?User {
+  private function loadUsername(string $name) : ?UserInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
     $query->where('users', 'user_email', 'LIKE', $name)
           ->orWhere('users', 'user_name', 'LIKE', $name);
@@ -497,9 +542,9 @@ class Controller implements IController {
     $this->dispatcher->put($params);
   }
 
-  private function registerIngredient(?int $id, array $record=null) : ?Ingredient {
+  private function registerIngredient(?int $id, array $record=null) : ?IngredientInterface {
     if (is_null($id) && is_array($record))
-      $id = intval($record['ing_id']);
+      $id = intval($record['ingredient_id']);
     if (array_key_exists($id, $this->ingredients))
       return $this->ingredients[$id];
     if (is_null($record)) {
@@ -510,7 +555,7 @@ class Controller implements IController {
     return $this->ingredients[$id];
   }
 
-  private function registerPicture(?int $id, array $record=null) : ?Picture {
+  private function registerPicture(?int $id, array $record=null) : ?PictureInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['picture_id']);
     if (array_key_exists($id, $this->pictures))
@@ -523,7 +568,7 @@ class Controller implements IController {
     return $this->pictures[$id];
   }
 
-  private function registerRating(?int $id, array $record=null) : ?Rating {
+  private function registerRating(?int $id, array $record=null) : ?RatingInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['entry_id']);
     if (array_key_exists($id, $this->ratings))
@@ -536,7 +581,7 @@ class Controller implements IController {
     return $this->ratings[$id];
   }
 
-  private function registerRecipe(?int $id, array $record=null) : ?Recipe {
+  private function registerRecipe(?int $id, array $record=null) : ?RecipeInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['recipe_id']);
     if (array_key_exists($id, $this->recipes))
@@ -549,7 +594,7 @@ class Controller implements IController {
     return $this->recipes[$id];
   }
 
-  private function registerStep(?int $id, array $record=null) : ?CookingStep {
+  private function registerStep(?int $id, array $record=null) : ?CookingStepInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['step_id']);
     if (array_key_exists($id, $this->steps))
@@ -562,7 +607,7 @@ class Controller implements IController {
     return $this->steps[$id];
   }
 
-  private function registerTag(?int $id, array $record=null) : ?Tag {
+  private function registerTag(?int $id, array $record=null) : ?TagInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['tag_id']);
     if (array_key_exists($id, $this->tags))
@@ -575,7 +620,7 @@ class Controller implements IController {
     return $this->tags[$id];
   }
 
-  private function registerUnit(?int $id, array $record=null) : ?Unit {
+  private function registerUnit(?int $id, array $record=null) : ?UnitInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['unit_id']);
     if (array_key_exists($id, $this->units))
@@ -588,7 +633,7 @@ class Controller implements IController {
     return $this->units[$id];
   }
 
-  private function registerUser(?int $id, array $record=null) : ?User {
+  private function registerUser(?int $id, array $record=null) : ?UserInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['user_id']);
     if (array_key_exists($id, $this->users))
@@ -665,8 +710,8 @@ class Controller implements IController {
 
       switch(get_class($object)) {
 
-        case 'Surcouf\Cookbook\BlankUser':
-        case 'Surcouf\Cookbook\User':
+        case 'Surcouf\Cookbook\User\BlankUser':
+        case 'Surcouf\Cookbook\User\User':
           if (count($object->getDbChanges()) == 0)
             break;
           $query = new QueryBuilder(EQueryType::qtUPDATE, 'users');
@@ -697,7 +742,7 @@ class Controller implements IController {
     return $result;
   }
 
-  public function updateDbObject(IDbObject &$object) : void {
+  public function updateDbObject(DbObjectInterface &$object) : void {
     $key = get_class($object).$object->getId();
     if (!array_key_exists($key, $this->changedObjects))
       $this->changedObjects[$key] = $object;

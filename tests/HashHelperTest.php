@@ -5,7 +5,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Surcouf\Cookbook\Controller;
 use Surcouf\Cookbook\Helper\HashHelper;
 
-require_once realpath(__DIR__.'/../private/entities/IController.php');
+require_once realpath(__DIR__.'/../private/entities/ControllerInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Controller.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/IHashHelper.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/HashHelper.php');

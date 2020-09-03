@@ -1,12 +1,12 @@
 <?php
 
-use Surcouf\Cookbook\BlankCookingStep;
-use Surcouf\Cookbook\BlankIngredient;
-use Surcouf\Cookbook\BlankPicture;
-use Surcouf\Cookbook\BlankRecipe;
-use Surcouf\Cookbook\BlankTag;
-use Surcouf\Cookbook\BlankUnit;
-use Surcouf\Cookbook\Recipe;
+use Surcouf\Cookbook\Recipe\Cooking\BlankCookingStep;
+use Surcouf\Cookbook\Recipe\Ingredients\BlankIngredient;
+use Surcouf\Cookbook\Recipe\Pictures\BlankPicture;
+use Surcouf\Cookbook\Recipe\BlankRecipe;
+use Surcouf\Cookbook\Recipe\Social\Tags\BlankTag;
+use Surcouf\Cookbook\Recipe\Ingredients\Units\BlankUnit;
+use Surcouf\Cookbook\Recipe\Recipe;
 use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
