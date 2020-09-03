@@ -382,7 +382,7 @@ function ui_post_new_recipe() {
     } else {
       $Controller->finishTransaction();
       $response = $Controller->Config()->getResponseArray(1);
-      $response['ForwardTo'] = $Controller->getLink('recipe:show', $id);
+      $response['ForwardTo'] = $Controller->getLink('recipe:show', $id, $recipe->getName());
       $response['ForwardNew'] = $Controller->getLink('recipe:new');
     }
 
