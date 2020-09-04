@@ -154,9 +154,19 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function getRatingStr() : string {
+    global $Controller;
     if ($this->countrated == 0)
       return '';
-    return Formatter::float_format($this->getRating(), 1);
+    $val = round($this->getRating(), 0);
+    switch($val) {
+      case 1:
+        return $Controller->l('common_rating_easy');
+      case 2:
+        return $Controller->l('common_rating_medium');
+      case 3:
+        return $Controller->l('common_rating_hard');
+    }
+    return '';
   }
 
   public function getRatings() : array {
