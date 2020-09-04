@@ -237,7 +237,6 @@ recipe:
     subject: 'Wenn du das Rezept nachgekocht hast, würden wir uns freuen, wenn du deine Meinung dazu teilst.'
     voted:
       subject: 'Du hast bereits eine Bewertung abgegeben. Du kannst das Rezept erst in einigen Tagen erneut bewerten.'
-      
     modal:
       title: 'Rezeptbewertung'
       description: 'Mit der Beantwortung der folgenden kurzen Fragen gibst du eine direkte Rückmeldung an den Autoren des Rezepts.'

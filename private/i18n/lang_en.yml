@@ -234,7 +234,33 @@ recipe:
       publish: 'Publish'
       unpublish: 'Reject publication'
   rate:
-    header: 'Dieses Rezept bewerten'
+    button: 'Submit a rating'
+    header: 'Rate this recipe'
+    subject: 'If you have recooked the recipe, we would be happy if you share your opinion.'
+    voted:
+      subject: 'You have already submitted a rating. You can only rate the recipe again in a few days.'
+    modal:
+      title: 'Recipe rating'
+      description: 'By answering the following short questions you give direct feedback to the author of the recipe.'
+      description2: 'You can cancel at any time. Only by clicking on the button Save your rating will be accepted.'
+      cooked:
+        title: 'Did you recook the recipe?'
+        none: 'Not specified'
+      rating:
+        title: 'How difficult was it?'
+        description: 'How hard did you find it to recook that recipe? Was everything described what you needed or did you get many question marks?'
+        easy: 'easy'
+        medium: 'medium'
+        hard: 'hard'
+        none: 'Not specified'
+      voting:
+        title: 'How many stars did the court earn?'
+        description: 'Rate with 1 (bad) to 5 (very good) stars how good you liked the dish.'
+      submitting: 'The rating is currently being sent to the server. This should not take longer than one second ...'
+      submitted: 'Your rating has been saved. Thanks a lot!'
+      error: 'There was an error in the data transfer &#x1F613;'
+      save: 'Save rating'
+      close: 'Back'
   stats:
     header: 'Statistics'
     cooked:
