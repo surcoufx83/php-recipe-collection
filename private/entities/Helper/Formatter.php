@@ -7,7 +7,7 @@ use \DateTime;
 if (!defined('CORE2'))
   exit;
 
-final class Formatter implements IFormatter {
+final class Formatter implements FormatterInterface {
 
   public static $ByteSymbols = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 

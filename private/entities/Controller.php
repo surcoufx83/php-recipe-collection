@@ -3,6 +3,7 @@
 namespace Surcouf\Cookbook;
 
 use Surcouf\Cookbook\Config;
+use Surcouf\Cookbook\ConfigInterface;
 use Surcouf\Cookbook\Config\Icon;
 use Surcouf\Cookbook\Config\IconConfig;
 use Surcouf\Cookbook\Controller\Dispatcher;
@@ -53,7 +54,7 @@ class Controller implements ControllerInterface {
 
   private $changedObjects = array();
 
-  public function Config() : Config {
+  public function Config() : ConfigInterface {
     return $this->config;
   }
 

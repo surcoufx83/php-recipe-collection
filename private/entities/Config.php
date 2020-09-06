@@ -8,7 +8,7 @@ use Surcouf\Cookbook\Config\IconConfig;
 if (!defined('CORE2'))
   exit;
 
-final class Config {
+final class Config implements ConfigInterface {
 
   private $config, $icocfg, $responses;
 

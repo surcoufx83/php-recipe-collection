@@ -19,7 +19,7 @@ if (!defined('CORE2'))
 
 interface ControllerInterface {
 
-  public function Config() : Config;
+  public function Config() : ConfigInterface;
   public function Dispatcher() : Dispatcher;
   public function User() : ?UserInterface;
 
