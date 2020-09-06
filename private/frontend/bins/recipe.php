@@ -318,7 +318,7 @@ function ui_post_new_recipe() {
       for ($i=0; $i<$recipe->getIngredientsCount(); $i++) {
         $obj = $recipe->getIngredients()[$i];
         $unit = $obj->getUnit();
-        if (!is_null($unit) && get_class($unit) == 'Surcouf\Cookbook\Recipe\Ingredients\BlankUnit') {
+        if (!is_null($unit) && !$unit->hasId()) {
           if (array_key_exists($unit->getName(), $insertedUnits))
             $unit->setId($insertedUnits[$unit->getName()]);
           else {

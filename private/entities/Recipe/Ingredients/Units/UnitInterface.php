@@ -9,5 +9,6 @@ interface UnitInterface {
 
   public function getId() : int;
   public function getName() : string;
+  public function hasId() : bool;
 
 }

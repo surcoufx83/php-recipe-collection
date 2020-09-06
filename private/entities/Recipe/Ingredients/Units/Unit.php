@@ -29,4 +29,8 @@ class Unit implements UnitInterface, DbObjectInterface {
     return $this->name;
   }
 
+  public function hasId() : bool {
+    return !is_null($this->id);
+  }
+
 }

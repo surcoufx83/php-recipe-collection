@@ -15,4 +15,14 @@ class BlankIngredient extends Ingredient {
     $this->description = $description;
   }
 
+  public function getUnit() : ?UnitInterface {
+    return $this->unit;
+  }
+
+  public function getUnitId() : ?int {
+    if (!is_null($this->unit) && $this->unit->hasId())
+      return $this->unit->getId();
+    return null;
+  }
+
 }
