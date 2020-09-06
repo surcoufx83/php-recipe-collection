@@ -17,4 +17,16 @@
                 </li>
               {% endfor %}
             </ul>
-          </div>
+          </div>{% if Recipe.getOverallTime() %}
+          <div class="mt-3">
+            <h4>{{ Controller.l('recipe_duration_header') }}</h4>
+            <p>{% if Recipe.getOverallTime() >= Config.LongTimeWarning() %}
+              {{ Controller.l('recipe_duration_description') }}{% else %}
+              {{ Controller.l('recipe_duration_description2') }}{% endif %}
+              <ul>{% if Recipe.getPreparationTime() %}
+                <li>{{ Controller.l('recipe_duration_preparation', Recipe.getPreparationTimeStr()) }}</li>{% endif %}{% if Recipe.getCookingTime() %}
+                <li>{{ Controller.l('recipe_duration_cooking', Recipe.getCookingTimeStr()) }}</li>{% endif %}{% if Recipe.getRestTime() %}
+                <li>{{ Controller.l('recipe_duration_rest', Recipe.getRestTimeStr()) }}</li>{% endif %}
+              </ul>
+            </p>
+          </div>{% endif %}

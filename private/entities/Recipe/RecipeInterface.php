@@ -22,6 +22,8 @@ interface RecipeInterface {
   public function addTag(TagInterface &$tag, int $votes) : void;
   public function getCookedCount() : int;
   public function getCookedCountStr() : string;
+  public function getCookingTime() : ?int;
+  public function getCookingTimeStr() : ?string;
   public function getCreationDate() : DateTime;
   public function getCreationDateStr() : string;
   public function getDescription() : string;
@@ -31,8 +33,11 @@ interface RecipeInterface {
   public function getIngredients() : array;
   public function getIngredientsCount() : int;
   public function getName() : string;
+  public function getOverallTime() : ?int;
   public function getPictures() : array;
   public function getPictureCount() : int;
+  public function getPreparationTime() : ?int;
+  public function getPreparationTimeStr() : ?string;
   public function getPublishedDate() : ?DateTime;
   public function getPublishedDateStr() : string;
   public function getRatedCount() : int;
@@ -40,6 +45,8 @@ interface RecipeInterface {
   public function getRating() : ?float;
   public function getRatingStr() : string;
   public function getRatings() : array;
+  public function getRestTime() : ?int;
+  public function getRestTimeStr() : ?string;
   public function getSourceDescription() : string;
   public function getSourceUrl() : string;
   public function getSteps() : array;

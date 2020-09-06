@@ -10,6 +10,10 @@ breadcrumb:
   recipes: 'Rezepte'
 
 common:
+  duration:
+    minutes: '%s Minuten'
+    hours: '%s Stunden'
+    days: '%s Tage'
   no: 'nein'
   noUc: 'Nein'
   yes: 'ja'
@@ -227,6 +231,13 @@ recipe:
     header: 'Bildergallerie'
   ingredients:
     header: 'Zutatenliste'
+  duration:
+    header: 'Zubereitungsdauer'
+    description: 'Die Zubereitung des Gerichts nimmt einige Zeit in Anspruch. Für die gesamte Zubereitung sind angegeben:'
+    description2: 'Folgende Zeiten sind für die Zubereitung des Gerichts angegeben:'
+    preparation: '%s zur Vorbereitung'
+    cooking: '%s zum Kochen/Backen'
+    rest: '%s zum Ziehen/Ruhen lassen'
   cookingSteps:
     header: 'Zubereitung'
     placeholder: 'Schritt'

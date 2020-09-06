@@ -19,6 +19,7 @@ if (!defined('CORE2'))
 class Recipe implements RecipeInterface, DbObjectInterface {
 
   protected $id, $userid, $ispublic, $name, $description, $eater, $sourcedesc, $sourceurl, $created, $published;
+  protected $timecooking = 0, $timepreparation = 0, $timerest = 0;
   protected $countcooked = 0, $countrated = 0, $countviewed = 0, $countvoted = 0;
   protected $sumvoted = 0, $sumrated = 0;
   protected $ingredients = array();
@@ -67,6 +68,12 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function addStep(CookingStepInterface &$step) : void {
+    if ($step->getPreparationTime() > 0)
+      $this->timepreparation += $step->getPreparationTime();
+    if ($step->getCookingTime() > 0)
+      $this->timecooking += $step->getCookingTime();
+    if ($step->getChillTime() > 0)
+      $this->timerest += $step->getChillTime();
     $this->steps[$step->getIndex()] = $step;
   }
 
@@ -81,6 +88,14 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function getCookedCountStr() : string {
     return Formatter::int_format($this->countcooked);
+  }
+
+  public function getCookingTime() : ?int {
+    return $this->timecooking > 0 ?? null;
+  }
+
+  public function getCookingTimeStr() : ?string {
+    return $this->timecooking > 0 ? Formatter::min_format($this->timecooking) : null;
   }
 
   public function getCreationDate() : DateTime {
@@ -123,12 +138,25 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     return $this->name;
   }
 
+  public function getOverallTime() : ?int {
+    $sum = $this->timepreparation + $this->timecooking + $this->timerest;
+    return $sum > 0 ? $sum : null;
+  }
+
   public function getPictures() : array {
     return $this->pictures;
   }
 
   public function getPictureCount() : int {
     return count($this->pictures);
+  }
+
+  public function getPreparationTime() : ?int {
+    return $this->timepreparation > 0 ?? null;
+  }
+
+  public function getPreparationTimeStr() : ?string {
+    return $this->timepreparation > 0 ? Formatter::min_format($this->timepreparation) : null;
   }
 
   public function getPublishedDate() : ?DateTime {
@@ -171,6 +199,14 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function getRatings() : array {
     return $this->ratings;
+  }
+
+  public function getRestTime() : ?int {
+    return $this->timerest > 0 ? $this->timerest : null;
+  }
+
+  public function getRestTimeStr() : ?string {
+    return $this->timerest > 0 ? Formatter::min_format($this->timerest) : null;
   }
 
   public function getSourceDescription() : string {
