@@ -5,7 +5,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Surcouf\Cookbook\Helper\Flags;
 
 
-require_once realpath(__DIR__.'/../private/entities/Helper/IFlags.php');
+require_once realpath(__DIR__.'/../private/entities/Helper/FlagsInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/Flags.php');
 
 /**

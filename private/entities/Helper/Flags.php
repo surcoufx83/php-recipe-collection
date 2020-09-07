@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook\Helper;
 if (!defined('CORE2'))
   exit;
 
-final class Flags implements IFlags {
+final class Flags implements FlagsInterface {
 
   public static function add_flag(int &$value, int $flag) : void {
     $value |= $flag;

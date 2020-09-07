@@ -7,7 +7,7 @@ use Surcouf\Cookbook\ControllerInterface;
 
 require_once realpath(__DIR__.'/../private/entities/ConfigInterface.php');
 require_once realpath(__DIR__.'/../private/entities/ControllerInterface.php');
-require_once realpath(__DIR__.'/../private/entities/Helper/IFlags.php');
+require_once realpath(__DIR__.'/../private/entities/Helper/FlagsInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/Flags.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/FormatterInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/Formatter.php');
