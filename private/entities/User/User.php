@@ -73,9 +73,9 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
     global $Controller;
     $session_token = HashHelper::generate_token(16);
     $session_password = HashHelper::generate_token(24);
-    $session_password4hash = HashHelper::hash(substr($session_token, 0, 16), $Controller->Config()->HashProvider);
+    $session_password4hash = HashHelper::hash(substr($session_token, 0, 16));
     $session_password4hash .= $session_password;
-    $session_password4hash .= HashHelper::hash(substr($session_token, 16), $Controller->Config()->HashProvider);
+    $session_password4hash .= HashHelper::hash(substr($session_token, 16));
     $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => 12]);
     $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => 12]);
 
@@ -278,9 +278,9 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
       return false;
     while ($record = $result->fetch_assoc()) {
       if (password_verify($session_token, $record['login_token'])) {
-        $pwdhash = HashHelper::hash(substr($session_token, 0, 16), $Controller->Config()->HashProvider);
+        $pwdhash = HashHelper::hash(substr($session_token, 0, 16));
         $pwdhash .= $session_password;
-        $pwdhash .= HashHelper::hash(substr($session_token, 16), $Controller->Config()->HashProvider);
+        $pwdhash .= HashHelper::hash(substr($session_token, 16));
 
         if (password_verify($pwdhash, $record['login_password'])) {
           $uptime = new DateTime();
