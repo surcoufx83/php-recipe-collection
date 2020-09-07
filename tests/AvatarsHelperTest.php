@@ -7,7 +7,7 @@ use Surcouf\Cookbook\Helper\FilesystemHelper;
 
 require_once realpath(__DIR__.'/../private/entities/Helper/IFilesystemHelper.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/FilesystemHelper.php');
-require_once realpath(__DIR__.'/../private/entities/Helper/IAvatarsHelper.php');
+require_once realpath(__DIR__.'/../private/entities/Helper/AvatarsHelperInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/AvatarsHelper.php');
 
 /**
