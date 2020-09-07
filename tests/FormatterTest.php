@@ -1,7 +1,6 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Surcouf\Cookbook\Helper\Formatter;
 use Surcouf\Cookbook\ConfigInterface;
 use Surcouf\Cookbook\ControllerInterface;
