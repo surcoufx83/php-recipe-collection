@@ -14,6 +14,6 @@ interface FormatterInterface {
   public static function float_format(float $value, int $precission = -1) : string;
   public static function min_format(int $minutes) : string;
   public static function int_format(int $value) : string;
-  public static function t(int $numericValue, string $singular, string $plural, int $options, string $separator = ' ') : string;
+  public static function t(int $numericValue, string $singular, string $plural, int $options = 0, string $separator = ' ') : string;
 
 }
