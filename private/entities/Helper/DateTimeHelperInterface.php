@@ -8,7 +8,7 @@ use \DateTime;
 if (!defined('CORE2'))
   exit;
 
-interface IDateTimeHelper {
+interface DateTimeHelperInterface {
 
   public static function dateInterval2IsoFormat(DateInterval $interval) : string;
 

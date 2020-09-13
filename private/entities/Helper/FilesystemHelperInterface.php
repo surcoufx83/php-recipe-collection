@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook\Helper;
 if (!defined('CORE2'))
   exit;
 
-interface IFilesystemHelper {
+interface FilesystemHelperInterface {
 
   public static function file_exists(string $filename) : bool;
   public static function file_put_contents(string $filename, $data, ?int $flags = 0);

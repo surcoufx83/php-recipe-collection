@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook\Helper;
 if (!defined('CORE2'))
   exit;
 
-interface IConverterHelper {
+interface ConverterHelperInterface {
 
   public static function bool_to_str(bool $b) : string;
 
