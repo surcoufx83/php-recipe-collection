@@ -12,13 +12,13 @@ require_once realpath(__DIR__.'/../private/entities/Config/IconConfigInterface.p
 require_once realpath(__DIR__.'/../private/entities/Config/IconConfig.php');
 
 /**
- * @covers Config::<public>
+ * @covers IconConfig::<public>
  */
 class IconConfigTest extends TestCase
 {
 
   /**
-   * Config $cfg
+   * IconConfig $cfg
    */
   protected $cfg;
 
@@ -28,7 +28,7 @@ class IconConfigTest extends TestCase
   }
 
   /**
-   * @covers Config::__call()
+   * @covers IconConfig::__call()
    */
   public function test__call() {
     $this->assertIsString($this->cfg->Dummy());
@@ -39,7 +39,7 @@ class IconConfigTest extends TestCase
   }
 
   /**
-   * @covers Config::__get()
+   * @covers IconConfig::__get()
    */
   public function test__get() {
     $this->assertInstanceOf(IconInterface::class, $this->cfg->Dummy);
