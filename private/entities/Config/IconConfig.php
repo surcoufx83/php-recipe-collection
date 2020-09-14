@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook\Config;
 if (!defined('CORE2'))
   exit;
 
-final class IconConfig {
+final class IconConfig implements IconConfigInterface {
 
   private $icons;
 
@@ -48,23 +48,23 @@ final class IconConfig {
     ];
   }
 
-  public function __call($methodName, $args) {
+  public function __call(string $methodName, array $params) : IconInterface {
     $ico = new Icon(array_key_exists($methodName, $this->icons) ? $this->icons[$methodName] : $this->icons['Dummy']);
-    switch (count($args)) {
+    switch (count($params)) {
       case 0:
         return $ico->getIcon();
       case 1:
-        return $ico->getIcon($args[0]);
+        return $ico->getIcon($params[0]);
       case 2:
-        return $ico->getIcon($args[0], $args[1]);
+        return $ico->getIcon($params[0], $params[1]);
       case 3:
-        return $ico->getIcon($args[0], $args[1], $args[2]);
+        return $ico->getIcon($params[0], $params[1], $params[2]);
     }
     throw new \Exception('Invalid argument count', 1);
 
   }
 
-  public function __get($propertyName) : Icon {
+  public function __get(string $propertyName) : IconInterface {
     return new Icon(array_key_exists($propertyName, $this->icons) ? $this->icons[$propertyName] : $this->icons['Dummy']);
   }
 
