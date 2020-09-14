@@ -251,11 +251,17 @@ class Controller implements ControllerInterface {
         exit('Error connecting to the database.');
       }
       $this->database->set_charset('utf8mb4');
-      return true;
     }
     catch (\Exception $e) {
       exit('Error connecting to the database.');
     }
+    try {
+      Database\Setup::checkAndPatch($this->database);
+    }
+    catch (\Exception $e) {
+      exit($e->getMessage());
+    }
+    return true;
   }
 
   private function init_Dispatcher() : bool {
