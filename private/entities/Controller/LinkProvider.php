@@ -24,7 +24,7 @@ class LinkProvider {
         'new-user-post' => '/admin/new-user',
         'oauth' => [
           'auth' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_AUTHURL : null,
-          'redirect' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/oauth2/callback',
+          'redirect' => ISWEB ? $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/oauth2/callback' : null,
           'token' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_TOKENURL : null,
           'user' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_DATAURL : null,
         ],
@@ -34,7 +34,7 @@ class LinkProvider {
       ],
       'maintenance' => '/maintenance',
       'private' => [
-        'activation' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/activate/%s',
+        'activation' => ISWEB ? $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/activate/%s' : null,
         'activatePassword' => '/activate-account/%s',
         'avatar' => '/pictures/avatars/%s',
         'books' => '/books',
