@@ -3,7 +3,6 @@
 namespace Surcouf\Cookbook\Database;
 
 use Surcouf\Cookbook\Helper\Flags;
-use Surcouf\Cookbook\IController;
 
 if (!defined('CORE2'))
   exit;
