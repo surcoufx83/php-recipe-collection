@@ -4,7 +4,8 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Surcouf\Cookbook\Helper\FilesystemHelper;
 
-define('DS', DIRECTORY_SEPARATOR);
+if (!defined('DS'))
+  define('DS', DIRECTORY_SEPARATOR);
 
 require_once realpath(__DIR__.'/../private/entities/Helper/FilesystemHelperInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/FilesystemHelper.php');

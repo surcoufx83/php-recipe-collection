@@ -6,7 +6,9 @@ use Surcouf\Cookbook\Config;
 use Surcouf\Cookbook\ControllerInterface;
 use Surcouf\Cookbook\Config\IconConfigInterface;
 
-define('DS', DIRECTORY_SEPARATOR);
+if (!defined('DS'))
+  define('DS', DIRECTORY_SEPARATOR);
+  
 define('ROOT', realpath(__DIR__.DS.'/..'));
 define('DIR_BACKEND', realpath(ROOT.DS.'private'.DS.'backend'));
 
