@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook\Config;
 if (!defined('CORE2'))
   exit;
 
-class Icon implements IIcon {
+class Icon implements IconInterface {
 
   private $space, $icon;
 
