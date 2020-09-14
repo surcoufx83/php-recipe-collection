@@ -48,7 +48,7 @@ final class IconConfig implements IconConfigInterface {
     ];
   }
 
-  public function __call(string $methodName, array $params) : IconInterface {
+  public function __call(string $methodName, array $params) : string {
     $ico = new Icon(array_key_exists($methodName, $this->icons) ? $this->icons[$methodName] : $this->icons['Dummy']);
     switch (count($params)) {
       case 0:

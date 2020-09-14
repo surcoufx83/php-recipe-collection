@@ -7,7 +7,7 @@ if (!defined('CORE2'))
 
 interface IconConfigInterface {
 
-  public function __call(string $methodName, array $params) : IconInterface;
+  public function __call(string $methodName, array $params) : string;
   public function __get(string $propertyName) : IconInterface;
 
 }
