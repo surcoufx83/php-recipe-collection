@@ -4,6 +4,7 @@ namespace Surcouf\Cookbook;
 
 use \DateInterval;
 use Surcouf\Cookbook\Config\IconConfig;
+use Surcouf\Cookbook\Config\IconConfigInterface;
 
 if (!defined('CORE2'))
   exit;
@@ -94,7 +95,7 @@ final class Config implements ConfigInterface {
     return array_key_exists($responseCode, $this->responses) ? $this->responses[$responseCode] : $this->responses[10];
   }
 
-  public function Icons() : IconConfig {
+  public function Icons() : IconConfigInterface {
     return $this->icocfg;
   }
 
