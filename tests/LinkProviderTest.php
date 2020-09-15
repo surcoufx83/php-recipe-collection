@@ -18,8 +18,6 @@ class LinkProviderTest extends TestCase
 
   protected function setUp() : void {
     parent::setUp();
-    $_SERVER['HTTP_HOST'] = 'foo.bar';
-    $_SERVER['REQUEST_SCHEME'] = 'https';
     $this->provider = new LinkProvider();
   }
 
