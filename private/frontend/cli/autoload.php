@@ -6,5 +6,7 @@ if (!defined('CORE2'))
 // CLI Frontend binaries
 require_once __DIR__.'/general/maintenance-on.php';
 require_once __DIR__.'/general/maintenance-off.php';
+require_once __DIR__.'/user/admin-grant.php';
+require_once __DIR__.'/user/admin-reject.php';
 require_once __DIR__.'/user/create.php';
 require_once __DIR__.'/user/list.php';

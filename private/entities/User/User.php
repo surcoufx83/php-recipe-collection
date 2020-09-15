@@ -165,6 +165,20 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
     return $this->mailvalidationcode;
   }
 
+  public function grantAdmin() : bool {
+    global $Controller;
+    if (ISWEB === false || (
+      $Controller->isAuthenticated() &&
+      $Controller->User()->isAdmin()
+    )) {
+      $this->isadmin = true;
+      $this->changes['user_isadmin'] = $this->isadmin;
+      $Controller->updateDbObject($this);
+      return true;
+    }
+    return false;
+  }
+
   public function hasHash() : bool {
     return !is_null($this->hash);
   }
@@ -179,6 +193,20 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
 
   public function isOAuthUser() : bool {
     return !is_null($this->oauthname);
+  }
+
+  public function rejectAdmin() : bool {
+    global $Controller;
+    if (ISWEB === false || (
+      $Controller->isAuthenticated() &&
+      $Controller->User()->isAdmin()
+    )) {
+      $this->isadmin = false;
+      $this->changes['user_isadmin'] = $this->isadmin;
+      $Controller->updateDbObject($this);
+      return true;
+    }
+    return false;
   }
 
   public function setFirstname(string $newValue) : void {

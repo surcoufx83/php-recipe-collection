@@ -24,9 +24,11 @@ interface UserInterface {
   public function getSession() : ?SessionInterface;
   public function getUsername() : string;
   public function getValidationCode() : string;
+  public function grantAdmin() : bool;
   public function hasRegistrationCompleted() : bool;
   public function isAdmin() : bool;
   public function isOAuthUser() : bool;
+  public function rejectAdmin() : bool;
   public function setFirstname(string $newValue) : void;
   public function setLastname(string $newValue) : void;
   public function setMail(string $newValue) : void;
