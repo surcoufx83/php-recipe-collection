@@ -59,7 +59,6 @@ class ObjectManager {
 
       default:
         throw new \Exception('Method \''.$name.'\' does not exist in ObjectManager.');
-        break;
     }
   }
 
