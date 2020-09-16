@@ -7,11 +7,13 @@ use Surcouf\Cookbook\ConfigInterface;
 use Surcouf\Cookbook\Config\Icon;
 use Surcouf\Cookbook\Config\IconConfig;
 use Surcouf\Cookbook\Controller\Dispatcher;
+use Surcouf\Cookbook\Controller\ObjectManager;
 use Surcouf\Cookbook\Database\DbConf;
 use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\DbObjectInterface;
+use Surcouf\Cookbook\Helper\DatabaseHelper;
 use Surcouf\Cookbook\OAuth2Conf;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStep;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStepInterface;
@@ -42,6 +44,7 @@ class Controller implements ControllerInterface {
 
   private $database, $currentUser;
   private $config, $dispatcher, $langcode, $linkProvider;
+  private $ObjectManager;
 
   private $ingredients = array();
   private $pictures = array();
@@ -52,7 +55,13 @@ class Controller implements ControllerInterface {
   private $units = array();
   private $users = array();
 
+  protected $objects = [];
+
   private $changedObjects = array();
+
+  public function __construct() {
+    $this->ObjectManager = new ObjectManager();
+  }
 
   public function Config() : ConfigInterface {
     return $this->config;
@@ -64,6 +73,14 @@ class Controller implements ControllerInterface {
 
   public function Language() : string {
     return $this->langcode;
+  }
+
+  public function ObjectManager() : ObjectManager {
+    return $this->ObjectManager;
+  }
+
+  public function OM() : ObjectManager {
+    return $this->ObjectManager;
   }
 
   public function User() : ?UserInterface {
@@ -138,6 +155,14 @@ class Controller implements ControllerInterface {
     ]);
   }
 
+  public function getObject(string $className, int $id) : ?object {
+    if (array_key_exists($className, $this->objects)
+     && array_key_exists($id, $this->objects[$className])) {
+      return $this->objects[$className][$id];
+    }
+    return null;
+  }
+
   public function getPicture($filter) : ?PictureInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->pictures))
@@ -159,18 +184,6 @@ class Controller implements ControllerInterface {
     }
     if (is_array($filter))
       return $this->registerRating(null, $filter);
-    return null;
-  }
-
-  public function getRecipe($filter) : ?RecipeInterface {
-    if (is_integer($filter)) {
-      if (!array_key_exists($filter, $this->recipes))
-        return $this->loadRecipe($filter);
-      else
-        return $this->recipes[$filter];
-    }
-    if (is_array($filter))
-      return $this->registerRecipe(null, $filter);
     return null;
   }
 
@@ -322,15 +335,6 @@ class Controller implements ControllerInterface {
     return $this->registerRating($id);
   }
 
-  private function loadRecipe(int $id) : ?RecipeInterface {
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
-    $query->where('recipes', 'recipe_id', '=', $id);
-    $record = $this->selectFirst($query);
-    if (is_array($record))
-      return $this->registerRecipe(intval($record['recipe_id']), $record);
-    return $this->registerRecipe($id);
-  }
-
   public function loadRecipeIngredients(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ingredients', DB_ANY);
     $query->where('recipe_ingredients', 'recipe_id', '=', $recipe->getId());
@@ -450,7 +454,7 @@ class Controller implements ControllerInterface {
     $record = $this->selectFirst($query);
     if (is_array($record))
       return $this->registerUser(intval($record['user_id']), $record);
-    return $this->registerUser($id);
+    return null;
   }
 
   private function login() : bool {
@@ -578,19 +582,6 @@ class Controller implements ControllerInterface {
     return $this->ratings[$id];
   }
 
-  private function registerRecipe(?int $id, array $record=null) : ?RecipeInterface {
-    if (is_null($id) && is_array($record))
-      $id = intval($record['recipe_id']);
-    if (array_key_exists($id, $this->recipes))
-      return $this->recipes[$id];
-    if (is_null($record)) {
-      $this->recipes[$id] = null;
-      return null;
-    }
-    $this->recipes[$id] = new Recipe($record);
-    return $this->recipes[$id];
-  }
-
   private function registerStep(?int $id, array $record=null) : ?CookingStepInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['step_id']);
@@ -664,12 +655,13 @@ class Controller implements ControllerInterface {
     $this->setCookie($this->config->PasswordCookieName, $_COOKIE[$this->config->PasswordCookieName], $expires);
   }
 
-  public function select(QueryBuilder &$qbuilder) : ?\mysqli_result {
-    $query = $qbuilder->buildQuery();
+  public function select(QueryBuilder &$queryBuilder) : ?\mysqli_result {
+    return DatabaseHelper::select($this->database, $queryBuilder);
+    /*$query = $qbuilder->buildQuery();
     $result = $this->database->query($query);
     if (!is_a($result, 'mysqli_result'))
       return null;
-    return $result;
+    return $result;*/
   }
 
   public function selectCountSimple(string $table, string $filterColumn=null, string $filterValue=null) : int {
@@ -680,14 +672,26 @@ class Controller implements ControllerInterface {
     return $this->select($query)->fetch_assoc()['count'];
   }
 
-  public function selectFirst(QueryBuilder &$qbuilder) : ?array {
-    $query = $qbuilder->buildQuery();
+  public function selectFirst(QueryBuilder &$queryBuilder) : ?array {
+    return DatabaseHelper::selectFirst($this->database, $queryBuilder);
+    /*$query = $qbuilder->buildQuery();
     $result = $this->database->query($query);
     if (!is_a($result, 'mysqli_result'))
       return null;
     if ($result->num_rows == 0)
       return null;
-    return $result->fetch_assoc();
+    return $result->fetch_assoc();*/
+  }
+
+  public function selectObject(QueryBuilder &$queryBuilder, string $className) : ?object {
+    return DatabaseHelper::selectObject($this->database, $queryBuilder, $className);
+    /*$query = $qbuilder->buildQuery();
+    $result = $this->database->query($query);
+    if (!is_a($result, 'mysqli_result'))
+      return null;
+    if ($result->num_rows == 0)
+      return null;
+    return $result->fetch_assoc();*/
   }
 
   private function setCookie(string $name, string $value, int $expiration) : bool {

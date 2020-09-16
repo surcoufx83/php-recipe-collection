@@ -4,6 +4,7 @@ namespace Surcouf\Cookbook;
 
 use Surcouf\Cookbook\DbObjectInterface;
 use Surcouf\Cookbook\Controller\Dispatcher;
+use Surcouf\Cookbook\Controller\ObjectManager;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStepInterface;
 use Surcouf\Cookbook\Recipe\Ingredients\IngredientInterface;
@@ -21,6 +22,8 @@ interface ControllerInterface {
 
   public function Config() : ConfigInterface;
   public function Dispatcher() : Dispatcher;
+  public function ObjectManager() : ObjectManager;
+  public function OM() : ObjectManager;
   public function User() : ?UserInterface;
 
   public function cancelTransaction() : bool;
@@ -34,7 +37,6 @@ interface ControllerInterface {
   public function getLink(string $filter, ...$args) : ?string;
   public function getPicture($filter) : ?PictureInterface;
   public function getRating($filter) : ?RatingInterface;
-  public function getRecipe($filter) : ?RecipeInterface;
   public function getStep($filter) : ?CookingStepInterface;
   public function getTag($filter) : ?TagInterface;
   public function getUnit($filter) : ?UnitInterface;
@@ -53,9 +55,9 @@ interface ControllerInterface {
   public function on(string $method, array $params) : void;
   public function post(array $params) : void;
   public function put(array $params) : void;
-  public function select(QueryBuilder &$qbuilder) : ?\mysqli_result;
+  public function select(QueryBuilder &$queryBuilder) : ?\mysqli_result;
   public function selectCountSimple(string $table, string $filterColumn=null, string $filterValue=null) : int;
-  public function selectFirst(QueryBuilder &$qbuilder) : ?array;
+  public function selectFirst(QueryBuilder &$queryBuilder);
   public function setSessionCookies(string $userCookie, string $tokenCookie, string $passwordCookie, bool $longDuration) : bool;
   public function startTransaction() : bool;
   public function tearDown() : void;

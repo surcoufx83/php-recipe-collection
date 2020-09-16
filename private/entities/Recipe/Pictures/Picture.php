@@ -75,7 +75,7 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface 
 
   public function getRecipe() : RecipeInterface {
     global $Controller;
-    return $Controller->getRecipe($this->recipeid);
+    return $Controller->OM()->Recipe($this->recipeid);
   }
 
   public function getRecipeId() : int {

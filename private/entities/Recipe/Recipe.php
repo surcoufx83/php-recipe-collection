@@ -18,7 +18,16 @@ if (!defined('CORE2'))
 
 class Recipe implements RecipeInterface, DbObjectInterface {
 
-  protected $id, $userid, $ispublic, $name, $description, $eater, $sourcedesc, $sourceurl, $created, $published;
+  protected $recipe_id,
+            $user_id,
+            $recipe_public,
+            $recipe_name,
+            $recipe_description,
+            $recipe_eater,
+            $recipe_source_desc,
+            $recipe_source_url,
+            $recipe_created,
+            $recipe_published;
   protected $timecooking = 0, $timepreparation = 0, $timerest = 0;
   protected $countcooked = 0, $countrated = 0, $countviewed = 0, $countvoted = 0;
   protected $sumvoted = 0, $sumrated = 0;
@@ -30,17 +39,25 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   protected $tagvotes = array();
   private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['recipe_id']);
-    $this->userid = (!is_null($dr['user_id']) ? intval($dr['user_id']) : null);
-    $this->ispublic = ConverterHelper::to_bool($dr['recipe_public']);
-    $this->name = $dr['recipe_name'];
-    $this->description = $dr['recipe_description'];
-    $this->eater = intval($dr['recipe_eater']);
-    $this->sourcedesc = $dr['recipe_source_desc'];
-    $this->sourceurl = $dr['recipe_source_url'];
-    $this->created = new DateTime($dr['recipe_created']);
-    $this->published = (!is_null($dr['recipe_published']) ? new DateTime($dr['recipe_published']) : null);
+  public function __construct(?array $record=null) {
+    if (!is_null($record)) {
+      $this->recipe_id = intval($record['recipe_id']);
+      $this->user_id = (!is_null($record['user_id']) ? intval($record['user_id']) : null);
+      $this->recipe_public = ConverterHelper::to_bool($record['recipe_public']);
+      $this->recipe_name = $record['recipe_name'];
+      $this->recipe_description = $record['recipe_description'];
+      $this->recipe_eater = intval($record['recipe_eater']);
+      $this->recipe_source_desc = $record['recipe_source_desc'];
+      $this->recipe_source_url = $record['recipe_source_url'];
+      $this->recipe_created = new DateTime($record['recipe_created']);
+      $this->recipe_published = (!is_null($record['recipe_published']) ? new DateTime($record['recipe_published']) : null);
+    } else {
+      $this->user_id = (!is_null($this->user_id) ? intval($this->user_id) : null);
+      $this->recipe_public = ConverterHelper::to_bool($this->recipe_public);
+      $this->recipe_eater = intval($this->recipe_eater);
+      $this->recipe_created = new DateTime($this->recipe_created);
+      $this->recipe_published = (!is_null($this->recipe_published) ? new DateTime($this->recipe_published) : null);
+    }
   }
 
   public function addIngredients(IngredientInterface &$ingredient) : void {
@@ -99,11 +116,11 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function getCreationDate() : DateTime {
-    return $this->created;
+    return $this->recipe_created;
   }
 
   public function getCreationDateStr() : string {
-    return Formatter::date_format($this->created);
+    return Formatter::date_format($this->recipe_created);
   }
 
   public function getDbChanges() : array {
@@ -111,7 +128,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function getDescription() : string {
-    return $this->description;
+    return $this->recipe_description;
   }
 
   public function getEaterCount() : int {
@@ -123,7 +140,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function getId() : int {
-    return $this->id;
+    return $this->recipe_id;
   }
 
   public function getIngredients() : array {
@@ -135,7 +152,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function getName() : string {
-    return $this->name;
+    return $this->recipe_name;
   }
 
   public function getOverallTime() : ?int {
@@ -160,11 +177,11 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function getPublishedDate() : ?DateTime {
-    return $this->published;
+    return $this->recipe_published;
   }
 
   public function getPublishedDateStr() : string {
-    return Formatter::date_format($this->published);
+    return Formatter::date_format($this->recipe_published);
   }
 
   public function getRatedCount() : int {
@@ -210,11 +227,11 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function getSourceDescription() : string {
-    return $this->sourcedesc;
+    return $this->recipe_source_desc;
   }
 
   public function getSourceUrl() : string {
-    return $this->sourceurl;
+    return $this->recipe_source_url;
   }
 
   public function getSteps() : array {
@@ -239,11 +256,11 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function getUser() : ?UserInterface {
     global $Controller;
-    return $Controller->getUser($this->userid);
+    return $Controller->getUser($this->user_id);
   }
 
   public function getUserId() : ?int {
-    return $this->userid;
+    return $this->user_id;
   }
 
   public function getViewedCount() : int {
@@ -275,7 +292,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function isPublished() : bool {
-    return $this->ispublic;
+    return $this->recipe_public;
   }
 
   public function hasPictures() : bool {
@@ -293,7 +310,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function setDescription(string $newDescription) : RecipeInterface {
     global $Controller;
-    $this->description = $newDescription;
+    $this->recipe_description = $newDescription;
     $this->changes['recipe_description'] = $newDescription;
     $Controller->updateDbObject($this);
     return $this;
@@ -309,7 +326,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function setName(string $newName) : RecipeInterface {
     global $Controller;
-    $this->name = $newName;
+    $this->recipe_name = $newName;
     $this->changes['recipe_name'] = $newName;
     $Controller->updateDbObject($this);
     return $this;
@@ -317,17 +334,17 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function setPublic(bool $newValue) : RecipeInterface {
     global $Controller;
-    $this->ispublic = $newValue;
-    $this->published = ($newValue ? new DateTime() : null);
+    $this->recipe_public = $newValue;
+    $this->recipe_published = ($newValue ? new DateTime() : null);
     $this->changes['recipe_public'] = intval($newValue);
-    $this->changes['recipe_published'] = $this->ispublic ? Formatter::date_format($this->published, DTF_SQL) : null;
+    $this->changes['recipe_published'] = $this->recipe_public ? Formatter::date_format($this->recipe_published, DTF_SQL) : null;
     $Controller->updateDbObject($this);
     return $this;
   }
 
   public function setSourceDescription(string $newDescription) : RecipeInterface {
     global $Controller;
-    $this->sourcedesc = $newDescription;
+    $this->recipe_source_desc = $newDescription;
     $this->changes['recipe_source_desc'] = $newDescription;
     $Controller->updateDbObject($this);
     return $this;
@@ -335,7 +352,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function setSourceUrl(string $newUrl) : RecipeInterface {
     global $Controller;
-    $this->sourceurl = $newUrl;
+    $this->recipe_source_url = $newUrl;
     $this->changes['recipe_source_url'] = $newUrl;
     $Controller->updateDbObject($this);
     return $this;

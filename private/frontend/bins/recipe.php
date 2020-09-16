@@ -59,8 +59,8 @@ function ui_myrecipes() {
   $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
   $query->where('recipes', 'user_id', '=', $Controller->User()->getId());
   $result = $Controller->select($query);
-  while ($record = $result->fetch_assoc()) {
-    $recipe = $Controller->getRecipe($record);
+  while ($record = $result->fetch_object(Recipe::class)) {
+    $recipe = $Controller->OM()->Recipe($record);
     $Controller->loadRecipePictures($recipe);
     $Controller->loadRecipeRatings($recipe);
     $Controller->loadRecipeTags($recipe);
@@ -76,7 +76,7 @@ function ui_myrecipes() {
 function ui_recipe() {
   global $Controller, $OUT, $twig;
 
-  $recipe = $Controller->getRecipe($Controller->Dispatcher()->getMatchInt('id'));
+  $recipe = $Controller->OM()->Recipe($Controller->Dispatcher()->getMatchInt('id'));
 
   if (!$recipe->isPublished() && $recipe->getUserId() != $Controller->User()->getId())
     $Controller->Dispatcher()->forward('/');
@@ -164,7 +164,7 @@ function ui_recipe() {
 function ui_recipe_publish() {
   global $Controller, $OUT, $twig;
 
-  $recipe = $Controller->getRecipe($Controller->Dispatcher()->getMatchInt('id'));
+  $recipe = $Controller->OM()->Recipe($Controller->Dispatcher()->getMatchInt('id'));
 
   if (is_null($recipe))
     $Controller->Dispatcher()->forward('/');
@@ -453,12 +453,10 @@ function ui_post_new_recipe() {
 function ui_post_vote_recipe() {
   global $Controller;
 
-  $recipe = $Controller->getRecipe($Controller->Dispatcher()->getMatchInt('id'));
+  $recipe = $Controller->OM()->Recipe($Controller->Dispatcher()->getMatchInt('id'));
 
-  if (is_null($recipe))
-    return $Controller->Config()->getResponseArray(80);
-
-  if ($recipe->getUserId() == $Controller->User()->getId())
+  if (is_null($recipe) ||
+    $recipe->getUserId() == $Controller->User()->getId())
     return $Controller->Config()->getResponseArray(80);
 
   $payload = $Controller->Dispatcher()->getPayload();
@@ -471,16 +469,10 @@ function ui_post_vote_recipe() {
   $rated = intval($payload['rated']);
   $voted = intval($payload['voted']);
 
-  if ($cooked < -1 && $cooked > 1)
-    return $Controller->Config()->getResponseArray(80);
-
-  if ($rated < -1 && $rated > 3)
-    return $Controller->Config()->getResponseArray(80);
-
-  if ($voted < 0 && $voted > 5)
-    return $Controller->Config()->getResponseArray(80);
-
-  if ($cooked == -1 && $rated == -1 && $voted == 0)
+  if (($cooked < -1 && $cooked > 1) ||
+    ($rated < -1 && $rated > 3) ||
+    ($voted < 0 && $voted > 5) ||
+    ($cooked == -1 && $rated == -1 && $voted == 0))
     return $Controller->Config()->getResponseArray(80);
 
   $maxage = (new DateTime())->sub($Controller->Config()->RecipeRatingClearance());
