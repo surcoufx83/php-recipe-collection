@@ -55,6 +55,7 @@ interface ControllerInterface {
   public function put(array $params) : void;
   public function select(QueryBuilder &$qbuilder) : ?\mysqli_result;
   public function selectCountSimple(string $table, string $filterColumn=null, string $filterValue=null) : int;
+  public function selectFirst(QueryBuilder &$qbuilder) : ?array;
   public function setSessionCookies(string $userCookie, string $tokenCookie, string $passwordCookie, bool $longDuration) : bool;
   public function startTransaction() : bool;
   public function tearDown() : void;

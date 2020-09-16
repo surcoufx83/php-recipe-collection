@@ -87,7 +87,9 @@ class LinkProvider {
       }
       try {
         return vsprintf($item, $args);
-      } catch (\Exception $e) { }
+      } catch (\Exception $e) {
+        // Ignore vsprintf exceptions
+      }
     }
     return null;
   }

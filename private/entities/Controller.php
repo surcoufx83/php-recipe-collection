@@ -298,40 +298,36 @@ class Controller implements ControllerInterface {
   private function loadIngredient(int $id) : ?IngredientInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ingredients', DB_ANY);
     $query->where('recipe_ingredients', 'ingredient_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
+    $record = $this->selectFirst($query);
+    if (is_array($record))
       return $this->registerIngredient(intval($record['ingredient_id']), $record);
-    }
     return $this->registerIngredient($id);
   }
 
   private function loadPicture(int $id) : ?PictureInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_pictures', DB_ANY);
     $query->where('recipe_pictures', 'picture_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
+    $record = $this->selectFirst($query);
+    if (is_array($record))
       return $this->registerPicture(intval($record['picture_id']), $record);
-    }
     return $this->registerPicture($id);
   }
 
   private function loadRating(int $id) : ?RatingInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
     $query->where('recipe_ratings', 'entry_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
+    $record = $this->selectFirst($query);
+    if (is_array($record))
       return $this->registerRating(intval($record['entry_id']), $record);
-    }
     return $this->registerRating($id);
   }
 
   private function loadRecipe(int $id) : ?RecipeInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
     $query->where('recipes', 'recipe_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
+    $record = $this->selectFirst($query);
+    if (is_array($record))
       return $this->registerRecipe(intval($record['recipe_id']), $record);
-    }
     return $this->registerRecipe($id);
   }
 
@@ -405,50 +401,45 @@ class Controller implements ControllerInterface {
   private function loadStep(int $id) : ?CookingStepInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_steps', DB_ANY);
     $query->where('recipe_steps', 'step_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
+    $record = $this->selectFirst($query);
+    if (is_array($record))
       return $this->registerStep(intval($record['step_id']), $record);
-    }
     return $this->registerStep($id);
   }
 
   private function loadTag(int $id) : ?TagInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'tags', DB_ANY);
     $query->where('tags', 'tag_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
+    $record = $this->selectFirst($query);
+    if (is_array($record))
       return $this->registerTag(intval($record['tag_id']), $record);
-    }
     return $this->registerTag($id);
   }
 
   private function loadTagByName(string $name) : ?TagInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'tags', DB_ANY);
     $query->where('tags', 'tag_name', 'LIKE', $name);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
-      return $this->registerTag(intval($record['tag_id']), $record);
-    }
+    $record = $this->selectFirst($query);
+    if (is_array($record))
+    return $this->registerTag(intval($record['tag_id']), $record);
     return null;
   }
 
   private function loadUnit(int $id) : ?UnitInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'units', DB_ANY);
     $query->where('units', 'unit_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
+    $record = $this->selectFirst($query);
+    if (is_array($record))
       return $this->registerUnit(intval($record['unit_id']), $record);
-    }
     return $this->registerUnit($id);
   }
 
   private function loadUser(int $id) : ?UserInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
     $query->where('users', 'user_id', '=', $id);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
+    $record = $this->selectFirst($query);
+    if (is_array($record))
       return $this->registerUser(intval($record['user_id']), $record);
-    }
     return $this->registerUser($id);
   }
 
@@ -456,11 +447,10 @@ class Controller implements ControllerInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
     $query->where('users', 'user_email', 'LIKE', $name)
           ->orWhere('users', 'user_name', 'LIKE', $name);
-    $result = $this->select($query);
-    if ($record = $result->fetch_assoc()) {
+    $record = $this->selectFirst($query);
+    if (is_array($record))
       return $this->registerUser(intval($record['user_id']), $record);
-    }
-    return null;
+    return $this->registerUser($id);
   }
 
   private function login() : bool {
@@ -688,6 +678,16 @@ class Controller implements ControllerInterface {
     if (!is_null($filterColumn))
       $query->where($table, $filterColumn, '=', $filterValue);
     return $this->select($query)->fetch_assoc()['count'];
+  }
+
+  public function selectFirst(QueryBuilder &$qbuilder) : ?array {
+    $query = $qbuilder->buildQuery();
+    $result = $this->database->query($query);
+    if (!is_a($result, 'mysqli_result'))
+      return null;
+    if ($result->num_rows == 0)
+      return null;
+    return $result->fetch_assoc();
   }
 
   private function setCookie(string $name, string $value, int $expiration) : bool {

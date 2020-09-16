@@ -18,10 +18,6 @@ require_once realpath(__DIR__.'/../private/entities/Helper/Formatter.php');
 class FormatterTest extends TestCase
 {
 
-  protected function setUp() : void {
-    parent::setUp();
-  }
-
   /**
    * @covers Formatter::byte_format
    * @depends testFloat_format

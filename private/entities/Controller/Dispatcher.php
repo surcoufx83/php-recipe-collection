@@ -124,7 +124,6 @@ class Dispatcher {
     if (!is_null($response))
       throw new \Exception('ERROR '.$response['Result']['Error']['Code'].': '.$response['Result']['Error']['Message']);
     throw new \Exception('ERROR '.$code.': '.$message);
-    exit;
   }
 
   /**
@@ -332,7 +331,9 @@ class Dispatcher {
           return true;
         }
       }
-    } catch (\Exception $e) { }
+    } catch (\Exception $e) {
+      // Don't care for exceptions right now
+    }
     return false;
   }
 
