@@ -9,12 +9,17 @@ if (!defined('CORE2'))
 
 class Tag implements TagInterface, DbObjectInterface {
 
-  protected $id, $name;
+  protected $tag_id,
+            $tag_name;
   private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['tag_id']);
-    $this->name = $dr['tag_name'];
+  public function __construct(?array $record=null) {
+    if (!is_null($record)) {
+      $this->tag_id = intval($record['tag_id']);
+      $this->tag_name = $record['tag_name'];
+    } else {
+      $this->tag_id = intval($this->tag_id);
+    }
   }
 
   public function getDbChanges() : array {
@@ -22,11 +27,11 @@ class Tag implements TagInterface, DbObjectInterface {
   }
 
   public function getId() : int {
-    return $this->id;
+    return $this->tag_id;
   }
 
   public function getName() : string {
-    return $this->name;
+    return $this->tag_name;
   }
 
 }

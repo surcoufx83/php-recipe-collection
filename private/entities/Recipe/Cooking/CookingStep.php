@@ -9,31 +9,46 @@ if (!defined('CORE2'))
 
 class CookingStep implements CookingStepInterface, DbObjectInterface {
 
-  protected $id, $recipeid, $stepno, $title, $content;
-  protected $timeprep, $timecook, $timechill;
+  protected $step_id,
+            $recipe_id,
+            $step_no,
+            $step_title,
+            $step_data,
+            $step_time_preparation,
+            $step_time_cooking,
+            $step_time_chill;
   private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['step_id']);
-    $this->recipeid = intval($dr['recipe_id']);
-    $this->stepno = intval($dr['step_no']);
-    $this->title = $dr['step_title'];
-    $this->content = $dr['step_data'];
-    $this->timeprep = (!is_null($dr['step_time_preparation']) ? intval($dr['step_time_preparation']) : -1);
-    $this->timecook = (!is_null($dr['step_time_cooking']) ? intval($dr['step_time_cooking']) : -1);
-    $this->timechill = (!is_null($dr['step_time_chill']) ? intval($dr['step_time_chill']) : -1);
+  public function __construct(?array $record=null) {
+    if (!is_null($record)) {
+      $this->step_id = intval($record['step_id']);
+      $this->recipe_id = intval($record['recipe_id']);
+      $this->step_no = intval($record['step_no']);
+      $this->step_title = $record['step_title'];
+      $this->step_data = $record['step_data'];
+      $this->step_time_preparation = (!is_null($record['step_time_preparation']) ? intval($record['step_time_preparation']) : -1);
+      $this->step_time_cooking = (!is_null($record['step_time_cooking']) ? intval($record['step_time_cooking']) : -1);
+      $this->step_time_chill = (!is_null($record['step_time_chill']) ? intval($record['step_time_chill']) : -1);
+    } else {
+      $this->step_id = intval($this->step_id);
+      $this->recipe_id = intval($this->recipe_id);
+      $this->step_no = intval($this->step_no);
+      $this->step_time_preparation = (!is_null($this->step_time_preparation) ? intval($this->step_time_preparation) : -1);
+      $this->step_time_cooking = (!is_null($this->step_time_cooking) ? intval($this->step_time_cooking) : -1);
+      $this->step_time_chill = (!is_null($this->step_time_chill) ? intval($this->step_time_chill) : -1);
+    }
   }
 
   public function getContent() : string {
-    return $this->content;
+    return $this->step_data;
   }
 
-  public function getChillTime() : int {
-    return $this->timechill;
+  public function getChillTime() : ?int {
+    return $this->step_time_chill;
   }
 
-  public function getCookingTime() : int {
-    return $this->timecook;
+  public function getCookingTime() : ?int {
+    return $this->step_time_cooking;
   }
 
   public function getDbChanges() : array {
@@ -41,36 +56,36 @@ class CookingStep implements CookingStepInterface, DbObjectInterface {
   }
 
   public function getHtmlContent() : string {
-    return str_replace("\r\n", '<br />', $this->content);
+    return str_replace("\r\n", '<br />', $this->step_data);
   }
 
   public function getId() : int {
-    return $this->id;
+    return $this->step_id;
   }
 
   public function getIndex() : int {
-    return ($this->stepno - 1);
+    return ($this->step_no - 1);
   }
 
-  public function getPreparationTime() : int {
-    return $this->timeprep;
+  public function getPreparationTime() : ?int {
+    return $this->step_time_preparation;
   }
 
-  public function getRecipe() : ?RecipeInterface {
+  public function getRecipe() : RecipeInterface {
     global $Controller;
-    return $Controller->OM()->Recipe($this->recipeid);
+    return $Controller->OM()->Recipe($this->recipe_id);
   }
 
-  public function getRecipeId() : ?int {
-    return $this->recipeid;
+  public function getRecipeId() : int {
+    return $this->recipe_id;
   }
 
   public function getStepNo() : int {
-    return $this->stepno;
+    return $this->step_no;
   }
 
   public function getTitle() : string {
-    return $this->title;
+    return $this->step_title;
   }
 
 }

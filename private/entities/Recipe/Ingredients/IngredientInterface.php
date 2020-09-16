@@ -13,8 +13,8 @@ interface IngredientInterface {
   public function getDescription() : string;
   public function getId() : int;
   public function getQuantity() : ?float;
-  public function getRecipe() : ?RecipeInterface;
-  public function getRecipeId() : ?int;
+  public function getRecipe() : RecipeInterface;
+  public function getRecipeId() : int;
   public function getUnit() : ?UnitInterface;
   public function getUnitId() : ?int;
 

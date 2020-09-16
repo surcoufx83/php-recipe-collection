@@ -15,10 +15,10 @@ if (!defined('CORE2'))
 
 interface RecipeInterface {
 
+  public function addCookingStep(CookingStepInterface &$step) : void;
   public function addIngredients(IngredientInterface &$ingredient) : void;
   public function addPicture(PictureInterface &$picture) : void;
   public function addRating(RatingInterface &$rating) : void;
-  public function addStep(CookingStepInterface &$step) : void;
   public function addTag(TagInterface &$tag, int $votes) : void;
   public function getCookedCount() : int;
   public function getCookedCountStr() : string;

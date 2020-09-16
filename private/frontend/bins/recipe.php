@@ -120,7 +120,7 @@ function ui_recipe() {
   $result = $Controller->select($query);
   $myvote = false;
   if ($result && $result->num_rows > 0)
-    $myvote = $Controller->getRating($result->fetch_assoc());
+    $myvote = $Controller->OM()->Rating($result->fetch_assoc());
 
   $OUT['Page']['Breadcrumbs'][] = array(
     'text' => lang('breadcrumb_recipes'),
@@ -197,7 +197,7 @@ function ui_new_recipe() {
   $result = $Controller->select($query);
   if ($result) {
     while($record = $result->fetch_assoc()) {
-      $units[] = $Controller->getUnit($record);
+      $units[] = $Controller->OM()->Unit($record);
     }
   }
 
@@ -207,7 +207,7 @@ function ui_new_recipe() {
   $result = $Controller->select($query);
   if ($result) {
     while($record = $result->fetch_assoc()) {
-      $tags[] = $Controller->getTag($record);
+      $tags[] = $Controller->OM()->Tag($record);
     }
   }
 

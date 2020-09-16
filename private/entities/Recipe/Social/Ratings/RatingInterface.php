@@ -17,8 +17,8 @@ interface RatingInterface {
   public function getRating() : int;
   public function getRecipe() : RecipeInterface;
   public function getRecipeId() : int;
-  public function getUser() : ?UserInterface;
-  public function getUserId() : ?int;
+  public function getUser() : UserInterface;
+  public function getUserId() : int;
   public function getVoting() : int;
   public function hasCooked() : bool;
   public function hasRated() : bool;

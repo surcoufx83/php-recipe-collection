@@ -35,8 +35,27 @@ class ObjectManager {
   public function __call(string $name, array $arguments) : ?object {
     switch ($name) {
 
+      case 'CookingStep':
+      case 'Step':
+        return $this->Object(CookingStep::class, $arguments[0]);
+
+      case 'Ingredient':
+        return $this->Object(Ingredient::class, $arguments[0]);
+
+      case 'Picture':
+        return $this->Object(Picture::class, $arguments[0]);
+
+      case 'Rating':
+        return $this->Object(Rating::class, $arguments[0]);
+
       case 'Recipe':
         return $this->Object(Recipe::class, $arguments[0]);
+
+      case 'Tag':
+        return $this->Object(Tag::class, $arguments[0]);
+
+      case 'Unit':
+        return $this->Object(Unit::class, $arguments[0]);
 
       default:
         throw new \Exception('Method \''.$name.'\' does not exist in ObjectManager.');

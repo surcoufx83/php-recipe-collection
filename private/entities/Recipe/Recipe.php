@@ -3,13 +3,23 @@
 namespace Surcouf\Cookbook\Recipe;
 
 use \DateTime;
+use Surcouf\Cookbook\ControllerInterface;
+use Surcouf\Cookbook\Database\EAggregationType;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Database\ObjectTableMapper;
 use Surcouf\Cookbook\DbObjectInterface;
 use Surcouf\Cookbook\Helper\ConverterHelper;
 use Surcouf\Cookbook\Helper\Formatter;
+use Surcouf\Cookbook\Recipe\Cooking\CookingStep;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStepInterface;
+use Surcouf\Cookbook\Recipe\Ingredients\Ingredient;
 use Surcouf\Cookbook\Recipe\Ingredients\IngredientInterface;
+use Surcouf\Cookbook\Recipe\Pictures\Picture;
 use Surcouf\Cookbook\Recipe\Pictures\PictureInterface;
+use Surcouf\Cookbook\Recipe\Social\Ratings\Rating;
 use Surcouf\Cookbook\Recipe\Social\Ratings\RatingInterface;
+use Surcouf\Cookbook\Recipe\Social\Tags\Tag;
 use Surcouf\Cookbook\Recipe\Social\Tags\TagInterface;
 use Surcouf\Cookbook\User\UserInterface;
 
@@ -60,6 +70,16 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     }
   }
 
+  public function addCookingStep(CookingStepInterface &$step) : void {
+    if ($step->getPreparationTime() > 0)
+      $this->timepreparation += $step->getPreparationTime();
+    if ($step->getCookingTime() > 0)
+      $this->timecooking += $step->getCookingTime();
+    if ($step->getChillTime() > 0)
+      $this->timerest += $step->getChillTime();
+    $this->steps[$step->getIndex()] = $step;
+  }
+
   public function addIngredients(IngredientInterface &$ingredient) : void {
     $this->ingredients[$ingredient->getId()] = $ingredient;
   }
@@ -82,16 +102,6 @@ class Recipe implements RecipeInterface, DbObjectInterface {
       $this->countvoted++;
       $this->sumvoted += $rating->getVoting();
     }
-  }
-
-  public function addStep(CookingStepInterface &$step) : void {
-    if ($step->getPreparationTime() > 0)
-      $this->timepreparation += $step->getPreparationTime();
-    if ($step->getCookingTime() > 0)
-      $this->timecooking += $step->getCookingTime();
-    if ($step->getChillTime() > 0)
-      $this->timerest += $step->getChillTime();
-    $this->steps[$step->getIndex()] = $step;
   }
 
   public function addTag(TagInterface &$tag, int $votes) : void {
@@ -301,11 +311,82 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function loadComplete() : void {
     global $Controller;
-    $Controller->loadRecipeIngredients($this);
-    $Controller->loadRecipePictures($this);
-    $Controller->loadRecipeRatings($this);
-    $Controller->loadRecipeSteps($this);
-    $Controller->loadRecipeTags($this);
+    $this->loadRecipeIngredients($Controller);
+    $this->loadRecipePictures($Controller);
+    $this->loadRecipeRatings($Controller);
+    $this->loadRecipeSteps($Controller);
+    $this->loadRecipeTags($Controller);
+  }
+
+  private function loadRecipeIngredients(ControllerInterface $Controller) : void {
+    $mapper = ObjectTableMapper::getMapper(Ingredient::class);
+    $query = new QueryBuilder(EQueryType::qtSELECT, $mapper->TableName(), DB_ANY);
+    $query->where($mapper->TableName(), 'recipe_id', '=', $this->getId());
+    $result = $Controller->select($query);
+    if ($result) {
+      while ($record = $result->fetch_object(Ingredient::class)) {
+        $record = $Controller->OM()->Ingredient($record);
+        $this->addIngredients($record);
+      }
+    }
+  }
+
+  private function loadRecipePictures(ControllerInterface $Controller) : void {
+    $mapper = ObjectTableMapper::getMapper(Picture::class);
+    $query = new QueryBuilder(EQueryType::qtSELECT, $mapper->TableName(), DB_ANY);
+    $query->where($mapper->TableName(), 'recipe_id', '=', $this->getId());
+    $result = $Controller->select($query);
+    if ($result) {
+      while ($record = $result->fetch_object(Picture::class)) {
+        $record = $Controller->OM()->Picture($record);
+        $this->addPicture($record);
+      }
+    }
+  }
+
+  private function loadRecipeRatings(ControllerInterface $Controller) : void {
+    $mapper = ObjectTableMapper::getMapper(Rating::class);
+    $query = new QueryBuilder(EQueryType::qtSELECT, $mapper->TableName(), DB_ANY);
+    $query->where($mapper->TableName(), 'recipe_id', '=', $this->getId());
+    $result = $Controller->select($query);
+    if ($result) {
+      while ($record = $result->fetch_object(Rating::class)) {
+        $record = $Controller->OM()->Rating($record);
+        $this->addRating($record);
+      }
+    }
+  }
+
+  private function loadRecipeSteps(ControllerInterface $Controller) : void {
+    $mapper = ObjectTableMapper::getMapper(CookingStep::class);
+    $query = new QueryBuilder(EQueryType::qtSELECT, $mapper->TableName(), DB_ANY);
+    $query->where($mapper->TableName(), 'recipe_id', '=', $this->getId());
+    $result = $Controller->select($query);
+    if ($result) {
+      while ($record = $result->fetch_object(CookingStep::class)) {
+        $record = $Controller->OM()->CookingStep($record);
+        $this->addCookingStep($record);
+      }
+    }
+  }
+
+  private function loadRecipeTags(ControllerInterface $Controller) : void {
+    $mapper = ObjectTableMapper::getMapper(Tag::class);
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_tags');
+    $query->select($mapper->TableName(), DB_ANY)
+          ->select($mapper->TableName(), [[$mapper->IdColumn(), EAggregationType::atCOUNT, 'count']])
+          ->join($mapper->TableName(),
+            [$mapper->TableName(), $mapper->IdColumn(), '=', 'recipe_tags', 'tag_id'],
+            ['AND', 'recipe_tags', 'recipe_id', '=', $this->getId()])
+          ->groupBy($mapper->TableName(), [$mapper->IdColumn(), 'tag_name'])
+          ->orderBy2(null, 'count', 'DESC');
+    $result = $Controller->select($query);
+    if ($result) {
+      while ($record = $result->fetch_array()) {
+        $tag = $Controller->OM()->Tag($record);
+        $this->addTag($tag, intval($record['count']));
+      }
+    }
   }
 
   public function setDescription(string $newDescription) : RecipeInterface {
