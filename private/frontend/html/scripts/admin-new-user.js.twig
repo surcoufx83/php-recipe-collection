@@ -1,0 +1,76 @@
+
+  $('#new-user-form').submit(function(event) {
+    event.preventDefault();
+    var frm = $(this);
+    var invalid = $(':invalid');
+    if (invalid.length > 0)
+      return;
+    $('.invalid-feedback').removeClass('d-block');
+    if (!testUniqueParams())
+      return;
+    $('#new-user-modal-close').addClass('d-none');
+    $('#new-user-modal-description').removeClass('d-none');
+    $('#new-user-modal-error').addClass('d-none');
+    $('#new-user-modal-error-msg').text('');
+    $('#new-user-modal-success').addClass('d-none');
+    $('#new-user-modal-success-userid').text('');
+    $('#new-user-modal').modal('show');
+    $.ajax({
+      method: 'POST',
+      url: frm.attr('action'),
+      data: {
+        'firstname': $('#user-firstname').val(),
+        'lastname': $('#user-lastname').val(),
+        'email': $('#user-email').val(),
+        'username': $('#user-name').val()
+      }
+    }).done(function(data) {
+      if (data.success) {
+        $('#new-user-modal-description').addClass('d-none');
+        $('#new-user-modal-spinner').addClass('d-none');
+        $('#new-user-modal-success').removeClass('d-none');
+        $('#new-user-modal-success-userid').text(data.userid);
+        $('#new-user-modal-new').removeClass('d-none');
+        $('#new-recipe-modal-new').click(function() {
+          location.reload();
+        });
+        setTimeout(function () {
+          location.href = '{{ Controller.getlink('admin:users') }}';
+        }, 10000);
+      } else {
+        $('#new-user-modal-description').addClass('d-none');
+        $('#new-user-modal-spinner').addClass('d-none');
+        $('#new-user-modal-error').removeClass('d-none');
+        $('#new-user-modal-error-msg').text(data.message);
+        $('#new-user-modal-close').removeClass('d-none');
+      }
+    });
+
+  });
+
+  function testUniqueParams() {
+    var response = false;
+    $.ajax({
+      async: false,
+      method: 'POST',
+      url: '{{ Controller.getLink('admin:ajax:testEntity') }}',
+      data: {
+        'user-email': $('#user-email').val(),
+        'user-name': $('#user-name').val()
+      }
+    }).done(function(data) {
+      if (data.success) {
+        response = true;
+      } else {
+        for (item in data.fields) {
+          var target = $('#' + item + '-invalidFeedback');
+          target.text(data.fields[item]);
+          target.addClass('d-block');
+        }
+      }
+    }).fail(function(jqXHR, textStatus) {
+      easytooltip($('#submitButton'), '{{ Controller.l('page_admin_newUser_chapter1_validationFailed') }}', 'error');
+      console.log(textStatus);
+    });
+    return response;
+  }

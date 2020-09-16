@@ -1,20 +1,47 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
-use Surcouf\PhpArchive\Config;
-use Surcouf\PhpArchive\Database\DbConf;
-use Surcouf\PhpArchive\Database\EAggregationType;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
+use Surcouf\Cookbook\Config;
+use Surcouf\Cookbook\ConfigInterface;
+use Surcouf\Cookbook\Config\Icon;
+use Surcouf\Cookbook\Config\IconConfig;
+use Surcouf\Cookbook\Controller\Dispatcher;
+use Surcouf\Cookbook\Database\DbConf;
+use Surcouf\Cookbook\Database\EAggregationType;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\DbObjectInterface;
+use Surcouf\Cookbook\OAuth2Conf;
+use Surcouf\Cookbook\Recipe\Cooking\CookingStep;
+use Surcouf\Cookbook\Recipe\Cooking\CookingStepInterface;
+use Surcouf\Cookbook\Recipe\Ingredients\Ingredient;
+use Surcouf\Cookbook\Recipe\Ingredients\IngredientInterface;
+use Surcouf\Cookbook\Recipe\Ingredients\Units\Unit;
+use Surcouf\Cookbook\Recipe\Ingredients\Units\UnitInterface;
+use Surcouf\Cookbook\Recipe\Pictures\Picture;
+use Surcouf\Cookbook\Recipe\Pictures\PictureInterface;
+use Surcouf\Cookbook\Recipe\Recipe;
+use Surcouf\Cookbook\Recipe\RecipeInterface;
+use Surcouf\Cookbook\Recipe\Social\Ratings\Rating;
+use Surcouf\Cookbook\Recipe\Social\Ratings\RatingInterface;
+use Surcouf\Cookbook\Recipe\Social\Tags\Tag;
+use Surcouf\Cookbook\Recipe\Social\Tags\TagInterface;
+use Surcouf\Cookbook\User\BlankUser;
+use Surcouf\Cookbook\User\OAuthUser;
+use Surcouf\Cookbook\User\User;
+use Surcouf\Cookbook\User\UserInterface;
+
+use \League\OAuth2\Client\Token\AccessToken;
+use \League\OAuth2\Client\Provider\GenericProvider;
 
 if (!defined('CORE2'))
   exit;
 
-class Controller implements IController {
+class Controller implements ControllerInterface {
 
   private $database, $currentUser;
-  private $config, $dispatcher, $langcode;
+  private $config, $dispatcher, $langcode, $linkProvider;
 
   private $ingredients = array();
   private $pictures = array();
@@ -27,7 +54,7 @@ class Controller implements IController {
 
   private $changedObjects = array();
 
-  public function Config() : Config\Configuration {
+  public function Config() : ConfigInterface {
     return $this->config;
   }
 
@@ -39,8 +66,18 @@ class Controller implements IController {
     return $this->langcode;
   }
 
-  public function User() : ?User {
+  public function User() : ?UserInterface {
     return $this->currentUser;
+  }
+
+  public function cancelTransaction() : bool {
+    $ret = $this->database->rollback();
+    $this->database->autocommit(true);
+    return $ret;
+  }
+
+  public function dberror() : string {
+    return $this->database->error;
   }
 
   public function dbescape($value, bool $includeQuotes = true) : string {
@@ -56,11 +93,20 @@ class Controller implements IController {
     return $result;
   }
 
+  public function finishTransaction() : bool {
+    $ret = $this->database->commit();
+    if ($ret == false) {
+      $this->database->rollback();
+    }
+    $this->database->autocommit(true);
+    return $ret;
+  }
+
   public function get(array $params) : void {
     $this->dispatcher->get($params);
   }
 
-  public function getIngredient($filter) : ?Ingredient {
+  public function getIngredient($filter) : ?IngredientInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->ingredients))
         return $this->loadIngredient($filter);
@@ -76,129 +122,23 @@ class Controller implements IController {
     return $this->database->insert_id;
   }
 
-  public function getLink($filter) : ?string {
-
-    $items = explode(':', $filter);
-
-    switch($items[0]) {
-      case 'admin':
-        return $this->getLink_Admin($items);
-      case 'ajax':
-        return $this->getLink_Ajax($items);
-      case 'dropzone':
-        return $this->getLink_Dropzone($items);
-      case 'maintenance':
-        return '/maintenance';
-      case 'private':
-        return $this->getLink_Private($items);
-      case 'recipe':
-        return $this->getLink_Recipe($items);
-      case 'tag':
-        return $this->getLink_Tag($items);
-
-    }
-
-    return null;
+  public function getLink(string $filter, ...$args) : ?string {
+    $filter2 = str_replace(':', '_', $filter);
+    return $this->linkProvider->$filter2($args);
   }
 
-  private function getLink_Ajax(array $params) : ?string {
-    switch($params[1]) {
-      case 'admin':
-      return $this->getLink_AjaxAdmin($params);
-      break;
-    }
-    return null;
+  public function getOAuthProvider() : GenericProvider {
+    return new GenericProvider([
+      'clientId'                => OAuth2Conf::OATH_CLIENTID,    // The client ID assigned to you by the provider
+      'clientSecret'            => OAuth2Conf::OATH_CLIENT_SECRET,   // The client password assigned to you by the provider
+      'redirectUri'             => $this->getLink('admin:oauth:redirect'),
+      'urlAuthorize'            => $this->getLink('admin:oauth:auth'),
+      'urlAccessToken'          => $this->getLink('admin:oauth:token'),
+      'urlResourceOwnerDetails' => $this->getLink('admin:oauth:user'),
+    ]);
   }
 
-  private function getLink_AjaxAdmin(array $params) : ?string {
-    switch($params[2]) {
-      case 'address':
-        switch($params[3]) {
-          case 'create':
-            return '/ajax/admin/address/create';
-          case 'search':
-            return '/ajax/admin/search/address';
-        }
-        return null;
-    }
-    return null;
-  }
-
-  private function getLink_Admin(array $params) : ?string {
-    switch($params[1]) {
-      case 'address':
-        return '/admin/address/'.$params[2];
-      case 'addresses':
-        return '/admin/addresses';
-      case 'cronjobs':
-        return '/admin/cronjobs';
-      case 'logs':
-        return '/admin/logs';
-      case 'main':
-        return '/admin';
-      case 'settings':
-        return '/admin/settings';
-      case 'storage':
-        return '/admin/storage';
-      case 'user':
-        return '/admin/user/'.$params[2];
-      case 'users':
-        return '/admin/users';
-    }
-    return null;
-  }
-
-  private function getLink_Dropzone(array $params) : ?string {
-    switch($params[1]) {
-      case 'main':
-        return '/dropzone';
-    }
-    return null;
-  }
-
-  private function getLink_Private(array $params) : ?string {
-    switch($params[1]) {
-      case 'avatar':
-        return '/pictures/avatars/'.$params[2];
-      case 'lists':
-        return '/lists';
-      case 'login':
-        return '/login';
-      case 'logout':
-        return '/logout';
-      case 'home':
-        return '/';
-      case 'random':
-        return '/random';
-      case 'search':
-        return '/search';
-      case 'settings':
-        return '/settings';
-    }
-    return null;
-  }
-
-  private function getLink_Recipe(array $params) : ?string {
-    switch($params[1]) {
-      case 'publish':
-        return '/recipe/publish/'.$params[2];
-      case 'show':
-        return '/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
-      case 'unpublish':
-        return '/recipe/unpublish/'.$params[2];
-    }
-    return null;
-  }
-
-  private function getLink_Tag(array $params) : ?string {
-    switch($params[1]) {
-      case 'show':
-        return '/tag/'.$params[2].(array_key_exists(3, $params) ? '/'.urlencode($params[3]) : '');
-    }
-    return null;
-  }
-
-  public function getPicture($filter) : ?Picture {
+  public function getPicture($filter) : ?PictureInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->pictures))
         return $this->loadPicture($filter);
@@ -210,7 +150,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getRating($filter) : ?Rating {
+  public function getRating($filter) : ?RatingInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->ratings))
         return $this->loadRating($filter);
@@ -222,7 +162,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getRecipe($filter) : ?Recipe {
+  public function getRecipe($filter) : ?RecipeInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->recipes))
         return $this->loadRecipe($filter);
@@ -234,7 +174,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getStep($filter) : ?CookingStep {
+  public function getStep($filter) : ?CookingStepInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->steps))
         return $this->loadStep($filter);
@@ -246,7 +186,7 @@ class Controller implements IController {
     return null;
   }
 
-  public function getTag($filter) : ?Tag {
+  public function getTag($filter) : ?TagInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->tags))
         return $this->loadTag($filter);
@@ -255,10 +195,12 @@ class Controller implements IController {
     }
     if (is_array($filter))
       return $this->registerTag(null, $filter);
+    if (is_string($filter))
+      return $this->loadTagByName($filter);
     return null;
   }
 
-  public function getUnit($filter) : ?Unit {
+  public function getUnit($filter) : ?UnitInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->units))
         return $this->loadUnit($filter);
@@ -270,46 +212,35 @@ class Controller implements IController {
     return null;
   }
 
-  public function getUser($filter=null) : ?User {
+  public function getUser($filter=null) : ?UserInterface {
     if (is_integer($filter)) {
       if (!array_key_exists($filter, $this->users))
         return $this->loadUser($filter);
       else
         return $this->users[$filter];
     }
-    if (is_string($filter)) {
+    if (is_string($filter))
       return $this->loadUsername($filter);
-    }
-    var_dump($filter);
-    //debug_print_backtrace();
-    exit;
-    // tbd
+    if (is_array($filter))
+      return $this->registerUser(null, $filter);
     return null;
   }
 
   public function init() : void {
+    global $i18n;
+    $this->langcode = $i18n->getAppliedLang();
+    $this->linkProvider = new Controller\LinkProvider();
     if (!$this->init_Database())
       exit;
     if (!$this->init_Config())
       exit;
     if (!$this->init_Dispatcher())
       exit;
-    global $i18n;
-    $this->langcode = $i18n->getAppliedLang();
   }
 
   private function init_Config() : bool {
-    $this->config = new Config\Configuration();
-    $result = null;
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'config', DB_ANY);
-    $query->orderBy(['parent_id', 'config_id']);
-    $result = $this->select($query);
-    if (!$result)
-      return false;
-    while ($record = $result->fetch_assoc()) {
-      $this->config->addChild($record);
-    }
-    define('MAINTENANCE', $this->config->Maintenance->Enabled->getBool());
+    $this->config = new Config();
+    define('MAINTENANCE', $this->config->MaintenanceMode);
     return true;
   }
 
@@ -320,11 +251,17 @@ class Controller implements IController {
         exit('Error connecting to the database.');
       }
       $this->database->set_charset('utf8mb4');
-      return true;
     }
     catch (\Exception $e) {
       exit('Error connecting to the database.');
     }
+    try {
+      Database\Setup::checkAndPatch($this->database);
+    }
+    catch (\Exception $e) {
+      exit($e->getMessage());
+    }
+    return true;
   }
 
   private function init_Dispatcher() : bool {
@@ -354,20 +291,21 @@ class Controller implements IController {
   }
 
   public function l(string $key, ...$params) : string {
-    return lang($key, $params);
+    $outval = lang($key, $params);
+    return ($outval == '' ? 'MISSING translation: '.$key : $outval);
   }
 
-  private function loadIngredient(int $id) : ?Ingredient {
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'ingredients', DB_ANY);
-    $query->where('ingredients', 'ing_id', '=', $id);
+  private function loadIngredient(int $id) : ?IngredientInterface {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ingredients', DB_ANY);
+    $query->where('recipe_ingredients', 'ingredient_id', '=', $id);
     $result = $this->select($query);
     if ($record = $result->fetch_assoc()) {
-      return $this->registerIngredient(intval($record['ing_id']), $record);
+      return $this->registerIngredient(intval($record['ingredient_id']), $record);
     }
     return $this->registerIngredient($id);
   }
 
-  private function loadPicture(int $id) : ?Picture {
+  private function loadPicture(int $id) : ?PictureInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_pictures', DB_ANY);
     $query->where('recipe_pictures', 'picture_id', '=', $id);
     $result = $this->select($query);
@@ -377,7 +315,7 @@ class Controller implements IController {
     return $this->registerPicture($id);
   }
 
-  private function loadRating(int $id) : ?Rating {
+  private function loadRating(int $id) : ?RatingInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
     $query->where('recipe_ratings', 'entry_id', '=', $id);
     $result = $this->select($query);
@@ -387,7 +325,7 @@ class Controller implements IController {
     return $this->registerRating($id);
   }
 
-  private function loadRecipe(int $id) : ?Recipe {
+  private function loadRecipe(int $id) : ?RecipeInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
     $query->where('recipes', 'recipe_id', '=', $id);
     $result = $this->select($query);
@@ -397,28 +335,19 @@ class Controller implements IController {
     return $this->registerRecipe($id);
   }
 
-  public function loadRecipeIngredients(Recipe &$recipe) : void {
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'ingredients', DB_ANY);
-    $query->select('recipe_ingredients', DB_ANY)
-          ->select('units', DB_ANY)
-          ->join('recipe_ingredients',
-            ['recipe_ingredients', 'ing_id', '=', 'ingredients', 'ing_id'],
-            ['AND', 'recipe_ingredients', 'recipe_id', '=', $recipe->getId()])
-          ->joinLeft('units', ['units', 'unit_id', '=', 'recipe_ingredients', 'unit_id']);
+  public function loadRecipeIngredients(RecipeInterface &$recipe) : void {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ingredients', DB_ANY);
+    $query->where('recipe_ingredients', 'recipe_id', '=', $recipe->getId());
     $result = $this->select($query);
     if ($result) {
       while ($record = $result->fetch_assoc()) {
         $ingredient = $this->getIngredient($record);
-        if (!is_null($record['unit_id']))
-          $unit = $this->getUnit($record);
-        else
-          $unit = null;
-        $recipe->addIngredients($ingredient, $unit, $record);
+        $recipe->addIngredients($ingredient);
       }
     }
   }
 
-  public function loadRecipePictures(Recipe &$recipe) : void {
+  public function loadRecipePictures(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_pictures', DB_ANY);
     $query->where('recipe_pictures', 'recipe_id', '=', $recipe->getId());
     $result = $this->select($query);
@@ -430,7 +359,7 @@ class Controller implements IController {
     }
   }
 
-  public function loadRecipeRatings(Recipe &$recipe) : void {
+  public function loadRecipeRatings(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
     $query->where('recipe_ratings', 'recipe_id', '=', $recipe->getId());
     $result = $this->select($query);
@@ -442,7 +371,7 @@ class Controller implements IController {
     }
   }
 
-  public function loadRecipeSteps(Recipe &$recipe) : void {
+  public function loadRecipeSteps(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_steps', DB_ANY);
     $query->where('recipe_steps', 'recipe_id', '=', $recipe->getId())
           ->orderBy(['step_no']);
@@ -455,7 +384,7 @@ class Controller implements IController {
     }
   }
 
-  public function loadRecipeTags(Recipe &$recipe) : void {
+  public function loadRecipeTags(RecipeInterface &$recipe) : void {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_tags');
     $query->select('tags', DB_ANY)
           ->select('tags', [['tag_id', EAggregationType::atCOUNT, 'count']])
@@ -473,7 +402,7 @@ class Controller implements IController {
     }
   }
 
-  private function loadStep(int $id) : ?CookingStep {
+  private function loadStep(int $id) : ?CookingStepInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_steps', DB_ANY);
     $query->where('recipe_steps', 'step_id', '=', $id);
     $result = $this->select($query);
@@ -483,7 +412,7 @@ class Controller implements IController {
     return $this->registerStep($id);
   }
 
-  private function loadTag(int $id) : ?Tag {
+  private function loadTag(int $id) : ?TagInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'tags', DB_ANY);
     $query->where('tags', 'tag_id', '=', $id);
     $result = $this->select($query);
@@ -493,7 +422,17 @@ class Controller implements IController {
     return $this->registerTag($id);
   }
 
-  private function loadUnit(int $id) : ?Unit {
+  private function loadTagByName(string $name) : ?TagInterface {
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'tags', DB_ANY);
+    $query->where('tags', 'tag_name', 'LIKE', $name);
+    $result = $this->select($query);
+    if ($record = $result->fetch_assoc()) {
+      return $this->registerTag(intval($record['tag_id']), $record);
+    }
+    return null;
+  }
+
+  private function loadUnit(int $id) : ?UnitInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'units', DB_ANY);
     $query->where('units', 'unit_id', '=', $id);
     $result = $this->select($query);
@@ -503,7 +442,7 @@ class Controller implements IController {
     return $this->registerUnit($id);
   }
 
-  private function loadUser(int $id) : ?User {
+  private function loadUser(int $id) : ?UserInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
     $query->where('users', 'user_id', '=', $id);
     $result = $this->select($query);
@@ -513,17 +452,15 @@ class Controller implements IController {
     return $this->registerUser($id);
   }
 
-  private function loadUsername(string $name) : ?User {
+  private function loadUsername(string $name) : ?UserInterface {
     $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
-    if (strpos($name, '@') > 0)
-      $query->where('users', 'user_email', 'LIKE', $name);
-    else
-      $query->where('users', 'user_name', 'LIKE', $name);
+    $query->where('users', 'user_email', 'LIKE', $name)
+          ->orWhere('users', 'user_name', 'LIKE', $name);
     $result = $this->select($query);
     if ($record = $result->fetch_assoc()) {
       return $this->registerUser(intval($record['user_id']), $record);
     }
-    return $this->registerUser($id);
+    return null;
   }
 
   private function login() : bool {
@@ -541,26 +478,46 @@ class Controller implements IController {
   private function loginWithCookies() : bool {
     if (count($_COOKIE) == 0)
       return false;
-    if (!array_key_exists($this->config->Cookies->User->getString(), $_COOKIE) ||
-        !array_key_exists($this->config->Cookies->Session->getString(), $_COOKIE) ||
-        !array_key_exists($this->config->Cookies->Password->getString(), $_COOKIE)) {
+    if (!array_key_exists($this->config->UserCookieName, $_COOKIE) ||
+        !array_key_exists($this->config->SessionCookieName, $_COOKIE) ||
+        !array_key_exists($this->config->PasswordCookieName, $_COOKIE)) {
       return false;
     }
-    $user = $this->loadUsername($_COOKIE[$this->config->Cookies->User->getString()]);
-    if (is_null($user) || !$user->verifySession($_COOKIE[$this->config->Cookies->Session->getString()], $_COOKIE[$this->config->Cookies->Password->getString()])) {
+    $uname = $_COOKIE[$this->config->UserCookieName];
+    $user = $this->loadUsername($uname);
+    if (is_null($user) || !$user->verifySession($_COOKIE[$this->config->SessionCookieName], $_COOKIE[$this->config->PasswordCookieName])) {
       $this->removeCookies();
       return false;
     }
     $this->currentUser = $user;
+    $this->renewSession();
     return true;
   }
 
-  public function loginWithPassword(string $username, string $password, bool $keepSession, bool $agreedStatement, Array &$response = null) : bool {
-    if ($password == '' || $username == '' || !$agreedStatement) {
+  public function loginWithOAuth(AccessToken $token, bool &$userCreated) : bool {
+    $values = $token->getValues();
+    if (!array_key_exists('user_id', $values))
+      return false;
+    $userid = 'OAuth2::'.$values['user_id'].'@'.OAuth2Conf::OATH_PROVIDER;
+    $user = $this->getUser($userid, true);
+    if (is_null($user)) {
+      $user = new OAuthUser($values['user_id']);
+      $response = [];
+      if (!$user->save($response))
+        return false;
+      $userCreated = true;
+    }
+    $this->currentUser =& $user;
+    $this->currentUser->createNewSession(true, $token);
+    return true;
+  }
+
+  public function loginWithPassword(string $email, string $password, bool $keepSession, array &$response = null) : bool {
+    if ($email == '' || $password == '') {
       $response = $this->config->getResponseArray(30);
       return false;
     }
-    $user = $this->loadUsername($username);
+    $user = $this->getUser($email);
     if (is_null($user) || !$user->verify($password)) {
       $response = $this->config->getResponseArray(30);
       return false;
@@ -592,9 +549,9 @@ class Controller implements IController {
     $this->dispatcher->put($params);
   }
 
-  private function registerIngredient(?int $id, array $record=null) : ?Ingredient {
+  private function registerIngredient(?int $id, array $record=null) : ?IngredientInterface {
     if (is_null($id) && is_array($record))
-      $id = intval($record['ing_id']);
+      $id = intval($record['ingredient_id']);
     if (array_key_exists($id, $this->ingredients))
       return $this->ingredients[$id];
     if (is_null($record)) {
@@ -605,7 +562,7 @@ class Controller implements IController {
     return $this->ingredients[$id];
   }
 
-  private function registerPicture(?int $id, array $record=null) : ?Picture {
+  private function registerPicture(?int $id, array $record=null) : ?PictureInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['picture_id']);
     if (array_key_exists($id, $this->pictures))
@@ -618,7 +575,7 @@ class Controller implements IController {
     return $this->pictures[$id];
   }
 
-  private function registerRating(?int $id, array $record=null) : ?Rating {
+  private function registerRating(?int $id, array $record=null) : ?RatingInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['entry_id']);
     if (array_key_exists($id, $this->ratings))
@@ -631,7 +588,7 @@ class Controller implements IController {
     return $this->ratings[$id];
   }
 
-  private function registerRecipe(?int $id, array $record=null) : ?Recipe {
+  private function registerRecipe(?int $id, array $record=null) : ?RecipeInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['recipe_id']);
     if (array_key_exists($id, $this->recipes))
@@ -644,7 +601,7 @@ class Controller implements IController {
     return $this->recipes[$id];
   }
 
-  private function registerStep(?int $id, array $record=null) : ?CookingStep {
+  private function registerStep(?int $id, array $record=null) : ?CookingStepInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['step_id']);
     if (array_key_exists($id, $this->steps))
@@ -657,7 +614,7 @@ class Controller implements IController {
     return $this->steps[$id];
   }
 
-  private function registerTag(?int $id, array $record=null) : ?Tag {
+  private function registerTag(?int $id, array $record=null) : ?TagInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['tag_id']);
     if (array_key_exists($id, $this->tags))
@@ -670,7 +627,7 @@ class Controller implements IController {
     return $this->tags[$id];
   }
 
-  private function registerUnit(?int $id, array $record=null) : ?Unit {
+  private function registerUnit(?int $id, array $record=null) : ?UnitInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['unit_id']);
     if (array_key_exists($id, $this->units))
@@ -683,7 +640,7 @@ class Controller implements IController {
     return $this->units[$id];
   }
 
-  private function registerUser(?int $id, array $record=null) : ?User {
+  private function registerUser(?int $id, array $record=null) : ?UserInterface {
     if (is_null($id) && is_array($record))
       $id = intval($record['user_id']);
     if (array_key_exists($id, $this->users))
@@ -702,6 +659,19 @@ class Controller implements IController {
       setcookie($keys[$i], null, -1);
       unset($_COOKIE[$keys[$i]]);
     }
+  }
+
+  private function renewSession() : void {
+    $session = $this->currentUser->getSession();
+    $expires = 0;
+    if ($session->keep()) {
+      global $NOW;
+      $expdatetime = $NOW->add($this->config->SessionLongExpirationTime);
+      $expires = $expdatetime->getTimestamp();
+    }
+    $this->setCookie($this->config->UserCookieName, $_COOKIE[$this->config->UserCookieName], $expires);
+    $this->setCookie($this->config->SessionCookieName, $_COOKIE[$this->config->SessionCookieName], $expires);
+    $this->setCookie($this->config->PasswordCookieName, $_COOKIE[$this->config->PasswordCookieName], $expires);
   }
 
   public function select(QueryBuilder &$qbuilder) : ?\mysqli_result {
@@ -728,25 +698,50 @@ class Controller implements IController {
     $expires = 0;
     if ($longDuration) {
       global $NOW;
-      $expdatetime = $NOW->add($this->config->Cookies->ExpirationLong->getTimespan());
+      $expdatetime = $NOW->add($this->config->SessionLongExpirationTime);
       $expires = $expdatetime->getTimestamp();
     }
-    return ($this->setCookie($this->config->Cookies->User->getString(), $userCookie, $expires)
-      && $this->setCookie($this->config->Cookies->Session->getString(), $tokenCookie, $expires)
-      && $this->setCookie($this->config->Cookies->Password->getString(), $passwordCookie, $expires));
+    return ($this->setCookie($this->config->UserCookieName, $userCookie, $expires)
+      && $this->setCookie($this->config->SessionCookieName, $tokenCookie, $expires)
+      && $this->setCookie($this->config->PasswordCookieName, $passwordCookie, $expires));
+  }
+
+  public function startTransaction() : bool {
+    $this->database->autocommit(false);
+    return $this->database->begin_transaction();
   }
 
   public function tearDown() : void {
+
     foreach ($this->changedObjects as $key => $object) {
 
       switch(get_class($object)) {
 
-        case 'Surcouf\PhpArchive\User':
+        case 'Surcouf\Cookbook\Recipe\Recipe':
+          if (count($object->getDbChanges()) == 0)
+            break;
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipes');
+          $query->update($object->getDbChanges());
+          $query->where('recipes', 'recipe_id', '=', $object->getId());
+          $this->update($query);
+          break;
+
+        case 'Surcouf\Cookbook\User\BlankUser':
+        case 'Surcouf\Cookbook\User\User':
           if (count($object->getDbChanges()) == 0)
             break;
           $query = new QueryBuilder(EQueryType::qtUPDATE, 'users');
           $query->update($object->getDbChanges());
           $query->where('users', 'user_id', '=', $object->getId());
+          $this->update($query);
+          break;
+
+        case 'Surcouf\Cookbook\User\Session':
+          if (count($object->getDbChanges()) == 0)
+            break;
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'user_logins');
+          $query->update($object->getDbChanges());
+          $query->where('user_logins', 'login_id', '=', $object->getId());
           $this->update($query);
           break;
 
@@ -763,7 +758,7 @@ class Controller implements IController {
     return $result;
   }
 
-  public function updateDbObject(IDbObject &$object) : void {
+  public function updateDbObject(DbObjectInterface &$object) : void {
     $key = get_class($object).$object->getId();
     if (!array_key_exists($key, $this->changedObjects))
       $this->changedObjects[$key] = $object;

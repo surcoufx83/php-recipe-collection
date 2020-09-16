@@ -1,9 +1,9 @@
 <?php
 
-use Surcouf\PhpArchive\Database\EAggregationType;
-use Surcouf\PhpArchive\Database\EQueryType;
-use Surcouf\PhpArchive\Database\QueryBuilder;
-use Surcouf\PhpArchive\Helper\UiHelper\CarouselHelper;
+use Surcouf\Cookbook\Database\EAggregationType;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Helper\UiHelper\CarouselHelper;
 
 $Controller->get(array(
   'pattern' => '/',
@@ -41,14 +41,14 @@ function ui_home() {
         ->where('recipes', 'recipe_public', '=', 1)
         ->orderBy([['recipe_published', 'DESC']])
         ->limit(5);
-  
+
   $result = $Controller->select($query);
   $carousel = CarouselHelper::createNew('new-recipes');
   if ($result) {
     while($record = $result->fetch_assoc()) {
       $recipe = $Controller->getRecipe($record);
       CarouselHelper::addItem($carousel, [
-        'href' => $Controller->getLink('recipe:show:'.$recipe->getId().':'.$recipe->getName()),
+        'href' => $Controller->getLink('recipe:show', $recipe->getId(), $recipe->getName()),
         'image' => 'cbimages/'.$record['picture_filename'],
         'title' => $recipe->getName(),
         'description' => $recipe->getDescription(),

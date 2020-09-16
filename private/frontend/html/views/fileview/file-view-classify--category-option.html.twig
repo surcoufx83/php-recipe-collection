@@ -1,5 +1,0 @@
-
-                  <option value="{{ doccat.getId() }}">{{ doccat.getCategoryPath()|join('&nbsp;&#x27f6;&nbsp;')|raw }}</option>
-                  {% for child in doccat.getChilds() %}
-                  {% include "views/fileview/file-view-classify--category-option.html.twig" with { 'doccat': child } only %}
-                  {% endfor %}

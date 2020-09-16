@@ -1,9 +1,8 @@
 <?php
 
-namespace Surcouf\PhpArchive\Database;
+namespace Surcouf\Cookbook\Database;
 
-use Surcouf\PhpArchive\Helper\Flags;
-use Surcouf\PhpArchive\IController;
+use Surcouf\Cookbook\Helper\Flags;
 
 if (!defined('CORE2'))
   exit;
@@ -101,6 +100,8 @@ class QueryBuilder {
           $valline[] = $this->values[$i][$j];
         else if (is_bool($this->values[$i][$j]))
           $valline[] = intval($this->values[$i][$j]);
+        else if (is_null($this->values[$i][$j]))
+          $valline[] = 'NULL';
         else
           throw new \Exception('NYI.');
       }
@@ -155,6 +156,8 @@ class QueryBuilder {
         $update[] = $this->maskstr($key).'='.$value;
       else if (is_bool($value))
         $update[] = $this->maskstr($key).'='.intval($value);
+      else if (is_null($value))
+        $update[] = $this->maskstr($key).'=NULL';
       else
         throw new \Exception('NYI.');
     }
@@ -336,12 +339,18 @@ class QueryBuilder {
     }
   }
 
-  public function orderBy2(?string $table, string $column, string $direction) : void {
+  public function orderBy2(?string $table, string $column, string $direction) : QueryBuilder {
     if (!is_null($table)) {
       $alias = $this->getTableAlias($table);
-      $this->orders[] = $this->maskTablefield($alias, $column.' '.$direction);
+      $this->orders[] = $this->maskTablefield($alias, $column).' '.$direction;
     } else
       $this->orders[] = $this->maskstr($column).' '.$direction;
+    return $this;
+  }
+
+  public function orderRandom() : QueryBuilder {
+    $this->orders[] = 'RAND()';
+    return $this;
   }
 
   public function select(...$params) : QueryBuilder {
@@ -418,6 +427,12 @@ class QueryBuilder {
       $expr = $this->maskstr($field).' ';
     if ($operator == 'IS NULL' && is_null($value))
       $expr .= $operator;
+    else if ($operator == 'IN' && is_array($value)) {
+      for ($i=0; $i<count($value); $i++) {
+        $value[$i] = $Controller->dbescape($value[$i]);
+      }
+      $expr .= $operator.' ('.implode(', ', $value).')';
+    }
     else {
       $expr .= $operator.' ';
       $expr .= $Controller->dbescape($value);
@@ -435,6 +450,12 @@ class QueryBuilder {
       $expr .= $this->maskstr($field).' ';
     if ($operator == 'IS NULL' && is_null($value))
       $expr .= $operator;
+    else if ($operator == 'IN' && is_array($value)) {
+      for ($i=0; $i<count($value); $i++) {
+        $value[$i] = $Controller->dbescape($value[$i]);
+      }
+      $expr .= $operator.' ('.implode(', ', $value).')';
+    }
     else {
       $expr .= $operator.' ';
       $expr .= $Controller->dbescape($value);
@@ -452,6 +473,12 @@ class QueryBuilder {
       $expr .= $this->maskstr($field).' ';
     if ($operator == 'IS NULL' && is_null($value))
       $expr .= $operator;
+    else if ($operator == 'IN' && is_array($value)) {
+      for ($i=0; $i<count($value); $i++) {
+        $value[$i] = $Controller->dbescape($value[$i]);
+      }
+      $expr .= $operator.' ('.implode(', ', $value).')';
+    }
     else {
       $expr .= $operator.' ';
       $expr .= $Controller->dbescape($value);

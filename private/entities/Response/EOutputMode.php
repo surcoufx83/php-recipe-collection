@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive\Response;
+namespace Surcouf\Cookbook\Response;
 
 if (!defined('CORE2'))
   exit;

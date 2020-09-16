@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 use \Ahc\Cli\Application;
 use Ahc\Cli\IO\Interactor;
@@ -10,5 +10,5 @@ if (!defined('CORE2'))
   exit;
 
 $writer = new Writer;
-$app = new Application('Archive-cli', 'v0.0.1');
+$app = new Application('Archive-cli', 'v1.0');
 $interactor = new Interactor;

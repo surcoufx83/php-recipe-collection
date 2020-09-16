@@ -2,10 +2,10 @@
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Surcouf\PhpArchive\Helper\ConverterHelper;
+use Surcouf\Cookbook\Helper\ConverterHelper;
 
 
-require_once realpath(__DIR__.'/../private/entities/Helper/IConverterHelper.php');
+require_once realpath(__DIR__.'/../private/entities/Helper/ConverterHelperInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/ConverterHelper.php');
 
 /**

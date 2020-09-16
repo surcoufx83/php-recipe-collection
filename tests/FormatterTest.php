@@ -1,13 +1,15 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
-use Surcouf\PhpArchive\Helper\Formatter;
+use Surcouf\Cookbook\Helper\Formatter;
+use Surcouf\Cookbook\ConfigInterface;
+use Surcouf\Cookbook\ControllerInterface;
 
-
-require_once realpath(__DIR__.'/../private/entities/Helper/IFlags.php');
+require_once realpath(__DIR__.'/../private/entities/ConfigInterface.php');
+require_once realpath(__DIR__.'/../private/entities/ControllerInterface.php');
+require_once realpath(__DIR__.'/../private/entities/Helper/FlagsInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/Flags.php');
-require_once realpath(__DIR__.'/../private/entities/Helper/IFormatter.php');
+require_once realpath(__DIR__.'/../private/entities/Helper/FormatterInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/Formatter.php');
 
 /**
@@ -26,7 +28,27 @@ class FormatterTest extends TestCase
    * @dataProvider byte_formatDataProvider
    */
   public function testByte_format($value, $precission, $expected) {
+    global $Controller;
+    $Controller = $this->createStub(ControllerInterface::class);
+    $stubConfig = $this->createStub(ConfigInterface::class);
+    $Controller->method('Config')->willReturn($stubConfig);
+    $stubConfig->expects($this->exactly(3))
+               ->method('__call')
+               ->will($this->onConsecutiveCalls(2, '.', ''));
     $this->assertEquals($expected, Formatter::byte_format($value, $precission));
+  }
+
+  /**
+   * @covers Formatter::date_format
+   * @dataProvider date_formatDataProvider
+   */
+  public function testDate_format($value, $format, $expected) {
+    global $Controller;
+    $Controller = $this->createStub(ControllerInterface::class);
+    $stubConfig = $this->createStub(ConfigInterface::class);
+    $Controller->method('Config')->willReturn($stubConfig);
+    $stubConfig->method('__call')->willReturn('d. F Y');
+    $this->assertEquals($expected, Formatter::date_format($value, $format));
   }
 
   /**
@@ -34,6 +56,13 @@ class FormatterTest extends TestCase
    * @dataProvider float_formatDataProvider
    */
   public function testFloat_format($value, $precission, $expected) {
+    global $Controller;
+    $Controller = $this->createStub(ControllerInterface::class);
+    $stubConfig = $this->createStub(ConfigInterface::class);
+    $Controller->method('Config')->willReturn($stubConfig);
+    $stubConfig->expects($this->exactly(3))
+               ->method('__call')
+               ->will($this->onConsecutiveCalls(2, '.', ''));
     $this->assertEquals($expected, Formatter::float_format($value, $precission));
   }
 
@@ -42,7 +71,30 @@ class FormatterTest extends TestCase
    * @dataProvider int_formatDataProvider
    */
   public function testInt_format($value, $expected) {
+    global $Controller;
+    $Controller = $this->createStub(ControllerInterface::class);
+    $stubConfig = $this->createStub(ConfigInterface::class);
+    $Controller->method('Config')->willReturn($stubConfig);
+    $stubConfig->method('__call')->willReturn('');
     $this->assertEquals($expected, Formatter::int_format($value));
+  }
+
+  /**
+   * @covers Formatter::min_format
+   * @dataProvider min_formatDataProvider
+   */
+  public function testMin_format($value, $langstr, $expected) {
+    global $Controller;
+    $Controller = $this->createStub(ControllerInterface::class);
+    $stubConfig = $this->createStub(ConfigInterface::class);
+    $Controller->expects($this->once())
+               ->method('l')
+               ->with(
+                 $langstr,
+                 $expected
+               )
+               ->willReturn($expected);
+    $this->assertEquals($expected, Formatter::min_format($value));
   }
 
   /**
@@ -50,6 +102,11 @@ class FormatterTest extends TestCase
    * @dataProvider tDataProvider
    */
   public function testT($value, $singular, $plural, $flags, $separator, $expected) {
+    global $Controller;
+    $Controller = $this->createStub(ControllerInterface::class);
+    $stubConfig = $this->createStub(ConfigInterface::class);
+    $Controller->method('Config')->willReturn($stubConfig);
+    $stubConfig->method('__call')->willReturn('');
     $this->assertEquals($expected, Formatter::t($value, $singular, $plural, $flags, $separator));
   }
 
@@ -90,6 +147,14 @@ class FormatterTest extends TestCase
     ];
   }
 
+  public function date_formatDataProvider() {
+    return [
+      [null, null, (new DateTime())->format('d. F Y')],
+      [new DateTime('2020-01-01'), null, '01. January 2020'],
+      [new DateTime('2020-01-01'), 'Y-m-d', '2020-01-01'],
+    ];
+  }
+
   public function int_formatDataProvider() {
     return [
       [0, '0'],
@@ -97,6 +162,20 @@ class FormatterTest extends TestCase
       [-1, '-1'],
       [1000, '1000'],
       [-1000, '-1000'],
+    ];
+  }
+
+  public function min_formatDataProvider() {
+    return [
+      [1, 'common_duration_minutes', '1'],
+      [59, 'common_duration_minutes', '59'],
+      [60, 'common_duration_hours', '1'],
+      [90, 'common_duration_hours', '1.5'],
+      [1439, 'common_duration_hours', '23.5'],
+      [1440, 'common_duration_days', '1'],
+      [2880, 'common_duration_days', '2'],
+      [3600, 'common_duration_days', '2.5'],
+      [43200, 'common_duration_days', '30'],
     ];
   }
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Surcouf\PhpArchive\Helper;
+namespace Surcouf\Cookbook\Helper;
 
 if (!defined('CORE2'))
   exit;
 
-final class AvatarsHelper implements IAvatarsHelper {
+final class AvatarsHelper implements AvatarsHelperInterface {
 
   public static function createAvatar(string $payload, string $appendix) : string {
     $data = HashHelper::hash($payload);

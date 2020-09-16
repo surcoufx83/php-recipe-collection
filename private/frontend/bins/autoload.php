@@ -5,10 +5,11 @@ if (!defined('CORE2'))
 
 // Frontend binaries
 require_once __DIR__.'/home.php';
-require_once __DIR__.'/lists/lists.php';
-require_once __DIR__.'/recipes/recipe.php';
-require_once __DIR__.'/user/user.php';
-require_once __DIR__.'/user/dropzone.php';
-require_once __DIR__.'/user/search.php';
+require_once __DIR__.'/books.php';
+require_once __DIR__.'/recipe.php';
+require_once __DIR__.'/search.php';
+require_once __DIR__.'/random.php';
+require_once __DIR__.'/user.php';
 
-require_once __DIR__.'/admin/autoload.php';
+if ($Controller->isAuthenticated() && $Controller->User()->isAdmin())
+  require_once __DIR__.'/admin/autoload.php';

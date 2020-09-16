@@ -1,6 +1,6 @@
 <?php
 
-$i18n = new i18n(DIR_LOCALES.DIRECTORY_SEPARATOR.'lang_{LANGUAGE}.yml', DIR_CACHE.DIRECTORY_SEPARATOR.'langcache');
+$i18n = new i18n(DIR_LOCALES.DS.'lang_{LANGUAGE}.yml', DIR_CACHE.DS.'langcache');
 $i18n->setFallbackLang('en');
 $i18n->setPrefix('lang');
 $i18n->setSectionSeparator('_');

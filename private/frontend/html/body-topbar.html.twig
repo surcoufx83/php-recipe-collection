@@ -21,7 +21,7 @@
                 </ul>
                 <div class="text-right nav-buttons">
                   {% for Item in Page.Actions %}
-                  <a href="{{ Item.url }}" class="btn {{ Item.class }}">{{ Item.text }}</a>
+                  <a href="{{ Item.url }}" class="btn {{ Item.class }} btn-sm">{{ Item.text|raw }}</a>
                   {% endfor %}
                 </div>
               </div>

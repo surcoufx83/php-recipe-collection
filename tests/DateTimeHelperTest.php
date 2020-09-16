@@ -2,10 +2,10 @@
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Surcouf\PhpArchive\Helper\DateTimeHelper;
+use Surcouf\Cookbook\Helper\DateTimeHelper;
 
 
-require_once realpath(__DIR__.'/../private/entities/Helper/IDateTimeHelper.php');
+require_once realpath(__DIR__.'/../private/entities/Helper/DateTimeHelperInterface.php');
 require_once realpath(__DIR__.'/../private/entities/Helper/DateTimeHelper.php');
 
 /**

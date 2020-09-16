@@ -1,43 +1,45 @@
         <div class="nav-sidebar">
           <div class="nav-sidebar-inner-scroll">
             <div class="nav-sidebar-header">
-              <a title="{{ constant('lang::book_my') }}"
-                href="{{ Controller.getLink('private:home') }}">
+              <a href="{{ Controller.getLink('private:home') }}">
                 <img class="avatar avatar-40" src="{{ Controller.User().getAvatarUrl() }}" />
-                <div class="nav-sidebar-hideable">{{ constant('lang::book_my') }}</div>
+                <div class="nav-sidebar-hideable">{{ Controller.User().getFirstname() }}</div>
               </a>
             </div>
             <ul class="nav-sidebar-level1">
               <li{% if Page.Current == 'private:home' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:home') }}">
-                  {{ Config.Icons.Home.getIcon('fa-fw mr-2')|raw }} {{ constant('lang::page_home') }}
+                  {{ Config.Icons.Home('fa-fw mr-2')|raw }} {{ Controller.l('page_home') }}
                 </a>
               </li>
-              <li{% if Page.Current == 'private:lists' %} class="active"{% endif %}>
-                <a href="{{ Controller.getLink('private:lists') }}">
-                  {{ Config.Icons.Files.getIcon('fa-fw mr-2')|raw }} {{ constant('lang::page_lists') }}
+              <li{% if Page.Current == 'recipe:new' %} class="active"{% endif %}>
+                <a href="{{ Controller.getLink('recipe:new') }}">
+                  {{ Config.Icons.Add('fa-fw mr-2')|raw }} {{ Controller.l('page_createRecipe') }}
                 </a>
-                {% if Page.Current == 'private:lists' %}
-                <ul class="nav-sidebar-level2">
-                  <li{% if Page.CurrentSub == 'private:lists' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('private:lists') }}">{{ constant('lang::lists_all') }}</a>
-                  </li>
-                </ul>
-                {% endif %}
+              </li>
+              <li{% if Page.Current == 'private:books' %} class="active"{% endif %}>
+                <a href="{{ Controller.getLink('private:books') }}">
+                  {{ Config.Icons.Books('fa-fw mr-2')|raw }} {{ Controller.l('page_books_allbooks_title') }}
+                </a>
+              </li>
+              <li{% if Page.Current == 'private:recipes' %} class="active"{% endif %}>
+                <a href="{{ Controller.getLink('private:recipes') }}">
+                  {{ Config.Icons.Copy('fa-fw mr-2')|raw }} {{ Controller.l('page_recipes_myrecipes') }}
+                </a>
               </li>
               <li{% if Page.Current == 'private:search' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:search') }}">
-                  {{ Config.Icons.Search.getIcon('fa-fw mr-2')|raw }} {{ constant('lang::page_search') }}
+                  {{ Config.Icons.Search('fa-fw mr-2')|raw }} {{ Controller.l('page_search_sidebar_title') }}
                 </a>
               </li>
               <li>
                 <a href="{{ Controller.getLink('private:random') }}">
-                  {{ Config.Icons.Random.getIcon('fa-fw mr-2')|raw }} {{ constant('lang::page_random') }}
+                  {{ Config.Icons.Random('fa-fw mr-2')|raw }} {{ Controller.l('page_random') }}
                 </a>
-              </li>
+              </li>{% if Controller.User().isAdmin() %}
               <li{% if Page.Current == 'admin:main' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('admin:main') }}">
-                {{ Config.Icons.SystemSettings.getIcon('fa-fw mr-2')|raw }} {{ constant('lang::page_admin') }}
+                {{ Config.Icons.Settings('fa-fw mr-2')|raw }} {{ Controller.l('page_admin_title') }}
                 </a>
                 {% if Page.Current == 'admin:main' %}
                 <ul class="nav-sidebar-level2">
@@ -53,12 +55,12 @@
                   <li{% if Page.CurrentSub == 'admin:logs' %} class="active"{% endif %}>
                     <a href="{{ Controller.getLink('admin:logs') }}">Server-Logs</a>
                   </li>
-                <li{% if Page.CurrentSub == 'admin:user' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('admin:user') }}">User</a>
+                <li{% if Page.CurrentSub == 'admin:users' %} class="active"{% endif %}>
+                    <a href="{{ Controller.getLink('admin:users') }}">User</a>
                   </li>
                 </ul>
                 {% endif %}
-              </li>
+              </li>{% endif %}
               <a class="sidebar-toggle-nav" role="button" type="button" href="#">
                 {{ Config.Icons.DoubleAngleRight.getIcon('fa-fw mr-2 sidebar-toggle-icon-open')|raw }}
                 {{ Config.Icons.DoubleAngleLeft.getIcon('fa-fw mr-2 sidebar-toggle-icon-close')|raw }}

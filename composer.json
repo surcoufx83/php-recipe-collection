@@ -1,17 +1,18 @@
 {
     "name": "stefan/phparchive",
     "require": {
-        "twig/twig": "^3.0",
+        "adhocore/cli": ">=0.8",
         "dragonmantank/cron-expression": ">=2.3",
-        "twbs/bootstrap": ">=4.3",
-        "fortawesome/font-awesome": ">=5.8",
         "components/jquery": ">=3.3",
-        "org_heigl/ghostscript": ">=2.3",
-        "thiagoalessio/tesseract_ocr": ">=2.7",
-        "spatie/pdf-to-image": "^2.0",
-        "adhocore/cli": "^0.8.3",
+        "fortawesome/font-awesome": ">=5.8",
         "phpunit/phpunit": "^8.5",
-        "yzalis/identicon": "^2.0",
-        "surcoufx83/php-i18n": "^4.1"
+        "surcoufx83/php-i18n": ">=4.1",
+        "twbs/bootstrap": ">=4.5",
+        "twig/twig": ">=3.0",
+        "yzalis/identicon": ">=2.0",
+        "select2/select2": ">=4.0",
+        "phpmailer/phpmailer": "^6.1",
+        "league/oauth2-client": "^2.5",
+        "laravie/parser": "^2.0"
     }
 }

@@ -1,13 +1,16 @@
 <?php
 
-namespace Surcouf\PhpArchive\Helper;
+namespace Surcouf\Cookbook\Helper;
 
-use Surcouf\PhpArchive\Controller;
+use Surcouf\Cookbook\Controller;
 
 if (!defined('CORE2'))
   exit;
 
-class FilesystemHelper implements IFilesystemHelper {
+if (!defined('DS'))
+  define('DS', DIRECTORY_SEPARATOR);
+
+class FilesystemHelper implements FilesystemHelperInterface {
 
   public static function file_exists(string $filename) : bool {
     return file_exists($filename);
@@ -18,14 +21,8 @@ class FilesystemHelper implements IFilesystemHelper {
   }
 
   public static function paths_combine(...$paths) : string {
-    $fullpath = '';
-    foreach($paths AS $path) {
-      if ($fullpath == '')
-        $fullpath = $path;
-      else
-        $fullpath = $fullpath.DIRECTORY_SEPARATOR.$path;
-    }
-    return $fullpath;
+    $paths = array_filter($paths, function($value) { return !is_null($value) && $value !== ''; });
+    return join(DS, $paths);
   }
 
 }

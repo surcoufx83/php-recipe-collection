@@ -1,11 +1,11 @@
 <?php
 
-namespace Surcouf\PhpArchive\Helper;
+namespace Surcouf\Cookbook\Helper;
 
 if (!defined('CORE2'))
   exit;
 
-final class ConverterHelper implements IConverterHelper {
+final class ConverterHelper implements ConverterHelperInterface {
 
   public static function bool_to_str(bool $b) : string {
     return $b === true ? 'true' : 'false';

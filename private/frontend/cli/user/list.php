@@ -1,5 +1,11 @@
 <?php
 
+use Surcouf\Cookbook\Controller;
+use Surcouf\Cookbook\Database\EQueryType;
+use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Helper\ConverterHelper;
+use Surcouf\Cookbook\User\UserInterface;
+
 class UserListCommand extends Ahc\Cli\Input\Command
 {
   public function __construct()
@@ -9,17 +15,20 @@ class UserListCommand extends Ahc\Cli\Input\Command
 
   public function execute()
   {
-    global $writer, $UsersByName;
+    global $writer, $Controller;
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
+    $query->orderBy('users', ['user_name']);
+    $result = $Controller->select($query);
     $table = array();
-    foreach ($UsersByName as $key => $obj) {
+    while ($record = $result->fetch_assoc()) {
+      $user = $Controller->getUser($record);
       $table[] = array(
-        'Id' => $obj->getId(),
-        'Username' => $obj->getKey(),
-        'Name' => $obj->getName(),
-        'E-Mail' => $obj->getMail(),
-        'Admin' => ConverterHelper::bool_to_str($obj->isAdmin()),
-        'Guest' => ConverterHelper::bool_to_str($obj->isGuest()),
-        'Group' => $obj->getGroup()->getId().': '.$obj->getGroup()->getName(),
+        'Id' => $user->getId(),
+        'Username' => $user->getUsername(),
+        'Name' => $user->getName(),
+        'E-Mail' => $user->getMail(),
+        'Cloud user' => ConverterHelper::bool_to_str($user->isOAuthUser()),
+        'Admin' => ConverterHelper::bool_to_str($user->isAdmin()),
       );
     }
     $writer->table($table);
@@ -27,4 +36,4 @@ class UserListCommand extends Ahc\Cli\Input\Command
   }
 }
 
-$app->add(new UserListCommand, 'u');
+$app->add(new UserListCommand);

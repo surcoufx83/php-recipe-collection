@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive\Helper;
+namespace Surcouf\Cookbook\Helper;
 
 use \DateInterval;
 use \DateTime;
@@ -8,7 +8,7 @@ use \DateTime;
 if (!defined('CORE2'))
   exit;
 
-final class DateTimeHelper implements IDateTimeHelper {
+final class DateTimeHelper implements DateTimeHelperInterface {
 
   public static function dateInterval2IsoFormat(DateInterval $interval) : string {
     // https://stackoverflow.com/questions/33787039/format-dateinterval-as-iso8601

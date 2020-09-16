@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\PhpArchive;
+namespace Surcouf\Cookbook;
 
 if (!defined('CORE1'))
   exit;
@@ -16,7 +16,7 @@ define('DTF_SQL', 'Y-m-d H:i:s');
 $NOW = new \DateTime();
 $TODAY = new \DateTime($NOW->format('Y-m-d 00:00:00'));
 
-require_once __DIR__.'/security.php';
+require_once realpath(__DIR__.DS.'security.php');
 
 if (DEBUG === true)
   error_reporting(E_ALL);
