@@ -18,4 +18,5 @@ function ui_books() {
 
   $OUT['Page']['Current'] = 'private:books';
   $OUT['Page']['Heading1'] = lang('page_books_allbooks_title');
+  $OUT['Content'] = $twig->render('views/dummy.html.twig', $OUT);
 } // ui_books()

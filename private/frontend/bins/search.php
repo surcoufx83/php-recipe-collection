@@ -6,7 +6,14 @@ $Controller->get(array(
 ));
 
 function ui_search() {
-  global $OUT, $twig;
+  global $Controller, $OUT, $twig;
+
+  $OUT['Page']['Breadcrumbs'][] = array(
+    'text' => lang('page_search_header_title'),
+    'url' => $Controller->getLink('private:books'),
+  );
+
   $OUT['Page']['Current'] = 'private:search';
-  $OUT['Page']['Heading1'] = 'Searcg todo';
+  $OUT['Page']['Heading1'] = $Controller->l('page_search_header_title');
+  $OUT['Content'] = $twig->render('views/dummy.html.twig', $OUT);
 } // ui_search()

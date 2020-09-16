@@ -19,6 +19,11 @@ common:
     medium: 'medium'
     hard: 'hard'
 
+dev:
+  dummy:
+    header: 'This function is not yet available.'
+    description: 'Unfortunately, the page you have called up has not yet been developed and can therefore not yet be used. We take care of it!'
+
 greetings:
   hello: 'Hello %s'
   recipeFrom: '%s from %s'
@@ -209,11 +214,17 @@ page:
       title: 'Recipe image %s'
     myrecipes: 'My recipes'
     overview: 'Overview'
-  search: 'Search'
+  search:
+    header:
+      title: 'Search'
+    sidebar:
+      title: 'Search'
   selfRegister:
     description: 'Your Nextcloud account has not yet been used for the cookbook. Please let us know your name so we know how to contact you.'
     header: 'Login with Nextcloud account'
     title: 'Register with Nextcloud account'
+  settings:
+    title: 'Settings'
 
 recipe:
   about:

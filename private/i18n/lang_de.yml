@@ -23,6 +23,11 @@ common:
     medium: 'Mittel'
     hard: 'Schwierig'
 
+dev:
+  dummy:
+    header: 'Diese Funktion ist noch nicht verfügbar.'
+    description: 'Die aufgerufene Seite ist leider noch nicht entwickelt und kann daher noch nicht verwendet werden. Wir kümmern uns drum!'
+
 greetings:
   hello: 'Hallo %s'
   recipeFrom: '%s von %s'
@@ -211,11 +216,17 @@ page:
     myrecipes: 'Meine Rezepte'
     img:
       title: 'Rezeptbild %s'
-  search: 'Suche'
+  search:
+    header:
+      title: 'Rezeptsuche'
+    sidebar:
+      title: 'Rezeptsuche'
   selfRegister:
     description: 'Dein Nextcloud-Konto wurde bisher noch nicht für das Kochbuch verwendet. Bitte teile uns noch deinen Namen mit, damit wir wissen, wie wir dich ansprechen.'
     header: 'Anmeldung mit Nextcloud-Konto'
     title: 'Registrierung mit Nextcloud-Konto'
+  settings:
+    title: 'Einstellungen'
 
 recipe:
   about:

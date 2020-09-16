@@ -191,7 +191,13 @@ function ui_self_register() {
 function ui_settings() {
   global $Controller, $OUT, $twig;
 
+  $OUT['Page']['Breadcrumbs'][] = array(
+    'text' => lang('page_settings_title'),
+    'url' => $Controller->getLink('private:settings'),
+  );
+
   $OUT['Page']['Current'] = 'private:home';
   $OUT['Page']['CurrentSub'] = 'private:settings';
-  $OUT['Page']['Heading1'] = 'Meine Einstellungen';
+  $OUT['Page']['Heading1'] = $Controller->l('page_settings_title');
+  $OUT['Content'] = $twig->render('views/dummy.html.twig', $OUT);
 } // ui_settings()

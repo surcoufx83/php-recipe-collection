@@ -21,29 +21,15 @@
                 <a href="{{ Controller.getLink('private:books') }}">
                   {{ Config.Icons.Books('fa-fw mr-2')|raw }} {{ Controller.l('page_books_allbooks_title') }}
                 </a>
-                {% if Page.Current == 'private:books' %}
-                <ul class="nav-sidebar-level2">
-                  <li{% if Page.CurrentSub == 'private:books' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('private:books') }}">{{ Controller.l('page_books_allbooks_overview') }}</a>
-                  </li>
-                </ul>
-                {% endif %}
               </li>
               <li{% if Page.Current == 'private:recipes' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:recipes') }}">
                   {{ Config.Icons.Copy('fa-fw mr-2')|raw }} {{ Controller.l('page_recipes_myrecipes') }}
                 </a>
-                {% if Page.Current == 'private:recipes' %}
-                <ul class="nav-sidebar-level2">
-                <li{% if Page.CurrentSub == 'private:recipes' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('private:recipes') }}">{{ Controller.l('page_recipes_myrecipes') }}</a>
-                  </li>
-                </ul>
-                {% endif %}
               </li>
               <li{% if Page.Current == 'private:search' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:search') }}">
-                  {{ Config.Icons.Search('fa-fw mr-2')|raw }} {{ Controller.l('page_search') }}
+                  {{ Config.Icons.Search('fa-fw mr-2')|raw }} {{ Controller.l('page_search_sidebar_title') }}
                 </a>
               </li>
               <li>
