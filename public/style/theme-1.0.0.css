@@ -254,7 +254,7 @@ img.avatar-40 {
 }
 
 .carousel-control {
-  filter: drop-shadow(0px 0px 3px #000);
+  filter: drop-shadow(0 0 3px #000);
 }
 
 header.navbar {
@@ -358,12 +358,12 @@ div.page div.nav-sidebar .nav-sidebar-inner-scroll .nav-sidebar-header a {
   align-items: center;
   padding: 0.8rem 0.7rem;
   font-weight: bold;
-  box-shadow: 0px 1px 1px 0px #bcc2c8;
+  box-shadow: 0 1px 1px 0 #bcc2c8;
   background-color: rgba(0, 0, 0, 0.05);
 }
 div.page div.nav-sidebar .nav-sidebar-inner-scroll .nav-sidebar-header img.avatar {
-  padding: 0.2rem 0.2rem;
-  box-shadow: 0px 0px 1px 1px #bcc2c8;
+  padding: 0.2rem;
+  box-shadow: 0 0 1px 1px #bcc2c8;
   margin-right: 0.4rem;
 }
 div.page div.nav-sidebar ul {
@@ -386,7 +386,7 @@ div.page div.nav-sidebar ul.nav-sidebar-level1 a.sidebar-toggle-nav {
   display: flex;
   align-items: center;
   background-color: #e6e8e6;
-  box-shadow: 0px -1px 1px 0px #bcc2c8;
+  box-shadow: 0 -1px 1px 0 #bcc2c8;
 }
 div.page div.nav-sidebar ul.nav-sidebar-level2 {
   margin-bottom: 8px;
@@ -529,14 +529,14 @@ div.page div.header-container.header-container-border {
   border-bottom: 1px solid #bcc2c8;
 }
 div.page div.header-container ul.nav-tabs-custom {
-  border-bottom: 0px;
+  border-bottom: 0;
   flex: 1 1 0%;
 }
 div.page div.header-container ul.nav-tabs-custom li a {
   background-color: transparent !important;
-  padding: 0.1rem 0.4rem 0.3rem 0.4rem;
-  margin: 0rem 0.4rem;
-  border: 0px;
+  padding: 0.1rem 0.4rem 0.3rem;
+  margin: 0 0.4rem;
+  border: 0;
 }
 div.page div.header-container ul.nav-tabs-custom li.active a {
   border-bottom: 2px solid #bcc2c8;
@@ -548,7 +548,7 @@ div.page div.header-container ul.nav-tabs-custom li a.active {
 }
 div.page div.header-container div.nav-buttons a.btn {
   padding: 0.2rem 0.5rem;
-  margin: 0.4rem 0rem;
+  margin: 0.4rem 0;
 }
 div.page button.header-toggle-nav {
   background-color: transparent;
@@ -622,7 +622,7 @@ ul.pagination li.page-item.active a.page-link:hover {
 
   div.nav-sidebar:not(.sidebar-opened) {
     width: 40px !important;
-    box-shadow: 1px 0px 1px 0px #bcc2c8 !important;
+    box-shadow: 1px 0 1px 0 #bcc2c8 !important;
   }
 
   .breadcrumbs-items {
@@ -635,7 +635,7 @@ ul.pagination li.page-item.active a.page-link:hover {
   }
 
   div.nav-sidebar-header a {
-    padding: 0.8rem 0rem !important;
+    padding: 0.8rem 0 !important;
   }
 
   div.nav-sidebar-header img.avatar {
@@ -716,5 +716,3 @@ ul.pagination li.page-item.active a.page-link:hover {
     object-fit: cover;
   }
 }
-
-/*# sourceMappingURL=theme-1.0.0.css.map */
