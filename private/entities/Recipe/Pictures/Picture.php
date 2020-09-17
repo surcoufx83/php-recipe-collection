@@ -100,7 +100,7 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface 
 
   public function getUser() : ?UserInterface {
     global $Controller;
-    return $Controller->OM()->User($this->user_id);
+    return !is_null($this->user_id) ? $Controller->OM()->User($this->user_id) : null;
   }
 
   public function getUserId() : ?int {
