@@ -236,7 +236,7 @@ function ui_post_new_recipe() {
     if ($payload['ingredient_description'][$i] != '') {
       $unit = null;
       if ($payload['ingredient_unit'][$i] != '' && $payload['ingredient_unit'][$i] != '-1') {
-        $unit = $Controller->getUnit(intval($payload['ingredient_unit'][$i]));
+        $unit = $Controller->OM()->Unit(intval($payload['ingredient_unit'][$i]));
         if (is_null($unit) && !is_int($unit)) {
           $unit = new BlankUnit($payload['ingredient_unit'][$i]);
         }
@@ -282,7 +282,7 @@ function ui_post_new_recipe() {
 
   if (array_key_exists('tags', $payload)) {
     for ($i=0; $i<count($payload['tags']); $i++) {
-      $tag = $Controller->getTag($payload['tags'][$i]);
+      $tag = $Controller->OM()->Tag($payload['tags'][$i]);
       if (is_null($tag))
         $tag = new BlankTag($payload['tags'][$i]);
       $recipe->addNewTag($tag);

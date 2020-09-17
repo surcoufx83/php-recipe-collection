@@ -8,12 +8,12 @@ if (!defined('CORE2'))
 class BlankCookingStep extends CookingStep {
 
   public function __construct(int $step, string $title, string $content, string $preptime, string $chilltime, string $cookingtime) {
-    $this->stepno = $step;
-    $this->title = $title;
-    $this->content = $content;
-    $this->timeprep = ($preptime != '' ? intval($preptime) : -1);
-    $this->timecook = ($chilltime != '' ? intval($chilltime) : -1);
-    $this->timechill = ($cookingtime != '' ? intval($cookingtime) : -1);
+    $this->step_no = $step;
+    $this->step_title = $title;
+    $this->step_data = $content;
+    $this->step_time_preparation = ($preptime != '' ? intval($preptime) : -1);
+    $this->step_time_cooking = ($cookingtime != '' ? intval($cookingtime) : -1);
+    $this->step_time_chill = ($chilltime != '' ? intval($chilltime) : -1);
   }
 
 }

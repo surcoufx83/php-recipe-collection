@@ -17,7 +17,7 @@ class BlankPicture extends Picture implements HashableInterface {
     $this->picture_name = $name;
     $this->picture_hash = $this->calculateHash();
     $this->picture_filename = $name;
-    $this->picture_full_path = $path;
+    $this->path = $path;
   }
 
   public function calculateHash() : string {
