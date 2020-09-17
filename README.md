@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/surcoufx83/php-recipe-collection.svg?branch=master)](https://travis-ci.org/surcoufx83/php-recipe-collection)
+[![CodeFactor](https://www.codefactor.io/repository/github/surcoufx83/php-recipe-collection/badge)](https://www.codefactor.io/repository/github/surcoufx83/php-recipe-collection)
+
 # php-recipe-collection
 This project aims to develop a self-managed digital cookbook.
 It is based on PHP with a MySQL database and HTML with JavaScript for the frontend.
