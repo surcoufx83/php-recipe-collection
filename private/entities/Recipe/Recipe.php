@@ -142,11 +142,11 @@ class Recipe implements RecipeInterface, DbObjectInterface {
   }
 
   public function getEaterCount() : int {
-    return $this->eater;
+    return $this->recipe_eater;
   }
 
   public function getEaterCountStr() : string {
-    return Formatter::int_format($this->eater);
+    return Formatter::int_format($this->recipe_eater);
   }
 
   public function getId() : int {
@@ -399,7 +399,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function setEaterCount(int $newCount) : RecipeInterface {
     global $Controller;
-    $this->eater = $newCount;
+    $this->recipe_eater = $newCount;
     $this->changes['recipe_eater'] = $newCount;
     $Controller->updateDbObject($this);
     return $this;
