@@ -14,10 +14,6 @@ require_once realpath(__DIR__.'/../private/entities/Helper/DateTimeHelper.php');
 class DateTimeHelperTest extends TestCase
 {
 
-  protected function setUp() : void {
-    parent::setUp();
-  }
-
   /**
    * @covers DateTimeHelper::dateInterval2IsoFormat
    * @dataProvider intervalProvider

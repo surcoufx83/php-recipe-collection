@@ -16,10 +16,6 @@ require_once realpath(__DIR__.'/../private/entities/Helper/HashHelper.php');
 class HashHelperTest extends TestCase
 {
 
-  protected function setUp() : void {
-    parent::setUp();
-  }
-
   /**
    * @covers HashHelper::generate_token
    * @dataProvider tokenDataProvider

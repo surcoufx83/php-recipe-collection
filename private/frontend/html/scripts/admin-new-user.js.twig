@@ -31,9 +31,6 @@
         $('#new-user-modal-success').removeClass('d-none');
         $('#new-user-modal-success-userid').text(data.userid);
         $('#new-user-modal-new').removeClass('d-none');
-        $('#new-recipe-modal-new').click(function() {
-          location.reload();
-        });
         setTimeout(function () {
           location.href = '{{ Controller.getlink('admin:users') }}';
         }, 10000);
@@ -46,6 +43,10 @@
       }
     });
 
+  });
+
+  $('#new-user-modal-new').click(function() {
+    location.reload();
   });
 
   function testUniqueParams() {

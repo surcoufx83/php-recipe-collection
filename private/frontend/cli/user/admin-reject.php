@@ -29,10 +29,10 @@ class UserRejectAdminCommand extends Ahc\Cli\Input\Command
 
     if (!$this->un || $this->un == '')
       $this->un = $io->prompt('Enter a username for this user');
-    $this->user = $Controller->getUser($this->un);
+    $this->user = $Controller->OM()->User($this->un);
     while(is_null($this->user)) {
       $this->un = $io->prompt('Username not found. Try again');
-      $this->user = $Controller->getUser($this->un);
+      $this->user = $Controller->OM()->User($this->un);
     }
 
   }

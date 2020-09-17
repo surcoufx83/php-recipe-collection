@@ -51,7 +51,7 @@ class Session implements SessionInterface, DbObjectInterface {
 
   public function getUser() : UserInterface {
     global $Controller;
-    return $Controller->getUser($this->userid);
+    return $Controller->OM()->User($this->userid);
   }
 
   public function getUserId() : int {

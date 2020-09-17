@@ -3,6 +3,7 @@
 namespace Surcouf\Cookbook\Recipe;
 
 use \DateTime;
+use Surcouf\Cookbook\DbObjectInterface;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStepInterface;
 use Surcouf\Cookbook\Recipe\Ingredients\IngredientInterface;
 use Surcouf\Cookbook\Recipe\Pictures\PictureInterface;
@@ -12,14 +13,14 @@ use Surcouf\Cookbook\Recipe\Social\Tags\TagInterface;
 if (!defined('CORE2'))
   exit;
 
-class BlankRecipe extends Recipe {
+class BlankRecipe extends Recipe implements RecipeInterface, DbObjectInterface {
 
   public function __construct() {
     global $Controller;
-    $this->userid = $Controller->User()->getId();
-    $this->ispublic = false;
-    $this->created = new DateTime();
-    $this->published = false;
+    $this->user_id = $Controller->User()->getId();
+    $this->recipe_public = false;
+    $this->recipe_created = new DateTime();
+    $this->recipe_published = null;
   }
 
   public function addNewIngredients(IngredientInterface $ingredient) : RecipeInterface {
@@ -43,32 +44,32 @@ class BlankRecipe extends Recipe {
   }
 
   public function setDescription(string $newDescription) : RecipeInterface {
-    $this->description = $newDescription;
+    $this->recipe_description = $newDescription;
     return $this;
   }
 
   public function setEaterCount(int $newCount) : RecipeInterface {
-    $this->eater = $newCount;
+    $this->recipe_eater = $newCount;
     return $this;
   }
 
   public function setId(int $newId) : RecipeInterface {
-    $this->id = $newId;
+    $this->recipe_id = $newId;
     return $this;
   }
 
   public function setName(string $newName) : RecipeInterface {
-    $this->name = $newName;
+    $this->recipe_name = $newName;
     return $this;
   }
 
   public function setSourceDescription(string $newDescription) : RecipeInterface {
-    $this->sourcedesc = $newDescription;
+    $this->recipe_source_desc = $newDescription;
     return $this;
   }
 
   public function setSourceUrl(string $newUrl) : RecipeInterface {
-    $this->sourceurl = $newUrl;
+    $this->recipe_source_url = $newUrl;
     return $this;
   }
 

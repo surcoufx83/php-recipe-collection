@@ -4,6 +4,7 @@ use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\Helper\UiHelper\CarouselHelper;
+use Surcouf\Cookbook\Recipe\Recipe;
 
 $Controller->get(array(
   'pattern' => '/',
@@ -45,8 +46,8 @@ function ui_home() {
   $result = $Controller->select($query);
   $carousel = CarouselHelper::createNew('new-recipes');
   if ($result) {
-    while($record = $result->fetch_assoc()) {
-      $recipe = $Controller->getRecipe($record);
+    while($record = $result->fetch_array()) {
+      $recipe = $Controller->OM()->Recipe($record);
       CarouselHelper::addItem($carousel, [
         'href' => $Controller->getLink('recipe:show', $recipe->getId(), $recipe->getName()),
         'image' => 'cbimages/'.$record['picture_filename'],

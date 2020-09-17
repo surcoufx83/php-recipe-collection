@@ -73,7 +73,7 @@ function ui_activation() {
     return;
   }
 
-  $user = $Controller->getUser($result->fetch_assoc());
+  $user = $Controller->OM()->User($result->fetch_assoc());
 
   $OUT['User'] = $user;
   $OUT['Page']['Scripts']['FormValidator'] = true;
@@ -101,7 +101,7 @@ function post_activation() {
     return $Controller->Config()->getResponseArray(11);
 
   $payload = $Controller->Dispatcher()->getPayload();
-  $user = $Controller->getUser($result->fetch_assoc());
+  $user = $Controller->OM()->User($result->fetch_assoc());
 
   if (!array_key_exists('user', $payload) || intval($payload['user'] != $user->getId()))
     return $Controller->Config()->getResponseArray(11);

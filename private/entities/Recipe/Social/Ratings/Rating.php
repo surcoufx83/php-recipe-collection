@@ -13,27 +13,46 @@ if (!defined('CORE2'))
 
 class Rating implements RatingInterface, DbObjectInterface {
 
-  protected $id, $recipeid, $userid, $comment, $date, $viewed, $cooked, $voting, $rating;
+  protected $entry_id,
+            $user_id,
+            $recipe_id,
+            $entry_datetime,
+            $entry_comment,
+            $entry_viewed,
+            $entry_cooked,
+            $entry_vote,
+            $entry_rate;
   private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['entry_id']);
-    $this->recipeid = intval($dr['recipe_id']);
-    $this->userid = intval($dr['user_id']);
-    $this->comment = $dr['entry_comment'];
-    $this->date = $dr['entry_datetime'];
-    $this->viewed = (!is_null($dr['entry_viewed']) ? ConverterHelper::to_bool($dr['entry_viewed']) : null);
-    $this->cooked = (!is_null($dr['entry_cooked']) ? ConverterHelper::to_bool($dr['entry_cooked']) : null);
-    $this->voting = (!is_null($dr['entry_vote']) ? intval($dr['entry_vote']) : null);
-    $this->rating = (!is_null($dr['entry_rate']) ? intval($dr['entry_rate']) : null);
+  public function __construct(?array $record=null) {
+    if (!is_null($record)) {
+      $this->entry_id = intval($record['entry_id']);
+      $this->user_id = intval($record['user_id']);
+      $this->recipe_id = intval($record['recipe_id']);
+      $this->entry_datetime = new DateTime($record['entry_datetime']);
+      $this->entry_comment = $record['entry_comment'];
+      $this->entry_viewed = (!is_null($record['entry_viewed']) ? ConverterHelper::to_bool($record['entry_viewed']) : null);
+      $this->entry_cooked = (!is_null($record['entry_cooked']) ? ConverterHelper::to_bool($record['entry_cooked']) : null);
+      $this->entry_vote = (!is_null($record['entry_vote']) ? intval($record['entry_vote']) : null);
+      $this->entry_rate = (!is_null($record['entry_rate']) ? intval($record['entry_rate']) : null);
+    } else {
+      $this->entry_id = intval($this->entry_id);
+      $this->user_id = intval($this->user_id);
+      $this->recipe_id = intval($this->recipe_id);
+      $this->entry_datetime = new DateTime($this->entry_datetime);
+      $this->entry_viewed = (!is_null($this->entry_viewed) ? ConverterHelper::to_bool($this->entry_viewed) : null);
+      $this->entry_cooked = (!is_null($this->entry_cooked) ? ConverterHelper::to_bool($this->entry_cooked) : null);
+      $this->entry_vote = (!is_null($this->entry_vote) ? intval($this->entry_vote) : null);
+      $this->entry_rate = (!is_null($this->entry_rate) ? intval($this->entry_rate) : null);
+    }
   }
 
   public function getComment() : string {
-    return $this->comment;
+    return $this->entry_comment;
   }
 
   public function getDate() : DateTime {
-    return $this->date;
+    return $this->entry_datetime;
   }
 
   public function getDbChanges() : array {
@@ -41,49 +60,49 @@ class Rating implements RatingInterface, DbObjectInterface {
   }
 
   public function getId() : int {
-    return $this->id;
+    return $this->entry_id;
   }
 
   public function getRating() : int {
-    return $this->rating;
+    return $this->entry_rate;
   }
 
   public function getRecipe() : RecipeInterface {
     global $Controller;
-    return $Controller->getRecipe($this->recipeid);
+    return $Controller->OM()->Recipe($this->recipe_id);
   }
 
   public function getRecipeId() : int {
-    return $this->recipeid;
+    return $this->recipe_id;
   }
 
-  public function getUser() : ?UserInterface {
+  public function getUser() : UserInterface {
     global $Controller;
-    return $Controller->getUser($this->userid);
+    return $Controller->OM()->User($this->user_id);
   }
 
-  public function getUserId() : ?int {
-    return $this->userid;
+  public function getUserId() : int {
+    return $this->user_id;
   }
 
   public function getVoting() : int {
-    return $this->voting;
+    return $this->entry_vote;
   }
 
   public function hasCooked() : bool {
-    return ($this->cooked == true);
+    return ($this->entry_cooked == true);
   }
 
   public function hasRated() : bool {
-    return !is_null($this->rating);
+    return !is_null($this->entry_rate);
   }
 
   public function hasViewed() : bool {
-    return ($this->viewed == true);
+    return ($this->entry_viewed == true);
   }
 
   public function hasVoted() : bool {
-    return !is_null($this->voting);
+    return !is_null($this->entry_vote);
   }
 
 }

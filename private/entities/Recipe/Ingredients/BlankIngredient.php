@@ -11,8 +11,8 @@ class BlankIngredient extends Ingredient {
 
   public function __construct(float $quantity, ?UnitInterface $unit, string $description) {
     $this->unit = $unit;
-    $this->quantity = ($quantity != 0.0 ? $quantity : null);
-    $this->description = $description;
+    $this->ingredient_quantity = ($quantity != 0.0 ? $quantity : null);
+    $this->ingredient_description = $description;
   }
 
   public function getUnit() : ?UnitInterface {

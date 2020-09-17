@@ -59,11 +59,11 @@ function ui_myrecipes() {
   $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
   $query->where('recipes', 'user_id', '=', $Controller->User()->getId());
   $result = $Controller->select($query);
-  while ($record = $result->fetch_assoc()) {
-    $recipe = $Controller->getRecipe($record);
-    $Controller->loadRecipePictures($recipe);
-    $Controller->loadRecipeRatings($recipe);
-    $Controller->loadRecipeTags($recipe);
+  while ($record = $result->fetch_object(Recipe::class)) {
+    $recipe = $Controller->OM()->Recipe($record);
+    $recipe->loadRecipePictures($Controller);
+    $recipe->loadRecipeRatings($Controller);
+    $recipe->loadRecipeTags($Controller);
     $recipes[] = $recipe;
   }
 
@@ -76,7 +76,7 @@ function ui_myrecipes() {
 function ui_recipe() {
   global $Controller, $OUT, $twig;
 
-  $recipe = $Controller->getRecipe($Controller->Dispatcher()->getMatchInt('id'));
+  $recipe = $Controller->OM()->Recipe($Controller->Dispatcher()->getMatchInt('id'));
 
   if (!$recipe->isPublished() && $recipe->getUserId() != $Controller->User()->getId())
     $Controller->Dispatcher()->forward('/');
@@ -120,7 +120,7 @@ function ui_recipe() {
   $result = $Controller->select($query);
   $myvote = false;
   if ($result && $result->num_rows > 0)
-    $myvote = $Controller->getRating($result->fetch_assoc());
+    $myvote = $Controller->OM()->Rating($result->fetch_assoc());
 
   $OUT['Page']['Breadcrumbs'][] = array(
     'text' => lang('breadcrumb_recipes'),
@@ -164,7 +164,7 @@ function ui_recipe() {
 function ui_recipe_publish() {
   global $Controller, $OUT, $twig;
 
-  $recipe = $Controller->getRecipe($Controller->Dispatcher()->getMatchInt('id'));
+  $recipe = $Controller->OM()->Recipe($Controller->Dispatcher()->getMatchInt('id'));
 
   if (is_null($recipe))
     $Controller->Dispatcher()->forward('/');
@@ -197,7 +197,7 @@ function ui_new_recipe() {
   $result = $Controller->select($query);
   if ($result) {
     while($record = $result->fetch_assoc()) {
-      $units[] = $Controller->getUnit($record);
+      $units[] = $Controller->OM()->Unit($record);
     }
   }
 
@@ -207,7 +207,7 @@ function ui_new_recipe() {
   $result = $Controller->select($query);
   if ($result) {
     while($record = $result->fetch_assoc()) {
-      $tags[] = $Controller->getTag($record);
+      $tags[] = $Controller->OM()->Tag($record);
     }
   }
 
@@ -236,7 +236,7 @@ function ui_post_new_recipe() {
     if ($payload['ingredient_description'][$i] != '') {
       $unit = null;
       if ($payload['ingredient_unit'][$i] != '' && $payload['ingredient_unit'][$i] != '-1') {
-        $unit = $Controller->getUnit(intval($payload['ingredient_unit'][$i]));
+        $unit = $Controller->OM()->Unit(intval($payload['ingredient_unit'][$i]));
         if (is_null($unit) && !is_int($unit)) {
           $unit = new BlankUnit($payload['ingredient_unit'][$i]);
         }
@@ -282,7 +282,7 @@ function ui_post_new_recipe() {
 
   if (array_key_exists('tags', $payload)) {
     for ($i=0; $i<count($payload['tags']); $i++) {
-      $tag = $Controller->getTag($payload['tags'][$i]);
+      $tag = $Controller->OM()->Tag($payload['tags'][$i]);
       if (is_null($tag))
         $tag = new BlankTag($payload['tags'][$i]);
       $recipe->addNewTag($tag);
@@ -453,12 +453,10 @@ function ui_post_new_recipe() {
 function ui_post_vote_recipe() {
   global $Controller;
 
-  $recipe = $Controller->getRecipe($Controller->Dispatcher()->getMatchInt('id'));
+  $recipe = $Controller->OM()->Recipe($Controller->Dispatcher()->getMatchInt('id'));
 
-  if (is_null($recipe))
-    return $Controller->Config()->getResponseArray(80);
-
-  if ($recipe->getUserId() == $Controller->User()->getId())
+  if (is_null($recipe) ||
+    $recipe->getUserId() == $Controller->User()->getId())
     return $Controller->Config()->getResponseArray(80);
 
   $payload = $Controller->Dispatcher()->getPayload();
@@ -471,16 +469,10 @@ function ui_post_vote_recipe() {
   $rated = intval($payload['rated']);
   $voted = intval($payload['voted']);
 
-  if ($cooked < -1 && $cooked > 1)
-    return $Controller->Config()->getResponseArray(80);
-
-  if ($rated < -1 && $rated > 3)
-    return $Controller->Config()->getResponseArray(80);
-
-  if ($voted < 0 && $voted > 5)
-    return $Controller->Config()->getResponseArray(80);
-
-  if ($cooked == -1 && $rated == -1 && $voted == 0)
+  if (($cooked < -1 && $cooked > 1) ||
+    ($rated < -1 && $rated > 3) ||
+    ($voted < 0 && $voted > 5) ||
+    ($cooked == -1 && $rated == -1 && $voted == 0))
     return $Controller->Config()->getResponseArray(80);
 
   $maxage = (new DateTime())->sub($Controller->Config()->RecipeRatingClearance());

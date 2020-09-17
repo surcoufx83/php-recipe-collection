@@ -21,52 +21,77 @@ if (!defined('CORE2'))
 
 class User implements UserInterface, DbObjectInterface, HashableInterface {
 
-  protected $id, $firstname, $lastname, $name, $username, $oauthname, $initials, $passwordhash, $mailadress, $hash, $avatar, $isadmin;
-  protected $mailvalidationcode, $mailvalidated, $lastactivity, $registrationCompleted, $adconsent = false;
+  protected $user_id,
+            $user_name,
+            $oauth_user_name,
+            $user_firstname,
+            $user_lastname,
+            $user_fullname,
+            $initials,
+            $user_hash,
+            $user_isadmin,
+            $user_password,
+            $user_email,
+            $user_email_validation,
+            $user_email_validated,
+            $user_last_activity,
+            $user_avatar,
+            $user_registration_completed,
+            $user_adconsent = false;
 
   private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['user_id']);
-    $this->firstname = $dr['user_firstname'];
-    $this->lastname = $dr['user_lastname'];
-    $this->name = $dr['user_fullname'];
-    $this->username = $dr['user_name'];
-    $this->oauthname = $dr['oauth_user_name'];
-    $this->initials = strtoupper(substr($this->firstname, 0, 1).substr($this->lastname, 0, 1));
-    $this->passwordhash = $dr['user_password'];
-    $this->mailadress = $dr['user_email'];
-    $this->isadmin = (ConverterHelper::to_bool($dr['user_isadmin']) && !is_null($dr['user_email_validated']));
-    $this->mailvalidationcode = (!is_null($dr['user_email_validation']) ? $dr['user_email_validation'] : '');
-    $this->mailvalidated = (!is_null($dr['user_email_validated']) ? new DateTime($dr['user_email_validated']) : '');
-    $this->lastactivity = (!is_null($dr['user_last_activity']) ? new DateTime($dr['user_last_activity']) : '');
-    $this->registrationCompleted = (!is_null($dr['user_registration_completed']) ? new DateTime($dr['user_registration_completed']) : null);
-    $this->adconsent = (!is_null($dr['user_adconsent']) ? new DateTime($dr['user_adconsent']) : false);
-    $this->hash = $dr['user_hash'];
-    $this->avatar = $dr['user_avatar'];
-    if (is_null($this->hash))
+  public function __construct(?array $record=null) {
+    if (!is_null($record)) {
+      $this->user_id = intval($dr['user_id']);
+      $this->user_name = $dr['user_name'];
+      $this->oauth_user_name = $dr['oauth_user_name'];
+      $this->user_firstname = $dr['user_firstname'];
+      $this->user_lastname = $dr['user_lastname'];
+      $this->user_fullname = $dr['user_fullname'];
+      $this->user_hash = $dr['user_hash'];
+      $this->user_isadmin = (ConverterHelper::to_bool($dr['user_isadmin']) && !is_null($dr['user_email_validated']));
+      $this->user_password = $dr['user_password'];
+      $this->user_email = $dr['user_email'];
+      $this->user_email_validation = (!is_null($dr['user_email_validation']) ? $dr['user_email_validation'] : '');
+      $this->user_email_validated = (!is_null($dr['user_email_validated']) ? new DateTime($dr['user_email_validated']) : '');
+      $this->user_last_activity = (!is_null($dr['user_last_activity']) ? new DateTime($dr['user_last_activity']) : '');
+      $this->user_avatar = $dr['user_avatar'];
+      $this->user_registration_completed = (!is_null($dr['user_registration_completed']) ? new DateTime($dr['user_registration_completed']) : null);
+      $this->user_adconsent = (!is_null($dr['user_adconsent']) ? new DateTime($dr['user_adconsent']) : false);
+    } else {
+      $this->user_id = intval($this->user_id);
+      $this->user_isadmin = (ConverterHelper::to_bool($this->user_isadmin) && !is_null($this->user_email_validated));
+      $this->user_email_validation = (!is_null($this->user_email_validation) ? $this->user_email_validation : '');
+      $this->user_email_validated = (!is_null($this->user_email_validated) ? new DateTime($this->user_email_validated) : '');
+      $this->user_last_activity = (!is_null($this->user_last_activity) ? new DateTime($this->user_last_activity) : '');
+      $this->user_registration_completed = (!is_null($this->user_registration_completed) ? new DateTime($this->user_registration_completed) : null);
+      $this->user_adconsent = (!is_null($this->user_adconsent) ? new DateTime($this->user_adconsent) : false);
+    }
+    $this->initials = strtoupper(substr($this->user_firstname, 0, 1).substr($this->user_lastname, 0, 1));
+    if (is_null($this->user_hash))
       $this->calculateHash();
-    if (is_null($this->avatar))
+    if (is_null($this->user_avatar))
       $this->getAvatarUrl();
   }
 
   public function agreedToAds() : bool {
-    return ($this->adconsent !== false);
+    return ($this->user_adconsent !== false);
   }
 
   public function calculateHash() : string {
     global $Controller;
     $data = [
-      $this->id,
-      $this->firstname,
-      $this->lastname,
+      $this->user_id,
+      $this->user_firstname,
+      $this->user_lastname,
       $this->initials,
-      $this->mailadress,
+      $this->user_email,
     ];
-    $this->hash = HashHelper::hash(join($data));
-    $this->changes['user_hash'] = $this->hash;
+    $this->user_hash = HashHelper::hash(join($data));
+    $this->changes['user_hash'] = $this->user_hash;
     $Controller->updateDbObject($this);
-    return $this->hash;
+    return $this->user_hash;
   }
 
   public function createNewSession(bool $keepSession, ?AccessToken $token=null) : bool {
@@ -79,15 +104,15 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
     $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => 12]);
     $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => 12]);
 
-    if ($Controller->setSessionCookies($this->mailadress, $session_token, $session_password, $keepSession)) {
+    if ($Controller->setSessionCookies($this->user_email, $session_token, $session_password, $keepSession)) {
       $tokenstr = (!is_null($token) ? json_encode($token->jsonSerialize()) : NULL);
       $query = new QueryBuilder(EQueryType::qtINSERT, 'user_logins');
       $query->columns(['user_id', 'login_token', 'login_password', 'login_keep', 'login_oauthdata'])
-            ->values([$this->id, $hash_token, $hash_password, $keepSession, $tokenstr]);
+            ->values([$this->user_id, $hash_token, $hash_password, $keepSession, $tokenstr]);
       if ($Controller->insert($query)) {
         $this->session = new Session($this, array(
           'login_id' => 0,
-          'user_id' => $this->id,
+          'user_id' => $this->user_id,
           'login_time' => (new DateTime())->format('Y-m-d H:i:s'),
           'login_keep' => $keepSession,
           'login_oauthdata' => $tokenstr,
@@ -100,19 +125,19 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
 
   public function getAvatarUrl() : string {
     global $Controller;
-    if (is_null($this->avatar) || !AvatarsHelper::exists($this->avatar)) {
+    if (is_null($this->user_avatar) || !AvatarsHelper::exists($this->user_avatar)) {
       $data = [
-        $this->id,
-        $this->firstname,
-        $this->lastname,
+        $this->user_id,
+        $this->user_firstname,
+        $this->user_lastname,
         $this->initials,
-        $this->mailadress,
+        $this->user_email,
       ];
-      $this->avatar = AvatarsHelper::createAvatar(join($data), $this->id);
-      $this->changes['user_avatar'] = $this->avatar;
+      $this->user_avatar = AvatarsHelper::createAvatar(join($data), $this->user_id);
+      $this->changes['user_avatar'] = $this->user_avatar;
       $Controller->updateDbObject($this);
     }
-    return $Controller->getLink('private:avatar', $this->avatar);
+    return $Controller->getLink('private:avatar', $this->user_avatar);
   }
 
   public function getDbChanges() : array {
@@ -120,17 +145,17 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function getFirstname() : string {
-    return $this->firstname;
+    return $this->user_firstname;
   }
 
   public function getHash(bool $calculateIfNull = true) : ?string {
-    if (is_null($this->hash))
+    if (is_null($this->user_hash))
       $this->calculateHash();
-    return $this->hash;
+    return $this->user_hash;
   }
 
   public function getId() : int {
-    return $this->id;
+    return $this->user_id;
   }
 
   public function getInitials() : string {
@@ -138,19 +163,19 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function getLastname() : string {
-    return $this->lastname;
+    return $this->user_lastname;
   }
 
   public function getLastActivityTime() : ?DateTime {
-    return $this->lastactivity;
+    return $this->user_last_activity;
   }
 
   public function getMail() : string {
-    return $this->mailadress;
+    return $this->user_email;
   }
 
   public function getName() : string {
-    return $this->name;
+    return $this->user_fullname;
   }
 
   public function getSession() : ?SessionInterface {
@@ -158,11 +183,11 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function getUsername() : string {
-    return (!is_null($this->username) ? $this->username : $this->oauthname);
+    return (!is_null($this->user_name) ? $this->user_name : $this->oauth_user_name);
   }
 
   public function getValidationCode() : string {
-    return $this->mailvalidationcode;
+    return $this->user_email_validation;
   }
 
   public function grantAdmin() : bool {
@@ -171,8 +196,8 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
       $Controller->isAuthenticated() &&
       $Controller->User()->isAdmin()
     )) {
-      $this->isadmin = true;
-      $this->changes['user_isadmin'] = $this->isadmin;
+      $this->user_isadmin = true;
+      $this->changes['user_isadmin'] = $this->user_isadmin;
       $Controller->updateDbObject($this);
       return true;
     }
@@ -180,19 +205,19 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function hasHash() : bool {
-    return !is_null($this->hash);
+    return !is_null($this->user_hash);
   }
 
   public function hasRegistrationCompleted() : bool {
-    return !is_null($this->registrationCompleted);
+    return !is_null($this->user_registration_completed);
   }
 
   public function isAdmin() : bool {
-    return $this->isadmin;
+    return $this->user_isadmin;
   }
 
   public function isOAuthUser() : bool {
-    return !is_null($this->oauthname);
+    return !is_null($this->oauth_user_name);
   }
 
   public function rejectAdmin() : bool {
@@ -201,8 +226,8 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
       $Controller->isAuthenticated() &&
       $Controller->User()->isAdmin()
     )) {
-      $this->isadmin = false;
-      $this->changes['user_isadmin'] = $this->isadmin;
+      $this->user_isadmin = false;
+      $this->changes['user_isadmin'] = $this->user_isadmin;
       $Controller->updateDbObject($this);
       return true;
     }
@@ -211,30 +236,30 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
 
   public function setFirstname(string $newValue) : void {
     global $Controller;
-    $this->firstname = $newValue;
-    $this->changes['user_firstname'] = $this->firstname;
+    $this->user_firstname = $newValue;
+    $this->changes['user_firstname'] = $this->user_firstname;
     $Controller->updateDbObject($this);
   }
 
   public function setLastname(string $newValue) : void {
     global $Controller;
-    $this->lastname = $newValue;
-    $this->changes['user_lastname'] = $this->lastname;
+    $this->user_lastname = $newValue;
+    $this->changes['user_lastname'] = $this->user_lastname;
     $Controller->updateDbObject($this);
   }
 
   public function setMail(string $newValue) : void {
     global $Controller;
-    $this->mailadress = $newValue;
-    $this->changes['user_email'] = $this->mailadress;
+    $this->user_email = $newValue;
+    $this->changes['user_email'] = $this->user_email;
     $Controller->updateDbObject($this);
   }
 
   public function setName(string $newValue) : void {
     global $Controller;
-    $this->name = $newValue;
-    $this->changes['user_fullname'] = $this->name;
-    $parts = explode(' ', $this->name);
+    $this->user_fullname = $newValue;
+    $this->changes['user_fullname'] = $this->user_fullname;
+    $parts = explode(' ', $this->user_fullname);
     if (count($parts) == 1)
       $this->setFirstname($parts[0]);
     elseif (count($parts) == 2) {
@@ -254,9 +279,9 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
 
   public function setPassword(string $newPassword, string $oldPassword) : bool {
     global $Controller;
-    if ($this->passwordhash == '********' || password_verify($oldPassword, $this->passwordhash)) {
-      $this->passwordhash = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => 12]);
-      $this->changes['user_password'] = $this->passwordhash;
+    if ($this->user_password == '********' || password_verify($oldPassword, $this->user_password)) {
+      $this->user_password = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => 12]);
+      $this->changes['user_password'] = $this->user_password;
       $Controller->updateDbObject($this);
       return true;
     }
@@ -265,18 +290,18 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
 
   public function setRegistrationCompleted() : void {
     global $Controller;
-    $this->registrationCompleted = new DateTime();
-    $this->changes['user_registration_completed'] = $this->registrationCompleted->format(DTF_SQL);
+    $this->user_registration_completed = new DateTime();
+    $this->changes['user_registration_completed'] = $this->user_registration_completed->format(DTF_SQL);
     $Controller->updateDbObject($this);
   }
 
   public function validateEmail(string $token) : bool {
     global $Controller;
-    if ($this->mailvalidationcode == $token) {
-      $this->mailvalidationcode = '';
-      $this->mailvalidated = new DateTime();
+    if ($this->user_email_validation == $token) {
+      $this->user_email_validation = '';
+      $this->user_email_validated = new DateTime();
       $this->changes['user_email_validation'] = '';
-      $this->changes['user_email_validated'] = $this->mailvalidated->format(DTF_SQL);
+      $this->changes['user_email_validated'] = $this->user_email_validated->format(DTF_SQL);
       $Controller->updateDbObject($this);
       return true;
     }
@@ -285,10 +310,10 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
 
   public function verify(string $password) : bool {
     global $Controller;
-    if (password_verify($password, $this->passwordhash)) {
-      if (password_needs_rehash($this->passwordhash, PASSWORD_ARGON2I, ['threads' => 12])) {
-        $this->passwordhash = password_hash($password, PASSWORD_ARGON2I, ['threads' => 12]);
-        $this->changes['user_password'] = $this->passwordhash;
+    if (password_verify($password, $this->user_password)) {
+      if (password_needs_rehash($this->user_password, PASSWORD_ARGON2I, ['threads' => 12])) {
+        $this->user_password = password_hash($password, PASSWORD_ARGON2I, ['threads' => 12]);
+        $this->changes['user_password'] = $this->user_password;
         $Controller->updateDbObject($this);
       }
       return true;
@@ -299,7 +324,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   public function verifySession(string $session_token, string $session_password) : bool {
     global $Controller;
     $query = new QueryBuilder(EQueryType::qtSELECT, 'user_logins', DB_ANY);
-    $query->where('user_logins', 'user_id', '=', $this->id)
+    $query->where('user_logins', 'user_id', '=', $this->user_id)
           ->orderBy([['login_time', 'DESC']]);
     $result = $Controller->select($query);
     if (!$result || $result->num_rows == 0)

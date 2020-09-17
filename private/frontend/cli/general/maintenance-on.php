@@ -35,7 +35,7 @@ class MaintenanceOnCommand extends Ahc\Cli\Input\Command
       return -1;
     }
 
-    return;
+    return 1;
 
   }
 

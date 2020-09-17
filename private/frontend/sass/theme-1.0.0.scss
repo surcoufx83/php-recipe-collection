@@ -156,7 +156,7 @@ img.avatar-40 {
 .h-200px { height: 200px!important; }
 
 .carousel-control {
-  filter: drop-shadow(0px 0px 3px #000);
+  filter: drop-shadow(0 0 3px #000);
 }
 
 header.navbar {
@@ -277,13 +277,13 @@ div.page {
           align-items: center;
           padding: 0.8rem 0.7rem;
           font-weight:bold;
-          box-shadow: 0px 1px 1px 0px $bg-light-dark;
+          box-shadow: 0 1px 1px 0 $bg-light-dark;
           background-color: $bg-light-muted;
         }
 
         img.avatar {
-          padding: .2rem .2rem;
-          box-shadow: 0px 0px 1px 1px $bg-light-dark;
+          padding: .2rem;
+          box-shadow: 0 0 1px 1px $bg-light-dark;
           margin-right: .4rem;
         }
       }
@@ -310,7 +310,7 @@ div.page {
           display: flex;
           align-items: center;
           background-color: $bg-light;
-          box-shadow: 0px -1px 1px 0px $bg-light-dark;
+          box-shadow: 0 -1px 1px 0 $bg-light-dark;
         }
       }
 
@@ -486,14 +486,14 @@ div.page {
     }
 
     ul.nav-tabs-custom {
-      border-bottom: 0px;
+      border-bottom: 0;
       flex: 1 1 0%;
 
       li a {
         background-color: transparent!important;
-        padding: .1rem .4rem .3rem .4rem;
-        margin: .0rem .4rem;
-        border: 0px;
+        padding: .1rem .4rem .3rem;
+        margin: 0 .4rem;
+        border: 0;
       }
 
       li.active a {
@@ -509,7 +509,7 @@ div.page {
 
     div.nav-buttons a.btn {
       padding: .2rem .5rem;
-      margin: .4rem .0rem;
+      margin: .4rem 0;
     }
   }
 
@@ -588,7 +588,7 @@ ul.pagination li.page-item.active a.page-link {
   }
   div.nav-sidebar:not(.sidebar-opened) {
     width: 40px!important;
-    box-shadow: 1px 0px 1px 0px $bg-light-dark!important;
+    box-shadow: 1px 0 1px 0 $bg-light-dark!important;
   }
   .breadcrumbs-items {
     padding-left: 16px;

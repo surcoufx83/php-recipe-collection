@@ -14,10 +14,6 @@ require_once realpath(__DIR__.'/../private/entities/Helper/Flags.php');
 class FlagsTest extends TestCase
 {
 
-  protected function setUp() : void {
-    parent::setUp();
-  }
-
   /**
    * @covers Flags::add_flag
    */

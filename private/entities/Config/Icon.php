@@ -36,7 +36,7 @@ class Icon implements IconInterface {
   }
 
   private function getName() : string {
-    return $this->space.' '.' fa-'.$this->icon;
+    return $this->space.' fa-'.$this->icon;
   }
 
   private function getSpace() : string {

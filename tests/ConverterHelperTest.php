@@ -14,10 +14,6 @@ require_once realpath(__DIR__.'/../private/entities/Helper/ConverterHelper.php')
 class ConverterHelperTest extends TestCase
 {
 
-  protected function setUp() : void {
-    parent::setUp();
-  }
-
   /**
    * @covers ConverterHelper::bool_to_str
    */

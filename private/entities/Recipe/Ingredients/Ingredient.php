@@ -11,15 +11,26 @@ if (!defined('CORE2'))
 
 class Ingredient implements IngredientInterface, DbObjectInterface {
 
-  protected $id, $recipeid, $unitid, $quantity, $description;
+  protected $ingredient_id,
+            $recipe_id,
+            $unit_id,
+            $ingredient_quantity,
+            $ingredient_description;
   private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['ingredient_id']);
-    $this->recipeid = intval($dr['recipe_id']);
-    $this->unitid = intval($dr['unit_id']);
-    $this->quantity = (!is_null($dr['ingredient_quantity']) ? floatval($dr['ingredient_quantity']) : null);
-    $this->description = $dr['ingredient_description'];
+  public function __construct(?array $record=null) {
+    if (!is_null($record)) {
+      $this->ingredient_id = intval($record['ingredient_id']);
+      $this->recipe_id = intval($record['recipe_id']);
+      $this->unit_id = (!is_null($record['unit_id']) ? intval($record['unit_id']) : null);
+      $this->ingredient_quantity = (!is_null($record['ingredient_quantity']) ? floatval($record['ingredient_quantity']) : null);
+      $this->ingredient_description = $record['ingredient_description'];
+    } else {
+      $this->ingredient_id = intval($this->ingredient_id);
+      $this->recipe_id = intval($this->recipe_id);
+      $this->unit_id = (!is_null($this->unit_id) ? intval($this->unit_id) : null);
+      $this->ingredient_quantity = (!is_null($this->ingredient_quantity) ? floatval($this->ingredient_quantity) : null);
+    }
   }
 
   public function getDbChanges() : array {
@@ -27,33 +38,33 @@ class Ingredient implements IngredientInterface, DbObjectInterface {
   }
 
   public function getDescription() : string {
-    return $this->description;
+    return $this->ingredient_description;
   }
 
   public function getId() : int {
-    return $this->id;
+    return $this->ingredient_id;
   }
 
   public function getQuantity() : ?float {
-    return $this->quantity;
+    return $this->ingredient_quantity;
   }
 
-  public function getRecipe() : ?RecipeInterface {
+  public function getRecipe() : RecipeInterface {
     global $Controller;
-    return $Controller->getRecipe($this->recipeid);
+    return $Controller->OM()->Recipe($this->recipe_id);
   }
 
-  public function getRecipeId() : ?int {
-    return $this->recipeid;
+  public function getRecipeId() : int {
+    return $this->recipe_id;
   }
 
   public function getUnit() : ?UnitInterface {
     global $Controller;
-    return $Controller->getUnit($this->unitid);
+    return !is_null($this->unit_id) ? $Controller->OM()->Unit($this->unit_id) : null;
   }
 
   public function getUnitId() : ?int {
-    return $this->unitid;
+    return $this->unit_id;
   }
 
 }

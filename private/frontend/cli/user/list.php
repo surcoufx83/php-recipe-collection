@@ -21,7 +21,7 @@ class UserListCommand extends Ahc\Cli\Input\Command
     $result = $Controller->select($query);
     $table = array();
     while ($record = $result->fetch_assoc()) {
-      $user = $Controller->getUser($record);
+      $user = $Controller->OM()->User($record);
       $table[] = array(
         'Id' => $user->getId(),
         'Username' => $user->getUsername(),

@@ -9,12 +9,17 @@ if (!defined('CORE2'))
 
 class Unit implements UnitInterface, DbObjectInterface {
 
-  protected $id, $name;
+  protected $unit_id,
+            $unit_name;
   private $changes = array();
 
-  public function __construct($dr) {
-    $this->id = intval($dr['unit_id']);
-    $this->name = $dr['unit_name'];
+  public function __construct(?array $record=null) {
+    if (!is_null($record)) {
+      $this->unit_id = intval($record['unit_id']);
+      $this->unit_name = $record['unit_name'];
+    } else {
+      $this->unit_id = intval($this->unit_id);
+    }
   }
 
   public function getDbChanges() : array {
@@ -22,15 +27,15 @@ class Unit implements UnitInterface, DbObjectInterface {
   }
 
   public function getId() : int {
-    return $this->id;
+    return $this->unit_id;
   }
 
   public function getName() : string {
-    return $this->name;
+    return $this->unit_name;
   }
 
   public function hasId() : bool {
-    return !is_null($this->id);
+    return !is_null($this->unit_id);
   }
 
 }

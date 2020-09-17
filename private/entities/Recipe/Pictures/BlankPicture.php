@@ -13,25 +13,25 @@ class BlankPicture extends Picture implements HashableInterface {
 
   public function __construct(int $index, string $name, string $path) {
     global $Controller;
-    $this->index = $index;
-    $this->name = $name;
+    $this->picture_sortindex = $index;
+    $this->picture_name = $name;
+    $this->picture_hash = $this->calculateHash();
+    $this->picture_filename = $name;
     $this->path = $path;
-    $this->filename = $name;
-    $this->hash = $this->calculateHash();
   }
 
   public function calculateHash() : string {
     global $Controller;
     $data = [
-      $this->name,
-      $this->filename,
+      $this->picture_name,
+      $this->picture_filename,
     ];
-    $this->hash = HashHelper::hash(join($data));
-    return $this->hash;
+    $this->picture_hash = HashHelper::hash(join($data));
+    return $this->picture_hash;
   }
 
   public function getExtension() : string {
-    return pathinfo($this->filename, PATHINFO_EXTENSION);
+    return pathinfo($this->picture_filename, PATHINFO_EXTENSION);
   }
 
   public function moveTo(string $filesystemLocation) : bool {
@@ -39,17 +39,17 @@ class BlankPicture extends Picture implements HashableInterface {
       return false;
     if (!move_uploaded_file($this->path, $filesystemLocation))
       return false;
-    $this->location = $filesystemLocation;
+    $this->picture_full_path = $filesystemLocation;
     return true;
   }
 
   public function setFilename(string $newName) : PictureInterface {
-    $this->filename = $newName;
+    $this->picture_filename = $newName;
     return $this;
   }
 
   public function setId(int $newId) : PictureInterface {
-    $this->id = $newId;
+    $this->picture_id = $newId;
     return $this;
   }
 

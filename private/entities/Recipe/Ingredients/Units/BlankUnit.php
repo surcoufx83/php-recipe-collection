@@ -8,11 +8,11 @@ if (!defined('CORE2'))
 class BlankUnit extends Unit {
 
   public function __construct(string $name) {
-    $this->name = $name;
+    $this->unit_name = $name;
   }
 
   public function setId(int $newId) : UnitInterface {
-    $this->id = $newId;
+    $this->unit_id = $newId;
     return $this;
   }
 
