@@ -12,25 +12,25 @@ if (!defined('CORE2'))
 class BlankUser extends User {
 
   public function __construct(string $firstname, string $lastname, string $username, string $email) {
-    $this->firstname = $firstname;
-    $this->lastname = $lastname;
-    $this->mailadress = $email;
-    $this->mailvalidationcode = HashHelper::generate_token(12);
-    $this->name = $firstname.' '.$lastname;
-    $this->passwordhash = '********';
-    $this->registrationCompleted = new DateTime();
-    $this->username = $username;
+    $this->user_name = $username;
+    $this->user_firstname = $firstname;
+    $this->user_lastname = $lastname;
+    $this->user_fullname = $firstname.' '.$lastname;
+    $this->user_password = '********';
+    $this->user_email = $email;
+    $this->user_email_validation = HashHelper::generate_token(12);
+    $this->user_registration_completed = new DateTime();
   }
 
   public function sendActivationMail(array &$response) : bool {
     global $Controller, $twig, $OUT;
     $mail = new Mail();
-    $OUT['ActivationLink'] = $Controller->getLink('private:activation', $this->mailvalidationcode);
+    $OUT['ActivationLink'] = $Controller->getLink('private:activation', $this->user_email_validation);
     $data = [
       'Headline' => $Controller->l('sendmail_registration_activationMail_title'),
       'Content' => $twig->render('mails/activation-mail.html.twig', $OUT),
     ];
-    if ($mail->send($this->name, $this->mailadress, $Controller->l('sendmail_registration_activationMail_subject'),  $data, $response)) {
+    if ($mail->send($this->user_fullname, $this->user_email, $Controller->l('sendmail_registration_activationMail_subject'),  $data, $response)) {
       return true;
     }
     return false;
@@ -40,10 +40,10 @@ class BlankUser extends User {
     global $Controller;
     $result = $Controller->insertSimple('users',
       ['user_name', 'user_firstname', 'user_lastname', 'user_fullname', 'user_password', 'user_email', 'user_email_validation', 'user_registration_completed'],
-      [$this->username, $this->firstname, $this->lastname, $this->name, $this->passwordhash, $this->mailadress, $this->mailvalidationcode, $this->registrationCompleted->format(DTF_SQL)]
+      [$this->user_name, $this->user_firstname, $this->user_lastname, $this->user_fullname, $this->user_password, $this->user_email, $this->user_email_validation, $this->user_registration_completed->format(DTF_SQL)]
     );
     if ($result > -1) {
-      $this->id = $result;
+      $this->user_id = $result;
       return true;
     }
     $response = $Controller->Config()->getResponseArray(202);
