@@ -5,17 +5,12 @@ namespace Surcouf\Cookbook\Database\Mapper;
 if (!defined('CORE2'))
   exit;
 
-final class PictureMapper implements TableMapperInterface {
+final class PictureMapper extends Mapper implements TableMapperInterface {
 
-  static $TableName = 'recipe_pictures';
-  static $IdColumn = 'picture_id';
-
-  static function IdColumn() : string {
-    return PictureMapper::$IdColumn;
-  }
-
-  static function TableName() : string {
-    return PictureMapper::$TableName;
+  public function __construct() {
+    $this->TableName = 'recipe_pictures';
+    $this->IdColumn = 'picture_id';
+    $this->NameColumn = null;
   }
 
 }

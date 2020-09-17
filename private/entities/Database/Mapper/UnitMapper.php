@@ -5,17 +5,12 @@ namespace Surcouf\Cookbook\Database\Mapper;
 if (!defined('CORE2'))
   exit;
 
-final class UnitMapper implements TableMapperInterface {
+final class UnitMapper extends Mapper implements TableMapperInterface {
 
-  static $TableName = 'units';
-  static $IdColumn = 'unit_id';
-
-  static function IdColumn() : string {
-    return UnitMapper::$IdColumn;
-  }
-
-  static function TableName() : string {
-    return UnitMapper::$TableName;
+  public function __construct() {
+    $this->TableName = 'units';
+    $this->IdColumn = 'unit_id';
+    $this->NameColumn = 'unit_name';
   }
 
 }

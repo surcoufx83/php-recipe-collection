@@ -61,9 +61,9 @@ function ui_myrecipes() {
   $result = $Controller->select($query);
   while ($record = $result->fetch_object(Recipe::class)) {
     $recipe = $Controller->OM()->Recipe($record);
-    $Controller->loadRecipePictures($recipe);
-    $Controller->loadRecipeRatings($recipe);
-    $Controller->loadRecipeTags($recipe);
+    $recipe->loadRecipePictures($Controller);
+    $recipe->loadRecipeRatings($Controller);
+    $recipe->loadRecipeTags($Controller);
     $recipes[] = $recipe;
   }
 

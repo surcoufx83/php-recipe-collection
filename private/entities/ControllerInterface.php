@@ -34,7 +34,6 @@ interface ControllerInterface {
   public function get(array $params) : void;
   public function getInsertId() : ?int;
   public function getLink(string $filter, ...$args) : ?string;
-  public function getUser($filter=null) : ?UserInterface;
   public function init() : void;
   public function insert(QueryBuilder &$qbuilder) : bool;
   public function insertSimple(string $table, array $columns, array $data) : int;

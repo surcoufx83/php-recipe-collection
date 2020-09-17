@@ -5,17 +5,12 @@ namespace Surcouf\Cookbook\Database\Mapper;
 if (!defined('CORE2'))
   exit;
 
-final class RatingMapper implements TableMapperInterface {
+final class RatingMapper extends Mapper implements TableMapperInterface {
 
-  static $TableName = 'recipe_ratings';
-  static $IdColumn = 'entry_id';
-
-  static function IdColumn() : string {
-    return RatingMapper::$IdColumn;
-  }
-
-  static function TableName() : string {
-    return RatingMapper::$TableName;
+  public function __construct() {
+    $this->TableName = 'recipe_ratings';
+    $this->IdColumn = 'entry_id';
+    $this->NameColumn = null;
   }
 
 }

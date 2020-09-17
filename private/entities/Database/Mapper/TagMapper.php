@@ -5,17 +5,12 @@ namespace Surcouf\Cookbook\Database\Mapper;
 if (!defined('CORE2'))
   exit;
 
-final class TagMapper implements TableMapperInterface {
+final class TagMapper extends Mapper implements TableMapperInterface {
 
-  static $TableName = 'tags';
-  static $IdColumn = 'tag_id';
-
-  static function IdColumn() : string {
-    return TagMapper::$IdColumn;
-  }
-
-  static function TableName() : string {
-    return TagMapper::$TableName;
+  public function __construct() {
+    $this->TableName = 'tags';
+    $this->IdColumn = 'tag_id';
+    $this->NameColumn = 'tag_name';
   }
 
 }

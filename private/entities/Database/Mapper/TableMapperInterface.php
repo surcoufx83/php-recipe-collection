@@ -7,7 +7,9 @@ if (!defined('CORE2'))
 
 interface TableMapperInterface {
 
-  static function IdColumn() : string;
-  static function TableName() : string;
+  public function IdColumn() : string;
+  public function NameColumn() : string;
+  public function NameSearch() : bool;
+  public function TableName() : string;
 
 }

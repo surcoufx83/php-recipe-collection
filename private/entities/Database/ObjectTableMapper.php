@@ -33,6 +33,8 @@ final class ObjectTableMapper {
         return new Mapper\TagMapper();
       case Unit::class:
         return new Mapper\UnitMapper();
+      case User::class:
+        return new Mapper\UserMapper();
       default:
         throw new \Exception('Mapper \''.$className.'\' is not implemented.');
     }

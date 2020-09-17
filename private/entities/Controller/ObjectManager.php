@@ -57,12 +57,16 @@ class ObjectManager {
       case 'Unit':
         return $this->Object(Unit::class, $arguments[0]);
 
+      case 'User':
+        return $this->Object(User::class, $arguments[0]);
+
       default:
         throw new \Exception('Method \''.$name.'\' does not exist in ObjectManager.');
     }
   }
 
   private function Object(string $className, $filter = null) : ?object {
+    $mapper = ObjectTableMapper::getMapper($className);
     if (is_integer($filter)) {
       $obj = $this->getObject($className, $filter);
       if (!is_null($obj))
@@ -75,6 +79,8 @@ class ObjectManager {
       return $this->getObjectFromQueryBuilder($filter);
     if (is_array($filter))
       return $this->getObjectFromArray($className, $filter);
+    if (is_string($filter) && $mapper->NameSearch() == true)
+      return $this->getObjectFromDatabaseByName($className, $filter);
     throw new \Exception('First Parameter must be int or instance of DbObjectInterface or an array with the database record.');
   }
 
@@ -122,6 +128,21 @@ class ObjectManager {
       $this->addObjectToCache($object);
     else
       $this->addPlaceholderToCache($className, $id);
+    return $object;
+  }
+
+  private function getObjectFromDatabaseByName(string $className, string $name) : ?object {
+    global $Controller;
+    $mapper = ObjectTableMapper::getMapper($className);
+    $query = new QueryBuilder(EQueryType::qtSELECT, $mapper->TableName(), DB_ANY);
+    $query
+      ->where($mapper->TableName(), $mapper->NameColumn(), '=', $name)
+      ->limit(1);
+    if ($className == User::class)
+      $query->orWhere($mapper->TableName(), 'user_email', '=', $name);
+    $object = $Controller->selectObject($query, $className);
+    if (!is_null($object))
+      $this->addObjectToCache($object);
     return $object;
   }
 

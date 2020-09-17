@@ -266,7 +266,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function getUser() : ?UserInterface {
     global $Controller;
-    return $Controller->getUser($this->user_id);
+    return $Controller->OM()->User($this->user_id);
   }
 
   public function getUserId() : ?int {
@@ -318,7 +318,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     $this->loadRecipeTags($Controller);
   }
 
-  private function loadRecipeIngredients(ControllerInterface $Controller) : void {
+  public function loadRecipeIngredients(ControllerInterface $Controller) : void {
     $mapper = ObjectTableMapper::getMapper(Ingredient::class);
     $query = new QueryBuilder(EQueryType::qtSELECT, $mapper->TableName(), DB_ANY);
     $query->where($mapper->TableName(), 'recipe_id', '=', $this->getId());
@@ -331,7 +331,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     }
   }
 
-  private function loadRecipePictures(ControllerInterface $Controller) : void {
+  public function loadRecipePictures(ControllerInterface $Controller) : void {
     $mapper = ObjectTableMapper::getMapper(Picture::class);
     $query = new QueryBuilder(EQueryType::qtSELECT, $mapper->TableName(), DB_ANY);
     $query->where($mapper->TableName(), 'recipe_id', '=', $this->getId());
@@ -344,7 +344,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     }
   }
 
-  private function loadRecipeRatings(ControllerInterface $Controller) : void {
+  public function loadRecipeRatings(ControllerInterface $Controller) : void {
     $mapper = ObjectTableMapper::getMapper(Rating::class);
     $query = new QueryBuilder(EQueryType::qtSELECT, $mapper->TableName(), DB_ANY);
     $query->where($mapper->TableName(), 'recipe_id', '=', $this->getId());
@@ -357,7 +357,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     }
   }
 
-  private function loadRecipeSteps(ControllerInterface $Controller) : void {
+  public function loadRecipeSteps(ControllerInterface $Controller) : void {
     $mapper = ObjectTableMapper::getMapper(CookingStep::class);
     $query = new QueryBuilder(EQueryType::qtSELECT, $mapper->TableName(), DB_ANY);
     $query->where($mapper->TableName(), 'recipe_id', '=', $this->getId());
@@ -370,7 +370,7 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     }
   }
 
-  private function loadRecipeTags(ControllerInterface $Controller) : void {
+  public function loadRecipeTags(ControllerInterface $Controller) : void {
     $mapper = ObjectTableMapper::getMapper(Tag::class);
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_tags');
     $query->select($mapper->TableName(), DB_ANY)

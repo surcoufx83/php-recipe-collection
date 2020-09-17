@@ -36,10 +36,10 @@ class UserCreateCommand extends Ahc\Cli\Input\Command
 
     if (!$this->un || $this->un == '')
       $this->un = $io->prompt('Enter a username for this user');
-    $user = $Controller->getUser($this->un);
+    $user = $Controller->OM()->User($this->un);
     while(!is_null($user)) {
       $this->un = $io->prompt('Username already in use. Give another one');
-      $user = $Controller->getUser($this->un);
+      $user = $Controller->OM()->User($this->un);
     }
 
     if (!$this->fn || $this->fn == '')
@@ -50,10 +50,10 @@ class UserCreateCommand extends Ahc\Cli\Input\Command
 
     if (!$this->mail || $this->mail == '')
       $this->mail = $io->prompt('Enter users email address');
-    $user = $Controller->getUser($this->mail);
+    $user = $Controller->OM()->User($this->mail);
     while(!is_null($user)) {
       $this->mail = $io->prompt('Mailaddress already in use. Give another one');
-      $user = $Controller->getUser($this->mail);
+      $user = $Controller->OM()->User($this->mail);
     }
 
     if (is_null($this->novalidate))

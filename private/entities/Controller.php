@@ -147,20 +147,6 @@ class Controller implements ControllerInterface {
     return null;
   }
 
-  public function getUser($filter=null) : ?UserInterface {
-    if (is_integer($filter)) {
-      if (!array_key_exists($filter, $this->users))
-        return $this->loadUser($filter);
-      else
-        return $this->users[$filter];
-    }
-    if (is_string($filter))
-      return $this->loadUsername($filter);
-    if (is_array($filter))
-      return $this->registerUser(null, $filter);
-    return null;
-  }
-
   public function init() : void {
     global $i18n;
     $this->langcode = $i18n->getAppliedLang();
@@ -230,25 +216,6 @@ class Controller implements ControllerInterface {
     return ($outval == '' ? 'MISSING translation: '.$key : $outval);
   }
 
-  private function loadUser(int $id) : ?UserInterface {
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
-    $query->where('users', 'user_id', '=', $id);
-    $record = $this->selectFirst($query);
-    if (is_array($record))
-      return $this->registerUser(intval($record['user_id']), $record);
-    return $this->registerUser($id);
-  }
-
-  private function loadUsername(string $name) : ?UserInterface {
-    $query = new QueryBuilder(EQueryType::qtSELECT, 'users', DB_ANY);
-    $query->where('users', 'user_email', 'LIKE', $name)
-          ->orWhere('users', 'user_name', 'LIKE', $name);
-    $record = $this->selectFirst($query);
-    if (is_array($record))
-      return $this->registerUser(intval($record['user_id']), $record);
-    return null;
-  }
-
   private function login() : bool {
     if (ISWEB)
       return $this->loginWithCookies();
@@ -270,7 +237,7 @@ class Controller implements ControllerInterface {
       return false;
     }
     $uname = $_COOKIE[$this->config->UserCookieName];
-    $user = $this->loadUsername($uname);
+    $user = $this->OM()->User($uname);
     if (is_null($user) || !$user->verifySession($_COOKIE[$this->config->SessionCookieName], $_COOKIE[$this->config->PasswordCookieName])) {
       $this->removeCookies();
       return false;
@@ -285,7 +252,7 @@ class Controller implements ControllerInterface {
     if (!array_key_exists('user_id', $values))
       return false;
     $userid = 'OAuth2::'.$values['user_id'].'@'.OAuth2Conf::OATH_PROVIDER;
-    $user = $this->getUser($userid, true);
+    $user = $this->OM()->User($userid);
     if (is_null($user)) {
       $user = new OAuthUser($values['user_id']);
       $response = [];
@@ -303,7 +270,7 @@ class Controller implements ControllerInterface {
       $response = $this->config->getResponseArray(30);
       return false;
     }
-    $user = $this->getUser($email);
+    $user = $this->OM()->User($email);
     if (is_null($user) || !$user->verify($password)) {
       $response = $this->config->getResponseArray(30);
       return false;
@@ -333,19 +300,6 @@ class Controller implements ControllerInterface {
 
   public function put(array $params) : void {
     $this->dispatcher->put($params);
-  }
-
-  private function registerUser(?int $id, array $record=null) : ?UserInterface {
-    if (is_null($id) && is_array($record))
-      $id = intval($record['user_id']);
-    if (array_key_exists($id, $this->users))
-      return $this->users[$id];
-    if (is_null($record)) {
-      $this->users[$id] = null;
-      return null;
-    }
-    $this->users[$id] = new User($record);
-    return $this->users[$id];
   }
 
   private function removeCookies() : void {
