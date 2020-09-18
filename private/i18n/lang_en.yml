@@ -1,7 +1,11 @@
 breadcrumb:
   admin:
+    cronjobs: 'Cronjobs'
     home: 'Administration'
+    logs: 'Log file viewer'
     newUser: 'Setup new user'
+    settings: 'Settings'
+    translation: 'Translations'
     user: 'User administration'
   books:
     home: 'My cookery books'
@@ -135,6 +139,12 @@ page:
     alreadyActivated:
       description: 'The user account is already activated or the link is outdated. Please log in with your account to open your cookbook.'
   admin:
+    cronjobs:
+      title: 'Cronjobs'
+    dashboard:
+      title: 'Admin dashboard'
+    logs:
+      title: 'Log files'
     newUser:
       dataprivacy: 'Important: In terms of data protection, please always clarify with users personally whether they agree to the registration and thus the storage of personal data (name and e-mail address) before registering.'
       header: 'User registration'
@@ -172,6 +182,10 @@ page:
         newButton: 'Another user'
         success: 'The user has been saved and notified. User Id: '
         title: 'Is saved...'
+    settings:
+      title: 'System configuration'
+    translation:
+      title: 'Website translation'
     user:
       btnCreate: 'Add user'
       title: 'User administration'
@@ -236,6 +250,12 @@ recipe:
     publicationAnonymous: 'On %s this recipe was pubished.'
     unpublished: 'The recipe was created on %s and has not yet been published for other users.'
     source: 'Origin'
+  admin:
+    header: 'Administration'
+    author: 'Author: %s'
+    deletedAuthorAccount: 'Author: Deleted user'
+    removeRecipe: 'Remove recipe'
+    unpublishRecipe: 'Set private'
   gallery:
     header: 'Picture gallery'
   ingredients:

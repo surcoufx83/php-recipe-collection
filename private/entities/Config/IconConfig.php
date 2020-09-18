@@ -44,6 +44,7 @@ final class IconConfig implements IconConfigInterface {
       'Spinner'           => ['space' => 'fas', 'icon' => 'spinner'],
       'Star'              => ['space' => 'fas', 'icon' => 'star'],
       'Unlock'            => ['space' => 'fas', 'icon' => 'lock-open'],
+      'User'              => ['space' => 'fas', 'icon' => 'user-circle'],
       'View'              => ['space' => 'far', 'icon' => 'eye'],
     ];
   }

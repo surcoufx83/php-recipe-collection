@@ -28,7 +28,13 @@ class LinkProvider {
           'token' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_TOKENURL : null,
           'user' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_DATAURL : null,
         ],
+        'recipe' => [
+          'remove' => '/admin/recipe/remove/%d/%s',
+          'unpublish' => '/admin/recipe/unpublish/%d/%s',
+        ],
         'settings' => '/admin/settings',
+        'translation' => '/admin/translation',
+        'translateLanguage' => '/admin/translation/%s',
         'user' => '/admin/user/%d/%s',
         'users' => '/admin/users',
       ],

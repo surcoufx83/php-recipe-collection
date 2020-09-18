@@ -9,6 +9,7 @@ require_once __DIR__.'/books.php';
 require_once __DIR__.'/recipe.php';
 require_once __DIR__.'/search.php';
 require_once __DIR__.'/random.php';
+require_once __DIR__.'/tags.php';
 require_once __DIR__.'/user.php';
 
 if ($Controller->isAuthenticated() && $Controller->User()->isAdmin())

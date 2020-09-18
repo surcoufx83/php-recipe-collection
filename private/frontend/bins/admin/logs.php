@@ -6,19 +6,20 @@ $Controller->get(array(
 ));
 
 function ui_admin_logs_todo() {
-  global $Controller, $OUT;
+  global $Controller, $OUT, $twig;
 
   $OUT['Page']['Breadcrumbs'][] = array(
-    'text' => 'Administration',
+    'text' => $Controller->l('breadcrumb_admin_home'),
     'url' => $Controller->getLink('admin:main'),
   );
 
   $OUT['Page']['Breadcrumbs'][] = array(
-    'text' => 'Server-Logs',
+    'text' => $Controller->l('breadcrumb_admin_logs'),
     'url' => $Controller->getLink('admin:logs'),
   );
 
   $OUT['Page']['Current'] = 'admin:main';
   $OUT['Page']['CurrentSub'] = 'admin:logs';
-  $OUT['Page']['Heading1'] = '<<TODO>>';
+  $OUT['Page']['Heading1'] = $Controller->l('page_admin_logs_title');
+  $OUT['Content'] = $twig->render('views/dummy.html.twig', $OUT);
 } // ui_admin_logs_todo()

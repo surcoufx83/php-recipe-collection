@@ -1,7 +1,11 @@
 breadcrumb:
   admin:
+    cronjobs: 'Cronjobs'
     home: 'Administration'
+    logs: 'Log file viewer'
     newUser: 'Neuer Benutzer'
+    settings: 'Konfiguration'
+    translation: 'Übersetzung'
     user: 'Benutzerverwaltung'
   books:
     home: 'Meine Kochbücher'
@@ -139,6 +143,12 @@ page:
     alreadyActivated:
       description: 'Das Benutzerkonto ist bereits aktiviert oder der Link ist veraltet. Bitte melde dich mit deinem Konto an, um dein Kochbuch zu öffnen.'
   admin:
+    cronjobs:
+      title: 'Cronjobs'
+    dashboard:
+      title: 'Admin Dashboard'
+    logs:
+      title: 'Log files'
     newUser:
       dataprivacy: 'Wichtig: Im Sinne des Datenschutzes kläre bitte vor dem Eintragen von Benutzern immer mit diesen persönlich ab, ob sie mit der Registrierung und damit der Speicherung persönlicher Daten (Name und E-Mailadresse) einverstanden sind.'
       header: 'Benutzerregistrierung'
@@ -176,6 +186,10 @@ page:
         newButton: 'Weiterer Benutzer'
         success: 'Der Benutzer wurde gespeichert und benachrichtigt. User Id: '
         title: 'Wird gespeichert...'
+    settings:
+      title: 'Konfigurationsverwaltung'
+    translation:
+      title: 'Übersetzung'
     user:
       btnCreate: 'Neuer Benutzer'
       title: 'Benutzerverwaltung'
@@ -238,6 +252,12 @@ recipe:
     publicationAnonymous: 'Das Rezept wurde am %s veröffentlicht.'
     unpublished: 'Das Rezept wurde am %s erstellt und bisher nicht für andere User veröffentlicht.'
     source: 'Herkunft'
+  admin:
+    header: 'Administration'
+    author: 'Verfasst von %s'
+    deletedAuthorAccount: 'Verfasst von [Gelöschtes Konto]'
+    removeRecipe: 'Rezept entfernen'
+    unpublishRecipe: 'Nicht-Öffentlich setzen'
   gallery:
     header: 'Bildergallerie'
   ingredients:

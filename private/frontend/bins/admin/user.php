@@ -106,4 +106,5 @@ function ui_admin_users() {
   $OUT['Page']['Current'] = 'admin:main';
   $OUT['Page']['CurrentSub'] = 'admin:users';
   $OUT['Page']['Heading1'] = $Controller->l('page_admin_user_title');
+  $OUT['Content'] = $twig->render('views/dummy.html.twig', $OUT);
 } // ui_admin_users()

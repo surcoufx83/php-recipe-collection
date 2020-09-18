@@ -52,6 +52,9 @@
                   <li{% if Page.CurrentSub == 'admin:settings' %} class="active"{% endif %}>
                     <a href="{{ Controller.getLink('admin:settings') }}">Konfiguration</a>
                   </li>
+                  <li{% if Page.CurrentSub == 'admin:translation' %} class="active"{% endif %}>
+                    <a href="{{ Controller.getLink('admin:translation') }}">Übersetzung</a>
+                  </li>
                   <li{% if Page.CurrentSub == 'admin:logs' %} class="active"{% endif %}>
                     <a href="{{ Controller.getLink('admin:logs') }}">Server-Logs</a>
                   </li>

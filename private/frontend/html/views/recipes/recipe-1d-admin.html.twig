@@ -1,0 +1,29 @@
+          <div class="mt-3">
+            <h5>{{Controller.l('recipe_admin_header')}}</h5>
+            <div class="container">
+              <div class="row">
+                <div class="col-12 py-2 py-lg-1">{% if Recipe.getUserId() == null %}
+                    {{ Config.Icons.User('fa-fw mr-2')|raw }}
+                    {{ Controller.l('recipe_admin_deletedAuthorAccount')|raw }}
+                  {% else %}
+                    <a href="{{ Controller.getLink('admin:user', Recipe.getUserId(), Recipe.getUser().getName())}}">
+                      {{ Config.Icons.User('fa-fw mr-2')|raw }}
+                      {{ Controller.l('recipe_admin_author', Recipe.getUser().getName())|raw }}
+                    </a>
+                  {% endif %}
+                </div>{% if Recipe.isPublished() %}
+                <div class="col-12 py-2 py-lg-1">
+                  <a href="{{ Controller.getLink('admin:recipe:unpublish', Recipe.getId(), Recipe.getName()) }}">
+                    {{ Config.Icons.Lock('fa-fw mr-2')|raw }}
+                    {{ Controller.l('recipe_admin_unpublishRecipe') }}
+                  </a>
+                </div>{% endif %}
+                <div class="col-12 py-2 py-lg-1">
+                  <a href="{{ Controller.getLink('admin:recipe:remove', Recipe.getId(), Recipe.getName())}}">
+                    {{ Config.Icons.Delete('fa-fw mr-2')|raw }}
+                    {{ Controller.l('recipe_admin_removeRecipe')|raw }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
