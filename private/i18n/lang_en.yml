@@ -27,6 +27,9 @@ dev:
   dummy:
     header: 'This function is not yet available.'
     description: 'Unfortunately, the page you have called up has not yet been developed and can therefore not yet be used. We take care of it!'
+  maintenance:
+    header: 'This website is currently in maintenance mode!'
+    description: 'We are currently working on making the cookbook even better! But this may take a little time, so grab a cookie and go out into the sun.'
 
 greetings:
   hello: 'Hello %s'

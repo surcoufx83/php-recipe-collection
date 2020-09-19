@@ -17,103 +17,202 @@ if (!defined('CORE2'))
 
 final class Dispatcher {
 
-  private $controller;
-  private $requestMethod = ERequestMethod::Unknown;
+  private $matched = false,
+          $matchedGroups = null,
+          $matchedHandler = null,
+          $matchedObject = null,
+          $matchedPayloadRequirements = false,
+          $matchedPattern = null,
+          $outputMode = EOutputMode::Default,
+          $pageProperties = [],
+          $requestMethod = ERequestMethod::Unknown;
 
-  private $matched = false, $matchedGroups = array(), $matchedHandler, $matchedPattern;
 
-  private $fnSelfRegistration = false;
-  private $fnIgnoresMaintenanceMode = false;
-  private $fnOutputMethod = EOutputMode::Default;
-  private $fnRequiredPermission = array();
-  private $fnRequiredPayload = null;
-  private $fnRequiresAuthentication = false;
-
-  function __construct(Controller &$controller) {
-    $this->controller = $controller;
+  function __construct() {
     if (ISWEB)
       $this->requestMethod = $this->getHttpRequestMethod();
     else
       $this->requestMethod = ERequestMethod::CLI;
   }
 
-  private function dispatch() : void {
+  /**
+  * Registers a routing information for output to the web browser if the
+  * defaults specified in the $params array match the current page request.
+  * @param string $routePattern A regex pattern which defines the expected url for this route.
+  * @param array $params An associative array with the routing information.
+  * @return bool true if route matches the current request.
+  */
+  public function addRoute(string $routePattern, array $params) : bool {
+    global $Controller;
 
-    if (MAINTENANCE && !$this->fnIgnoresMaintenanceMode)
-      $this->exitError(100, null, null, null, '/maintenance');
+    if (array_key_exists('output', $params))
+      $this->outputMode = $params['output'];
+    else if (strpos($_SERVER['REQUEST_URI'], '/ajax/') === 0)
+      $this->outputMode = EOutputMode::JSON;
+    else
+      $this->outputMode = EOutputMode::Default;
+
+    if (
+         $this->evaluateRouteMaintenance($params)
+      && $this->evaluateRouteMethod($params)
+      && $this->evaluateRoutePattern($routePattern)
+      && $this->evaluateRouteUser($params)
+    ) {
+      $this->matched = true;
+      $this->matchedGroups = $this->routePatternMatches;
+      $this->matchedPattern = $routePattern;
+      $this->matchedHandler = $params['class'];
+      $this->matchedPayloadRequirements = $this->evaluateRoutePayload($params);
+
+      if (array_key_exists('properties', $params))
+        $this->pageProperties = $params['properties'];
+
+      if (array_key_exists('createObject', $params)) {
+        $method = $params['createObject']['method'];
+        $this->matchedObject = $Controller->OM()->$method(intval($this->getFromMatches($params['createObject']['idkey'])));
+      }
+
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Generates the output data for the called Url.
+   */
+  public function dispatchRoute() : void {
+    global $Controller, $OUT, $twig;
 
     if (!$this->matched)
-      $this->exitError(70, null, null, null, '/');
+      $this->exitError(70, null, null, null, $Controller->getLink('private:home'));
 
-    if ($this->fnRequiresAuthentication && !$this->controller->isAuthenticated())
-      $this->exitError(111, null, null, null, '/login');
+    $response = [];
+    $result = $this->matchedHandler::createOutput($response);
 
-    if (!$this->fnSelfRegistration &&
-        $this->controller->isAuthenticated() &&
-        !$this->controller->User()->hasRegistrationCompleted() &&
-        !$this->controller->User()->getSession()->isExpired())
-      $this->forward($this->controller->getLink('private:self-register'));
+    if (!$result)
+      $this->exitError(null, null, $response);
 
-    $response = null;
-
-    if (is_callable($this->matchedHandler))
-      $response = call_user_func($this->matchedHandler);
-    else {
-      if (function_exists($this->matchedHandler))
-        $response = call_user_func($this->matchedHandler);
-      else
-        $this->exitError(71, null, null, null, '/');
+    if ($this->outputMode == EOutputMode::JSON) {
+      $this->exitJson(!is_null($response) ? $response : $Controller->Config()->getResponseArray(10));
     }
 
-    if ($this->fnOutputMethod == EOutputMode::JSON) {
-      $this->exitJson(!is_null($response) ? $response : $this->controller->Config()->getResponseArray(10));
-    }
-    global $OUT, $start, $twig;
-    $this->controller->tearDown();
+    $this->tearDown();
     header('X-Frame-Options: DENY');
-    $OUT['time'] = microtime(true) - $start;
     echo $twig->render('body.html.twig', $OUT);
     exit;
 
   }
 
-  private function evaluateDispatch() : bool {
-
-    if (MAINTENANCE && !$this->fnIgnoresMaintenanceMode)
-      $this->forward($this->controller->getLink('maintenance'));
-
-    if ($this->fnRequiresAuthentication && !$this->controller->isAuthenticated())
-      $this->forward($this->controller->getLink('private:login'));
-
-    if (!is_null($this->fnRequiredPayload)) {
-      for($i=0; $i<count($this->fnRequiredPayload); $i++) {
-        if (!array_key_exists($this->fnRequiredPayload[$i], $_POST))
-          $this->exitJson($this->controller->Config()->getResponseArray(80));
-      }
-    }
-
-    return true;
-
+  /**
+   * Checks if request is available for active maintenance mode.
+   * @param array $params An associative array with the routing information.
+   * @return bool true if matching method.
+   */
+  private function evaluateRouteMaintenance(array $params) : bool {
+    if ((array_key_exists('ignoreMaintenance', $params) && $params['ignoreMaintenance'] === true && MAINTENANCE == true ) ||
+        MAINTENANCE === false)
+      return true;
+    return false;
   }
 
   /**
-  * This function forces the termination of the processing and an output depending on the request type (CLI, HTTP, HTTP ajax) and DEBUG setting.
+   * Checks if the HTTP REQUEST_METHOD matches the method required for the
+   * function.
+   * @param array $params An associative array with the routing information.
+   * @return bool true if matching method.
+   */
+  private function evaluateRouteMethod(array $params) : bool {
+    if ((!array_key_exists('method', $params) && $this->requestMethod == ERequestMethod::HTTP_GET) ||
+        (array_key_exists('method', $params) && $params['method'] == $this->requestMethod))
+      return true;
+    return false;
+  }
+
+  /**
+   * Checks if the requested page Url matches the route pattern.
+   * @param string $routePattern A regex pattern which defines the expected url for this route.
+   * @return bool true if matching pattern.
+   */
+  private function evaluateRoutePattern(string $routePattern) : bool {
+    $pattern = str_replace('/', '\\/', $routePattern);
+    $this->routePatternMatches = array();
+    if (preg_match('/^'.$pattern.'$/', $_SERVER['REQUEST_URI'], $this->routePatternMatches)) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * If the page is called via HTTP POST, the route may require certain POST
+   * information (payload). This function checks if this information is
+   * available in $_POST.
+   * @param array $params An associative array with the routing information.
+   * @return bool true if matching method.
+   */
+  private function evaluateRoutePayload(array $params) : bool {
+    if ($this->requestMethod != ERequestMethod::HTTP_POST)
+      return true;
+    if (array_key_exists('requiresPayload', $params)) {
+      $payload = $params['requiresPayload'];
+      if (is_string($payload))
+        return array_key_exists($payload, $_POST);
+      for($i=0; $i<count($payload); $i++) {
+        if (!array_key_exists($payload[$i], $_POST))
+          return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Checks if the requirements for user authentication are fullfilled.
+   * @param array $params An associative array with the routing information.
+   * @return bool true if matching method.
+   */
+  private function evaluateRouteUser(array $params) : bool {
+    global $Controller;
+    if (!$Controller->isAuthenticated()) {
+      // if no user logged in, route must define 'requiresUser' with false
+      // and must not define 'requiresAdmin'
+      if (!array_key_exists('requiresUser', $params) ||
+          $params['requiresUser'] !== false ||
+          array_key_exists('requiresAdmin', $params))
+        $this->forwardTo($Controller->getLink('private:login'));
+    } else {
+      // if route requires admin check if user is admin
+      if (array_key_exists('requiresAdmin', $params) &&
+          $params['requiresAdmin'] !== false &&
+          !$Controller->User()->isAdmin())
+        $this->exitError(120);
+    }
+    return true;
+  }
+
+  /**
+  * This function forces the termination of the processing and an output depending
+  * on the request type (CLI, HTTP, HTTP ajax) and DEBUG setting.
   * @param  int $code         The internal response code.
   * @param  string $message   An error message.
-  * @param  Array $response   A preconfigured response array.
+  * @param  array $response   A preconfigured response array.
   * @param  int $httpCode     HTTP status code to be displayed to the user (only if not CLI, not ajax and not DEBUG).
   * @throws \Exception        If DEBUG is active or the call was made via CLI.
   */
-  function exitError(int $code = null, string $message = null, Array $response = null, int $httpCode = null, string $forwardTo = null) : void {
-    $this->controller->tearDown();
+  public function exitError(int $code = null,
+                            string $message = null,
+                            array $response = null,
+                            int $httpCode = null,
+                            string $forwardTo = null) : void {
+    global $Controller;
+    $this->tearDown();
     if (ISWEB) {
       if (!is_null($code))
-        $response = $this->controller->Config()->getResponseArray($code);
-      if ($this->fnOutputMethod == EOutputMode::JSON && !is_null($response)) {
+        $response = $Controller->Config()->getResponseArray($code);
+      if ($this->outputMode == EOutputMode::JSON && !is_null($response)) {
         $this->exitJson($response);
       }
       if (!is_null($forwardTo))
-        $this->forward($forwardTo);
+        $this->forwardTo($forwardTo);
       if (DEBUG === true) {
         throw new \Exception('ERROR '.$code.': '.$message);
       }
@@ -131,7 +230,7 @@ final class Dispatcher {
   * @param  Array $response   A preconfigured response array.
   */
   function exitJson(Array $response) : void {
-    $this->controller->tearDown();
+    $this->tearDown();
     if (ISWEB) {
       header('Content-Type: application/json');
       echo json_encode($response);
@@ -158,8 +257,8 @@ final class Dispatcher {
       $isUserCreated = false;
       if ($Controller->loginWithOAuth($accessToken, $isUserCreated)) {
         if ($isUserCreated)
-          $this->forward($Controller->getLink('private:self-register'));
-        $this->forward($Controller->getLink('private:home'));
+          $this->forwardTo($Controller->getLink('private:self-register'));
+        $this->forwardTo($Controller->getLink('private:home'));
       }
       return false;
     } catch(\Exception $e) {
@@ -168,36 +267,39 @@ final class Dispatcher {
   }
 
   /**
-  * This function sends a forwarding header to the client, or a corresponding error message to the CLI.
-  * @param  string $moveTo   The URL that is referred to.
+  * This function sends a forwarding header to the client, or a corresponding
+  * error message to the CLI.
+  * @param string $newUrl The Url to which is forwarded.
   */
-  function forward(string $moveTo) : void {
-    $this->controller->tearDown();
+  public function forwardTo(string $newUrl) : void {
+    global $Controller;
     if (ISWEB) {
-      if ($this->fnOutputMethod == EOutputMode::JSON) {
-        $response = $this->controller->Config()->getResponseArray(12);
-        $response['Result']['Error']['ForwardTo'] = $moveTo;
+      if ($this->outputMode == EOutputMode::JSON) {
+        $response = $Controller->Config()->getResponseArray(12);
+        $response['Result']['Error']['ForwardTo'] = $newUrl;
         $this->exitJson($response);
       }
-      header('Location:'.$moveTo);
+      $this->tearDown();
+      header('Location:'.$newUrl);
       exit;
     }
     $this->exitError(12, 'The called function tries to redirect you.');
   }
 
-  /**
-  * Short form for dispatcher::on(ERequestMethod::HTTP_GET, $params).
-  * @param  array $params     An associative array to configure the function call.
-  */
-  function get(array $params) : void {
-    $this->on(ERequestMethod::HTTP_GET, $params);
+  public function getFromMatches(string $key) : ?string {
+    return array_key_exists($key, $this->matchedGroups) ? $this->matchedGroups[$key] : null;
+  }
+
+  public function getFromPayload(string $key) : ?string {
+    return array_key_exists($key, $_POST) ? $_POST[$key] : null;
   }
 
   /**
-  * This function returns the ERequestMethod enumeration value for the current HTTP request method.
-  * @return Surcouf\Cookbook\Request\ERequestMethod
+  * This function returns the ERequestMethod enumeration value for the current
+  * HTTP request method.
+  * @return string with cosnt values from Surcouf\Cookbook\Request\ERequestMethod
   */
-  private function getHttpRequestMethod() {
+  private function getHttpRequestMethod() : ?string {
     switch($_SERVER['REQUEST_METHOD']) {
       case 'GET':
         return ERequestMethod::HTTP_GET;
@@ -214,94 +316,23 @@ final class Dispatcher {
       case 'OPTIONS':
         return ERequestMethod::HTTP_OPTIONS;
     }
-    $this->exitError(11);
-  }
-
-  /**
-  * This function is called to register a function call for a URL. In the array $params various switches can be set, at least "pattern" is required.
-  * @param  string $method    The request method for which this function is allowed (according to Surcouf\Cookbook\Request\ERequestMethod)
-  * @param  array $params     An associative array to configure the function call.
-  */
-  function on(string $method, array $params) : void {
-    if ($this->requestMethod == $method) {
-      $pattern = str_replace('/', '\\/', $params['pattern']);
-      $m = array();
-      if (preg_match('/^'.$pattern.'$/', $_SERVER['REQUEST_URI'], $m)) {
-        $this->matchedPattern = $pattern;
-        $this->matchedHandler = $params['fn'];
-        $this->matched = true;
-        $this->matchedGroups = $m;
-        if (!array_key_exists('requiresAuthentication', $params))
-          $this->fnRequiresAuthentication = true;
-        else
-          $this->fnRequiresAuthentication = ConverterHelper::to_bool($params['requiresAuthentication']);
-        if (array_key_exists('ignoreMaintenance', $params)) {
-          $this->fnIgnoresMaintenanceMode = ConverterHelper::to_bool($params['ignoreMaintenance']);
-        }
-        if (array_key_exists('outputMode', $params)) {
-          $this->fnOutputMethod = $params['outputMode'];
-        } else if (strpos($_SERVER['REQUEST_URI'], '/ajax/') === 0) {
-          $this->fnOutputMethod = EOutputMode::JSON;
-        }
-        if (array_key_exists('requiredPayload', $params)) {
-          $this->fnRequiredPayload = $params['requiredPayload'];
-        }
-        if (array_key_exists('isSelfregistration', $params)) {
-          $this->fnSelfRegistration = $params['isSelfregistration'];
-        }
-
-        if (!$this->evaluateDispatch()) {
-          $this->matchedPattern = null;
-          $this->matchedHandler = null;
-          $this->matched = false;
-          $this->matchedGroups = false;
-          $this->fnRequiresAuthentication = true;
-          $this->fnIgnoresMaintenanceMode = false;
-        }
-        else
-          $this->dispatch();
-      }
-    }
-  }
-
-  /**
-  * Short form for dispatcher::on(ERequestMethod::HTTP_POST, $params).
-  * @param  array $params     An associative array to configure the function call.
-  */
-  function post(array $params) : void {
-    $this->on(ERequestMethod::HTTP_POST, $params);
-  }
-
-  /**
-  * Short form for dispatcher::on(ERequestMethod::HTTP_PUT, $params).
-  * @param  array $params     An associative array to configure the function call.
-  */
-  function put(array $params) : void {
-    $this->on(ERequestMethod::HTTP_PUT, $params);
-  }
-
-  public function getMatchInt(string $key, int $fallback = -1) : ?int {
-    if (array_key_exists($key, $this->matchedGroups))
-      return intval($this->matchedGroups[$key]);
-    return $fallback;
-  }
-
-  public function getMatchString(string $key, string $fallback = '') : ?string {
-    if (array_key_exists($key, $this->matchedGroups))
-      return $this->matchedGroups[$key];
-    return $fallback;
+    return ERequestMethod::Unknown;
   }
 
   public function getMatches() : array {
     return $this->matchedGroups;
   }
 
-  public function getPattern() : string {
-    return $this->matchedPattern;
+  public function getObject() : ?object {
+    return $this->matchedObject;
   }
 
   public function getPayload() : array {
     return $_POST;
+  }
+
+  public function getPattern() : string {
+    return $this->matchedPattern;
   }
 
   public function queryOAuthUserData() : bool {
@@ -343,7 +374,162 @@ final class Dispatcher {
     $authorizationUrl = $provider->getAuthorizationUrl();
     session_start();
     $_SESSION['oauth2state'] = $provider->getState();
-    $this->forward($authorizationUrl);
+    $this->forwardTo($authorizationUrl);
   }
+
+  private function tearDown() : void {
+    global $Controller;
+    $Controller->tearDown();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+  private function dispatch() : void {
+
+    if (MAINTENANCE && !$this->fnIgnoresMaintenanceMode)
+      $this->exitError(100, null, null, null, '/maintenance');
+
+    if (!$this->matched)
+      $this->exitError(70, null, null, null, '/');
+
+    if ($this->fnRequiresAuthentication && !$this->controller->isAuthenticated())
+      $this->exitError(111, null, null, null, '/login');
+
+    if (!$this->fnSelfRegistration &&
+        $this->controller->isAuthenticated() &&
+        !$this->controller->User()->hasRegistrationCompleted() &&
+        !$this->controller->User()->getSession()->isExpired())
+      $this->forwardTo($this->controller->getLink('private:self-register'));
+
+    $response = null;
+
+    if (is_callable($this->matchedHandler))
+      $response = call_user_func($this->matchedHandler);
+    else {
+      if (function_exists($this->matchedHandler))
+        $response = call_user_func($this->matchedHandler);
+      else
+        $this->exitError(71, null, null, null, '/');
+    }
+
+    if ($this->outputMode == EOutputMode::JSON) {
+      $this->exitJson(!is_null($response) ? $response : $this->controller->Config()->getResponseArray(10));
+    }
+    global $OUT, $start, $twig;
+    $this->controller->tearDown();
+    header('X-Frame-Options: DENY');
+    $OUT['time'] = microtime(true) - $start;
+    echo $twig->render('body.html.twig', $OUT);
+    exit;
+
+  }
+
+  private function evaluateDispatch() : bool {
+
+    if (MAINTENANCE && !$this->fnIgnoresMaintenanceMode)
+      $this->forwardTo($this->controller->getLink('maintenance'));
+
+    if ($this->fnRequiresAuthentication && !$this->controller->isAuthenticated())
+      $this->forwardTo($this->controller->getLink('private:login'));
+
+    if (!is_null($this->fnRequiredPayload)) {
+      for($i=0; $i<count($this->fnRequiredPayload); $i++) {
+        if (!array_key_exists($this->fnRequiredPayload[$i], $_POST))
+          $this->exitJson($this->controller->Config()->getResponseArray(80));
+      }
+    }
+
+    return true;
+
+  }*/
+
+  /**
+  * This function is called to register a function call for a URL. In the array $params various switches can be set, at least "pattern" is required.
+  * @param  string $method    The request method for which this function is allowed (according to Surcouf\Cookbook\Request\ERequestMethod)
+  * @param  array $params     An associative array to configure the function call.
+  *//*
+  function on(string $method, array $params) : void {
+    if ($this->requestMethod == $method) {
+      $pattern = str_replace('/', '\\/', $params['pattern']);
+      $m = array();
+      if (preg_match('/^'.$pattern.'$/', $_SERVER['REQUEST_URI'], $m)) {
+        $this->matchedPattern = $pattern;
+        $this->matchedHandler = $params['fn'];
+        $this->matched = true;
+        $this->matchedGroups = $m;
+        if (!array_key_exists('requiresAuthentication', $params))
+          $this->fnRequiresAuthentication = true;
+        else
+          $this->fnRequiresAuthentication = ConverterHelper::to_bool($params['requiresAuthentication']);
+        if (array_key_exists('ignoreMaintenance', $params)) {
+          $this->fnIgnoresMaintenanceMode = ConverterHelper::to_bool($params['ignoreMaintenance']);
+        }
+        if (array_key_exists('outputMode', $params)) {
+          $this->outputMode = $params['outputMode'];
+        } else if (strpos($_SERVER['REQUEST_URI'], '/ajax/') === 0) {
+          $this->outputMode = EOutputMode::JSON;
+        }
+        if (array_key_exists('requiredPayload', $params)) {
+          $this->fnRequiredPayload = $params['requiredPayload'];
+        }
+        if (array_key_exists('isSelfregistration', $params)) {
+          $this->fnSelfRegistration = $params['isSelfregistration'];
+        }
+
+        if (!$this->evaluateDispatch()) {
+          $this->matchedPattern = null;
+          $this->matchedHandler = null;
+          $this->matched = false;
+          $this->matchedGroups = false;
+          $this->fnRequiresAuthentication = true;
+          $this->fnIgnoresMaintenanceMode = false;
+        }
+        else
+          $this->dispatch();
+      }
+    }
+  }*/
+
+  /**
+  * Short form for dispatcher::on(ERequestMethod::HTTP_POST, $params).
+  * @param  array $params     An associative array to configure the function call.
+  *//*
+  function post(array $params) : void {
+    $this->on(ERequestMethod::HTTP_POST, $params);
+  }*/
+
+  /**
+  * Short form for dispatcher::on(ERequestMethod::HTTP_PUT, $params).
+  * @param  array $params     An associative array to configure the function call.
+  *//*
+  function put(array $params) : void {
+    $this->on(ERequestMethod::HTTP_PUT, $params);
+  }*
+
+  public function getMatchInt(string $key, int $fallback = -1) : ?int {
+    if (array_key_exists($key, $this->matchedGroups))
+      return intval($this->matchedGroups[$key]);
+    return $fallback;
+  }
+
+  public function getMatchString(string $key, string $fallback = '') : ?string {
+    if (array_key_exists($key, $this->matchedGroups))
+      return $this->matchedGroups[$key];
+    return $fallback;
+  }*/
 
 }

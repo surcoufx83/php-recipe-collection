@@ -31,6 +31,9 @@ dev:
   dummy:
     header: 'Diese Funktion ist noch nicht verfügbar.'
     description: 'Die aufgerufene Seite ist leider noch nicht entwickelt und kann daher noch nicht verwendet werden. Wir kümmern uns drum!'
+  maintenance:
+    header: 'Diese Webseite befindet sich derzeit im Wartungsmodus!'
+    description: 'Wir arbeiten gerade daran, das Kochbuch noch besser zu machen! Das kann allerdings ein wenig dauern, nimm dir einen Cookie und geh' raus in die Sonne.'
 
 greetings:
   hello: 'Hallo %s'

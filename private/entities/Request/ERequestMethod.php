@@ -7,7 +7,7 @@ if (!defined('CORE2'))
 
 final class ERequestMethod {
 
-  const Unknown       = false;
+  const Unknown       = null;
   const HTTP_GET      = 'GET';
   const HTTP_POST     = 'POST';
   const HTTP_PUT      = 'PUT';

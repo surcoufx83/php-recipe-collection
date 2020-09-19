@@ -16,7 +16,6 @@ final class Config implements ConfigInterface {
   public function __construct() {
     global $Controller;
     $this->config = [
-      'AdToken'                     => 'ca-pub-5505338479507158',
       'AllowRegistration'           => false,
       'ChecksumProvider'            => 'adler32',
       'ConsentCookieName'           => 'kbconsenttoken',

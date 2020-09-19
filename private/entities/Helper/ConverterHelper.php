@@ -12,6 +12,8 @@ final class ConverterHelper implements ConverterHelperInterface {
   }
 
   public static function to_bool($value) : bool {
+    if (is_null($value))
+      return false;
     return (
          $value === true
       || $value === 1
