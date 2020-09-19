@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook\Request;
 if (!defined('CORE2'))
   exit;
 
-class ERequestMethod {
+final class ERequestMethod {
 
   const Unknown       = false;
   const HTTP_GET      = 'GET';

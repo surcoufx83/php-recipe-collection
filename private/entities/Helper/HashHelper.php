@@ -7,7 +7,7 @@ use Surcouf\Cookbook\Controller;
 if (!defined('CORE2'))
   exit;
 
-class HashHelper implements HashHelperInterface {
+final class HashHelper implements HashHelperInterface {
 
   /**
    * Creates a random string with a length of at least 8 bytes.

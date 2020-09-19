@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook\Response;
 if (!defined('CORE2'))
   exit;
 
-class EOutputMode {
+final class EOutputMode {
 
   const Default       = 'HTML';
   const HTML          = 'HTML';

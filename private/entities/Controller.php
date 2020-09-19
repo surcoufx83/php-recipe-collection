@@ -40,7 +40,7 @@ use \League\OAuth2\Client\Provider\GenericProvider;
 if (!defined('CORE2'))
   exit;
 
-class Controller implements ControllerInterface {
+final class Controller implements ControllerInterface {
 
   private $database, $currentUser;
   private $config, $dispatcher, $langcode, $linkProvider;

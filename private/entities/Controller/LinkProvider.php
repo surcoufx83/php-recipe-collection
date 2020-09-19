@@ -7,7 +7,7 @@ use Surcouf\Cookbook\OAuth2Conf;
 if (!defined('CORE2'))
   exit;
 
-class LinkProvider {
+final class LinkProvider {
 
   private $routes = array();
 

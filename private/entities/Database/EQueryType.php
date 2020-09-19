@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook\Database;
 if (!defined('CORE2'))
   exit;
 
-class EQueryType {
+final class EQueryType {
 
   const None = 0;
 

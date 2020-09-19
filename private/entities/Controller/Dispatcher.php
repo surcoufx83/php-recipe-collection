@@ -15,7 +15,7 @@ use Laravie\Parser\Xml\Document;
 if (!defined('CORE2'))
   exit;
 
-class Dispatcher {
+final class Dispatcher {
 
   private $controller;
   private $requestMethod = ERequestMethod::Unknown;
