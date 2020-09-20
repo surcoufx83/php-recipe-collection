@@ -20,8 +20,11 @@ common:
   yesUc: 'Yes'
   rating:
     easy: 'easy'
+    easyTo: 'easy'
     medium: 'medium'
+    mediumTo: 'okay'
     hard: 'hard'
+    hardTo: 'hard'
 
 dev:
   dummy:
@@ -198,7 +201,26 @@ page:
       overview: 'Overview'
       title: 'My cookery books'
   createRecipe: 'New recipe'
-  home: 'Home'
+  home:
+    title: 'Home'
+    gallery:
+      items:
+        actions:
+          goto:
+            recipe: 'Go to the recipe'
+        imageAdded:
+          title: 'New picture in the gallery'
+          description: '%s has uploaded a new image for the recipe %s.'
+        ratingAdded:
+          title: 'New rating'
+          descriptionIntro: '%s has the recipe %s'
+          descriptionCooked: 'cooked.'
+          descriptionCookedAndVoted: 'cooked and rated:'
+          descriptionVoted: 'rated:'
+          descriptionRated: '%s to cook'
+        recipeAdded:
+          title: 'New recipe'
+          description: '%s has published the new recipe %s!'
   lists: 'Lists'
   login:
     cloud:

@@ -39,7 +39,7 @@ final class DbSetup2 {
     $query = 'INSERT INTO `db_version`(`version_value`) VALUES (2)';
     $result = $Database->query($query);
     if (!$result)
-      self::reportError($Database, __METHOD__);
+      self::reportError($Database, __METHOD__, $query);
     return $result;
   }
 
