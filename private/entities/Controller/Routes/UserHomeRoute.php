@@ -150,9 +150,9 @@ final class UserHomeRoute extends Route implements RouteInterface {
     ?int $userid, ?string $username, ?int $recipeid, ?string $recipename) {
 
     $body = $Controller->l('page_home_gallery_items_ratingAdded_descriptionIntro', $username, $recipename);
-    if (!is_null($record['entry_cooked']) && (!is_null($record['entry_vote']) || !is_null($record['entry_rate'])))
+    if ($record['entry_cooked'] == 1 && (!is_null($record['entry_vote']) || !is_null($record['entry_rate'])))
       $body .= ' '.$Controller->l('page_home_gallery_items_ratingAdded_descriptionCookedAndVoted');
-    elseif (!is_null($record['entry_cooked']))
+    elseif ($record['entry_cooked'] == 1)
       $body .= ' '.$Controller->l('page_home_gallery_items_ratingAdded_descriptionCooked');
     else
       $body .= ' '.$Controller->l('page_home_gallery_items_ratingAdded_descriptionVoted');
