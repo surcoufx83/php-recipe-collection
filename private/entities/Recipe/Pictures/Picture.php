@@ -74,12 +74,6 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface 
       $img->resizeCrop($height);
     $img->output(FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages'));
     return $filename;
-
-    var_dump($sizestr);
-    var_dump($width, $height);
-    var_dump($img);
-    exit;
-    return '';
   }
 
   public function getDbChanges() : array {
