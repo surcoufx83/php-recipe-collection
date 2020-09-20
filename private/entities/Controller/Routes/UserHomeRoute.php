@@ -14,6 +14,7 @@ use Surcouf\Cookbook\Helper\UiHelper\GalleryHelper;
 use Surcouf\Cookbook\Helper\UiHelper\GalleryItem;
 use Surcouf\Cookbook\Helper\UiHelper\GalleryItemInterface;
 use Surcouf\Cookbook\Recipe\Recipe;
+use Surcouf\Cookbook\Recipe\RecipeInterface;
 
 if (!defined('CORE2'))
   exit;
@@ -70,19 +71,22 @@ final class UserHomeRoute extends Route implements RouteInterface {
             $recipename = $record['recipe_name'];
         }
 
+        $recipe = $Controller->OM()->Recipe($recipeid);
+        $recipe->loadRecipePictures($Controller);
+
         $type = intval($record['entry_type']);
         switch($type) {
 
           case EActivityType::RecipePublished:
-            self::createRecipeItem($item, $Controller, $record, $data, $time, $userid, $username, $recipeid, $recipename);
+            self::createRecipeItem($item, $Controller, $recipe, $record, $data, $time, $userid, $username, $recipeid, $recipename);
             break;
 
           case EActivityType::PictureAdded:
-            self::createImageItem($item, $Controller, $record, $data, $time, $userid, $username, $recipeid, $recipename);
+            self::createImageItem($item, $Controller, $recipe, $record, $data, $time, $userid, $username, $recipeid, $recipename);
             break;
 
           case EActivityType::RatingAdded:
-            self::createRatingItem($item, $Controller, $record, $data, $time, $userid, $username, $recipeid, $recipename);
+            self::createRatingItem($item, $Controller, $recipe, $record, $data, $time, $userid, $username, $recipeid, $recipename);
             break;
 
           default:
@@ -92,9 +96,13 @@ final class UserHomeRoute extends Route implements RouteInterface {
         $item
           ->setFooterAction(
             $Controller->l('page_home_gallery_items_actions_goto_recipe'),
-            $Controller->getLink('recipe:show', $recipeid, $recipename)
+            $Controller->getLink('recipe:show', $recipe->getId(), $recipe->getName())
           )
           ->setFooterNote(Formatter::date_format($time));
+        if (is_null($item->getImageUrl()) && $recipe->hasPictures()) {
+          $pic = $recipe->getPictures()[0];
+          $item->setImage($Controller->getLink('recipe:picture:link', $pic->getFilename()));
+        }
         $gallery->addItem($item);
       }
     }
@@ -105,6 +113,7 @@ final class UserHomeRoute extends Route implements RouteInterface {
   private static function createImageItem(
     GalleryItemInterface &$item,
     ControllerInterface &$Controller,
+    RecipeInterface &$recipe,
     array &$record, array &$data,
     \DateTime $time,
     ?int $userid, ?string $username, ?int $recipeid, ?string $recipename) {
@@ -121,6 +130,7 @@ final class UserHomeRoute extends Route implements RouteInterface {
   private static function createRecipeItem(
     GalleryItemInterface &$item,
     ControllerInterface &$Controller,
+    RecipeInterface &$recipe,
     array &$record, array &$data,
     \DateTime $time,
     ?int $userid, ?string $username, ?int $recipeid, ?string $recipename) {
@@ -134,6 +144,7 @@ final class UserHomeRoute extends Route implements RouteInterface {
   private static function createRatingItem(
     GalleryItemInterface &$item,
     ControllerInterface &$Controller,
+    RecipeInterface &$recipe,
     array &$record, array &$data,
     \DateTime $time,
     ?int $userid, ?string $username, ?int $recipeid, ?string $recipename) {
