@@ -210,17 +210,17 @@ page:
             recipe: 'Go to the recipe'
         imageAdded:
           title: 'New picture in the gallery'
-          description: '%s has uploaded a new image for the recipe %s.'
+          description: '<b>%s</b> has uploaded a new image for the recipe <b>%s</b>.'
         ratingAdded:
           title: 'New rating'
-          descriptionIntro: '%s has the recipe %s'
+          descriptionIntro: '<b>%s</b> has the recipe <b>%s</b>'
           descriptionCooked: 'cooked.'
           descriptionCookedAndVoted: 'cooked and rated:'
           descriptionVoted: 'rated:'
           descriptionRated: '%s to cook'
         recipeAdded:
           title: 'New recipe'
-          description: '%s has published the new recipe %s!'
+          description: '<b>%s</b> has published the new recipe <b>%s</b>!'
   lists: 'Lists'
   login:
     cloud:

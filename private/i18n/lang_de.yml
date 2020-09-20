@@ -214,17 +214,17 @@ page:
             recipe: 'Zum Rezept'
         imageAdded:
           title: 'Neues Bild in der Galerie'
-          description: '%s hat ein neues Bild für das Rezept %s hochgeladen.'
+          description: '<b>%s</b> hat ein neues Bild für das Rezept <b>%s</b> hochgeladen.'
         ratingAdded:
           title: 'Neue Bewertung'
-          descriptionIntro: '%s hat das Rezept %s'
+          descriptionIntro: '<b>%s</b> hat das Rezept <b>%s</b>'
           descriptionCooked: 'nachgekocht.'
           descriptionCookedAndVoted: 'nachgekocht und bewertet:'
           descriptionVoted: 'bewertet:'
           descriptionRated: '%s nachzukochen'
         recipeAdded:
           title: 'Neues Rezept'
-          description: '%s hat das neue Rezept %s veröffentlicht!'
+          description: '<b>%s</b> hat das neue Rezept <b>%s</b> veröffentlicht!'
   login:
     cloud:
       description: 'Du hast schon mal unsere Nextcloud verwendet? Dann nutze dieses Konto um dich hier anzumelden. Einfach und sicher!'
