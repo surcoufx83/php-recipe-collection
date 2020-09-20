@@ -9,7 +9,7 @@
             <ul class="nav-sidebar-level1">
               <li{% if Page.Current == 'private:home' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:home') }}">
-                  {{ Config.Icons.Home('fa-fw mr-2')|raw }} {{ Controller.l('page_home') }}
+                  {{ Config.Icons.Home('fa-fw mr-2')|raw }} {{ Controller.l('page_home_title') }}
                 </a>
               </li>
               <li{% if Page.Current == 'recipe:new' %} class="active"{% endif %}>

@@ -41,6 +41,7 @@ final class IconConfig implements IconConfigInterface {
       'Menu'              => ['space' => 'fas', 'icon' => 'bars'],
       'Password'          => ['space' => 'fas', 'icon' => 'key'],
       'QuestionMark'      => ['space' => 'far', 'icon' => 'question-circle'],
+      'Quote'             => ['space' => 'fas', 'icon' => 'quote-right'],
       'Random'            => ['space' => 'fas', 'icon' => 'dice'],
       'Save'              => ['space' => 'fas', 'icon' => 'save'],
       'Search'            => ['space' => 'fas', 'icon' => 'search'],

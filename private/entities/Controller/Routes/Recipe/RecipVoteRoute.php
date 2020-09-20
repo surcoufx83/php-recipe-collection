@@ -3,6 +3,7 @@
 namespace Surcouf\Cookbook\Controller\Routes\Recipe;
 
 use \DateTime;
+use Surcouf\Cookbook\EActivityType;
 use Surcouf\Cookbook\Controller\Route;
 use Surcouf\Cookbook\Controller\RouteInterface;
 use Surcouf\Cookbook\Database\EQueryType;
@@ -68,6 +69,11 @@ class RecipVoteRoute extends Route implements RouteInterface {
     );
 
     if ($result != -1) {
+      $id = $Controller->getInsertId();
+      $Controller->addActivity(
+        EActivityType::RatingAdded, [
+          'rating_id' => $id,
+        ], $recipe, null, $id);
       $response = $Controller->Config()->getResponseArray(1);
       return true;
     }

@@ -83,6 +83,29 @@ final class Controller implements ControllerInterface {
     return $this->currentUser;
   }
 
+  public function addActivity(int $type, array $data, RecipeInterface $recipe, ?int $pictureId=null, ?int $ratingId=null, ?int $tagId=null) : void {
+    $query = new QueryBuilder(EQueryType::qtINSERT, 'activities');
+    $data = array_merge(
+              $data, [
+                'user_id' => $this->User()->getId(),
+                'user_name' => $this->User()->getUsername(),
+                'recipe_id' => $recipe->getId(),
+                'recipe_name' => $recipe->getName(),
+              ]);
+    $query
+      ->columns(['user_id', 'entry_type', 'entry_data', 'recipe_id', 'picture_id', 'rating_id', 'tag_id'])
+      ->values([
+        $this->User()->getId(),
+        $type,
+        json_encode($data),
+        $recipe->getId(),
+        $pictureId,
+        $ratingId,
+        $tagId
+      ]);
+    $this->insert($query);
+  }
+
   public function cancelTransaction() : bool {
     $ret = $this->database->rollback();
     $this->database->autocommit(true);

@@ -13,6 +13,7 @@ interface RouteInterface {
   static function addButton(string $Url, string $LinkText, ?string $btnClass = 'btn-outline-blue') : void;
   static function addButtonScript(string $Id, string $LinkText, ?string $btnClass = 'btn-outline-blue') : void;
   static function addCarousel(array $carouselData) : void;
+  static function addGallery(array $galleryData) : void;
   static function addScript(string $scriptName) : void;
   static function addRatingScript() : void;
   static function addToDictionary(string $key, $data) : void;

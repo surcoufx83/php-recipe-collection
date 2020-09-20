@@ -3,6 +3,7 @@
 namespace Surcouf\Cookbook\Controller;
 
 use Surcouf\Cookbook\Helper\UiHelper\CarouselHelper;
+use Surcouf\Cookbook\Helper\UiHelper\GalleryHelper;
 
 if (!defined('CORE2'))
   exit;
@@ -40,6 +41,11 @@ class Route implements RouteInterface {
   static function addCarousel(array $carouselData) : void {
     global $OUT;
     $OUT['Page']['Carousel'] = CarouselHelper::render($carouselData);
+  }
+
+  static function addGallery(array $galleryData) : void {
+    global $OUT;
+    $OUT['Page']['Gallery'] = GalleryHelper::render($galleryData);
   }
 
   static function addScript(string $scriptName) : void {
