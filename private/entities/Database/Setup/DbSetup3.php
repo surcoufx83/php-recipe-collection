@@ -49,7 +49,7 @@ final class DbSetup3 {
     return 'CREATE TABLE `activities` (
     	`entry_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     	`user_id` MEDIUMINT(8) UNSIGNED NULL DEFAULT NULL,
-    	`entry_timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    	`entry_timestamp` TIMESTAMP NOT NULL DEFAULT current_timestamp(),
     	`entry_type` TINYINT(3) UNSIGNED NOT NULL,
     	`entry_data` VARCHAR(1024) NULL DEFAULT NULL COLLATE \'utf8mb4_general_ci\',
     	`recipe_id` INT(10) UNSIGNED NULL DEFAULT NULL,
@@ -63,15 +63,14 @@ final class DbSetup3 {
     	INDEX `FK_activities_recipe_pictures` (`picture_id`) USING BTREE,
     	INDEX `FK_activities_recipe_ratings` (`rating_id`) USING BTREE,
     	INDEX `FK_activities_recipe_tags` (`tag_id`) USING BTREE,
-    	CONSTRAINT `FK_activities_recipe_pictures` FOREIGN KEY (`picture_id`) REFERENCES `cookbook`.`recipe_pictures` (`picture_id`) ON UPDATE CASCADE ON DELETE SET NULL,
-    	CONSTRAINT `FK_activities_recipe_ratings` FOREIGN KEY (`rating_id`) REFERENCES `cookbook`.`recipe_ratings` (`entry_id`) ON UPDATE CASCADE ON DELETE CASCADE,
-    	CONSTRAINT `FK_activities_recipe_tags` FOREIGN KEY (`tag_id`) REFERENCES `cookbook`.`recipe_tags` (`entry_id`) ON UPDATE CASCADE ON DELETE SET NULL,
-    	CONSTRAINT `FK_activities_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `cookbook`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE SET NULL,
-    	CONSTRAINT `FK_activities_users` FOREIGN KEY (`user_id`) REFERENCES `cookbook`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    	CONSTRAINT `FK_activities_recipe_pictures` FOREIGN KEY (`picture_id`) REFERENCES `'.DbConf::DB_DATABASE.'`.`recipe_pictures` (`picture_id`) ON UPDATE CASCADE ON DELETE SET NULL,
+    	CONSTRAINT `FK_activities_recipe_ratings` FOREIGN KEY (`rating_id`) REFERENCES `'.DbConf::DB_DATABASE.'`.`recipe_ratings` (`entry_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    	CONSTRAINT `FK_activities_recipe_tags` FOREIGN KEY (`tag_id`) REFERENCES `'.DbConf::DB_DATABASE.'`.`recipe_tags` (`entry_id`) ON UPDATE CASCADE ON DELETE SET NULL,
+    	CONSTRAINT `FK_activities_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `'.DbConf::DB_DATABASE.'`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE SET NULL,
+    	CONSTRAINT `FK_activities_users` FOREIGN KEY (`user_id`) REFERENCES `'.DbConf::DB_DATABASE.'`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
     )
     COLLATE=\'utf8mb4_general_ci\'
-    ENGINE=InnoDB
-    ';
+    ENGINE=InnoDB';
   }
 
 }
