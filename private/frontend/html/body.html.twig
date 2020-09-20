@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="/style/bootstrap-4.5.2.min.css">
+    <link rel="stylesheet" href="/style/ekko-lightbox-5.3.0.css">
     <link rel="stylesheet" href="/style/select2-4.0.0.min.css">
     <link rel="stylesheet" href="/style/fontawesome-all-5.14.0.min.css">
     <link rel="stylesheet" href="/style/icofont.min.css">
@@ -48,6 +49,7 @@
 
     <script src="/script/jquery-3.5.1.min.js"></script>
     <script src="/script/bootstrap-4.5.2.bundle.min.js"></script>
+    <script src="/script/ekko-lightbox-5.3.0.min.js"></script>
     <script src="/script/select2-4.0.0.min.js"></script>
     <script src="/script/plotly-1.54.1.min.js"></script>{% if Page.Scripts.StarRating == true %}
     <script src="/script/rater.min.js"></script>{% endif %}
@@ -130,6 +132,12 @@
         });
         $('select.form-select2-single').select2({
           tags: true
+        });
+        $('[data-toggle="lightbox"]').click(function(event) {
+          event.preventDefault();
+          $(this).ekkoLightbox({
+            alwaysShowClose: true
+          });
         });
       });
 

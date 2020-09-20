@@ -270,6 +270,10 @@ recipe:
     deletedAuthorAccount: 'Author: Deleted user'
     removeRecipe: 'Remove recipe'
     unpublishRecipe: 'Set private'
+  footer:
+    gallery: 'Pictures'
+    ingredients: 'Ingredients'
+    steps: 'Preparation'
   gallery:
     header: 'Picture gallery'
   ingredients:

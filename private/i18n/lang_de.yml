@@ -273,8 +273,12 @@ recipe:
     deletedAuthorAccount: 'Verfasst von [Gelöschtes Konto]'
     removeRecipe: 'Rezept entfernen'
     unpublishRecipe: 'Nicht-Öffentlich setzen'
+  footer:
+    gallery: 'Galerie'
+    ingredients: 'Zutaten'
+    steps: 'Zubereitung'
   gallery:
-    header: 'Bildergallerie'
+    header: 'Bildergalerie'
   ingredients:
     header: 'Zutatenliste'
   duration:

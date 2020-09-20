@@ -69,10 +69,10 @@ class RecipeRoute extends Route implements RouteInterface {
 
     $pics = $recipe->getPictures();
     if (count($pics) > 0) {
-      $carousel = CarouselHelper::createNew('recipe-'.$recipe->getId().'-pictures', true);
+      $carousel = CarouselHelper::createNew('recipe-'.$recipe->getId().'-pictures', true, true);
       for ($i = 0; $i < count($pics); $i++) {
         CarouselHelper::addItem($carousel, [
-          'href' => null,
+          'href' => $Controller->getLink('recipe:picture:link', $pics[$i]->getFilename()),
           'image' => 'cbimages/'.$pics[$i]->getFilename(),
           'title' => '',
           'description' => $pics[$i]->getDescription(),
