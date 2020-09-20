@@ -39,6 +39,10 @@ $white:               #FFF;
   src: url("/webfonts/SourceSansPro-Light.ttf");
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: $bg-white;
   color: $text-primary;
@@ -106,8 +110,9 @@ img.avatar-40 {
   }
 }
 
+.bg-light           { background-color: $bg-light; }
 .bg-light-dark      { background-color: $bg-light-dark; }
-.bg-light-muted      { background-color: $bg-light-muted; }
+.bg-light-muted     { background-color: $bg-light-muted; }
 
 .overflow-x-auto    { overflow-x: auto; }
 .overflow-x-default { overflow-x: visible; }
@@ -552,6 +557,11 @@ ul.pagination li.page-item.active a.page-link {
     background-color: $text-hover;
     border-color: $text-hover;
   }
+}
+
+nav.nav-recipe-sm {
+  background-color: $bg-light;
+  border-top: 1px solid $bg-light-dark;
 }
 
 @media (min-width: 1200px) {

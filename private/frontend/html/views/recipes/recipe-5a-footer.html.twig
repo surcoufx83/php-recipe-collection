@@ -1,0 +1,13 @@
+    <nav class="navbar fixed-bottom d-fixed d-md-none nav-recipe-sm">
+      <div class="d-flex w-100">{% if Page.Gallery %}
+        <div class="w-50 text-center">
+          <span class="btn btn-blue scroll-to px-2" data-target="gallery-anchor">{{ Config.Icons.Gallery('mr-2 text-small')|raw }}Galerie</span>
+        </div>{% endif %}
+        <div class="w-50 text-center">
+          <span class="btn btn-blue scroll-to px-2" data-target="ingredients-anchor">{{ Config.Icons.Ingredient('mr-2 text-small')|raw }}Zutaten</span>
+        </div>
+        <div class="w-50 text-center">
+          <span class="btn btn-blue scroll-to px-2" data-target="steps-anchor">{{ Config.Icons.Start('mr-2 text-small')|raw }}Zubereitung</span>
+        </div>
+      </div>
+    </nav>

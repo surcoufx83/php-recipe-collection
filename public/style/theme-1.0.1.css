@@ -11,6 +11,9 @@
 @font-face {
   font-family: "SourceSansPro Light";
   src: url("/webfonts/SourceSansPro-Light.ttf"); }
+html {
+  scroll-behavior: smooth; }
+
 body {
   background-color: #f8f9fa;
   color: #2C2E3A;
@@ -61,6 +64,9 @@ img.avatar-40 {
   color: #3E5D65 !important; }
   .page-link:hover {
     color: #3E6F7A !important; }
+
+.bg-light {
+  background-color: #e6e8e6; }
 
 .bg-light-dark {
   background-color: #bcc2c8; }
@@ -456,6 +462,10 @@ ul.pagination li.page-item.active a.page-link {
     color: #f8f9fa !important;
     background-color: #3E6F7A;
     border-color: #3E6F7A; }
+
+nav.nav-recipe-sm {
+  background-color: #e6e8e6;
+  border-top: 1px solid #bcc2c8; }
 
 @media (min-width: 1200px) {
   div.page {

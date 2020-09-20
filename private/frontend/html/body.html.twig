@@ -22,7 +22,7 @@
     {% include 'body-navbar.html.twig' %}
 
     <main>
-  <div class="page" {% if Controller.isAuthenticated() == false or Controller.User().hasRegistrationCompleted() == false %}style="padding-left:0!important;"{% endif %}>
+      <div class="page" {% if Controller.isAuthenticated() == false or Controller.User().hasRegistrationCompleted() == false %}style="padding-left:0!important;"{% endif %}>
       {% if Controller.isAuthenticated() and Controller.User().hasRegistrationCompleted() %}
         {% include 'body-sidebar.html.twig' %}
       {% endif %}
@@ -112,6 +112,14 @@
         $('div.page-overlay').addClass('sidebar-opened');
         $('div.nav-sidebar').addClass('sidebar-opened');
         $('a.sidebar-toggle-nav').addClass('sidebar-opened');
+      });
+
+      $('.scroll-to').click(function() {
+        var target = $('#' + $(this).data('target'));
+        if (target) {
+          var pos = target.offset().top - 60;
+          $(window).scrollTop(pos);
+        }
       });
 
       $(function () {

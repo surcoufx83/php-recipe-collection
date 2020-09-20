@@ -1,4 +1,4 @@
-          {% if Page.Gallery %}<div>
+          {% if Page.Gallery %}<div id="gallery-anchor">
             <h5>{{Controller.l('recipe_gallery_header')}}</h5>
             {{ Page.Gallery|raw }}
             <p class="mt-1 mt-lg-2">{% for Tag in Recipe.getTags() %}
