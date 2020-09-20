@@ -1,1 +1,13 @@
-{"name":"","short_name":"","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}
+{
+  "name": "mogul.network Digitales Kochbuch",
+  "short_name": "Kochbuch",
+  "description": "Unser digitales Familienkochbuch - gemeinsam Erinnerungen erhalten und teilen."
+  "icons":[
+    {"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},
+    {"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}
+  ],
+  "start_url": "/",
+  "theme_color":"#343a40",
+  "background_color":"#f8f9fa",
+  "display":"standalone"
+}

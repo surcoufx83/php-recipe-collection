@@ -9,7 +9,11 @@
                 <a href="{{ Controller.getLink('recipe:show', Recipe.getId(), Recipe.getName()) }}">
                   <img class="rounded" src="{{ Controller.getLink('recipe:picture:link', Picture.getFilename(null, 60)) }}" style="max-height:60px;"
                     title="{{ Controller.l('page_myrecipes_img_title', Recipe.getName()) }}" />
-                </a>{% endif %}
+                </a>{% else %}
+                <a href="{{ Controller.getLink('recipe:show', Recipe.getId(), Recipe.getName()) }}">
+                  <img class="rounded" src="/pictures/_dummy0x60.jpg" style="max-height:60px; opacity: 0.3;" />
+                </a>
+              {% endif %}
               </div>
               <div class="item-major">
                 <div class="title">
