@@ -18,6 +18,7 @@ final class IconConfig implements IconConfigInterface {
       'Back'              => ['space' => 'fas', 'icon' => 'arrow-left'],
       'Ban'               => ['space' => 'fas', 'icon' => 'ban'],
       'Books'             => ['space' => 'fas', 'icon' => 'book'],
+      'Calendar'          => ['space' => 'far', 'icon' => 'calendar-alt'],
       'Cloud'             => ['space' => 'fas', 'icon' => 'cloud'],
       'Copy'              => ['space' => 'fas', 'icon' => 'copy'],
       'Delete'            => ['space' => 'far', 'icon' => 'trash-alt'],

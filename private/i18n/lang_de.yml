@@ -229,10 +229,22 @@ page:
       title: 'Anmelden'
     title: 'Benutzer Anmeldung'
   random: 'Zufälliges Rezept'
-  recipes:
-    myrecipes: 'Meine Rezepte'
+  myrecipes:
+    title: 'Meine Rezepte'
+    deleteBtn:
+      description: 'Löschen'
     img:
       title: 'Rezeptbild %s'
+    private:
+      description: 'Dieses Rezept ist nur für dich sichtbar und kann von niemandem sonst gefunden werden.'
+      title: 'Privat'
+    public:
+      description: 'Dieses Rezept ist für andere sichtbar.'
+      title: '%s'
+    viewed:
+      description: '&times; gesehen'
+    voted:
+      description: 'bei %d Bewertungen'
   search:
     header:
       title: 'Rezeptsuche'
@@ -310,7 +322,7 @@ recipe:
     cooked:
       times: '&times; gekocht'
     views:
-      times: '&times; angesehen'
+      times: '&times; gesehen'
 
 response:
   badArgumentsException: 'Ungültige Argumente angegeben.'

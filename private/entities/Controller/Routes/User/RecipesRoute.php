@@ -18,10 +18,12 @@ class RecipesRoute extends Route implements RouteInterface {
   static function createOutput(array &$response) : bool {
     global $Controller, $OUT;
 
-    parent::addBreadcrumb($Controller->getLink('private:recipes'), $Controller->l('page_recipes_myrecipes'));
+    parent::addBreadcrumb($Controller->getLink('private:recipes'), $Controller->l('page_myrecipes_title'));
     $recipes = [];
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
-    $query->where('recipes', 'user_id', '=', $Controller->User()->getId());
+    $query
+      ->where('recipes', 'user_id', '=', $Controller->User()->getId())
+      ->orderBy2('recipes', 'recipe_name', 'ASC');
     $result = $Controller->select($query);
     while ($record = $result->fetch_object(Recipe::class)) {
       $recipe = $Controller->OM()->Recipe($record);
@@ -33,7 +35,7 @@ class RecipesRoute extends Route implements RouteInterface {
 
     parent::addToDictionary('Recipes', $recipes);
     parent::setPage('private:recipes');
-    parent::setTitle($Controller->l('page_recipes_myrecipes'));
+    parent::setTitle($Controller->l('page_myrecipes_title'));
     return parent::render(self::$template, $response);
   }
 

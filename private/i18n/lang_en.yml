@@ -226,11 +226,22 @@ page:
       title: 'Login'
     title: 'User Login'
   random: 'Random recipe'
-  recipes:
+  myrecipes:
+    title: 'My recipes'
+    deleteBtn:
+      description: 'Delete'
     img:
       title: 'Recipe image %s'
-    myrecipes: 'My recipes'
-    overview: 'Overview'
+    private:
+      description: 'This recipe is only visible to you and cannot be found by anyone else.'
+      title: 'private'
+    public:
+      description: 'This recipe is visible to others.'
+      title: '%s'
+    viewed:
+      description: '&times; visited'
+    voted:
+      description: 'from %d votes'
   search:
     header:
       title: 'Search'

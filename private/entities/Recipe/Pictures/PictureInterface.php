@@ -8,7 +8,8 @@ if (!defined('CORE2'))
 interface PictureInterface {
 
   public function getDescription() : string;
-  public function getFilename() : string;
+  public function getExtension() : string;
+  public function getFilename(?int $width=null, ?int $height=null) : string;
   public function getFullpath() : string;
   public function getId() : int;
   public function getIndex() : int;

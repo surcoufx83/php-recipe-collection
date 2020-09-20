@@ -24,7 +24,7 @@
               </li>
               <li{% if Page.Current == 'private:recipes' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:recipes') }}">
-                  {{ Config.Icons.Copy('fa-fw mr-2')|raw }} {{ Controller.l('page_recipes_myrecipes') }}
+                  {{ Config.Icons.Copy('fa-fw mr-2')|raw }} {{ Controller.l('page_myrecipes_title') }}
                 </a>
               </li>
               <li{% if Page.Current == 'private:search' %} class="active"{% endif %}>

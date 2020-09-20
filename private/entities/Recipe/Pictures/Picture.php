@@ -3,8 +3,10 @@
 namespace Surcouf\Cookbook\Recipe\Pictures;
 
 use Surcouf\Cookbook\HashableInterface;
+use Surcouf\Cookbook\Helper\FilesystemHelper;
 use Surcouf\Cookbook\Helper\HashHelper;
 use Surcouf\Cookbook\DbObjectInterface;
+use BenMajor\ImageResize\Image;
 
 if (!defined('CORE2'))
   exit;
@@ -55,6 +57,31 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface 
     return $this->picture_hash;
   }
 
+  private function cropImage(?int $width=null, ?int $height=null) : string {
+    $sizestr = sprintf('%dx%d', $width ?? 0, $height ?? 0);
+    $filename =  $this->picture_hash.$this->picture_id.$sizestr.'.'.$this->getExtension();
+    $path = FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages', $filename);
+    if (FilesystemHelper::file_exists($path))
+      return $filename;
+    $copyfile = copy($this->picture_full_path, $path);
+    $img = new Image($path);
+    $img->disableRename();
+    if (!is_null($width) && !is_null($height))
+      $img->resizeCrop($width, $height);
+    else if (!is_null($width))
+      $img->resizeCrop($width);
+    else
+      $img->resizeCrop($height);
+    $img->output(FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages'));
+    return $filename;
+
+    var_dump($sizestr);
+    var_dump($width, $height);
+    var_dump($img);
+    exit;
+    return '';
+  }
+
   public function getDbChanges() : array {
     return $this->changes;
   }
@@ -63,8 +90,14 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface 
     return $this->picture_description;
   }
 
-  public function getFilename() : string {
-    return $this->picture_filename;
+  public function getExtension() : string {
+    return pathinfo($this->picture_filename, PATHINFO_EXTENSION);
+  }
+
+  public function getFilename(?int $width=null, ?int $height=null) : string {
+    if (is_null($height) && is_null($width))
+      return $this->picture_filename;
+    return $this->cropImage($width, $height);
   }
 
   public function getFullpath() : string {

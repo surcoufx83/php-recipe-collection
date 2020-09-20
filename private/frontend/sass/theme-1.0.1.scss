@@ -426,11 +426,10 @@ div.page {
       div.item-flexbox {
         display:flex;
         flex: 1;
-        padding-right: 1.0rem;
 
         div.item-icon {
-          height: 48px;
-          width: 48px;
+          height: 60px;
+          width: 60px;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -438,6 +437,9 @@ div.page {
 
           i {
             color: $text-link!important;
+          }
+          img {
+            border: 1px solid $bg-light-dark;
           }
         }
 
@@ -467,7 +469,7 @@ div.page {
           flex-direction: column;
           align-items: flex-end;
           flex: 1 0 auto;
-          margin-right: 1.0rem;
+          margin-left: 1.0rem;
         }
       }
     }

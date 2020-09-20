@@ -30,10 +30,6 @@ class BlankPicture extends Picture implements HashableInterface {
     return $this->picture_hash;
   }
 
-  public function getExtension() : string {
-    return pathinfo($this->picture_filename, PATHINFO_EXTENSION);
-  }
-
   public function moveTo(string $filesystemLocation) : bool {
     if (file_exists($filesystemLocation))
       return false;
