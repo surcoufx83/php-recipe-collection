@@ -59,7 +59,7 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface 
 
   private function cropImage(?int $width=null, ?int $height=null) : string {
     $sizestr = sprintf('%dx%d', $width ?? 0, $height ?? 0);
-    $filename =  $this->picture_hash.$this->picture_id.$sizestr.'.'.$this->getExtension();
+    $filename =  $this->picture_hash.$this->recipe_id.$sizestr.'.'.$this->getExtension();
     $path = FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages', $filename);
     if (FilesystemHelper::file_exists($path))
       return $filename;

@@ -210,19 +210,17 @@ class RecipeNewSubmitRoute extends Route implements RouteInterface {
       if (!$failed) {
         for ($i=0; $i<$recipe->getPictureCount(); $i++) {
           $obj = $recipe->getPictures()[$i];
-          $filename =  $obj->getHash().$id.'.'.$obj->getExtension();
           if (!$obj->moveTo(FilesystemHelper::paths_combine(
-              DIR_PUBLIC_IMAGES, 'cbimages', $filename))) {
+              DIR_PUBLIC_IMAGES, 'cbimages'), $id)) {
             $failed = true;
             break;
           }
-          $obj->setFilename($filename);
           $res = $Controller->insertSimple(
             'recipe_pictures',
             ['recipe_id', 'user_id', 'picture_sortindex', 'picture_name',
              'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path'],
             [$id, $recipe->getUserId(), $obj->getIndex(), $obj->getName(),
-             '', $obj->getHash(), $filename, $obj->getFullpath()]
+             '', $obj->getHash(), $obj->getFilename(), $obj->getFullpath()]
           );
           if ($res == -1) {
             $failed = true;
