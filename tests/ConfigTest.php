@@ -8,7 +8,7 @@ use Surcouf\Cookbook\Config\IconConfigInterface;
 
 if (!defined('DS'))
   define('DS', DIRECTORY_SEPARATOR);
-  
+
 define('ROOT', realpath(__DIR__.DS.'/..'));
 define('DIR_BACKEND', realpath(ROOT.DS.'private'.DS.'backend'));
 
@@ -70,7 +70,6 @@ class ConfigTest extends TestCase
 
   public function callDataProvider() {
     return [
-      ['AdToken', 'ca-pub-5505338479507158'],
       ['AllowRegistration', false],
       ['ChecksumProvider', 'adler32'],
       ['ConsentCookieName', 'kbconsenttoken'],

@@ -28,7 +28,7 @@ use Surcouf\Cookbook\User\UserInterface;
 if (!defined('CORE2'))
   exit;
 
-class ObjectManager {
+final class ObjectManager {
 
   protected $cache = [];
 

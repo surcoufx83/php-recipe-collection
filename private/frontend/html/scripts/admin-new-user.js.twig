@@ -68,6 +68,7 @@
           target.text(data.fields[item]);
           target.addClass('d-block');
         }
+        easytooltip($('#submitButton'), data.message, 'error');
       }
     }).fail(function(jqXHR, textStatus) {
       easytooltip($('#submitButton'), '{{ Controller.l('page_admin_newUser_chapter1_validationFailed') }}', 'error');

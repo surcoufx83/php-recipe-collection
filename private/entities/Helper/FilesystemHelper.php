@@ -10,7 +10,7 @@ if (!defined('CORE2'))
 if (!defined('DS'))
   define('DS', DIRECTORY_SEPARATOR);
 
-class FilesystemHelper implements FilesystemHelperInterface {
+final class FilesystemHelper implements FilesystemHelperInterface {
 
   public static function file_exists(string $filename) : bool {
     return file_exists($filename);

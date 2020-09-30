@@ -9,7 +9,7 @@ if (!defined('CORE2'))
 
 define('DB_ANY', '*');
 
-class QueryBuilder {
+final class QueryBuilder {
 
   private $queryType;
 

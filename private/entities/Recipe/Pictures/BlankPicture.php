@@ -3,8 +3,10 @@
 namespace Surcouf\Cookbook\Recipe\Pictures;
 
 use Surcouf\Cookbook\HashableInterface;
+use Surcouf\Cookbook\Helper\FilesystemHelper;
 use Surcouf\Cookbook\Helper\HashHelper;
 use Surcouf\Cookbook\DbObjectInterface;
+use BenMajor\ImageResize\Image;
 
 if (!defined('CORE2'))
   exit;
@@ -30,22 +32,35 @@ class BlankPicture extends Picture implements HashableInterface {
     return $this->picture_hash;
   }
 
-  public function getExtension() : string {
-    return pathinfo($this->picture_filename, PATHINFO_EXTENSION);
+  private function cropImage(string $path, ?int $width=null, ?int $height=null) : string {
+    $sizestr = sprintf('%dx%d', $width ?? 0, $height ?? 0);
+    $filename =  $this->picture_hash.$this->recipe_id.$sizestr.'.'.$this->getExtension();
+    $path = FilesystemHelper::paths_combine($path, $filename);
+    if (FilesystemHelper::file_exists($path))
+      return $filename;
+    $copyfile = copy($this->path, $path);
+    $img = new Image($path);
+    $img->disableRename();
+    if (!is_null($width) && !is_null($height))
+      $img->resizeCrop($width, $height);
+    else if (!is_null($width))
+      $img->resizeCrop($width);
+    else
+      $img->resizeCrop($height);
+    $img->output(FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages'));
+    return $filename;
   }
 
-  public function moveTo(string $filesystemLocation) : bool {
-    if (file_exists($filesystemLocation))
+  public function moveTo(string $path, int $recipeId) : bool {
+    $this->recipe_id = $recipeId;
+    try {
+      $this->picture_filename = $this->cropImage($path, 1920, 1080);
+      $this->picture_full_path = FilesystemHelper::paths_combine($path, $this->picture_filename);
+      $this->cropImage($path, 60);
+    } catch(Exception $e) {
       return false;
-    if (!move_uploaded_file($this->path, $filesystemLocation))
-      return false;
-    $this->picture_full_path = $filesystemLocation;
+    }
     return true;
-  }
-
-  public function setFilename(string $newName) : PictureInterface {
-    $this->picture_filename = $newName;
-    return $this;
   }
 
   public function setId(int $newId) : PictureInterface {

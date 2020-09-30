@@ -4,11 +4,12 @@ namespace Surcouf\Cookbook\Recipe;
 
 use \DateTime;
 use Surcouf\Cookbook\ControllerInterface;
+use Surcouf\Cookbook\EActivityType;
+use Surcouf\Cookbook\DbObjectInterface;
 use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\Database\ObjectTableMapper;
-use Surcouf\Cookbook\DbObjectInterface;
 use Surcouf\Cookbook\Helper\ConverterHelper;
 use Surcouf\Cookbook\Helper\Formatter;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStep;
@@ -420,6 +421,8 @@ class Recipe implements RecipeInterface, DbObjectInterface {
     $this->changes['recipe_public'] = intval($newValue);
     $this->changes['recipe_published'] = $this->recipe_public ? Formatter::date_format($this->recipe_published, DTF_SQL) : null;
     $Controller->updateDbObject($this);
+    $Controller->addActivity(
+      $newValue == true ? EActivityType::RecipePublished : EActivityType::RecipeRemoved, [], $this);
     return $this;
   }
 

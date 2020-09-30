@@ -25,7 +25,13 @@ $Controller->init();
 
 if (ISWEB) {
   require_once DIR_BACKEND  .'/web.php';
-  require_once DIR_FRONTEND .'/bins/autoload.php';
+  if (Controller\RoutingManager::registerRoutes()) {
+    $Controller->Dispatcher()->dispatchRoute();
+    exit;
+  }
+  if (MAINTENANCE)
+    $Controller->Dispatcher()->forwardTo($Controller->getLink('maintenance'));
+  $Controller->Dispatcher()->routingFailed();
 } else if (ISCONSOLE) {
   require_once DIR_BACKEND  .'/cli.php';
   require_once DIR_FRONTEND .'/cli/autoload.php';

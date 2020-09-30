@@ -1,7 +1,11 @@
 breadcrumb:
   admin:
+    cronjobs: 'Cronjobs'
     home: 'Administration'
+    logs: 'Log file viewer'
     newUser: 'Neuer Benutzer'
+    settings: 'Konfiguration'
+    translation: 'Übersetzung'
     user: 'Benutzerverwaltung'
   books:
     home: 'Meine Kochbücher'
@@ -20,13 +24,19 @@ common:
   yesUc: 'Ja'
   rating:
     easy: 'Leicht'
+    easyTo: 'einfach'
     medium: 'Mittel'
+    mediumTo: 'mittelschwer'
     hard: 'Schwierig'
+    hardTo: 'sehr schwer'
 
 dev:
   dummy:
     header: 'Diese Funktion ist noch nicht verfügbar.'
     description: 'Die aufgerufene Seite ist leider noch nicht entwickelt und kann daher noch nicht verwendet werden. Wir kümmern uns drum!'
+  maintenance:
+    header: 'Diese Webseite befindet sich derzeit im Wartungsmodus!'
+    description: 'Wir arbeiten gerade daran, das Kochbuch noch besser zu machen! Das kann allerdings ein wenig dauern, nimm dir einen Cookie und geh' raus in die Sonne.'
 
 greetings:
   hello: 'Hallo %s'
@@ -139,6 +149,12 @@ page:
     alreadyActivated:
       description: 'Das Benutzerkonto ist bereits aktiviert oder der Link ist veraltet. Bitte melde dich mit deinem Konto an, um dein Kochbuch zu öffnen.'
   admin:
+    cronjobs:
+      title: 'Cronjobs'
+    dashboard:
+      title: 'Admin Dashboard'
+    logs:
+      title: 'Log files'
     newUser:
       dataprivacy: 'Wichtig: Im Sinne des Datenschutzes kläre bitte vor dem Eintragen von Benutzern immer mit diesen persönlich ab, ob sie mit der Registrierung und damit der Speicherung persönlicher Daten (Name und E-Mailadresse) einverstanden sind.'
       header: 'Benutzerregistrierung'
@@ -176,6 +192,10 @@ page:
         newButton: 'Weiterer Benutzer'
         success: 'Der Benutzer wurde gespeichert und benachrichtigt. User Id: '
         title: 'Wird gespeichert...'
+    settings:
+      title: 'Konfigurationsverwaltung'
+    translation:
+      title: 'Übersetzung'
     user:
       btnCreate: 'Neuer Benutzer'
       title: 'Benutzerverwaltung'
@@ -185,7 +205,26 @@ page:
       overview: 'Übersicht'
       title: 'Meine Kochbücher'
   createRecipe: 'Neues Rezept'
-  home: 'Start'
+  home:
+    title: 'Start'
+    gallery:
+      items:
+        actions:
+          goto:
+            recipe: 'Zum Rezept'
+        imageAdded:
+          title: 'Neues Bild in der Galerie'
+          description: '<b>%s</b> hat ein neues Bild für das Rezept <b>%s</b> hochgeladen.'
+        ratingAdded:
+          title: 'Neue Bewertung'
+          descriptionIntro: '<b>%s</b> hat das Rezept <b>%s</b>'
+          descriptionCooked: 'nachgekocht.'
+          descriptionCookedAndVoted: 'nachgekocht und bewertet:'
+          descriptionVoted: 'bewertet:'
+          descriptionRated: '%s nachzukochen'
+        recipeAdded:
+          title: 'Neues Rezept'
+          description: '<b>%s</b> hat das neue Rezept <b>%s</b> veröffentlicht!'
   login:
     cloud:
       description: 'Du hast schon mal unsere Nextcloud verwendet? Dann nutze dieses Konto um dich hier anzumelden. Einfach und sicher!'
@@ -212,10 +251,22 @@ page:
       title: 'Anmelden'
     title: 'Benutzer Anmeldung'
   random: 'Zufälliges Rezept'
-  recipes:
-    myrecipes: 'Meine Rezepte'
+  myrecipes:
+    title: 'Meine Rezepte'
+    deleteBtn:
+      description: 'Löschen'
     img:
       title: 'Rezeptbild %s'
+    private:
+      description: 'Dieses Rezept ist nur für dich sichtbar und kann von niemandem sonst gefunden werden.'
+      title: 'Privat'
+    public:
+      description: 'Dieses Rezept ist für andere sichtbar.'
+      title: '%s'
+    viewed:
+      description: '&times; gesehen'
+    voted:
+      description: 'bei %d Bewertungen'
   search:
     header:
       title: 'Rezeptsuche'
@@ -238,8 +289,18 @@ recipe:
     publicationAnonymous: 'Das Rezept wurde am %s veröffentlicht.'
     unpublished: 'Das Rezept wurde am %s erstellt und bisher nicht für andere User veröffentlicht.'
     source: 'Herkunft'
+  admin:
+    header: 'Administration'
+    author: 'Verfasst von %s'
+    deletedAuthorAccount: 'Verfasst von [Gelöschtes Konto]'
+    removeRecipe: 'Rezept entfernen'
+    unpublishRecipe: 'Nicht-Öffentlich setzen'
+  footer:
+    gallery: 'Galerie'
+    ingredients: 'Zutaten'
+    steps: 'Zubereitung'
   gallery:
-    header: 'Bildergallerie'
+    header: 'Bildergalerie'
   ingredients:
     header: 'Zutatenliste'
   duration:
@@ -287,7 +348,7 @@ recipe:
     cooked:
       times: '&times; gekocht'
     views:
-      times: '&times; angesehen'
+      times: '&times; gesehen'
 
 response:
   badArgumentsException: 'Ungültige Argumente angegeben.'

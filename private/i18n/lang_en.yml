@@ -1,7 +1,11 @@
 breadcrumb:
   admin:
+    cronjobs: 'Cronjobs'
     home: 'Administration'
+    logs: 'Log file viewer'
     newUser: 'Setup new user'
+    settings: 'Settings'
+    translation: 'Translations'
     user: 'User administration'
   books:
     home: 'My cookery books'
@@ -16,13 +20,19 @@ common:
   yesUc: 'Yes'
   rating:
     easy: 'easy'
+    easyTo: 'easy'
     medium: 'medium'
+    mediumTo: 'okay'
     hard: 'hard'
+    hardTo: 'hard'
 
 dev:
   dummy:
     header: 'This function is not yet available.'
     description: 'Unfortunately, the page you have called up has not yet been developed and can therefore not yet be used. We take care of it!'
+  maintenance:
+    header: 'This website is currently in maintenance mode!'
+    description: 'We are currently working on making the cookbook even better! But this may take a little time, so grab a cookie and go out into the sun.'
 
 greetings:
   hello: 'Hello %s'
@@ -135,6 +145,12 @@ page:
     alreadyActivated:
       description: 'The user account is already activated or the link is outdated. Please log in with your account to open your cookbook.'
   admin:
+    cronjobs:
+      title: 'Cronjobs'
+    dashboard:
+      title: 'Admin dashboard'
+    logs:
+      title: 'Log files'
     newUser:
       dataprivacy: 'Important: In terms of data protection, please always clarify with users personally whether they agree to the registration and thus the storage of personal data (name and e-mail address) before registering.'
       header: 'User registration'
@@ -172,6 +188,10 @@ page:
         newButton: 'Another user'
         success: 'The user has been saved and notified. User Id: '
         title: 'Is saved...'
+    settings:
+      title: 'System configuration'
+    translation:
+      title: 'Website translation'
     user:
       btnCreate: 'Add user'
       title: 'User administration'
@@ -181,7 +201,26 @@ page:
       overview: 'Overview'
       title: 'My cookery books'
   createRecipe: 'New recipe'
-  home: 'Home'
+  home:
+    title: 'Home'
+    gallery:
+      items:
+        actions:
+          goto:
+            recipe: 'Go to the recipe'
+        imageAdded:
+          title: 'New picture in the gallery'
+          description: '<b>%s</b> has uploaded a new image for the recipe <b>%s</b>.'
+        ratingAdded:
+          title: 'New rating'
+          descriptionIntro: '<b>%s</b> has the recipe <b>%s</b>'
+          descriptionCooked: 'cooked.'
+          descriptionCookedAndVoted: 'cooked and rated:'
+          descriptionVoted: 'rated:'
+          descriptionRated: '%s to cook'
+        recipeAdded:
+          title: 'New recipe'
+          description: '<b>%s</b> has published the new recipe <b>%s</b>!'
   lists: 'Lists'
   login:
     cloud:
@@ -209,11 +248,22 @@ page:
       title: 'Login'
     title: 'User Login'
   random: 'Random recipe'
-  recipes:
+  myrecipes:
+    title: 'My recipes'
+    deleteBtn:
+      description: 'Delete'
     img:
       title: 'Recipe image %s'
-    myrecipes: 'My recipes'
-    overview: 'Overview'
+    private:
+      description: 'This recipe is only visible to you and cannot be found by anyone else.'
+      title: 'private'
+    public:
+      description: 'This recipe is visible to others.'
+      title: '%s'
+    viewed:
+      description: '&times; visited'
+    voted:
+      description: 'from %d votes'
   search:
     header:
       title: 'Search'
@@ -236,6 +286,16 @@ recipe:
     publicationAnonymous: 'On %s this recipe was pubished.'
     unpublished: 'The recipe was created on %s and has not yet been published for other users.'
     source: 'Origin'
+  admin:
+    header: 'Administration'
+    author: 'Author: %s'
+    deletedAuthorAccount: 'Author: Deleted user'
+    removeRecipe: 'Remove recipe'
+    unpublishRecipe: 'Set private'
+  footer:
+    gallery: 'Pictures'
+    ingredients: 'Ingredients'
+    steps: 'Preparation'
   gallery:
     header: 'Picture gallery'
   ingredients:

@@ -1,5 +1,5 @@
           <div class="carousel-item {{ item.active }}">
-            <a href="{{ item.href }}">
+            <a href="{% if item.href != false %}{{ item.href }}{% else %}#{% endif %}"{% if carousel.lightbox %} data-toggle="lightbox"{% endif %}>
               <img src="/pictures/{{ item.image }}" class="d-block w-100">
             </a>
             <div class="carousel-caption d-none d-md-block">

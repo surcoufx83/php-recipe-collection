@@ -9,7 +9,7 @@
             <ul class="nav-sidebar-level1">
               <li{% if Page.Current == 'private:home' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:home') }}">
-                  {{ Config.Icons.Home('fa-fw mr-2')|raw }} {{ Controller.l('page_home') }}
+                  {{ Config.Icons.Home('fa-fw mr-2')|raw }} {{ Controller.l('page_home_title') }}
                 </a>
               </li>
               <li{% if Page.Current == 'recipe:new' %} class="active"{% endif %}>
@@ -24,7 +24,7 @@
               </li>
               <li{% if Page.Current == 'private:recipes' %} class="active"{% endif %}>
                 <a href="{{ Controller.getLink('private:recipes') }}">
-                  {{ Config.Icons.Copy('fa-fw mr-2')|raw }} {{ Controller.l('page_recipes_myrecipes') }}
+                  {{ Config.Icons.Copy('fa-fw mr-2')|raw }} {{ Controller.l('page_myrecipes_title') }}
                 </a>
               </li>
               <li{% if Page.Current == 'private:search' %} class="active"{% endif %}>
@@ -51,6 +51,9 @@
                   </li>
                   <li{% if Page.CurrentSub == 'admin:settings' %} class="active"{% endif %}>
                     <a href="{{ Controller.getLink('admin:settings') }}">Konfiguration</a>
+                  </li>
+                  <li{% if Page.CurrentSub == 'admin:translation' %} class="active"{% endif %}>
+                    <a href="{{ Controller.getLink('admin:translation') }}">Übersetzung</a>
                   </li>
                   <li{% if Page.CurrentSub == 'admin:logs' %} class="active"{% endif %}>
                     <a href="{{ Controller.getLink('admin:logs') }}">Server-Logs</a>

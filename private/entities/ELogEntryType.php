@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook;
 if (!defined('CORE2'))
   exit;
 
-class ELogEntryType {
+final class ELogEntryType {
 
   const letUndefined = 0;
   const letRecordCreated = 1;

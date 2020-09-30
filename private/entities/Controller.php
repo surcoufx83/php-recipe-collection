@@ -40,7 +40,7 @@ use \League\OAuth2\Client\Provider\GenericProvider;
 if (!defined('CORE2'))
   exit;
 
-class Controller implements ControllerInterface {
+final class Controller implements ControllerInterface {
 
   private $database, $currentUser;
   private $config, $dispatcher, $langcode, $linkProvider;
@@ -81,6 +81,29 @@ class Controller implements ControllerInterface {
 
   public function User() : ?UserInterface {
     return $this->currentUser;
+  }
+
+  public function addActivity(int $type, array $data, RecipeInterface $recipe, ?int $pictureId=null, ?int $ratingId=null, ?int $tagId=null) : void {
+    $query = new QueryBuilder(EQueryType::qtINSERT, 'activities');
+    $data = array_merge(
+              $data, [
+                'user_id' => $this->User()->getId(),
+                'user_name' => $this->User()->getUsername(),
+                'recipe_id' => $recipe->getId(),
+                'recipe_name' => $recipe->getName(),
+              ]);
+    $query
+      ->columns(['user_id', 'entry_type', 'entry_data', 'recipe_id', 'picture_id', 'rating_id', 'tag_id'])
+      ->values([
+        $this->User()->getId(),
+        $type,
+        json_encode($data),
+        $recipe->getId(),
+        $pictureId,
+        $ratingId,
+        $tagId
+      ]);
+    $this->insert($query);
   }
 
   public function cancelTransaction() : bool {

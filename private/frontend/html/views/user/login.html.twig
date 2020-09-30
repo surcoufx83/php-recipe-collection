@@ -11,7 +11,7 @@
           <p class="text-muted text-small">{{ Controller.l('page_login_cloud_description') }}</p>{% if LoginFailed %}
           <p class="text-danger">{{ Controller.l('page_login_cloud_failed') }}</p>{% endif %}
           <form id="oauth2-form" method="get" action="{{ Controller.getLink('private:login-oauth2') }}">
-            <button type="submit" id="login-submit-button" class="btn btn-blue font-weight-bold">
+            <button type="submit" id="oauth2-submit-button" class="btn btn-blue font-weight-bold">
               {{ Config.Icons.Cloud('fa-fw mr-2')|raw }}
               {{ Controller.l('page_login_cloud_submit') }}
             </button>

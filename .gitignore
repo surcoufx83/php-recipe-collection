@@ -1,4 +1,5 @@
 /cache/
 /vendor/
 /.sass-cache/
+/.maintenance.tmp
 /.phpunit.result.cache

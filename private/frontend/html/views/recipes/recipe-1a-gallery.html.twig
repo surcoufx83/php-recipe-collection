@@ -1,0 +1,10 @@
+          {% if Page.Gallery %}<div id="gallery-anchor">
+            <h5>{{Controller.l('recipe_gallery_header')}}</h5>
+            {{ Page.Gallery|raw }}
+            <p class="mt-1 mt-lg-2">{% for Tag in Recipe.getTags() %}
+              <a class="btn btn-outline-blue btn-sm" href="{{ Controller.getLink('tag:show', Tag.getId(), Tag.getName()) }}">
+                {{ Tag.getName() }}
+                <span class="badge ml-1">{{ Recipe.getTagVotes()[Tag.getId()] }} {{ Config.Icons.Favorite.getIcon('')|raw }}</span>
+              </a>
+            {% endfor %}</p>
+          </div>{% endif %}

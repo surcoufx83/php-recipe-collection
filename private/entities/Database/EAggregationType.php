@@ -5,7 +5,7 @@ namespace Surcouf\Cookbook\Database;
 if (!defined('CORE2'))
   exit;
 
-class EAggregationType {
+final class EAggregationType {
 
   const None = 0;
 

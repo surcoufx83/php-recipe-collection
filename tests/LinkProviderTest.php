@@ -58,6 +58,8 @@ class LinkProviderTest extends TestCase
       ['admin_oauth_token', '', []],
       ['admin_oauth_user', '', []],
       ['admin_settings', '/admin/settings', []],
+      ['admin_recipe_remove', '/admin/recipe/remove/1/foo', [1, 'foo']],
+      ['admin_recipe_unpublish', '/admin/recipe/unpublish/1/foo', [1, 'foo']],
       ['admin_user', '/admin/user/1/foo', [1, 'foo']],
       ['admin_user', '/admin/user/2/foobar', [2, 'foobar']],
       ['admin_users', '/admin/users', []],
@@ -125,24 +127,19 @@ class LinkProviderTest extends TestCase
 
   public function badPropertiesProvider() {
     return [
-      ['admin_user'],
+      ['admin_recipe_remove'],
+      ['admin_recipe_unpublish'],
       ['admin_user'],
       ['private_activation'],
-      ['private_activation'],
-      ['private_activatePassword'],
       ['private_activatePassword'],
       ['private_avatar'],
-      ['private_avatar'],
-      ['recipe_picture_link'],
       ['recipe_picture_link'],
       ['recipe_publish'],
-      ['recipe_publish'],
       ['recipe_show'],
-      ['recipe_show'],
-      ['recipe_unpublish'],
+      ['recipe_sendVoting'],
       ['recipe_unpublish'],
       ['tag_show'],
-      ['tag_show'],
+      ['user_recipes'],
     ];
   }
 
