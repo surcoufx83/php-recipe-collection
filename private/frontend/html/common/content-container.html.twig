@@ -1,3 +1,4 @@
-              <div class="container-fluid container-max1280 breadcrumbs">
-                
+              <div class="container-fluid container-max1280"
+                v-if="user.loggedIn">
+                <router-view class="view one" name="Home"></router-view>
               </div>

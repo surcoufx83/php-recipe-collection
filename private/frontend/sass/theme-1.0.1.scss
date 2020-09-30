@@ -330,7 +330,7 @@ div.page {
       li {
         white-space: nowrap;
 
-        &.active {
+        & a.router-link-active {
           background-color: $bg-light-muted;
           box-shadow: inset 4px 0 0 $bg-dark;
         }

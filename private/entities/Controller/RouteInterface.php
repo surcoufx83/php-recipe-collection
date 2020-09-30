@@ -9,7 +9,8 @@ if (!defined('CORE2'))
 
 interface RouteInterface {
 
-  static function addBreadcrumb(string $Url, string $LinkText) : void;
+  //static function addBreadcrumb(string $Url, string $LinkText) : void;
+  static function addBreadcrumb(array &$response, string $pageTarget, string $linkText) : void;
   static function addButton(string $Url, string $LinkText, ?string $btnClass = 'btn-outline-blue') : void;
   static function addButtonScript(string $Id, string $LinkText, ?string $btnClass = 'btn-outline-blue') : void;
   static function addCarousel(array $carouselData) : void;

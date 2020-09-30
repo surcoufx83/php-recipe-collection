@@ -55,15 +55,9 @@ final class LinkProvider {
         'settings' => '/settings',
       ],
       'recipe' => [
-        'new' => '/recipe/new',
         'picture' => [
           'link' => '/pictures/cbimages/%s',
         ],
-        'postnew' => '/recipe/new',
-        'publish' => '/recipe/publish/%d/%s',
-        'show' => '/%d/%s',
-        'sendVoting' => '/recipe/vote/%d/%s',
-        'unpublish' => '/recipe/unpublish/%d/%s',
       ],
       'tag' => [
         'show' => '/tag/%d/%s',

@@ -1,6 +1,6 @@
 <?php
 
-namespace Surcouf\Cookbook\Controller\Routes\User;
+namespace Surcouf\Cookbook\Controller\Routes\Api\User;
 
 use Surcouf\Cookbook\Controller\Route;
 use Surcouf\Cookbook\Controller\RouteInterface;
@@ -13,7 +13,8 @@ class LogoutRoute extends Route implements RouteInterface {
   static function createOutput(array &$response) : bool {
     global $Controller;
     $Controller->logout();
-    $Controller->Dispatcher()->forwardTo($Controller->getLink('private:home'));
+    $response = $Controller->Config()->getResponseArray(1);
+    return true;
   }
 
 }

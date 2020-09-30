@@ -183,7 +183,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function getUsername() : string {
-    return (!is_null($this->user_name) ? $this->user_name : $this->oauth_user_name);
+    return (!is_null($this->oauth_user_name) ? $this->oauth_user_name : $this->user_name);
   }
 
   public function getValidationCode() : string {

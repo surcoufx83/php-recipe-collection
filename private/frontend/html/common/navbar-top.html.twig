@@ -18,12 +18,12 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-uppercase" href="#" id="navbarDropdown"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ Controller.User().getFirstname() }}
+            <img class="avatar avatar-18 mr-1" :src="user.avatar.url" /> ${ user.meta.un }
           </a>
           <div class="dropdown-menu dropdown-menu-right small p-1" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{{ Controller.getLink('private:settings') }}">{{ Controller.l('navigation_topbar_user_settings') }}</a>
+            <router-link class="dropdown-item" :to="{ name: 'settings'}">{{ Controller.l('navigation_topbar_user_settings') }}</router-link>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ Controller.getLink('private:logout') }}">{{ Controller.l('navigation_topbar_user_logout') }}</a>
+            <router-link class="dropdown-item" to="/logout">{{ Controller.l('navigation_topbar_user_logout') }}</router-link>
           </div>
         </li>
       </ul>

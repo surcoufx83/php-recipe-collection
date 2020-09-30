@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="/style/icofont.min.css">
     <link rel="stylesheet" href="/style/theme-1.0.1.css">
     <script src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
     {{ Header.JS|raw }}
     <title>{{ Config.PageTitle }}</title>
@@ -26,10 +28,6 @@
 
     <div id="vue-app">
       {% include 'common/navbar-top.html.twig' %}
-
-      <login-component>
-      </login-component>
-
       <main>
         <div class="page"
           v-bind:class="{'pl-0': user.loggedIn === false}">
@@ -38,7 +36,7 @@
             <div class="page-header-wrapper"
               v-if="user.loggedIn">
               <div class="page-header">
-                {% include 'body-header.html.twig' %}
+                {% include 'common/breadcrumbs-container.html.twig' %}
               </div>
               <div class="page-topbar">
                 {% include 'body-headingbar.html.twig' %}
@@ -48,6 +46,7 @@
               </div>
             </div>
             <div class="page-content pt-3">
+              {% include 'views/user/login.html.twig' %}
               {% include 'common/content-container.html.twig' %}
             </div>
           </div>
@@ -63,10 +62,10 @@
     <script src="/script/plotly-1.54.1.min.js"></script>{% if Page.Scripts.StarRating == true %}
     <script src="/script/rater.min.js"></script>{% endif %}
 
-    <script src="/script/components/login-components.js"></script>
+    <script src="/script/components/vue-components.js"></script>
     <script src="/script/vue.js"></script>
 
-    <script>
+    <script type="module">
 
       function delay(callback, ms) {
         var timer = 0;

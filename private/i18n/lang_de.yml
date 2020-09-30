@@ -11,6 +11,7 @@ breadcrumb:
     home: 'Meine Kochbücher'
   home: 'Startseite'
   newRecipe: 'Neues Rezept'
+  random: 'Zufällige Rezepte'
   recipes: 'Rezepte'
 
 common:

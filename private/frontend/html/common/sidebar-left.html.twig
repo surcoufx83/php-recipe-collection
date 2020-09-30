@@ -1,70 +1,55 @@
         <div class="nav-sidebar" v-if="user.loggedIn">
           <div class="nav-sidebar-inner-scroll">
-            <div class="nav-sidebar-header">
-              <a href="{{ Controller.getLink('private:home') }}">
-                <img class="avatar avatar-40" src="{{ Controller.User().getAvatarUrl() }}" />
-                <div class="nav-sidebar-hideable">{{ Controller.User().getFirstname() }}</div>
-              </a>
-            </div>
             <ul class="nav-sidebar-level1">
-              <li{% if Page.Current == 'private:home' %} class="active"{% endif %}>
-                <a href="{{ Controller.getLink('private:home') }}">
-                  {{ Config.Icons.Home('fa-fw mr-2')|raw }} {{ Controller.l('page_home_title') }}
-                </a>
-              </li>
-              <li{% if Page.Current == 'recipe:new' %} class="active"{% endif %}>
-                <a href="{{ Controller.getLink('recipe:new') }}">
-                  {{ Config.Icons.Add('fa-fw mr-2')|raw }} {{ Controller.l('page_createRecipe') }}
-                </a>
-              </li>
-              <li{% if Page.Current == 'private:books' %} class="active"{% endif %}>
-                <a href="{{ Controller.getLink('private:books') }}">
-                  {{ Config.Icons.Books('fa-fw mr-2')|raw }} {{ Controller.l('page_books_allbooks_title') }}
-                </a>
-              </li>
-              <li{% if Page.Current == 'private:recipes' %} class="active"{% endif %}>
-                <a href="{{ Controller.getLink('private:recipes') }}">
-                  {{ Config.Icons.Copy('fa-fw mr-2')|raw }} {{ Controller.l('page_myrecipes_title') }}
-                </a>
-              </li>
-              <li{% if Page.Current == 'private:search' %} class="active"{% endif %}>
-                <a href="{{ Controller.getLink('private:search') }}">
-                  {{ Config.Icons.Search('fa-fw mr-2')|raw }} {{ Controller.l('page_search_sidebar_title') }}
-                </a>
-              </li>
               <li>
-                <a href="{{ Controller.getLink('private:random') }}">
-                  {{ Config.Icons.Random('fa-fw mr-2')|raw }} {{ Controller.l('page_random') }}
-                </a>
+                <router-link :to="{ name: 'home'}">
+                  {{ Config.Icons.Home('fa-fw mr-2')|raw }} {{ Controller.l('page_home_title') }}
+                </router-link>
               </li>
               <li
-                v-if="user.isAdmin"
-                {% if Page.Current == 'admin:main' %} class="active"{% endif %}>
-                <a href="{{ Controller.getLink('admin:main') }}">
-                {{ Config.Icons.Settings('fa-fw mr-2')|raw }} {{ Controller.l('page_admin_title') }}
-                </a>
-                {% if Page.Current == 'admin:main' %}
-                <ul class="nav-sidebar-level2">
-                  <li{% if Page.CurrentSub == 'admin:main' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('admin:main') }}">Dashboard</a>
-                  </li>
-                  <li{% if Page.CurrentSub == 'admin:cronjobs' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('admin:cronjobs') }}">Cronjobs</a>
-                  </li>
-                  <li{% if Page.CurrentSub == 'admin:settings' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('admin:settings') }}">Konfiguration</a>
-                  </li>
-                  <li{% if Page.CurrentSub == 'admin:translation' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('admin:translation') }}">Übersetzung</a>
-                  </li>
-                  <li{% if Page.CurrentSub == 'admin:logs' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('admin:logs') }}">Server-Logs</a>
-                  </li>
-                <li{% if Page.CurrentSub == 'admin:users' %} class="active"{% endif %}>
-                    <a href="{{ Controller.getLink('admin:users') }}">User</a>
-                  </li>
+                v-if="$route.matched.some(({ name }) => name === 'recipe')">
+                <router-link :to="{ name: 'recipe', params: { id: page.currentRecipe.id, name: page.currentRecipe.title }}">
+                  {{ Config.Icons.Meal('fa-fw mr-2')|raw }} ${ page.currentRecipe.title }
+                </router-link>
+                <ul class="nav-sidebar-level2"
+                  v-if="page.currentRecipe.owner === user.id">
+                  <li><router-link :to="{ name: 'editRecipe', params: { id: page.currentRecipe.id, name: page.currentRecipe.title }}">
+                    {{ Config.Icons.Meal('fa-fw mr-2')|raw }} ${ page.currentRecipe.title }
+                  </router-link></li>
                 </ul>
-                {% endif %}
+              </li>
+              <li>
+                <router-link :to="{ name: 'newRecipe'}">
+                  {{ Config.Icons.Add('fa-fw mr-2')|raw }} {{ Controller.l('page_createRecipe') }}
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'search'}">
+                  {{ Config.Icons.Search('fa-fw mr-2')|raw }} {{ Controller.l('page_search_sidebar_title') }}
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'recipes'}">
+                  {{ Config.Icons.Copy('fa-fw mr-2')|raw }} {{ Controller.l('page_myrecipes_title') }}
+                </router-link>
+              </li>
+              <li>
+                <router-link :to="{ name: 'random'}">
+                  {{ Config.Icons.Random('fa-fw mr-2')|raw }} {{ Controller.l('page_random') }}
+                </router-link>
+              </li>
+              <li
+                v-if="user.isAdmin">
+                <router-link :to="{ name: 'admin'}">
+                  {{ Config.Icons.Settings('fa-fw mr-2')|raw }} {{ Controller.l('page_admin_title') }}
+                </router-link>
+                <ul class="nav-sidebar-level2"
+                  v-if="$route.matched.some(({ name }) => name === 'admin')">
+                  <li><router-link :to="{ name: 'cronjobs'}">{{ Config.Icons.Cronjob('fa-fw mr-2')|raw }} Cronjobs</router-link></li>
+                  <li><router-link :to="{ name: 'translations'}">{{ Config.Icons.Language('fa-fw mr-2')|raw }} Übersetzung</router-link></li>
+                  <li><router-link :to="{ name: 'logs'}">{{ Config.Icons.Logs('fa-fw mr-2')|raw }} Server-Logs</router-link></li>
+                  <li><router-link :to="{ name: 'users'}">{{ Config.Icons.Users('fa-fw mr-2')|raw }} User</router-link></li>
+                </ul>
               </li>
               <a class="sidebar-toggle-nav" role="button" type="button" href="#">
                 {{ Config.Icons.DoubleAngleRight.getIcon('fa-fw mr-2 sidebar-toggle-icon-open')|raw }}

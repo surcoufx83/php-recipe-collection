@@ -44,6 +44,7 @@ final class Config implements ConfigInterface {
                                         '127.0.0.1',
                                        ],
       'PasswordCookieName'          => 'kbpasstoken',
+      'PasswordLoginEnabled'        => false,
       'PublicContact'               => 'Elias und Stefan',
       'PublicSignature'             => 'Kochbuch-Team',
       'PublicUrl'                   => 'kochbuch.mogul.network',

@@ -12,12 +12,16 @@ class Route implements RouteInterface {
 
   private static $template = 'dummy';
 
-  static function addBreadcrumb(string $Url, string $LinkText) : void {
-    global $OUT;
-    $OUT['Page']['Breadcrumbs'][] = array(
-      'text' => $LinkText,
-      'url' => $Url,
-    );
+  static function addBreadcrumb(array &$response, string $pageTarget, string $linkText) : void {
+    $response = array_merge_recursive($response, [
+      'page' => [
+        'contentData' => [
+          'breadcrumbs' => [
+            [ 'target' => $pageTarget, 'title' => $linkText]
+          ]
+        ]
+      ]
+    ]);
   }
 
   static function addButton(string $Url, string $LinkText, ?string $btnClass = 'btn-outline-blue') : void {

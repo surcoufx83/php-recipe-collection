@@ -313,7 +313,7 @@ div.page {
           padding: 0.4rem 0.7rem 0.4rem 2.5rem; }
       div.page div.nav-sidebar ul li {
         white-space: nowrap; }
-        div.page div.nav-sidebar ul li.active {
+        div.page div.nav-sidebar ul li a.router-link-active {
           background-color: rgba(0, 0, 0, 0.05);
           box-shadow: inset 4px 0 0 #343a40; }
         div.page div.nav-sidebar ul li a {
