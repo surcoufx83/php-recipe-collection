@@ -7,7 +7,7 @@ use Surcouf\Cookbook\DbObjectInterface;
 if (!defined('CORE2'))
   exit;
 
-class CookingStep implements CookingStepInterface, DbObjectInterface {
+class CookingStep implements CookingStepInterface, DbObjectInterface, \JsonSerializable {
 
   protected $step_id,
             $recipe_id,
@@ -86,6 +86,20 @@ class CookingStep implements CookingStepInterface, DbObjectInterface {
 
   public function getTitle() : string {
     return $this->step_title;
+  }
+
+  public function jsonSerialize() {
+    return [
+      'index' => $this->step_no,
+      'name' => $this->step_title,
+      'userContent' => $this->step_data,
+      'timeConsumed' => [
+        'cooking' => ($this->step_time_cooking == -1 ? null : $this->step_time_cooking),
+        'preparing' => ($this->step_time_preparation == -1 ? null : $this->step_time_preparation),
+        'rest' => ($this->step_time_chill == -1 ? null : $this->step_time_chill),
+        'unit' => 'minutes',
+      ]
+    ];
   }
 
 }

@@ -9,7 +9,7 @@ use Surcouf\Cookbook\Recipe\Ingredients\Units\UnitInterface;
 if (!defined('CORE2'))
   exit;
 
-class Ingredient implements IngredientInterface, DbObjectInterface {
+class Ingredient implements IngredientInterface, DbObjectInterface, \JsonSerializable {
 
   protected $ingredient_id,
             $recipe_id,
@@ -65,6 +65,16 @@ class Ingredient implements IngredientInterface, DbObjectInterface {
 
   public function getUnitId() : ?int {
     return $this->unit_id;
+  }
+
+  public function jsonSerialize() {
+    return [
+      'id' => $this->ingredient_id,
+      'unitId' => $this->unit_id,
+      'unit' => (!is_null($this->unit_id) ? $this->getUnit() : null),
+      'quantity' => $this->ingredient_quantity,
+      'description' => $this->ingredient_description,
+    ];
   }
 
 }

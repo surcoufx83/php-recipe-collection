@@ -11,7 +11,7 @@ use Surcouf\Cookbook\User\UserInterface;
 if (!defined('CORE2'))
   exit;
 
-class Rating implements RatingInterface, DbObjectInterface {
+class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
 
   protected $entry_id,
             $user_id,
@@ -103,6 +103,19 @@ class Rating implements RatingInterface, DbObjectInterface {
 
   public function hasVoted() : bool {
     return !is_null($this->entry_vote);
+  }
+
+  public function jsonSerialize() {
+    return [
+      'id' => $this->entry_id,
+      'userId' => $this->user_id,
+      'user' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : null),
+      'time' => $this->entry_datetime->format(DateTime::ISO8601),
+      'comment' => $this->entry_comment,
+      'cooked' => $this->entry_cooked,
+      'voting' => $this->entry_vote,
+      'rating' => $this->entry_rate,
+    ];
   }
 
 }

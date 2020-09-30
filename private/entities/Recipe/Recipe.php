@@ -27,7 +27,7 @@ use Surcouf\Cookbook\User\UserInterface;
 if (!defined('CORE2'))
   exit;
 
-class Recipe implements RecipeInterface, DbObjectInterface {
+class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
 
   protected $recipe_id,
             $user_id,
@@ -304,6 +304,47 @@ class Recipe implements RecipeInterface, DbObjectInterface {
 
   public function isPublished() : bool {
     return $this->recipe_public;
+  }
+
+  public function jsonSerialize() {
+    global $Controller;
+    return [
+      'id' => $this->recipe_id,
+      'name' => $this->recipe_name,
+      'created' => $this->recipe_created->format(DateTime::ISO8601),
+      'description' => $this->recipe_description,
+      'eaterCount' => $this->recipe_eater,
+      'ownerId' => $this->user_id,
+      'ownerName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : ''),
+      'published' => ($this->recipe_public ? $this->recipe_published->format(DateTime::ISO8601) : null),
+      'source' => [
+        'description' => $this->recipe_source_desc,
+        'url' => $this->recipe_source_url,
+      ],
+      'pictures' => $this->pictures,
+      'preparation' => [
+        'ingredients' => $this->ingredients,
+        'steps' => $this->steps,
+        'timeConsumed' => [
+          'cooking' => $this->timecooking,
+          'preparing' => $this->timepreparation,
+          'rest' => $this->timerest,
+          'unit' => 'minutes',
+        ]
+      ],
+      'socials' => [
+        'cookedCounter' => $this->countcooked,
+        'ratedCounter' => $this->countrated,
+        'ratedSum' => $this->sumrated,
+        'viewCounter' => $this->countviewed,
+        'votedCounter' => $this->countvoted,
+        'votedSum' => $this->sumvoted,
+      ],
+      'tags' => [
+        'items' => $this->tags,
+        'votes' => $this->tagvotes,
+      ]
+    ];
   }
 
   public function hasPictures() : bool {
