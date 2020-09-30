@@ -1,21 +1,16 @@
 
     <header class="navbar sticky-top navbar-expand navbar-dark bg-dark">
-      <a class="navbar-brand mr-0 mr-md-2" href="/">
-        {{ Config.PageHeader }}
-      </a>
-      <div>
+      <a class="navbar-brand mr-0 mr-md-2" href="/">{{ Config.PageHeader }}</a>
+      <div
+        v-if="user.loggedIn === false && config.maintenanceEnabled === false">
         <ul class="navbar-nav flex-row">
-          {% if Controller.isAuthenticated() == false %}
-            {% if Config.MaintenanceMode == false %}
           <li class="nav-item text-uppercase">
             <a class="nav-link" href="/login">{{ Controller.l('navigation_topbar_user_login') }}</a>
           </li>
-            {% endif %}
-          {% endif %}
         </ul>
       </div>
-      {% if Controller.isAuthenticated() == true %}
-      <ul class="navbar-nav ml-md-auto d-none d-md-flex">
+      <ul class="navbar-nav ml-md-auto d-none d-md-flex"
+        v-if="user.loggedIn">
         <li class="nav-item d-none d-md-inline-block mr-5">
           <input class="form-control form-control-sm mt-2 bg-dark text-light border-top-0 border-left-0 border-right-0 rounded-0 border-light"
             type="search" placeholder="{{ Controller.l('navigation_topbar_search_placeholder') }}" aria-label="{{ Controller.l('navigation_topbar_search_placeholder') }}">
@@ -32,5 +27,4 @@
           </div>
         </li>
       </ul>
-      {% endif %}
     </header>
