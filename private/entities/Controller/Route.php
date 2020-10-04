@@ -4,6 +4,7 @@ namespace Surcouf\Cookbook\Controller;
 
 use Surcouf\Cookbook\Helper\UiHelper\CarouselHelper;
 use Surcouf\Cookbook\Helper\UiHelper\GalleryHelper;
+use Surcouf\Cookbook\Recipe\RecipeInterface;
 
 if (!defined('CORE2'))
   exit;
@@ -12,69 +13,17 @@ class Route implements RouteInterface {
 
   private static $template = 'dummy';
 
-  static function addBreadcrumb(array &$response, string $pageTarget, string $linkText) : void {
+  static function addBreadcrumb(array &$response, string $pageTarget, string $linkText, ?array $params = []) : void {
     $response = array_merge_recursive($response, [
-      'page' => [
-        'contentData' => [
+      'page' => ['contentData' => [
           'breadcrumbs' => [
-            [ 'target' => $pageTarget, 'title' => $linkText]
+            [ 'target' => $pageTarget, 'title' => $linkText, 'params' => $params]
           ]
-        ]
-      ]
-    ]);
+      ]]]);
   }
 
-  static function addButton(string $Url, string $LinkText, ?string $btnClass = 'btn-outline-blue') : void {
-    global $OUT;
-    $OUT['Page']['Actions'][] = array(
-      'class' => $btnClass,
-      'text' => $LinkText,
-      'url' => $Url,
-    );
-  }
-
-  static function addButtonScript(string $Id, string $LinkText, ?string $btnClass = 'btn-outline-blue') : void {
-    global $OUT;
-    $OUT['Page']['Actions'][] = array(
-      'class' => $btnClass,
-      'text' => $LinkText,
-      'id' => $Id,
-    );
-  }
-
-  static function addCarousel(array $carouselData) : void {
-    global $OUT;
-    $OUT['Page']['Carousel'] = CarouselHelper::render($carouselData);
-  }
-
-  static function addGallery(array $galleryData) : void {
-    global $OUT;
-    $OUT['Page']['Gallery'] = GalleryHelper::render($galleryData);
-  }
-
-  static function addScript(string $scriptName) : void {
-    global $OUT;
-    $OUT['Page']['Scripts']['Custom'][] = $scriptName;
-  }
-
-  static function addRatingScript() : void {
-    global $OUT;
-    $OUT['Page']['Scripts']['StarRating'] = true;
-  }
-
-  static function addToDictionary(string $key, $data) : void {
-    global $OUT;
-    $OUT[$key] = $data;
-  }
-
-  static function addToPage(string $key, $data) : void {
-    global $OUT;
-    $OUT['Page'][$key] = $data;
-  }
-
-  static function addValidationScript() : void {
-    global $OUT;
-    $OUT['Page']['Scripts']['FormValidator'] = true;
+  static function addToDictionary(array &$response, array $dataToAdd) : void {
+    $response = array_merge_recursive($response, $dataToAdd);
   }
 
   static function createOutput(array &$response) : bool {
@@ -84,25 +33,32 @@ class Route implements RouteInterface {
     return self::render(self::$template, $response);
   }
 
-  static function render(string $templateFile, array &$response) : bool {
-    global $OUT, $twig;
-    $OUT['Content'] = $twig->render(sprintf('views/%s.html.twig', $templateFile), $OUT);
-    return true;
+  static function forwardResponse(array &$response, string $pageTarget, ?array $params = []) : void {
+    $response = array_merge_recursive($response, [
+      'forward' => [
+        'route' => $pageTarget,
+        'params' => $params,
+        ]]);
   }
 
-  static function setPage(string $page) : void {
-    global $OUT;
-    $OUT['Page']['Current'] = $page;
+  static function forwardExternalResponse(array &$response, string $url) : void {
+    $response = array_merge_recursive($response, [
+      'forward' => [
+        'ext' => true,
+        'extUrl' => $url,
+        ]]);
   }
 
-  static function setSubPage(string $subpage) : void {
-    global $OUT;
-    $OUT['Page']['CurrentSub'] = $subpage;
+  static function setDescription(array &$response, string $newDescription, ?array $arguments = null) : void {
+    $response = \array_merge_recursive($response, ['page' => ['contentData' => [
+                  'titleDescription' => (is_null($arguments) ? $newDescription : vsprintf($newDescription, $arguments))
+                ]]]);
   }
 
-  static function setTitle(string $newTitle) : void {
-    global $OUT;
-    $OUT['Page']['Heading1'] = $newTitle;
+  static function setTitle(array &$response, string $newTitle, ?array $arguments = null) : void {
+    $response = \array_merge_recursive($response, ['page' => ['contentData' => [
+                  'title' => (is_null($arguments) ? $newTitle : vsprintf($newTitle, $arguments))
+                ]]]);
   }
 
 }

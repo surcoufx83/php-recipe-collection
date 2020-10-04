@@ -68,7 +68,10 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
       $this->user_registration_completed = (!is_null($this->user_registration_completed) ? new DateTime($this->user_registration_completed) : null);
       $this->user_adconsent = (!is_null($this->user_adconsent) ? new DateTime($this->user_adconsent) : false);
     }
-    $this->initials = strtoupper(substr($this->user_firstname, 0, 1).substr($this->user_lastname, 0, 1));
+    if ($this->user_firstname != '' || $this->user_lastname != '')
+      $this->initials = strtoupper(substr($this->user_firstname, 0, 1).substr($this->user_lastname, 0, 1));
+    else
+      $this->initials = strtoupper(substr($this->getUsername(), 0, 1));
     if (is_null($this->user_hash))
       $this->calculateHash();
     if (is_null($this->user_avatar))

@@ -1,4 +1,13 @@
               <div class="container-fluid container-max1280"
                 v-if="user.loggedIn">
-                <router-view class="view one" name="Home"></router-view>
+                <div class="row mb-lg-2">
+                  <div class="col-12 mb-3">
+                    <h3 class="font-weight-bold">
+                      ${ page.contentData.title }
+                    </h3>
+                    <p class="text-muted mb-0"
+                      v-if="page.contentData.titleDescription !== ''">${ page.contentData.titleDescription }</p>
+                  </div>
+                </div>
+                <router-view :page="page" :recipe="page.currentRecipe" />
               </div>

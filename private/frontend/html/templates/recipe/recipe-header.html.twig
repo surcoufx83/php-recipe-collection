@@ -1,0 +1,67 @@
+          <div class="mt-3 mt-lg-0">
+            <h4>{{Controller.l('recipe_about_header')}}</h4>
+            <p class="mb-1">
+              <span v-if="recipe.published === false">{{ Controller.l('recipe_about_unpublished') }}</span>
+              <span v-if="recipe.published && recipe.ownerId !== false">{{ Controller.l('recipe_about_publication') }}</span>
+              <span v-if="recipe.published && recipe.ownerId === false">{{ Controller.l('recipe_about_publicationAnonymous') }}</span>
+              <span v-if="recipe.socials.cookedCounter == 0">{{ Controller.l('recipe_about_notCooked') }}</span>
+              <span v-if="recipe.socials.cookedCounter > 0 && recipe.socials.votedCounter === 0">{{ Controller.l('recipe_about_cooked') }}</span>
+              <span v-if="recipe.socials.cookedCounter > 0 && recipe.socials.votedCounter > 0">{{ Controller.l('recipe_about_cookedAndRated') }}</span>
+            </p>
+            <table class="table table-borderless table-sm">
+              <tr>
+                <th class="pl-0">{{ Controller.l('recipe_about_source_header') }}:</th>
+                <td class="w-100">
+                  <span v-if="recipe.source.description === ''">{{ Controller.l('recipe_about_source_noSource') }}</span>
+                  <span v-if="recipe.source.description !== '' && recipe.source.url === ''" v-text="recipe.source.description"></span>
+                  <span v-if="recipe.source.description !== '' && recipe.source.url !== ''">
+                    <a :href="recipe.source.url" target="_blank">${recipe.source.description}</a>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th class="pl-0">{{ Controller.l('recipe_about_voting_header') }}:</th>
+                <td>
+                  <span v-if="recipe.socials.votedCounter === 0">{{ Controller.l('recipe_about_voting_notVoted') }}</span>
+                  <span v-if="recipe.socials.votedCounter !== 0">
+                    ${ recipe.socials.votedAvg1 }<fa-icon icon="heart" class="fs-80 mx-1 text-contrast"></fa-icon>
+                    {{ Controller.l('recipe_about_voting_voted') }}.
+                    <span v-if="page.my.lastVote === false">{{ Controller.l('recipe_about_voting_my_notYetVoted', Config.RecipeRatingClearance().d) }}.</span>
+                    <span v-if="page.my.lastVote">
+                      {{ Controller.l('recipe_about_voting_my_voted') }}
+                      ${ page.my.lastVote.voting }<fa-icon icon="heart" class="fs-80 ml-1 text-contrast"></fa-icon>.
+                    </span>
+                  </span>
+                  <span v-if="page.my.visitCount > 1">
+                    <span v-if="page.my.voteCount !== 0">{{ Controller.l('recipe_about_voting_my_voteAndVisitCount') }}</span>
+                    <span v-if="page.my.voteCount === 0">{{ Controller.l('recipe_about_voting_my_visitCount') }}</span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th class="pl-0"></th>
+                <td>
+
+                </td>
+              </tr>
+            </table>
+            {% if Recipe.getVotedCount() > 0 %}
+            <p class="mb-1">
+              <span class="font-weight-bold mr-3">Bewertung:</span>
+              <span>{% for i in 1..5 %}{% if Recipe.getVoting() >= i %}
+                {{ Config.Icons.Star('text-success')|raw }}{% else %}
+                {{ Config.Icons.Star('text-blue')|raw }}{% endif %}{% endfor %}
+                <span class="ml-3">{{ Recipe.getVotingStr() }} bei {{ Recipe.getVotedCountStr() }} Bewertungen</span>
+              </span>
+            </p>{% endif %}{% if Recipe.getRatedCount() > 0 %}
+            <p class="mb-1">
+              <span class="font-weight-bold mr-3">Schwierigkeit:</span>
+              <span>{{ Recipe.getRatingStr() }}</span>
+            </p>{% endif %}{% if Recipe.getSourceDescription() != '' or Recipe.getSourceUrl() != '' %}
+            <p class="mb-1">
+              <span class="font-weight-bold mr-3">{{ Controller.l('recipe_about_source') }}:</span> {% if Recipe.getSourceDescription() != '' and Recipe.getSourceUrl() != '' %}
+              <a target="_blank" href="{{ Recipe.getSourceUrl() }}">{{ Recipe.getSourceDescription() }}</a>{% elseif Recipe.getSourceDescription() != '' %}
+              {{ Recipe.getSourceDescription() }}{% else %}
+              <a target="_blank" href="{{ Recipe.getSourceUrl() }}">{{ Recipe.getSourceUrl() }}</a>{% endif %}
+            </p>{% endif %}
+          </div>

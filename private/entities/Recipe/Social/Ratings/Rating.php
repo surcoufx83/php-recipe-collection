@@ -106,6 +106,7 @@ class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
   }
 
   public function jsonSerialize() {
+    global $Controller;
     return [
       'id' => $this->entry_id,
       'userId' => $this->user_id,
@@ -115,6 +116,9 @@ class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
       'cooked' => $this->entry_cooked,
       'voting' => $this->entry_vote,
       'rating' => $this->entry_rate,
+      'formatted' => [
+        'time' => $this->entry_datetime->format($Controller->Config()->DefaultDateFormatUi()),
+      ]
     ];
   }
 

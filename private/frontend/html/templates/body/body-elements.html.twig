@@ -1,0 +1,76 @@
+
+    <template id="sidebar-template">
+      <div>
+        <b-sidebar id="sidebar-main"
+          :page="page"
+          bg-variant="light-blue"
+          @change="toggleSidebar"
+          shadow visible
+          no-header
+          :no-close-on-route-change="page.sidebar.initialVisible"
+          no-close-on-esc>
+          <ul class="nav-sidebar-level1">
+            <sidebar-ul1-li
+              v-for="route in page.routes.sidebar"
+              v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
+              :to="route.to"
+              :params="route.to != 'recipe' ? { } : { id: page.currentRecipe.id, name: page.currentRecipe.name}"
+              :icon="route.icon"
+              :text="route.to != 'recipe' ? route.text : page.currentRecipe.name"
+              :children="route.children"
+              :exact="route.exact"
+              ></sidebar-ul1-li>
+          </ul>
+          <template slot="footer">
+            <div v-b-toggle.sidebar-main class="d-flex bg-dark text-gray align-items-center px-3 py-2 fs-80">
+              <span class="mr-auto">
+                <b-icon icon="chevron-double-left" class="text-100"></b-icon>
+                {{ Controller.l('navigation_sidebar_close') }}
+              </span>
+            </div>
+          </template>
+        </b-sidebar>
+      </div>
+    </template>
+
+    <template id="sidebar-ul1-li-template">
+      <li>
+        <router-link :to="{ name: to, params: params }">
+          <fa-icon :fas="fas" :far="far" :icon="icon"></fa-icon>
+          ${text}
+        </router-link>
+        <ul class="nav-sidebar-level2"
+          v-if="children && children.length > 0 && ($route.name === to || ($route.matched.length > 0 && $route.matched[0].name === to))">
+          <sidebar-ul2-li
+            v-for="route in children"
+            v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
+            :to="route.to"
+            :params="route.to != 'recipe' ? { } : { id: page.currentRecipe.id, name: page.currentRecipe.name}"
+            :icon="route.icon"
+            :text="route.to != 'recipe' ? route.text : page.currentRecipe.name"
+            :exact="route.exact"
+            ></sidebar-ul2-li>
+        </ul>
+      </li>
+    </template>
+
+    <template id="sidebar-ul2-li-template">
+      <li>
+        <router-link :to="{ name: to, params: params }">
+          <fa-icon :fas="fas" :far="far" :icon="icon"></fa-icon>
+          ${text}
+        </router-link>
+      </li>
+    </template>
+
+    <template id="home-template">
+      <h1>Home</h1>
+    </template>
+
+    <template id="fa-icon-template">
+      <i :class="[
+          {fas: fas && !far},
+          {far: far || !fas},
+          icon ? 'fa-' + icon : 'fa-question'
+        ]"></i>
+    </template>

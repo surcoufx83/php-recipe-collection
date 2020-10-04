@@ -50,6 +50,14 @@ final class RoutingManager {
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RandomRecipePageRoute::class,
       'method' => ERequestMethod::HTTP_GET,
     ],
+    '/api/page-data\?/recipe/(?<id>\d+)-(?<name>.+)' => [ // recipe page
+      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipePageRoute::class,
+      'method' => ERequestMethod::HTTP_GET,
+      'createObject' => [
+        'idkey' => 'id',
+        'method' => 'Recipe',
+      ],
+    ],
     '/api/page-data\?(?<page>.*)' => [ // common data request
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\PageData::class,
       'method' => ERequestMethod::HTTP_GET,

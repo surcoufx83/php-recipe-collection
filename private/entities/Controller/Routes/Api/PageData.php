@@ -13,6 +13,8 @@ class PageData extends Route implements RouteInterface {
   static function createOutput(array &$response) : bool {
     global $Controller;
     $response = $Controller->Config()->getResponseArray(1);
+    parent::addBreadcrumb($response, 'home', $Controller->l('breadcrumb_home'));
+    parent::setTitle($response,  'Page not found');
     $page = 'createOutput_'.str_replace('/', '_', $Controller->Dispatcher()->getMatches()['page']);
     self::$page($response);
     return true;

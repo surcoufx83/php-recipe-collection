@@ -1,0 +1,30 @@
+
+    <template id="recipe-template">
+      <div v-if="recipe.id">
+        <b-row>
+          <b-col class="col-12 col-md-5 order-0 order-md-1">
+            {% include 'templates/recipe/recipe-gallery.html.twig' %}
+          </b-col>
+          <b-col class="col-12 col-md-7 order-1 order-md-0">
+            {% include 'templates/recipe/recipe-header.html.twig' %}
+          </b-col>
+        </b-row>
+      </div>
+    </template>
+
+      <div class="d-none">
+        <div class="row">
+          <div class="col-12 col-lg-5 order-0 order-lg-1">
+            {% include 'views/recipes/recipe-1b-rating.html.twig' %}
+            {% include 'views/recipes/recipe-1c-options.html.twig' %}
+            {% include 'views/recipes/recipe-1d-admin.html.twig' %}
+          </div>
+          <div class="col-12 col-lg-7 order-1 order-lg-0">
+            {% include 'views/recipes/recipe-2a-header.html.twig' %}
+            {% include 'views/recipes/recipe-2b-ingredients.html.twig' %}
+            {% include 'views/recipes/recipe-3a-steps.html.twig' %}
+          </div>
+        </div>
+        {% include 'views/recipes/recipe-4a-modal.html.twig' %}
+        {% include 'views/recipes/recipe-5a-footer.html.twig' %}
+      </div>

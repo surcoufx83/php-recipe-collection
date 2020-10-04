@@ -1,15 +1,18 @@
               <div class="container-fluid container-max1280 breadcrumbs"
                 v-if="user.loggedIn">
                 <div class="header-container header-container-border fs-80">
-                  <button name="button" type="button" class="header-toggle-nav"><span class="sr-only">Open sidebar</span>
+                  <b-button v-b-toggle.sidebar-main
+                    class="header-toggle-nav" v-if="page.sidebar.visible !== true">
+                    <span class="sr-only">Toggle sidebar</span>
                     {{ Config.Icons.Menu()|raw }}
-                  </button>
+                  </b-button>
                   <div class="breadcrumbs-items">
                     <ul class="breadcrumbs-list">
                       <breadcrumb
                         v-for="bc in page.contentData.breadcrumbs"
                         v-bind:target="bc.target"
                         v-bind:title="bc.title"
+                        v-bind:params="bc.params"
                       ></breadcrumb>
                     </ul>
                   </div>

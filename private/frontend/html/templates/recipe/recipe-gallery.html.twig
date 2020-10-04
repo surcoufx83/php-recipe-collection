@@ -1,0 +1,30 @@
+          <div id="gallery-anchor"
+            v-if="recipe.pictures.length !== 0">
+            <h5>{{Controller.l('recipe_gallery_header')}}</h5>
+            <b-container fluid>
+              <b-row>
+                <b-col class="p-1 col-6 col-lg-12" v-for="pic in recipe.pictures.slice(0, 1)">
+                  <b-aspect aspect="3:1">
+                    <b-img-lazy thumbnail fluid class="rounded of-cover" :src="pic.link"></b-img>
+                  </b-aspect>
+                </b-col>
+                <b-col class="p-1 col-6" v-for="pic in recipe.pictures.slice(1, 5)">
+                  <b-aspect aspect="16:9">
+                    <b-img-lazy thumbnail fluid class="rounded of-cover" :src="pic.link"></b-img>
+                  </b-aspect>
+                </b-col>
+              </b-row>
+            </b-container>
+          </div>
+
+          <div id="tags-anchor"
+            class="mt-1 mt-lg-2"
+            v-if="recipe.tags.items.length !== 0">
+            <h6 class="d-none d-lg-block">{{Controller.l('recipe_tags_header')}}</h6>
+            <btn-sm-blue
+              :outline="true"
+              :title="tag.name"
+              class="mr-1"
+              v-for="tag in recipe.tags.items">
+            </btn-sm-blue>
+          </div>

@@ -11,6 +11,7 @@
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="/style/bootstrap-4.5.2.min.css">
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.css" />
     <link rel="stylesheet" href="/style/ekko-lightbox-5.3.0.css">
     <link rel="stylesheet" href="/style/select2-4.0.0.min.css">
     <link rel="stylesheet" href="/style/fontawesome-all-5.14.0.min.css">
@@ -20,6 +21,7 @@
     <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
     {{ Header.JS|raw }}
     <title>{{ Config.PageTitle }}</title>
   </head>
@@ -30,8 +32,8 @@
       {% include 'common/navbar-top.html.twig' %}
       <main>
         <div class="page"
-          v-bind:class="{'pl-0': user.loggedIn === false}">
-          {% include 'common/sidebar-left.html.twig' %}
+          v-bind:class="{'pl-0': user.loggedIn === false, 'sidebar-visible': page.sidebar.visible}">
+          <sidebar :page="page" v-if="user.loggedIn"></sidebar>
           <div class="page-wrapper">
             <div class="page-header-wrapper"
               v-if="user.loggedIn">
@@ -39,10 +41,7 @@
                 {% include 'common/breadcrumbs-container.html.twig' %}
               </div>
               <div class="page-topbar">
-                {% include 'body-headingbar.html.twig' %}
-              </div>
-              <div class="page-topbar">
-                {% include 'body-topbar.html.twig' %}
+                {% include 'common/navbar-inpage.html.twig' %}
               </div>
             </div>
             <div class="page-content pt-3">
@@ -54,6 +53,11 @@
       </main>
 
     </div>
+    <div id="reactive-size-spy-sm" class="d-block"></div>
+    <div id="reactive-size-spy-lg" class="d-none d-lg-block"></div>
+
+    {% include 'templates/body/body-elements.html.twig' %}
+    {% include 'templates/recipe/recipe.html.twig' %}
 
     <script src="/script/jquery-3.5.1.min.js"></script>
     <script src="/script/bootstrap-4.5.2.bundle.min.js"></script>
@@ -63,6 +67,7 @@
     <script src="/script/rater.min.js"></script>{% endif %}
 
     <script src="/script/components/vue-components.js"></script>
+    <script src="/script/components/vue-router.js"></script>
     <script src="/script/vue.js"></script>
 
     <script type="module">

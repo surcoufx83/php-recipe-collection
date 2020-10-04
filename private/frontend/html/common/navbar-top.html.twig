@@ -1,6 +1,10 @@
 
     <header class="navbar sticky-top navbar-expand navbar-dark bg-dark">
       <a class="navbar-brand mr-0 mr-md-2" href="/">{{ Config.PageHeader }}</a>
+      <i class="fas fa-circle-notch text-light fa-spin"
+        v-if="page.loading !== false"></i>
+      <span class="small text-light"
+        v-if="page.loading === false && user.isAdmin">${ page.loadingTime}</span>
       <div
         v-if="user.loggedIn === false && config.maintenanceEnabled === false">
         <ul class="navbar-nav flex-row">
@@ -18,7 +22,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-uppercase" href="#" id="navbarDropdown"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img class="avatar avatar-18 mr-1" :src="user.avatar.url" /> ${ user.meta.un }
+            <b-avatar rounded :src="user.avatar.url" :text="user.meta.initials" :size="24" class="mr-1 bg-blue"></b-avatar> ${ user.meta.un }
           </a>
           <div class="dropdown-menu dropdown-menu-right small p-1" aria-labelledby="navbarDropdown">
             <router-link class="dropdown-item" :to="{ name: 'settings'}">{{ Controller.l('navigation_topbar_user_settings') }}</router-link>

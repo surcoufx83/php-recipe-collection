@@ -19,4 +19,5 @@ class OAuth2Conf {
   public const OATH_PROVIDER = '<Nextcloud hostname>';
   public const OATH_TOKENURL = 'https://<Nextcloud hostname>/apps/oauth2/api/v1/token';
   public const OATH_DATAURL = 'https://<Nextcloud hostname>/ocs/v1.php/cloud/user';
+  public const OATH_GROUPSURL = 'https://<Nextcloud hostname>/ocs/v1.php/cloud/users/%s/groups';
 }

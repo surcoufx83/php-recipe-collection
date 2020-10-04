@@ -6,6 +6,7 @@ use Surcouf\Cookbook\Controller\Route;
 use Surcouf\Cookbook\Controller\RouteInterface;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Helper\Formatter;
 use Surcouf\Cookbook\Recipe\Recipe;
 
 if (!defined('CORE2'))
@@ -21,12 +22,10 @@ class RandomRecipePageRoute extends Route implements RouteInterface {
           ->limit(1);
     $result = $Controller->select($query);
     if ($result && $result->num_rows == 1) {
-      $response = $Controller->Config()->getResponseArray(1);
+      $response = $Controller->Config()->getResponseArray(4);
       $recipe = $result->fetch_object(Recipe::class);
-      $recipe->loadComplete();
-      $response['page'] = [
-        'currentRecipe' => $recipe,
-      ];
+      parent::forwardResponse($response, 'recipe', ['id' => $recipe->getId(), 'name' => Formatter::nice_urlstring($recipe->getName())]);
+      return true;
     }
     else
       $response = $Controller->Config()->getResponseArray(3);

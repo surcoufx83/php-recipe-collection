@@ -88,6 +88,16 @@ final class Formatter implements FormatterInterface {
   }
 
   /**
+   * Formats an string for an url.
+   *
+   * @param string $value The value to be formatted.
+   * @return string    The formatted string.
+   */
+  public static function nice_urlstring(string $value) : string {
+    return str_replace('/', '-', str_replace(' ', '_', $value));
+  }
+
+  /**
    * Selects the singular or plural form depending on the numeric value and outputs it.
    * The numeric value can be optionally set in front or behind.
    *

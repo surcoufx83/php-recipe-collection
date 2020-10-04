@@ -27,6 +27,7 @@ final class LinkProvider {
           'redirect' => ISWEB ? $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/oauth2/callback' : null,
           'token' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_TOKENURL : null,
           'user' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_DATAURL : null,
+          'groups' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_GROUPSURL : null,
         ],
         'recipe' => [
           'remove' => '/admin/recipe/remove/%d/%s',

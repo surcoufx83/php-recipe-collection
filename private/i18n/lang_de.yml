@@ -12,7 +12,8 @@ breadcrumb:
   home: 'Startseite'
   newRecipe: 'Neues Rezept'
   random: 'Zufällige Rezepte'
-  recipes: 'Rezepte'
+  recipes:
+    all: 'Rezepte'
 
 common:
   duration:
@@ -126,6 +127,8 @@ newRecipe:
     title: 'Rezept speichern'
 
 navigation:
+  sidebar:
+    close: 'Verkleinern'
   topbar:
     search:
       placeholder: 'Suche'
@@ -283,13 +286,27 @@ page:
 recipe:
   about:
     header: 'Über dieses Rezept'
-    cooked: 'Es wurde bisher %s mal nachgekocht.'
-    cookedAndRated: 'Es wurde bisher %s mal nachgekocht und mit %s Sternen bewertet.'
+    cooked: 'Es wurde bisher ${ recipe.socials.cookedCounter } mal nachgekocht.'
+    cookedAndRated: 'Es wurde bisher ${ recipe.socials.cookedCounter } mal nachgekocht und mit ${ recipe.socials.votedAvg1 } Sternen bewertet.'
     notCooked: 'Es wurde leider noch nicht nachgekocht.'
-    publication: 'Das Rezept wurde am %s von %s veröffentlicht.'
-    publicationAnonymous: 'Das Rezept wurde am %s veröffentlicht.'
-    unpublished: 'Das Rezept wurde am %s erstellt und bisher nicht für andere User veröffentlicht.'
-    source: 'Herkunft'
+    publication: 'Das Rezept wurde am ${ recipe.formatted.published } von ${ recipe.ownerName } veröffentlicht.'
+    publicationAnonymous: 'Das Rezept wurde am ${ recipe.formatted.published } veröffentlicht.'
+    unpublished: 'Das Rezept wurde am ${ recipe.formatted.created } erstellt und bisher nicht für andere User veröffentlicht.'
+    source:
+      header: 'Herkunft'
+      noSource: 'Keine Angaben gemacht'
+    title:
+      noUser: '%s'
+      withUser: '%s von %s'
+    voting:
+      header: 'Bewertungen'
+      notVoted: 'Bisher noch keine Bewertung erhalten.'
+      voted: ' bei ${ recipe.socials.votedCounter } abgegebenen Stimmen'
+      my:
+        notYetVoted: 'Du hast in den letzten %s Tagen keine Bewertung abgegeben'
+        voted: 'Du hast das Rezept zuletzt am ${ page.my.lastVote.formatted.time } bewertet mit '
+        voteAndVisitCount: 'Insgesamt hast du es dir ${ page.my.visitCount } mal angesehen und ${ page.my.voteCount } mal bewertet.'
+        visitCount: 'Insgesamt hast du es dir ${ page.my.visitCount } mal angesehen.'
   admin:
     header: 'Administration'
     author: 'Verfasst von %s'
@@ -350,6 +367,8 @@ recipe:
       times: '&times; gekocht'
     views:
       times: '&times; gesehen'
+  tags:
+    header: 'Schlagworte'
 
 response:
   badArgumentsException: 'Ungültige Argumente angegeben.'
@@ -386,3 +405,19 @@ sendmail:
         subject: 'Bitte klicke auf den folgenden Link: '
         linktitle: 'Anmeldung bestätigen'
       chapter5: 'Wir wünschen dir Alles Gute!'
+
+sidebar:
+  admin:
+    cronjobs: 'Cronjobs'
+    home: 'Administration'
+    logs: 'Logdateien'
+    translations: 'Übersetzung'
+    users: 'Benutzer'
+  home: 'Startseite'
+  recipe:
+    edit: 'Bearbeiten'
+    search: 'Suche'
+    random: 'Zufälliges Rezept'
+    write: 'Neues Rezept'
+  profile:
+    recipes: 'Meine Rezepte'

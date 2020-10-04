@@ -238,6 +238,12 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
   }
 
   public function getSourceDescription() : string {
+    if (is_null($this->recipe_source_desc) || $this->recipe_source_desc == '') {
+      if (is_null($this->recipe_source_url) || $this->recipe_source_url == '')
+        return '';
+      $pi = parse_url($this->recipe_source_url);
+      return $pi['host'];
+    }
     return $this->recipe_source_desc;
   }
 
@@ -314,12 +320,16 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
       'created' => $this->recipe_created->format(DateTime::ISO8601),
       'description' => $this->recipe_description,
       'eaterCount' => $this->recipe_eater,
-      'ownerId' => $this->user_id,
+      'ownerId' => (!is_null($this->user_id) ? $this->user_id : false),
       'ownerName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : ''),
-      'published' => ($this->recipe_public ? $this->recipe_published->format(DateTime::ISO8601) : null),
+      'published' => ($this->recipe_public ? $this->recipe_published->format(DateTime::ISO8601) : false),
       'source' => [
-        'description' => $this->recipe_source_desc,
-        'url' => $this->recipe_source_url,
+        'description' => $this->getSourceDescription(),
+        'url' => $this->getSourceUrl(),
+      ],
+      'formatted' => [
+        'created' => $this->recipe_created->format($Controller->Config()->DefaultDateFormatUi()),
+        'published' => ($this->recipe_public ? $this->recipe_published->format($Controller->Config()->DefaultDateFormatUi()) : ''),
       ],
       'pictures' => $this->pictures,
       'preparation' => [
@@ -339,6 +349,8 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
         'viewCounter' => $this->countviewed,
         'votedCounter' => $this->countvoted,
         'votedSum' => $this->sumvoted,
+        'votedAvg1' => ($this->countvoted > 0 ? Formatter::float_format($this->sumvoted / $this->countvoted, 1) : null),
+        'votedAvg0' => ($this->countvoted > 0 ? Formatter::float_format($this->sumvoted / $this->countvoted, 0) : null),
       ],
       'tags' => [
         'items' => $this->tags,
