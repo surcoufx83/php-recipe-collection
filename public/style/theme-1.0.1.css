@@ -73,6 +73,15 @@ h1, h2, h3 {
 .bg-light-muted {
   background-color: #D5D8D5; }
 
+.bg-contrast {
+  background-color: #1C77C3; }
+
+.bg-contrast-brighter {
+  background-color: #3B97E3; }
+
+.bg-contrast-darker {
+  background-color: #14588F; }
+
 .overflow-x-auto {
   overflow-x: auto; }
 
@@ -163,6 +172,18 @@ h1, h2, h3 {
 .w-90 {
   width: 90% !important; }
 
+.w-min-content {
+  width: min-content !important; }
+
+.w-75px {
+  width: 75px !important; }
+
+.w-100px {
+  width: 100px !important; }
+
+.w-200px {
+  width: 200px !important; }
+
 .h-10 {
   height: 10% !important; }
 
@@ -226,6 +247,11 @@ header.navbar {
 
 ul.list-group-sm li.list-group-item {
   padding: .2rem .8rem; }
+
+.alert-contrast {
+  color: #1C77C3;
+  background-color: #fff;
+  border-color: #1C77C3; }
 
 div.page {
   transition: padding-left 0.3s;

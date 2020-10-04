@@ -71,20 +71,45 @@ final class Formatter implements FormatterInterface {
    * Formats an integer specifying a number of minutes.
    *
    * @param int $value The value to be formatted.
+   * @param Boolean $useFractals default: true, True if 1/2 instead of .5
    * @return string    The formatted string.
    */
-  public static function min_format(int $minutes) : string {
+  public static function min_format(int $minutes, bool $useFractals = true) : string {
     global $Controller;
-    if ($minutes < 60)
+    $minutes = floatval($minutes);
+    if ($minutes < 30.0){
+      if ($minutes == 1)
+        return $Controller->l('common_duration_minute', $minutes);
       return $Controller->l('common_duration_minutes', $minutes);
-    if ($minutes < 1440) {
-      $hrs = floor(floatval($minutes) / 60.0 * 2.0) / 2.0;
-      $hrs = Formatter::float_format($hrs, $hrs - floor($hrs) == 0 ? 0 : 1);
-      return $Controller->l('common_duration_hours', $hrs);
     }
-    $days = floor(floatval($minutes) / 60.0 / 24.0 * 2.0) / 2.0;
-    $days = Formatter::float_format($days, $days - floor($days) == 0 ? 0 : 1);
-    return $Controller->l('common_duration_days', $days);
+    if ($minutes < 720.0) {
+      $halfhour = ceil($minutes / 60.0 * 2.0) / 2.0;
+      if ($useFractals) {
+        if ($halfhour == .5)
+          return $Controller->l('common_duration_hour', '&frac12;');
+        if ($halfhour == 1.0)
+          return $Controller->l('common_duration_hour', $halfhour);
+        if (floor($halfhour) != $halfhour)
+          return $Controller->l('common_duration_hours', floor($halfhour).'&frac12;');
+        return $Controller->l('common_duration_hours', floor($halfhour));
+      }
+      if ($halfhour == 1.0)
+        return $Controller->l('common_duration_hour', Formatter::float_format($halfhour, $halfhour - floor($halfhour) == 0 ? 0 : 1));
+      return $Controller->l('common_duration_hours', Formatter::float_format($halfhour, $halfhour - floor($halfhour) == 0 ? 0 : 1));
+    }
+    $halfdays = ceil($minutes / 1440.0 * 2.0) / 2.0;
+    if ($useFractals) {
+      if ($halfdays == .5)
+        return $Controller->l('common_duration_day', '&frac12;');
+      if ($halfdays == 1.0)
+        return $Controller->l('common_duration_day', $halfdays);
+      if (floor($halfdays) != $halfdays)
+        return $Controller->l('common_duration_days', floor($halfdays).'&frac12;');
+      return $Controller->l('common_duration_days', floor($halfdays));
+    }
+    if ($halfdays == 1.0)
+      return $Controller->l('common_duration_day', Formatter::float_format($halfdays, $halfdays - floor($halfdays) == 0 ? 0 : 1));
+    return $Controller->l('common_duration_days', Formatter::float_format($halfdays, $halfdays - floor($halfdays) == 0 ? 0 : 1));
   }
 
   /**

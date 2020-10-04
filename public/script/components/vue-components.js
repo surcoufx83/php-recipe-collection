@@ -43,6 +43,16 @@ Vue.component('fa-icon', {
   template: '#fa-icon-template'
 })
 
+Vue.component('recipe-ingredient', {
+  props: {
+    description: { type: String, required: true },
+    quantity: { type: Number, required: false },
+    unit: { type: Object, required: false }
+  },
+  delimiters: ['${', '}'],
+  template: '#recipe-ingredient-template'
+})
+
 Vue.component('sidebar', {
   props: ['page'],
   delimiters: ['${', '}'],
@@ -91,5 +101,50 @@ const Home = {
 const Recipe = {
   delimiters: ['${', '}'],
   props: ['recipe', 'page'],
-  template: '#recipe-template'
+  template: '#recipe-template',
+  computed: {
+    pbCookValue: function() {
+      return Math.floor(this.recipe.preparation.timeConsumed.cooking / this.recipe.preparation.timeConsumed.total * 100)
+    },
+    pbCookWidth: function() {
+      return 'width: ' + (this.pbCookValue == 0 ? 1 : this.pbCookValue - 1) + '%'
+    },
+    pbCookLabel: function() {
+      if (this.pbCookValue > 20)
+        return this.recipe.preparation.timeConsumed.formatted.cooking.timeStr
+      return ''
+    },
+    pbPrepValue: function() {
+      return Math.floor(this.recipe.preparation.timeConsumed.preparing / this.recipe.preparation.timeConsumed.total * 100)
+    },
+    pbPrepWidth: function() {
+      return 'width: ' + (this.pbPrepValue == 0 ? 1 : this.pbPrepValue - 1) + '%'
+    },
+    pbPrepLabel: function() {
+      if (this.pbPrepValue > 20)
+        return this.recipe.preparation.timeConsumed.formatted.preparing.timeStr
+      return ''
+    },
+    pbRestValue: function() {
+      return Math.floor(this.recipe.preparation.timeConsumed.rest / this.recipe.preparation.timeConsumed.total * 100)
+    },
+    pbRestWidth: function() {
+      return 'width: ' + (this.pbRestValue == 0 ? 1 : this.pbRestValue - 1) + '%'
+    },
+    pbRestLabel: function() {
+      if (this.pbRestValue > 20)
+        return this.recipe.preparation.timeConsumed.formatted.rest.timeStr
+      return ''
+    }
+  },
+  methods: {
+    onEaterCountChanged: function(event) {
+      for (key in this.recipe.preparation.ingredients) {
+          this.recipe.preparation.ingredients[key].quantityCalc =
+            this.recipe.preparation.ingredients[key].quantity /
+            this.recipe.eaterCount *
+            event
+      }
+    }
+  }
 }

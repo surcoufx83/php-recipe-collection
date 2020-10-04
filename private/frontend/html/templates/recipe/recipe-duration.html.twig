@@ -1,0 +1,54 @@
+          <div class="mt-3" id="duration-anchor"
+            v-if="recipe.preparation.timeConsumed.total > 0">
+            <h4>{{Controller.l('recipe_duration_header')}}</h4>
+            <p>
+              {{ Controller.l('recipe_duration_overallPrefix') }}
+              <strong class="mx-1" v-html="recipe.preparation.timeConsumed.formatted.total.valueStr"></strong>
+              {{ Controller.l('recipe_duration_overallSuffix') }}
+            </p>
+            <div class="progress bg-transparent rounded-0 mb-2">
+              <div class="progress-bar bg-contrast-lighter rounded mx-1" role="progressbar"
+                :style="pbPrepWidth" :aria-valuenow="pbPrepWidth"
+                :title="recipe.preparation.timeConsumed.formatted.preparing.timeStr2"
+                aria-valuemin="0" aria-valuemax="100" v-html="pbPrepLabel"></div>
+              <div class="progress-bar bg-contrast rounded mx-1" role="progressbar"
+                :style="pbRestWidth" :aria-valuenow="pbRestWidth"
+                :title="recipe.preparation.timeConsumed.formatted.rest.timeStr2"
+                aria-valuemin="0" aria-valuemax="100" v-html="pbRestLabel"></div>
+              <div class="progress-bar bg-contrast-darker rounded mx-1" role="progressbar"
+                :style="pbCookWidth" :aria-valuenow="pbCookWidth"
+                :title="recipe.preparation.timeConsumed.formatted.cooking.timeStr2"
+                aria-valuemin="0" aria-valuemax="100" v-html="pbCookLabel"></div>
+            </div>
+            <b-alert show variant="contrast"
+              class="px-2 px-lg-3 p-1"
+              v-if="recipe.preparation.timeConsumed.total > {{ Config.LongTimeWarning() }}">
+              <div class="my-2 text-center">
+                <fa-icon icon="info-circle" class="mr-1"></fa-icon>
+                {{ Controller.l('recipe_duration_description') }}
+              </div>
+            </b-alert>
+            <table class="table table-borderless table-sm">
+              <tr>
+                <th class="pl-0">{{ Controller.l('recipe_duration_preparationHeader') }}:</th>
+                <td class="w-100">
+                  <span v-if="recipe.preparation.timeConsumed.preparing == 0">{{ Controller.l('recipe_duration_notSet') }}</span>
+                  <span v-else v-html="recipe.preparation.timeConsumed.formatted.preparing.valueStr"></span>
+                </td>
+              </tr>
+              <tr>
+                <th class="pl-0">{{ Controller.l('recipe_duration_restHeader') }}:</th>
+                <td class="w-100">
+                  <span v-if="recipe.preparation.timeConsumed.rest == 0">{{ Controller.l('recipe_duration_notSet') }}</span>
+                  <span v-else v-html="recipe.preparation.timeConsumed.formatted.rest.valueStr"></span>
+                </td>
+              </tr>
+              <tr>
+                <th class="pl-0">{{ Controller.l('recipe_duration_cookingHeader') }}:</th>
+                <td class="w-100">
+                  <span v-if="recipe.preparation.timeConsumed.cooking == 0">{{ Controller.l('recipe_duration_notSet') }}</span>
+                  <span v-else v-html="recipe.preparation.timeConsumed.formatted.cooking.valueStr"></span>
+                </td>
+              </tr>
+            </table>
+          </div>

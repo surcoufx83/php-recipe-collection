@@ -1,5 +1,7 @@
 
 $bg-contrast:         #1C77C3;
+$bg-contrast-brighter: #3B97E3;
+$bg-contrast-darker:  #14588F;
 $bg-contrast-10:      rgba(28, 119, 195, .1);
 $bg-contrast-light:   #EDF6FC;
 $bg-contrast-dark:    #0D3759;
@@ -14,6 +16,7 @@ $shadow-dark:         $bg-dark;
 $shadow-light:        $bg-gray;
 
 $border-light:        $bg-gray;
+$border-contrast:     $bg-contrast;
 $border-dark:         $bg-dark;
 
 $text-contrast:       $bg-contrast;
@@ -122,6 +125,9 @@ h1, h2, h3 {
 .bg-light           { background-color: $bg-light; }
 .bg-light-dark      { background-color: $bg-gray; }
 .bg-light-muted     { background-color: $bg-muted; }
+.bg-contrast        { background-color: $bg-contrast; }
+.bg-contrast-brighter{ background-color: $bg-contrast-brighter; }
+.bg-contrast-darker { background-color: $bg-contrast-darker; }
 
 .overflow-x-auto    { overflow-x: auto; }
 .overflow-x-default { overflow-x: visible; }
@@ -157,6 +163,10 @@ h1, h2, h3 {
 .w-75 { width: 75%!important; }
 .w-80 { width: 80%!important; }
 .w-90 { width: 90%!important; }
+.w-min-content { width: min-content!important; }
+.w-75px { width: 75px!important; }
+.w-100px { width: 100px!important; }
+.w-200px { width: 200px!important; }
 
 .h-10 { height: 10%!important; }
 .h-20 { height: 20%!important; }
@@ -196,6 +206,12 @@ header.navbar {
 
 ul.list-group-sm li.list-group-item {
   padding: .2rem .8rem;
+}
+
+.alert-contrast {
+    color: $text-contrast;
+    background-color: #fff;
+    border-color: $border-contrast;
 }
 
 div.page {

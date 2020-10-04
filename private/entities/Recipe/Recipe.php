@@ -39,7 +39,7 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
             $recipe_source_url,
             $recipe_created,
             $recipe_published;
-  protected $timecooking = 0, $timepreparation = 0, $timerest = 0;
+  protected $timecooking = 0, $timepreparation = 0, $timerest = 0, $timetotal = 0;
   protected $countcooked = 0, $countrated = 0, $countviewed = 0, $countvoted = 0;
   protected $sumvoted = 0, $sumrated = 0;
   protected $ingredients = array();
@@ -78,6 +78,7 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
       $this->timecooking += $step->getCookingTime();
     if ($step->getChillTime() > 0)
       $this->timerest += $step->getChillTime();
+    $this->timetotal = $this->timepreparation + $this->timecooking + $this->timerest;
     $this->steps[$step->getIndex()] = $step;
   }
 
@@ -320,6 +321,7 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
       'created' => $this->recipe_created->format(DateTime::ISO8601),
       'description' => $this->recipe_description,
       'eaterCount' => $this->recipe_eater,
+      'eaterCountCalc' => $this->recipe_eater,
       'ownerId' => (!is_null($this->user_id) ? $this->user_id : false),
       'ownerName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : ''),
       'published' => ($this->recipe_public ? $this->recipe_published->format(DateTime::ISO8601) : false),
@@ -339,7 +341,28 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
           'cooking' => $this->timecooking,
           'preparing' => $this->timepreparation,
           'rest' => $this->timerest,
+          'total' => $this->timetotal,
           'unit' => 'minutes',
+          'formatted' => [
+            'cooking' => [
+              'valueStr' => Formatter::min_format($this->timecooking),
+              'timeStr' => $Controller->l('recipe_duration_cooking', $this->timecooking > 0 ? Formatter::min_format($this->timecooking) : $Controller->l('recipe_duration_notSet')),
+              'timeStr2' => $Controller->l('recipe_duration_cooking', $this->timecooking > 0 ? Formatter::min_format($this->timecooking, false) : $Controller->l('recipe_duration_notSet')),
+            ],
+            'preparing' => [
+              'valueStr' => Formatter::min_format($this->timepreparation),
+              'timeStr' => $Controller->l('recipe_duration_preparation', $this->timepreparation > 0 ? Formatter::min_format($this->timepreparation) : $Controller->l('recipe_duration_notSet')),
+              'timeStr2' => $Controller->l('recipe_duration_preparation', $this->timepreparation > 0 ? Formatter::min_format($this->timepreparation, false) : $Controller->l('recipe_duration_notSet')),
+            ],
+            'rest' => [
+              'valueStr' => Formatter::min_format($this->timerest),
+              'timeStr' => $Controller->l('recipe_duration_rest', $this->timerest > 0 ? Formatter::min_format($this->timerest) : $Controller->l('recipe_duration_notSet')),
+              'timeStr2' => $Controller->l('recipe_duration_rest', $this->timerest > 0 ? Formatter::min_format($this->timerest, false) : $Controller->l('recipe_duration_notSet')),
+            ],
+            'total' => [
+              'valueStr' => Formatter::min_format($this->timetotal),
+            ]
+          ]
         ]
       ],
       'socials' => [

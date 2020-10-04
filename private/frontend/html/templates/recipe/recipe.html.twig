@@ -7,9 +7,23 @@
           </b-col>
           <b-col class="col-12 col-md-7 order-1 order-md-0">
             {% include 'templates/recipe/recipe-header.html.twig' %}
+            {% include 'templates/recipe/recipe-ingredients.html.twig' %}
+            {% include 'templates/recipe/recipe-duration.html.twig' %}
           </b-col>
         </b-row>
       </div>
+    </template>
+
+    <template id="recipe-ingredient-template">
+      <tr
+        v-if="description">
+        <td class="ml-0 text-right pr-1 pr-lg-2">
+          <span v-if="quantity !== null">${ quantity }</span><span class="ml-1" v-if="unit">${ unit.name }</span>
+        </td>
+        <td class="w-100">
+          <span>${ description }</span>
+        </td>
+      </tr>
     </template>
 
       <div class="d-none">
@@ -20,7 +34,6 @@
             {% include 'views/recipes/recipe-1d-admin.html.twig' %}
           </div>
           <div class="col-12 col-lg-7 order-1 order-lg-0">
-            {% include 'views/recipes/recipe-2a-header.html.twig' %}
             {% include 'views/recipes/recipe-2b-ingredients.html.twig' %}
             {% include 'views/recipes/recipe-3a-steps.html.twig' %}
           </div>

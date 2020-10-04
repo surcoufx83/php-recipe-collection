@@ -17,8 +17,11 @@ breadcrumb:
 
 common:
   duration:
+    minute: '%s Minute'
     minutes: '%s Minuten'
+    hour: '%s Stunde'
     hours: '%s Stunden'
+    day: '%s Tag'
     days: '%s Tage'
   no: 'nein'
   noUc: 'Nein'
@@ -305,8 +308,8 @@ recipe:
       my:
         notYetVoted: 'Du hast in den letzten %s Tagen keine Bewertung abgegeben'
         voted: 'Du hast das Rezept zuletzt am ${ page.my.lastVote.formatted.time } bewertet mit '
-        voteAndVisitCount: 'Insgesamt hast du es dir ${ page.my.visitCount } mal angesehen und ${ page.my.voteCount } mal bewertet.'
-        visitCount: 'Insgesamt hast du es dir ${ page.my.visitCount } mal angesehen.'
+        voteAndVisitCount: 'Insgesamt hast du es ${ page.my.visitCount } mal angesehen und ${ page.my.voteCount } mal bewertet.'
+        visitCount: 'Insgesamt hast du es ${ page.my.visitCount } mal angesehen.'
   admin:
     header: 'Administration'
     author: 'Verfasst von %s'
@@ -321,13 +324,24 @@ recipe:
     header: 'Bildergalerie'
   ingredients:
     header: 'Zutatenliste'
+    eater:
+      count:
+        prefix: 'Das Rezept ist ausgelegt für '
+        suffix: ' Personen.'
+        inputPrefix: 'Mengenangaben umrechnen für: '
+        inputPersons: ' Personen'
   duration:
     header: 'Zubereitungsdauer'
-    description: 'Die Zubereitung des Gerichts nimmt einige Zeit in Anspruch. Für die gesamte Zubereitung sind angegeben:'
-    description2: 'Folgende Zeiten sind für die Zubereitung des Gerichts angegeben:'
-    preparation: '%s zur Vorbereitung'
-    cooking: '%s zum Kochen/Backen'
-    rest: '%s zum Ziehen/Ruhen lassen'
+    overallPrefix: 'Für dieses Rezept ist eine Zubereitungsdauer von insgesamt '
+    overallSuffix: ' angegeben.'
+    description: 'Hinweis: Die Zubereitung des Gerichts nimmt viel Zeit in Anspruch.'
+    preparation: 'Vorbereitungszeit: %s'
+    preparationHeader: 'Vorbereitungszeit'
+    cooking: 'Kochzeit: %s'
+    cookingHeader: 'Kochzeit'
+    rest: 'Ruhezeit: %s'
+    restHeader: 'Ruhezeit'
+    notSet: 'keine Angabe'
   cookingSteps:
     header: 'Zubereitung'
     placeholder: 'Schritt'
