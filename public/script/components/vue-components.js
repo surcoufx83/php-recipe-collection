@@ -146,6 +146,10 @@ const Recipe = {
             this.recipe.eaterCount *
             event
       }
+    },
+    onRatingStartButtonPress: function(event) {
+      console.log('onRatingStartButtonPress')
+      console.log(this.$bvModal)
     }
   }
 }
