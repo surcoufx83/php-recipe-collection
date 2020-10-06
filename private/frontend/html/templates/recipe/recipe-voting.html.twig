@@ -6,7 +6,7 @@
             <div v-if="page.myVote === false">
               <p class="text-small text-muted">{{ Controller.l('recipe_rate_subject') }}</p>
               <b-button size="sm" variant="blue"
-                :click="onRatingStartButtonPress">
+                @click="onRatingStartButtonPress">
                 <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space"
                   class="fa-fw mr-2"></fa-icon>
                 {{ Controller.l('recipe_rate_button') }}

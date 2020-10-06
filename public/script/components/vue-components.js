@@ -37,8 +37,11 @@ Vue.component('fa-icon', {
   props: {
     far: { type: Boolean, default: false, required: false },
     fas: { type: Boolean, default: true, required: false },
+    fw: { type: Boolean, default: false, required: false },
+    icon: { type: String, required: false },
     space: { type: String, required: false },
-    icon: { type: String, required: false }
+    spin: { type: Boolean, default: false, required: false },
+    pulse: { type: Boolean, default: false, required: false }
   },
   delimiters: ['${', '}'],
   template: '#fa-icon-template'
@@ -149,7 +152,7 @@ const Recipe = {
     },
     onRatingStartButtonPress: function(event) {
       console.log('onRatingStartButtonPress')
-      console.log(this.$bvModal)
+      $('#recipe-rating-modal').modal()
     }
   }
 }

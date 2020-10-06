@@ -359,7 +359,7 @@ recipe:
     modal:
       title: 'Rezeptbewertung'
       description: 'Mit der Beantwortung der folgenden kurzen Fragen gibst du eine direkte Rückmeldung an den Autoren des Rezepts.'
-      description2: 'Du kannst jederzeit abbrechen. Erst durch einen Klick auf den Button Speichern wird deine Bewertung übernommen.'
+      description2: 'Du kannst jederzeit abbrechen. Erst durch einen Klick auf 'Bewertung speichern' wird deine Bewertung übernommen.'
       cooked:
         title: 'Hast du das Rezept nachgekocht?'
         none: 'Keine Angabe'
@@ -368,8 +368,8 @@ recipe:
         description: 'Wie schwer fandest du es, dass Rezept nachzukochen? War alles beschrieben was du benötigst oder haben sich dir viele Fragezeichen aufgetan?'
         none: 'Keine Angabe'
       voting:
-        title: 'Wieviel Sterne hat das Gericht verdient?'
-        description: 'Bewerte mit 1 (schlecht) bis 5 (sehr gut) Sternen, wie gut dir das Gericht geschmeckt hat.'
+        title: 'Wieviele Herzen hat das Gericht verdient?'
+        description: 'Bewerte mit 1 (schlecht) bis 5 (sehr gut), wie gut dir das Gericht geschmeckt hat.'
       submitting: 'Die Bewertung wird gerade an den Server geschickt. Das sollte nicht länger als eine Sekunde dauern ...'
       submitted: 'Deine Bewertung wurde gespeichert. Vielen Dank!'
       error: 'Es gab einen Fehler bei der Datenübertragung &#x1F613;'

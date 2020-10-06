@@ -71,6 +71,9 @@
       <i :class="[
           {fas: (fas && !far && !space) || space === 'fas'},
           {far: ((far || !fas) && !space) || space === 'far'},
+          {'fa-fw': fw === true},
+          {'fa-spin': spin === true},
+          {'fa-pulse': pulse === true},
           icon ? 'fa-' + icon : 'fa-question'
         ]"></i>
     </template>
