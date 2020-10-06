@@ -12,7 +12,7 @@
           v-bind:class="{'border-bottom': config.login.defaultEnabled}">
           <h5 class="mb-3 font-weight-bold">{{ Controller.l('page_login_cloud_header') }}</h5>
           <p class="text-muted text-small">{{ Controller.l('page_login_cloud_description') }}</p>
-          <p class="text-danger">{{ Controller.l('page_login_cloud_failed') }}</p>
+          <p class="text-danger d-none">{{ Controller.l('page_login_cloud_failed') }}</p>
           <form id="oauth2-form" method="get" action="{{ Controller.getLink('private:login-oauth2') }}">
             <button type="submit" id="oauth2-submit-button" class="btn btn-blue font-weight-bold">
               {{ Config.Icons.Cloud('fa-fw mr-2')|raw }}
@@ -21,7 +21,7 @@
           </form>
         </div>
       </div>
-      <div class="row mb-3"
+      <div class="row mb-3 d-none"
         v-if="config.login.defaultEnabled">
         <div class="col-12 col-md-6">
           <h5 class="mb-3 font-weight-bold">{{ Controller.l('page_login_regular_header') }}</h5>
