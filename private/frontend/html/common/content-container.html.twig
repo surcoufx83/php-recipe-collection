@@ -9,5 +9,5 @@
                       v-if="page.contentData.titleDescription !== ''">${ page.contentData.titleDescription }</p>
                   </div>
                 </div>
-                <router-view :page="page" :recipe="page.currentRecipe" />
+                <router-view :page="page" :recipe="page.currentRecipe" :user="user" />
               </div>

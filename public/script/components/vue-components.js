@@ -37,6 +37,7 @@ Vue.component('fa-icon', {
   props: {
     far: { type: Boolean, default: false, required: false },
     fas: { type: Boolean, default: true, required: false },
+    space: { type: String, required: false },
     icon: { type: String, required: false }
   },
   delimiters: ['${', '}'],
@@ -100,7 +101,7 @@ const Home = {
 
 const Recipe = {
   delimiters: ['${', '}'],
-  props: ['recipe', 'page'],
+  props: ['recipe', 'page', 'user'],
   template: '#recipe-template',
   computed: {
     pbCookValue: function() {

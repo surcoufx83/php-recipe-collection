@@ -28,6 +28,11 @@ class CommonData extends Route implements RouteInterface {
         'title' => '',
         'titleDescription' => ''
       ],
+      'iconSet' => [
+        'add' => ['icon' => 'plus-circle', 'space' => 'fas'],
+        'info' => ['icon' => 'info-circle', 'space' => 'fas'],
+        'like' => ['icon' => 'heart', 'space' => 'fas'],
+      ],
       'loading' => false,
       'myVote' => false,
       'routes' => [

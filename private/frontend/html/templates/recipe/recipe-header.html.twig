@@ -1,4 +1,4 @@
-          <div class="mt-3 mt-lg-0">
+          <div class="mt-5 mt-lg-0">
             <h4>{{Controller.l('recipe_about_header')}}</h4>
             <p class="mb-1">
               <span v-if="recipe.published === false">{{ Controller.l('recipe_about_unpublished') }}</span>
@@ -24,12 +24,12 @@
                 <td>
                   <span v-if="recipe.socials.votedCounter === 0">{{ Controller.l('recipe_about_voting_notVoted') }}<br /></span>
                   <span v-if="recipe.socials.votedCounter !== 0">
-                    ${ recipe.socials.votedAvg1 }<fa-icon icon="heart" class="fs-80 mx-1 text-contrast"></fa-icon>
+                    ${ recipe.socials.votedAvg1 }<fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="fs-80 mx-1 text-contrast"></fa-icon>
                     {{ Controller.l('recipe_about_voting_voted') }}.<br />
                     <span v-if="page.my.lastVote === false">{{ Controller.l('recipe_about_voting_my_notYetVoted', Config.RecipeRatingClearance().d) }}.</span>
                     <span v-if="page.my.lastVote">
                       {{ Controller.l('recipe_about_voting_my_voted') }}
-                      ${ page.my.lastVote.voting }<fa-icon icon="heart" class="fs-80 ml-1 text-contrast"></fa-icon>.
+                      ${ page.my.lastVote.voting }<fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="fs-80 ml-1 text-contrast"></fa-icon>.
                     </span>
                   </span>
                   <span v-if="page.my.visitCount > 1">

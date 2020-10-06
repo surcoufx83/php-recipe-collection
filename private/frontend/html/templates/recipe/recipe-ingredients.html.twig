@@ -1,4 +1,4 @@
-          <div class="mt-3" id="ingredients-anchor">
+          <div class="mt-5 mt-lg-3" id="ingredients-anchor">
             <h4>{{Controller.l('recipe_ingredients_header')}}</h4>
             <p>
               {{ Controller.l('recipe_ingredients_eater_count_prefix') }}
@@ -9,11 +9,11 @@
               class="px-2 px-lg-3 p-1">
               <b-form inline>
                 {{ Controller.l('recipe_ingredients_eater_count_inputPrefix') }}
-                <b-form-input type="number" min="1" max="99" size="sm"
-                  class="text-center w-75px mx-2 text-contrast bg-light fs-120"
+                <input type="number" min="1" max="99"
+                  class="form-control form-control-sm text-center w-75px mx-2 py-0 fs-110 text-contrast bg-light"
                   v-model="recipe.eaterCountCalc"
                   @change="onEaterCountChanged"
-                  ></b-form-input>
+                  ></input>
                 {{ Controller.l('recipe_ingredients_eater_count_inputPersons') }}
               </b-form>
             </b-alert>

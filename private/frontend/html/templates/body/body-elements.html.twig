@@ -69,8 +69,8 @@
 
     <template id="fa-icon-template">
       <i :class="[
-          {fas: fas && !far},
-          {far: far || !fas},
+          {fas: (fas && !far && !space) || space === 'fas'},
+          {far: ((far || !fas) && !space) || space === 'far'},
           icon ? 'fa-' + icon : 'fa-question'
         ]"></i>
     </template>

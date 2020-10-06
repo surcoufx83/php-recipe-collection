@@ -1,0 +1,14 @@
+          <div class="mt-5 mt-lg-3" id="steps-anchor">
+            <h4>{{Controller.l('recipe_cookingSteps_header')}}</h4>
+            <div
+              v-for="step in recipe.preparation.steps">
+              <h5 v-if="step.name !== ''">
+                <span v-if="recipe.preparation.steps.length > 1">
+                  ${ step.index }.
+                  <span v-if="step.name === ''">{{Controller.l('recipe_cookingSteps_header')}}</span>
+                  <span v-else>${ step.name }</span>
+                </span>
+              </h5>
+              <p style="white-space:pre-wrap">${ step.userContent }</p>
+            </div>
+          </div>

@@ -133,6 +133,9 @@ h1, h2, h3 {
 .text-large, .fs-120 {
   font-size: 120%; }
 
+.fs-120 {
+  font-size: 110%; }
+
 .text-small, .fs-80 {
   font-size: 80%; }
 
