@@ -63,7 +63,7 @@ class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
     return $this->entry_id;
   }
 
-  public function getRating() : int {
+  public function getRating() : ?int {
     return $this->entry_rate;
   }
 
@@ -85,7 +85,7 @@ class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
     return $this->user_id;
   }
 
-  public function getVoting() : int {
+  public function getVoting() : ?int {
     return $this->entry_vote;
   }
 

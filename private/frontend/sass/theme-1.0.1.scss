@@ -83,7 +83,7 @@ h1, h2, h3 {
   font-family: Cinzel;
 }
 
-.btn-blue {
+.btn-blue, .btn-outline-blue.active {
   color: $bg-light!important;
   background-color: $bg-contrast-dark;
   border-color: $bg-contrast-dark;
@@ -95,7 +95,7 @@ h1, h2, h3 {
   }
 }
 
-.btn-outline-blue {
+.btn-outline-blue:not(.active) {
   color: $text-link!important;
   background-color: $bg-light;
   border-color: $bg-contrast-dark;
@@ -209,10 +209,34 @@ ul.list-group-sm li.list-group-item {
   padding: .2rem .8rem;
 }
 
+.alert-blue {
+  color: $bg-light!important;
+  background-color: $bg-contrast-dark;
+  border-color: $bg-contrast-dark;
+
+  &:hover {
+    color: $bg-light!important;
+    background-color: $bg-contrast;
+    border-color: $bg-contrast;
+  }
+}
+
+.alert-outline-blue {
+  color: $text-link!important;
+  background-color: $bg-light;
+  border-color: $bg-contrast-dark;
+
+  &:hover {
+    color: $bg-light!important;
+    background-color: $bg-contrast;
+    border-color: $bg-contrast;
+  }
+}
+
 .alert-contrast {
-    color: $text-contrast;
-    background-color: #fff;
-    border-color: $border-contrast;
+  color: $text-contrast;
+  background-color: #fff;
+  border-color: $border-contrast;
 }
 
 div.page {

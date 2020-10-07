@@ -32,10 +32,21 @@ class CommonData extends Route implements RouteInterface {
         'add' => ['icon' => 'plus-circle', 'space' => 'fas'],
         'info' => ['icon' => 'info-circle', 'space' => 'fas'],
         'like' => ['icon' => 'heart', 'space' => 'fas'],
+        'reset' => ['icon' => 'times-circle', 'space' => 'fas'],
         'spinner' => ['icon' => 'circle-notch', 'space' => 'fas'],
       ],
       'loading' => false,
-      'myVote' => false,
+      'self' => [
+        'currentVote' => [
+          'cooked' => -1,
+          'rating' => -1,
+          'voting' => -1,
+        ],
+        'hasVoted' => false,
+        'lastVote' => false,
+        'visitCount' => 0,
+        'voteCount' => 0,
+      ],
       'routes' => [
         'sidebar' => [
           ['to' => 'home', 'icon' => 'home', 'text' => $Controller->l('sidebar_home') ],

@@ -16,10 +16,13 @@ class RandomRecipePageRoute extends Route implements RouteInterface {
 
   static function createOutput(array &$response) : bool {
     global $Controller;
+    $matchid = $Controller->Dispatcher()->getFromMatches('id');
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
     $query->where('recipes', 'recipe_public', '=', 1)
           ->orderRandom()
           ->limit(1);
+    if (!is_null($matchid))
+      $query->andWhere('recipes', 'recipe_id', '!=', intval($matchid));
     $result = $Controller->select($query);
     if ($result && $result->num_rows == 1) {
       $response = $Controller->Config()->getResponseArray(4);

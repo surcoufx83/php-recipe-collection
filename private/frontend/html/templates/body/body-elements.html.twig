@@ -14,7 +14,13 @@
               v-for="route in page.routes.sidebar"
               v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
               :to="route.to"
-              :params="route.to != 'recipe' ? { } : { id: page.currentRecipe.id, name: page.currentRecipe.name}"
+              :params="route.to != 'recipe' && route.to != 'random' ? { } :
+                (
+                  route.to == 'recipe' ? { id: page.currentRecipe.id, name: page.currentRecipe.name} :
+                  (
+                    page.currentRecipe.id != undefined ? { id: '-'+page.currentRecipe.id } : { }
+                  )
+                )"
               :icon="route.icon"
               :text="route.to != 'recipe' ? route.text : page.currentRecipe.name"
               :children="route.children"

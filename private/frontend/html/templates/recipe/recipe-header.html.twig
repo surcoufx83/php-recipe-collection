@@ -26,15 +26,15 @@
                   <span v-if="recipe.socials.votedCounter !== 0">
                     ${ recipe.socials.votedAvg1 }<fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="fs-80 mx-1 text-contrast"></fa-icon>
                     {{ Controller.l('recipe_about_voting_voted') }}.<br />
-                    <span v-if="page.my.lastVote === false">{{ Controller.l('recipe_about_voting_my_notYetVoted', Config.RecipeRatingClearance().d) }}.</span>
-                    <span v-if="page.my.lastVote">
+                    <span v-if="page.self.lastVote === false">{{ Controller.l('recipe_about_voting_my_notYetVoted', Config.RecipeRatingClearance().d) }}.</span>
+                    <span v-if="page.self.lastVote">
                       {{ Controller.l('recipe_about_voting_my_voted') }}
-                      ${ page.my.lastVote.voting }<fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="fs-80 ml-1 text-contrast"></fa-icon>.
+                      ${ page.self.lastVote.voting }<fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="fs-80 ml-1 text-contrast"></fa-icon>.
                     </span>
                   </span>
-                  <span v-if="page.my.visitCount > 1">
-                    <span v-if="page.my.voteCount !== 0">{{ Controller.l('recipe_about_voting_my_voteAndVisitCount') }}</span>
-                    <span v-if="page.my.voteCount === 0">{{ Controller.l('recipe_about_voting_my_visitCount') }}</span>
+                  <span v-if="page.self.visitCount > 1">
+                    <span v-if="page.self.voteCount !== 0">{{ Controller.l('recipe_about_voting_my_voteAndVisitCount') }}</span>
+                    <span v-if="page.self.voteCount === 0">{{ Controller.l('recipe_about_voting_my_visitCount') }}</span>
                   </span>
                 </td>
               </tr>
