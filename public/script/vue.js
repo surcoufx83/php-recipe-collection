@@ -127,6 +127,7 @@ function refreshPageData(path, appparam = false) {
 
   function updateProps(data, prop) {
     for (key in data) {
+<<<<<<< HEAD
       console.log(key + ': ' +  data[key])
       if (prop[key] === undefined || typeof data[key] != typeof prop[key])
         createProp(prop, key, data[key])
@@ -136,6 +137,13 @@ function refreshPageData(path, appparam = false) {
         else if (Array.isArray(data[key]) && data[key].length != prop[key].length)
           createProp(prop, key, data[key])
         else if (Array.isArray(data[key]) && data[key].length == prop[key].length)
+=======
+      //console.log(key + ': ' +  data[key])
+      if (prop[key] === undefined || typeof data[key] != typeof prop[key])
+        createProp(prop, key, data[key])
+      else {
+        if (typeof data[key] === 'object' || Array.isArray(data[key]))
+>>>>>>> b42dde7e6473b63819adcbb31dace6ee036dec3a
           updateProps(data[key], prop[key])
         else {
           try {
