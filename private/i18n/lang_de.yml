@@ -307,9 +307,9 @@ recipe:
       voted: ' bei ${ recipe.socials.votedCounter } abgegebenen Stimmen'
       my:
         notYetVoted: 'Du hast in den letzten %s Tagen keine Bewertung abgegeben'
-        voted: 'Du hast das Rezept zuletzt am ${ page.my.lastVote.formatted.time } bewertet mit '
-        voteAndVisitCount: 'Insgesamt hast du es ${ page.my.visitCount } mal angesehen und ${ page.my.voteCount } mal bewertet.'
-        visitCount: 'Insgesamt hast du es ${ page.my.visitCount } mal angesehen.'
+        voted: 'Du hast das Rezept zuletzt am ${ page.self.lastVote.formatted.time } bewertet mit '
+        voteAndVisitCount: 'Insgesamt hast du es ${ page.self.visitCount } mal angesehen und ${ page.self.voteCount } mal bewertet.'
+        visitCount: 'Insgesamt hast du es ${ page.self.visitCount } mal angesehen.'
   admin:
     header: 'Administration'
     author: 'Verfasst von %s'
@@ -399,6 +399,7 @@ response:
   noApiKeyException: 'Der Zugriff erfordert ein Anmelde-Token. Bitte melden Sie sich zuerst über die Website an, bevor Sie den API-Zugang versuchen.'
   noChanges: 'Es wurden keine Änderungen erkannt.'
   noResults: 'Die Suche hat keine Ergebnisse zurückgeliefert.'
+  notAllowedException: 'Keine Berechtigung für diese Aktion.'
   notAuthenticatedException: 'Benutzer nicht eingeloggt.'
   pageMovedException: 'Die angeforderte Seite wurde verschoben und kann nicht mehr per Webanforderung oder CLI abgerufen werden.'
   parameterException: 'Für die angegebenen Parameter ist keine Verarbeitung konfiguriert.'

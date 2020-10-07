@@ -142,17 +142,48 @@ const Recipe = {
     }
   },
   methods: {
-    onEaterCountChanged: function(event) {
+    onEaterCountChanged: function() {
       for (key in this.recipe.preparation.ingredients) {
-          this.recipe.preparation.ingredients[key].quantityCalc =
-            this.recipe.preparation.ingredients[key].quantity /
-            this.recipe.eaterCount *
-            event
+        this.recipe.preparation.ingredients[key].quantityCalc =
+          this.recipe.preparation.ingredients[key].quantity /
+          this.recipe.eaterCount *
+          this.recipe.eaterCountCalc
       }
     },
-    onRatingStartButtonPress: function(event) {
-      console.log('onRatingStartButtonPress')
+    onRatingStartButtonPress: function() {
       $('#recipe-rating-modal').modal()
+    },
+    onRatingSubmitPress: function() {
+      console.log('onRatingSubmitPress')
+      $('#recipe-rating-modal-save').addClass('d-none')
+      $('#recipe-rating-modal-spinner').removeClass('d-none')
+      $('#recipe-rating-modal-mainbody').addClass('d-none')
+      $('#recipe-rating-modal-submitting').removeClass('d-none')
+      postPageData(app.$route.path, {
+        vote: {
+          cooked: this.page.self.currentVote.cooked,
+          rating: this.page.self.currentVote.rating,
+          voting: this.page.self.currentVote.voting
+        }
+      }, function(data) {
+        console.log('onRatingSubmitPress: ', data)
+        if (data.success) {
+          console.log(app)
+          app.$set(app.page.self.lastVote, 'cooked', app.page.self.currentVote.cooked)
+          app.$set(app.page.self.lastVote, 'rating', app.page.self.currentVote.rating)
+          app.$set(app.page.self.lastVote, 'voting', app.page.self.currentVote.voting)
+          app.$set(app.page.self, 'hasVoted', true)
+          $('#recipe-rating-modal-spinner').addClass('d-none')
+          $('#recipe-rating-modal-submitting').addClass('d-none')
+          $('#recipe-rating-modal-submitted').removeClass('d-none')
+        } else {
+          $('#recipe-rating-modal-spinner').addClass('d-none')
+          $('#recipe-rating-modal-save').addClass('d-none')
+          $('#recipe-rating-modal-submitting').addClass('d-none')
+          $('#recipe-rating-modal-error').removeClass('d-none')
+          $('#recipe-rating-modal-mainbody').removeClass('d-none')
+        }
+      })
     }
   }
 }

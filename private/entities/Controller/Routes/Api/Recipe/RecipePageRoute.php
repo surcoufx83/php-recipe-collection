@@ -45,11 +45,12 @@ class RecipePageRoute extends Route implements RouteInterface {
     parent::setDescription($response, $recipe->getDescription());
 
     parent::addToDictionary($response, ['page' => [ 'currentRecipe' => $recipe ]]);
-    parent::addToDictionary($response, ['page' => [ 'my' => [
-        'lastVote' => (!is_null($userVote)) ? $userVote : false,
-        'voteCount' => self::getMyVoteCount($recipe),
-        'visitCount' => self::getMyVisitCount($recipe),
-      ]]]);
+    parent::addToDictionary($response, ['page' => [ 'self' => [
+      'hasVoted' => (!is_null($userVote)) ? true : false,
+      'lastVote' => $userVote,
+      'voteCount' => self::getMyVoteCount($recipe),
+      'visitCount' => self::getMyVisitCount($recipe),
+    ]]]);
 
     return true;
 

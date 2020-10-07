@@ -46,17 +46,27 @@ final class RoutingManager {
       'method' => ERequestMethod::HTTP_GET,
       'requiresAdmin' => true,
     ],
-    '/api/page-data\?/random' => [ // random recipe page
+    '/api/page-data\?/random(/-(?<id>\d+))?' => [ // random recipe page
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RandomRecipePageRoute::class,
       'method' => ERequestMethod::HTTP_GET,
     ],
     '/api/page-data\?/recipe/(?<id>\d+)-(?<name>.+)' => [ // recipe page
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipePageRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
-      'createObject' => [
-        'idkey' => 'id',
-        'method' => 'Recipe',
+      [ // recipe display page
+        'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipePageRoute::class,
+        'method' => ERequestMethod::HTTP_GET,
+        'createObject' => [
+          'idkey' => 'id',
+          'method' => 'Recipe',
+        ],
       ],
+      [ // recipe actions (vote, publish, etc)
+        'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipePostRoute::class,
+        'method' => ERequestMethod::HTTP_POST,
+        'createObject' => [
+          'idkey' => 'id',
+          'method' => 'Recipe',
+        ],
+      ]
     ],
     '/api/page-data\?(?<page>.*)' => [ // common data request
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\PageData::class,

@@ -72,6 +72,7 @@ final class Config implements ConfigInterface {
        80 => ['code' =>  80, 'message' => $Controller->l('response_badArgumentsException'), 'success' => false],
        90 => ['code' =>  90, 'message' => $Controller->l('response_validationSucceeded'), 'success' => true],
        91 => ['code' =>  91, 'message' => $Controller->l('response_validationFailed'), 'success' => false],
+       92 => ['code' =>  92, 'message' => $Controller->l('response_notAllowedException'), 'success' => false],
       100 => ['code' => 100, 'message' => $Controller->l('response_maintenanceException'), 'success' => false],
       110 => ['code' => 110, 'message' => $Controller->l('response_notAuthenticatedException'), 'success' => false],
       111 => ['code' => 111, 'message' => $Controller->l('response_noApiKeyException'), 'success' => false],

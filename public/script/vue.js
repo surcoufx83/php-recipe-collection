@@ -79,7 +79,6 @@ function refreshPageData(path, appparam = false) {
     .then(response => response.json())
     .then((data) => {
       if (data.forward) {
-        console.log(data)
         if (data.forward.ext) {
           location.href = data.forward.extUrl;
           return;
@@ -87,30 +86,34 @@ function refreshPageData(path, appparam = false) {
         router.push({ name: data.forward.route, params: data.forward.params })
       }
       else if (data.page) {
-        if (data.page.contentData)
-          app.$set(app.page, 'contentData', data.page.contentData)
-        else
-          app.$set(app.page, 'contentData', {
-            breadcrumbs: [],
-            title: '',
-            titleDescription: ''
-          })
-        if (data.page.currentRecipe)
-          app.$set(app.page, 'currentRecipe', data.page.currentRecipe)
-        else
-          app.$set(app.page, 'currentRecipe', { })
-        if (data.page.currentUser)
-          app.$set(app.page, 'currentUser', data.page.currentUser)
-        else
-          app.$set(app.page, 'currentUser', { })
-        if (data.page.my) {
-          app.$set(app.page, 'my', data.page.my)
-          if (!data.page.my.lastVote)
-            app.$set(app.page.my, 'lastVote', false)
+        if (data.page.contentData) {
+          if (data.page.contentData.breadcrumbs)
+            app.$set(app.page.contentData, 'breadcrumbs', [])
         }
-        else
-          app.$set(app.page, 'my', { lastVote: false })
+        updateProps(data, app)
       }
+      app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+      app.$set(app.page, 'loading',false)
+    })
+  }
+
+  function postPageData(path, data, callback) {
+    if (!app)
+      return;
+    app.$set(app.page, 'loading', true)
+    var m0 = performance.now()
+    $.ajax({
+      url: '/api/page-data?' + encodeURI(path),
+      method: 'POST',
+      data: data
+    })
+    .done(function(data) {
+      app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+      app.$set(app.page, 'loading',false)
+      callback(data);
+    })
+    .fail(function(jqXHR, textStatus) {
+      console.log(jqXHR, textStatus)
       app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
       app.$set(app.page, 'loading',false)
     })
@@ -120,4 +123,35 @@ function refreshPageData(path, appparam = false) {
     if (duration < 900)
       return duration.toFixed(0) + ' ms';
     return (duration / 1000).toFixed(2) + ' s'
+  }
+
+  function updateProps(data, prop) {
+    for (key in data) {
+      console.log(key + ': ' +  data[key])
+      if (prop[key] === undefined || typeof data[key] != typeof prop[key])
+        createProp(prop, key, data[key])
+      else {
+        if (typeof data[key] === 'object')
+          updateProps(data[key], prop[key])
+        else if (Array.isArray(data[key]) && data[key].length != prop[key].length)
+          createProp(prop, key, data[key])
+        else if (Array.isArray(data[key]) && data[key].length == prop[key].length)
+          updateProps(data[key], prop[key])
+        else {
+          try {
+            app.$set(prop, key, data[key])
+          } catch(e) {
+            console.log('EX updateProps', e)
+          }
+        }
+      }
+    }
+  }
+
+  function createProp(prop, key, fromobj) {
+    try {
+      app.$set(prop, key, fromobj)
+    } catch(e) {
+      console.log('EX updateProps', e)
+    }
   }
