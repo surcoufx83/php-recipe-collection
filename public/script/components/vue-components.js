@@ -12,12 +12,15 @@ Vue.component('btn-sm-blue', {
     badgeicon: { type: Object, required: false },
     outline: { type: Boolean, default: false, required: false },
     title: { type: String, required: true },
-    subject: { type: String, required: false }
+    subject: { type: String, required: false },
+    icon: { type: String, required: false },
+    space: { type: String, required: false }
   },
   template:
     `<b-button size="sm"
       v-bind:class="[{ 'btn-blue': !outline }, { 'btn-outline-blue': outline } ]"
       @click="onClick">
+      <fa-icon v-if="icon" :icon="icon" :space="space" class="fs-80 mr-1"></fa-icon>
       {{ title }}
       <b-badge class="ml-1 text-blue" v-if="badge" variant="light">
         {{ badge }} <b-icon class="text-blue"
@@ -30,6 +33,30 @@ Vue.component('btn-sm-blue', {
         this.$emit('click', this.subject ? this.subject : this.title)
       }
     }
+})
+
+Vue.component('btn-scrollto', {
+  props: {
+    badge: { type: String, required: false },
+    badgeicon: { type: Object, required: false },
+    outline: { type: Boolean, default: false, required: false },
+    target: { type: String, required: true },
+    title: { type: String, required: true },
+    subject: { type: String, required: false },
+    icon: { type: String, required: false },
+    space: { type: String, required: false }
+  },
+  template: '#btn-scrollto-template',
+  methods: {
+    onClick: function(e) {
+      var tar = $('#' + this.target)
+      if (tar) {
+        var pos = tar.offset().top - 60;
+        $(window).scrollTop(pos);
+      }
+      this.$emit('click', this.subject ? this.subject : this.title)
+    }
+  }
 })
 
 Vue.component('fa-icon', {
@@ -254,4 +281,10 @@ const Recipe = {
       })
     }
   }
+}
+
+const RecipesList = {
+  delimiters: ['${', '}'],
+  props: ['recipe', 'page', 'user'],
+  template: '#recipes-listing-template'
 }

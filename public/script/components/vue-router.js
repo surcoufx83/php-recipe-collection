@@ -18,7 +18,7 @@ const router = new VueRouter({
     { name: 'recipe', path: '/recipe/:id(.+)-:name([^/]*)', component: Recipe, children: [
       { name: 'editRecipe', path: 'edit', component: Recipe }
     ]},
-    { name: 'recipes', path: '/recipes' },
+    { name: 'recipes', path: '/recipes', component: RecipesList },
     { name: 'search', path: '/search' },
     { name: 'user', path: '/user/:id(.+)-:name([^/]*)', children: [
       { name: 'userRecipes', path: 'recipes' }

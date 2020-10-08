@@ -45,6 +45,10 @@ Vue.http.get('common-data')
               $('#sidebar-main').prop("aria-hidden", "")
             }
           }
+        },
+        onClick: function(e) {
+          console.log('@onClick', e, this.target)
+          this.$emit('click', this.subject ? this.subject : this.title)
         }
       }
     })
@@ -110,65 +114,65 @@ function refreshPageData(path, appparam = false) {
       app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
       app.$set(app.page, 'loading',false)
     })
-  }
+}
 
-  function postPageData(path, data, callback, updateOnSuccess = false) {
-    if (!app)
-      return;
-    app.$set(app.page, 'updating', true)
-    var m0 = performance.now()
-    $.ajax({
-      url: '/api/page-data?' + encodeURI(path),
-      method: 'POST',
-      data: data
-    })
-    .done(function(data) {
-      if (updateOnSuccess == true && data.success == true)
-        updateProps(data, app)
-      app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
-      app.$set(app.page, 'updating',false)
-      callback(data);
-    })
-    .fail(function(jqXHR, textStatus) {
-      console.log(jqXHR, textStatus)
-      app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
-      app.$set(app.page, 'updating',false)
-    })
-  }
+function postPageData(path, data, callback, updateOnSuccess = false) {
+  if (!app)
+    return;
+  app.$set(app.page, 'updating', true)
+  var m0 = performance.now()
+  $.ajax({
+    url: '/api/page-data?' + encodeURI(path),
+    method: 'POST',
+    data: data
+  })
+  .done(function(data) {
+    if (updateOnSuccess == true && data.success == true)
+      updateProps(data, app)
+    app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+    app.$set(app.page, 'updating',false)
+    callback(data);
+  })
+  .fail(function(jqXHR, textStatus) {
+    console.log(jqXHR, textStatus)
+    app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+    app.$set(app.page, 'updating',false)
+  })
+}
 
-  function formatMillis(duration) {
-    if (duration < 900)
-      return duration.toFixed(0) + ' ms';
-    return (duration / 1000).toFixed(2) + ' s'
-  }
+function formatMillis(duration) {
+  if (duration < 900)
+    return duration.toFixed(0) + ' ms';
+  return (duration / 1000).toFixed(2) + ' s'
+}
 
-  function updateProps(data, prop) {
-    for (key in data) {
-      //console.log(key + ': ' +  data[key])
-      if (prop[key] === undefined || typeof data[key] != typeof prop[key])
+function updateProps(data, prop) {
+  for (key in data) {
+    //console.log(key + ': ' +  data[key])
+    if (prop[key] === undefined || typeof data[key] != typeof prop[key])
+      createProp(prop, key, data[key])
+    else {
+      if (typeof data[key] === 'object')
+        updateProps(data[key], prop[key])
+      else if (Array.isArray(data[key]) && data[key].length != prop[key].length)
         createProp(prop, key, data[key])
+      else if (Array.isArray(data[key]) && data[key].length == prop[key].length)
+        updateProps(data[key], prop[key])
       else {
-        if (typeof data[key] === 'object')
-          updateProps(data[key], prop[key])
-        else if (Array.isArray(data[key]) && data[key].length != prop[key].length)
-          createProp(prop, key, data[key])
-        else if (Array.isArray(data[key]) && data[key].length == prop[key].length)
-          updateProps(data[key], prop[key])
-        else {
-          try {
-            app.$set(prop, key, data[key])
-          } catch(e) {
-            console.log('EX updateProps', e)
-          }
+        try {
+          app.$set(prop, key, data[key])
+        } catch(e) {
+          console.log('EX updateProps', e)
         }
       }
     }
   }
+}
 
-  function createProp(prop, key, fromobj) {
-    try {
-      app.$set(prop, key, fromobj)
-    } catch(e) {
-      console.log('EX updateProps', e)
-    }
+function createProp(prop, key, fromobj) {
+  try {
+    app.$set(prop, key, fromobj)
+  } catch(e) {
+    console.log('EX updateProps', e)
   }
+}

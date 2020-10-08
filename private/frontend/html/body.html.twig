@@ -88,7 +88,7 @@
     <script src="/script/components/vue-router.js"></script>
     <script src="/script/vue.js"></script>
 
-    <script type="module">
+    <script>
 
       function delay(callback, ms) {
         var timer = 0;
@@ -148,14 +148,6 @@
         $('div.page-overlay').addClass('sidebar-opened');
         $('div.nav-sidebar').addClass('sidebar-opened');
         $('a.sidebar-toggle-nav').addClass('sidebar-opened');
-      });
-
-      $('.scroll-to').click(function() {
-        var target = $('#' + $(this).data('target'));
-        if (target) {
-          var pos = target.offset().top - 60;
-          $(window).scrollTop(pos);
-        }
       });
 
       $(function () {
