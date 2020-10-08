@@ -1,10 +1,10 @@
 
     <header class="navbar sticky-top navbar-expand navbar-dark bg-dark">
       <a class="navbar-brand mr-0 mr-md-2" href="/">{{ Config.PageHeader }}</a>
-      <i class="fas fa-circle-notch text-light fa-spin"
-        v-if="page.loading !== false"></i>
-      <span class="small text-light"
-        v-if="page.loading === false && user.isAdmin">${ page.loadingTime}</span>
+      <i class="fas fa-circle-notch text-light fa-spin ml-2"
+        v-if="page.loading !== false && page.updating !== false"></i>
+      <span class="small text-light ml-1"
+        v-if="page.loading === false && page.updating === false && user.isAdmin">${ page.loadingTime}</span>
       <div
         v-if="user.loggedIn === false && config.maintenanceEnabled === false">
         <ul class="navbar-nav flex-row">

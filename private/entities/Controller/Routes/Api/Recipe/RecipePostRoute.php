@@ -13,6 +13,7 @@ use Surcouf\Cookbook\Recipe\RecipeInterface;
 use Surcouf\Cookbook\Recipe\Recipe;
 use Surcouf\Cookbook\Recipe\Social\Ratings\RatingInterface;
 use Surcouf\Cookbook\Helper\Formatter;
+use Surcouf\Cookbook\User\UserInterface;
 
 if (!defined('CORE2'))
   exit;
@@ -24,18 +25,47 @@ class RecipePostRoute extends Route implements RouteInterface {
 
     $recipe = $Controller->Dispatcher()->getObject();
     $payload = $Controller->Dispatcher()->getPayload();
+    $user = $Controller->User();
+    if (array_key_exists('publish', $payload))
+      return self::publish($response, $recipe, $user);
+    if (array_key_exists('unpublish', $payload))
+      return self::unpublish($response, $recipe, $user);
     if (array_key_exists('vote', $payload))
-      return self::vote($response, $recipe, $payload['vote']);
-    $response = $Controller->Config()->getResponseArray(1);
+      return self::vote($response, $recipe, $user, $payload['vote']);
+
+    $response = $Controller->Config()->getResponseArray(71);
 
     return true;
 
   }
 
-  static function vote(array &$response, RecipeInterface $recipe , array $voting) : bool {
+  static function publish(array &$response, RecipeInterface $recipe, ?UserInterface $user) : bool {
     global $Controller;
-    $user = $Controller->User();
-    if ($recipe->getUserId() == $user->getId() || !$recipe->isPublished()) {
+    if (!$user || $recipe->getUserId() != $user->getId()) {
+      $response = $Controller->Config()->getResponseArray(92);
+      return false;
+    }
+    $recipe->setPublic(true);
+    $response = $Controller->Config()->getResponseArray(1);
+    parent::addToDictionary($response, ['page' => [ 'currentRecipe' => [ 'published' => $recipe->getPublishedDate()->format(DateTime::ISO8601) ]]]);
+    return true;
+  }
+
+  static function unpublish(array &$response, RecipeInterface $recipe, ?UserInterface $user) : bool {
+    global $Controller;
+    if (!$user || $recipe->getUserId() != $user->getId()) {
+      $response = $Controller->Config()->getResponseArray(92);
+      return false;
+    }
+    $recipe->setPublic(false);
+    $response = $Controller->Config()->getResponseArray(1);
+    parent::addToDictionary($response, ['page' => [ 'currentRecipe' => [ 'published' => false ]]]);
+    return true;
+  }
+
+  static function vote(array &$response, RecipeInterface $recipe, ?UserInterface $user, array $voting) : bool {
+    global $Controller;
+    if (!$user || $recipe->getUserId() == $user->getId() || !$recipe->isPublished()) {
       $response = $Controller->Config()->getResponseArray(92);
       return false;
     }

@@ -20,22 +20,40 @@ class CommonData extends Route implements RouteInterface {
       ],
       'maintenanceEnabled' => $Controller->Config()->MaintenanceMode(),
     ];
+    $response['forward'] = false;
     $response['page'] = [
       'currentRecipe' => new \stdClass,
       'currentUser' => new \stdClass,
       'contentData' => [
+        'actions' => [],
         'breadcrumbs' => [],
+        'filters' => [],
         'title' => '',
-        'titleDescription' => ''
+        'titleDescription' => '',
+        'hasActions' => false,
+        'hasFilters' => false,
       ],
       'iconSet' => [
         'add' => ['icon' => 'plus-circle', 'space' => 'fas'],
         'info' => ['icon' => 'info-circle', 'space' => 'fas'],
         'like' => ['icon' => 'heart', 'space' => 'fas'],
+        'lock' => ['icon' => 'lock', 'space' => 'fas'],
+        'meal' => ['icon' => 'utensils', 'space' => 'fas'],
+        'nouser' => ['icon' => 'user-slash', 'space' => 'fas'],
         'reset' => ['icon' => 'times-circle', 'space' => 'fas'],
         'spinner' => ['icon' => 'circle-notch', 'space' => 'fas'],
+        'unlock' => ['icon' => 'unlock', 'space' => 'fas'],
+        'user' => ['icon' => 'user-circle', 'space' => 'far'],
+        'view' => ['icon' => 'eye', 'space' => 'fas'],
       ],
       'loading' => false,
+      'updating' => false,
+      'modals' => [
+        'failedModal' => [
+          'message' => '',
+          'code' => 0,
+        ]
+      ],
       'self' => [
         'currentVote' => [
           'cooked' => -1,
@@ -43,7 +61,19 @@ class CommonData extends Route implements RouteInterface {
           'voting' => -1,
         ],
         'hasVoted' => false,
-        'lastVote' => false,
+        'lastVote' => [
+          'id' => '',
+          'userId' => '',
+          'user' => '',
+          'time' => '',
+          'comment' => '',
+          'cooked' => '',
+          'voting' => '',
+          'rating' => '',
+          'formatted' => [
+            'time' => '',
+          ]
+        ],
         'visitCount' => 0,
         'voteCount' => 0,
       ],

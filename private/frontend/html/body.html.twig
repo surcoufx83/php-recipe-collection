@@ -51,7 +51,25 @@
           </div>
         </div>
       </main>
-
+      <div class="modal modal-danger" tabindex="-1" role="dialog" id="action-failed-modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">{{Controller.l('modals_failed_head')}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p class="my-0">${ page.modals.failedModal.message }</p>
+              <p class="text-small my-0">Code: ${ page.modals.failedModal.code }</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-blue" data-dismiss="modal">{{Controller.l('modals_failed_close')}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div id="reactive-size-spy-sm" class="d-block"></div>
     <div id="reactive-size-spy-lg" class="d-none d-lg-block"></div>

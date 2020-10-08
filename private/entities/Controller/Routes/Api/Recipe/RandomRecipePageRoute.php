@@ -27,6 +27,9 @@ class RandomRecipePageRoute extends Route implements RouteInterface {
     if ($result && $result->num_rows == 1) {
       $response = $Controller->Config()->getResponseArray(4);
       $recipe = $result->fetch_object(Recipe::class);
+      parent::setTitle($response,  $Controller->l('recipe_loading_title'));
+      parent::setDescription($response, '');
+      parent::addToDictionary($response, ['page' => [ 'currentRecipe' => new \stdClass ]]);
       parent::forwardResponse($response, 'recipe', ['id' => $recipe->getId(), 'name' => Formatter::nice_urlstring($recipe->getName())]);
       return true;
     }

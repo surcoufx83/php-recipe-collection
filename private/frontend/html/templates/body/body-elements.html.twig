@@ -83,3 +83,43 @@
           icon ? 'fa-' + icon : 'fa-question'
         ]"></i>
     </template>
+
+    <template id="page-actions-container-template">
+      <b-container fluid class="header-container header-container-border">
+        <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+        </ul>
+        <b-container class="text-right nav-buttons"
+          v-if="page.contentData.hasActions === true && page.contentData.actions.length > 0"
+          >miau1
+        </b-container>
+        <b-container class="text-right nav-buttons px-0"
+          v-if="page.contentData.hasActions === true && page.contentData.actions.length === 0 && page.currentRecipe !== null && page.currentRecipe.id > 0"
+          >
+          <recipe-actions-container :page="page" :user="user"
+            @click="onClick"></recipe-actions-container>
+        </b-container>
+      </b-container>
+    </template>
+
+    <template id="recipe-actions-container-template">
+      <b-container class="px-0">
+        <btn-sm-blue v-if="
+          page.currentRecipe !== null && user !== null &&
+          page.currentRecipe.published !== false &&
+          ('ownerId' in page.currentRecipe) && ('id' in user) &&
+          page.currentRecipe.ownerId === user.id"
+          :outline="true"
+          subject="unpublish"
+          title="{{ Controller.l('recipe_options_publication_unpublish') }}"
+          @click="onClick"></btn-sm-blue>
+        <btn-sm-blue v-if="
+          page.currentRecipe !== null && user !== null &&
+          page.currentRecipe.published === false &&
+          ('ownerId' in page.currentRecipe) && ('id' in user) &&
+          page.currentRecipe.ownerId === user.id"
+          :outline="true"
+          subject="publish"
+          title="{{ Controller.l('recipe_options_publication_publish') }}"
+          @click="onClick"></btn-sm-blue>
+      </b-container>
+    </template>

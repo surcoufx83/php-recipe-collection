@@ -14,7 +14,7 @@ const router = new VueRouter({
       { name: 'users', path: 'users' }
     ]},
     { name: 'home', path: '/home', alias: '/', component: Home },
-    { name: 'random', path: '/random/:id?', component: Recipe },
+    { name: 'random', path: '/random/:id?' },
     { name: 'recipe', path: '/recipe/:id(.+)-:name([^/]*)', component: Recipe, children: [
       { name: 'editRecipe', path: 'edit', component: Recipe }
     ]},

@@ -8,29 +8,28 @@ Vue.component('breadcrumb', {
 
 Vue.component('btn-sm-blue', {
   props: {
-    badge: {
-      type: String,
-      required: false
-    },
-    badgeicon: {
-      type: Object,
-      required: false
-    },
-    outline: {
-      type: Boolean,
-      default: false
-    },
-    title: String
+    badge: { type: String, required: false },
+    badgeicon: { type: Object, required: false },
+    outline: { type: Boolean, default: false, required: false },
+    title: { type: String, required: true },
+    subject: { type: String, required: false }
   },
   template:
     `<b-button size="sm"
-      v-bind:class="[{ 'btn-blue': !outline }, { 'btn-outline-blue': outline } ]">
+      v-bind:class="[{ 'btn-blue': !outline }, { 'btn-outline-blue': outline } ]"
+      @click="onClick">
       {{ title }}
       <b-badge class="ml-1 text-blue" v-if="badge" variant="light">
         {{ badge }} <b-icon class="text-blue"
           :icon="badgeicon.icon" v-if="badgeicon"></b-icon>
       </b-badge>
-    </b-button>`
+    </b-button>`,
+    methods: {
+      onClick: function() {
+        console.log('@onClick')
+        this.$emit('click', this.subject ? this.subject : this.title)
+      }
+    }
 })
 
 Vue.component('fa-icon', {
@@ -57,13 +56,80 @@ Vue.component('recipe-ingredient', {
   template: '#recipe-ingredient-template'
 })
 
+Vue.component('page-actions-container', {
+  props: {
+    page: { type: Object, required: true },
+    user: { type: Object, required: true }
+  },
+  delimiters: ['${', '}'],
+  template: '#page-actions-container-template',
+  methods: {
+    onClick: function(e) {
+      console.log('@onClick', e)
+      this.$emit('click', e)
+    }
+  }
+})
+
+Vue.component('recipe-actions-container', {
+  props: {
+    page: { type: Object, required: true },
+    user: { type: Object, required: true }
+  },
+  delimiters: ['${', '}'],
+  template: '#recipe-actions-container-template',
+  methods: {
+    onClick: function(e) {
+      console.log('@onClick', e)
+      switch(e) {
+        case 'unpublish':
+          var recipe = this.page.currentRecipe
+          var user = this.user
+          if (recipe == null || recipe.id == null || recipe.isPublished == false
+              || user == null || recipe.ownerId == null || user.id == null
+              || user.id != recipe.ownerId)
+            return
+          postPageData(app.$route.path, {
+            unpublish: true
+          }, function(data) {
+            console.log('unpublish: ', data)
+            if (data.success == false) {
+              app.$set(app.page.modals.failedModal, 'message', data.message)
+              app.$set(app.page.modals.failedModal, 'code', data.code)
+              $('#action-failed-modal').modal()
+            }
+          }, true)
+          break
+        case 'publish':
+          console.log(e)
+          var recipe = this.page.currentRecipe
+          var user = this.user
+          if (recipe == null || recipe.id == null || recipe.isPublished == false
+              || user == null || recipe.ownerId == null || user.id == null
+              || user.id != recipe.ownerId)
+            return
+          postPageData(app.$route.path, {
+            publish: true
+          }, function(data) {
+            console.log('publish: ', data)
+            if (data.success == false) {
+              app.$set(app.page.modals.failedModal, 'message', data.message)
+              app.$set(app.page.modals.failedModal, 'code', data.code)
+              $('#action-failed-modal').modal()
+            }
+          }, true)
+          break
+      }
+    }
+  }
+})
+
 Vue.component('sidebar', {
   props: ['page'],
   delimiters: ['${', '}'],
   template: '#sidebar-template',
   methods: {
     toggleSidebar: function(event) {
-      console.log('sidebar: toggleSidebar')
       app.$set(app.page.sidebar, 'visible', event)
     }
   }
@@ -142,6 +208,9 @@ const Recipe = {
     }
   },
   methods: {
+    onActionClicked: function(e) {
+      console.log('@onActionClicked', e)
+    },
     onEaterCountChanged: function() {
       for (key in this.recipe.preparation.ingredients) {
         this.recipe.preparation.ingredients[key].quantityCalc =
@@ -168,7 +237,6 @@ const Recipe = {
       }, function(data) {
         console.log('onRatingSubmitPress: ', data)
         if (data.success) {
-          console.log(app)
           app.$set(app.page.self.lastVote, 'cooked', app.page.self.currentVote.cooked)
           app.$set(app.page.self.lastVote, 'rating', app.page.self.currentVote.rating)
           app.$set(app.page.self.lastVote, 'voting', app.page.self.currentVote.voting)

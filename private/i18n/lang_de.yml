@@ -47,6 +47,12 @@ greetings:
   hello: 'Hallo %s'
   recipeFrom: '%s von %s'
 
+modals:
+  failed:
+    head: 'Fehler'
+    subject: 'Bei der Aktion ist leider ein Fehler aufgetreten.'
+    close: 'Zurück'
+
 newRecipe:
   header: 'Neues Rezept von %s'
   intro:
@@ -287,6 +293,8 @@ page:
     title: 'Einstellungen'
 
 recipe:
+  loading:
+    title: 'Rezept wird geladen...'
   about:
     header: 'Über dieses Rezept'
     cooked: 'Es wurde bisher ${ recipe.socials.cookedCounter } mal nachgekocht.'
@@ -312,7 +320,7 @@ recipe:
         visitCount: 'Insgesamt hast du es ${ page.self.visitCount } mal angesehen.'
   admin:
     header: 'Administration'
-    author: 'Verfasst von %s'
+    author: 'Verfasst von ${ recipe.ownerName }'
     deletedAuthorAccount: 'Verfasst von [Gelöschtes Konto]'
     removeRecipe: 'Rezept entfernen'
     unpublishRecipe: 'Nicht-Öffentlich setzen'
@@ -391,7 +399,7 @@ response:
   dbSelectException: 'Beim Abrufen von Datensätzen aus der Datenbank ist ein Fehler aufgetreten.'
   dbStmtException: 'Fehler bei der Vorbereitung der Datenbank-Anweisung.'
   dbUpdateException: 'Fehler beim Speichern der Änderungen in der Datenbank.'
-  functionNotFoundException: 'Die Seite, auf die Sie zuzugreifen versuchen, funktioniert derzeit nicht: die angegebene Funktion ist nicht verfügbar.'
+  functionNotFoundException: 'Die angeforderte Funktion ist leider noch nicht programmiert. Stefan hauen, oder etwas Geduld zeigen ;)'
   insufficientPermissionException: 'Unzureichende Berechtigung für diese Aktion.'
   loginFailed: 'Anmeldung fehlgeschlagen.'
   loginSuccessfull: 'Anmeldung erfolgreich.'

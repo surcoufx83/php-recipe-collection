@@ -42,8 +42,10 @@ class RecipePageRoute extends Route implements RouteInterface {
       parent::setTitle($response,  $Controller->l('recipe_about_title_noUser', $recipe->getName()));
     }
     parent::addBreadcrumb($response, 'recipe', $recipe->getName(), ['id' => $recipe->getId(), 'name' => Formatter::nice_urlstring($recipe->getName())]);
+
     parent::setDescription($response, $recipe->getDescription());
 
+    parent::addToDictionary($response, ['page' => [ 'contentData' => [ 'hasActions' => true ]]]);
     parent::addToDictionary($response, ['page' => [ 'currentRecipe' => $recipe ]]);
     parent::addToDictionary($response, ['page' => [ 'self' => [
       'hasVoted' => (!is_null($userVote)) ? true : false,
