@@ -4,7 +4,6 @@ const router = new VueRouter({
   routes: [
     { name: 'account', path: '/profile', children: [
       { name: 'logout', path: 'logout' },
-      { name: 'myRecipes', path: 'recipes' },
       { name: 'settings', path: 'settings' }
     ]},
     { name: 'admin', path: '/admin', children: [
@@ -18,10 +17,15 @@ const router = new VueRouter({
     { name: 'recipe', path: '/recipe/:id(.+)-:name([^/]*)', component: Recipe, children: [
       { name: 'editRecipe', path: 'edit', component: Recipe }
     ]},
-    { name: 'recipes', path: '/recipes', component: RecipesList },
+    { name: 'recipes', path: '/recipes', component: RecipesList, children: [
+      { name: 'recipePage', path: ':page' },
+      { name: 'myRecipes', path: 'my' },
+      { name: 'userRecipes', path: 'user/:id(.+)-:name([^/]*)' }
+      ]
+    },
     { name: 'search', path: '/search' },
     { name: 'user', path: '/user/:id(.+)-:name([^/]*)', children: [
-      { name: 'userRecipes', path: 'recipes' }
+
     ]},
     { name: 'writeRecipe', path: '/write' },
   ]

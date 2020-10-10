@@ -13,7 +13,8 @@ breadcrumb:
   newRecipe: 'Neues Rezept'
   random: 'Zufällige Rezepte'
   recipes:
-    all: 'Rezepte'
+    all: 'Rezeptesammlung'
+    my: 'Meine Rezepte'
 
 common:
   duration:
@@ -391,6 +392,20 @@ recipe:
       times: '&times; gesehen'
   tags:
     header: 'Schlagworte'
+
+recipes:
+  filtered:
+    own:
+      title: 'Meine Rezepte'
+    user:
+      title: 'Rezepte von %s'
+  unfiltered:
+    title: 'Rezepte erkunden'
+  common:
+    goto: 'Zum Rezept'
+    submittedBy: 'Eingetragen von'
+    voting: 'Bewertung'
+    votings: 'Bewertungen'
 
 response:
   badArgumentsException: 'Ungültige Argumente angegeben.'

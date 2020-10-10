@@ -68,6 +68,10 @@ final class RoutingManager {
         ],
       ]
     ],
+    '/api/page-data\?/recipes(/(?<filter>[^/]+)(/(?<id>\d+)-(?<name>.+))?)?' => [ // recipe listing page with filter
+      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipeListRoute::class,
+      'method' => ERequestMethod::HTTP_GET,
+    ],
     '/api/page-data\?(?<page>.*)' => [ // common data request
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\PageData::class,
       'method' => ERequestMethod::HTTP_GET,

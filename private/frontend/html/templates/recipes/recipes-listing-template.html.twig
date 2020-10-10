@@ -1,0 +1,54 @@
+
+    <template id="recipes-listing-template">
+      <b-container fluid>
+        <b-card-group columns class="masonry-deck cols-1 cols-sm-2 cols-md-2 cols-lg-2 cols-xl-3">
+          <recipes-listing-item v-for="record in page.customContent.records" :recipe="record.recipe" :record="record" :page="page">
+          </recipes-listing-item>
+        </b-card-group>
+      </b-container>
+    </template>
+
+    <template id="recipes-listing-item-template">
+      <b-card no-body align="center"
+        :img-src="recipe.pictures.length != 0 ? recipe.pictures[0].link : ''"
+        :img-top="recipe.pictures.length != 0 ? true : false"
+        class="shadow-sm">
+        <b-card-body>
+          <h4 class="my-2">${ recipe.name }</h4>
+          <div class="text-muted" v-if="recipe.description !== ''">
+            ${ recipe.description }
+          </div>
+          <div class="text-muted mb-2" v-if="record.showAuthor === true && recipe.ownerId !== false">
+            {{ Controller.l('recipes_common_submittedBy') }} ${ recipe.ownerName }
+          </div>
+          <span class="text-muted" v-if="record.views != 0">
+            <fa-icon :icon="page.iconSet.view.icon" :space="page.iconSet.view.space" class="text-small"></fa-icon>
+            ${ record.views }
+          </span>
+          <span class="text-muted" v-if="record.cooked != 0">
+            <span class="mx-2" v-if="record.views != 0">&bull;</span>
+            <fa-icon :icon="page.iconSet.meal.icon" :space="page.iconSet.meal.space" class="text-small"></fa-icon>
+            ${ record.cooked }
+          </span>
+          <span class="text-muted" v-if="record.comments != 0">
+            <span class="mx-2" v-if="record.views != 0 || record.cooked != 0">&bull;</span>
+            <fa-icon :icon="page.iconSet.msg.icon" :space="page.iconSet.msg.space" class="text-small"></fa-icon>
+            ${ record.comments }
+          </span>
+          <span class="text-muted" v-if="record.votes != 0">
+            <span class="mx-2" v-if="record.views != 0 || record.cooked != 0 || record.comments != 0">&bull;</span>
+            <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="text-small text-contrast"></fa-icon>
+            ${ record.voting }
+            <span class="text-small">(${ record.votes }
+              <span v-if="record.votes == 1">{{ Controller.l('recipes_common_voting') }})</span>
+              <span v-else>{{ Controller.l('recipes_common_votings') }})</span>
+            </span>
+          </span>
+        </b-card-body>
+        <b-card-footer>
+          <router-link
+            :to="{ name: 'recipe', params: { id: recipe.id, name: recipe.name } }"
+            class="stretched-link">{{ Controller.l('recipes_common_goto') }}</router-link>
+        </b-card-footer>
+      </b-card>
+    </template>

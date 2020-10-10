@@ -462,4 +462,70 @@ nav.nav-recipe-sm {
   background-color: #E6E8E6;
   border-top: 1px solid #BFC4BF; }
 
+@media (max-width: 575.98px) {
+  .card-columns.masonry-deck.cols-1 {
+    column-count: 1; }
+  .card-columns.masonry-deck.cols-2 {
+    column-count: 2; }
+  .card-columns.masonry-deck.cols-3 {
+    column-count: 3; }
+  .card-columns.masonry-deck.cols-4 {
+    column-count: 4; }
+  .card-columns.masonry-deck.cols-5 {
+    column-count: 5; }
+  .card-columns.masonry-deck.cols-6 {
+    column-count: 6; } }
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .card-columns.masonry-deck.cols-sm-1 {
+    column-count: 1; }
+  .card-columns.masonry-deck.cols-sm-2 {
+    column-count: 2; }
+  .card-columns.masonry-deck.cols-sm-3 {
+    column-count: 3; }
+  .card-columns.masonry-deck.cols-sm-4 {
+    column-count: 4; }
+  .card-columns.masonry-deck.cols-sm-5 {
+    column-count: 5; }
+  .card-columns.masonry-deck.cols-sm-6 {
+    column-count: 6; } }
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .card-columns.masonry-deck.cols-md-1 {
+    column-count: 1; }
+  .card-columns.masonry-deck.cols-md-2 {
+    column-count: 2; }
+  .card-columns.masonry-deck.cols-md-3 {
+    column-count: 3; }
+  .card-columns.masonry-deck.cols-md-4 {
+    column-count: 4; }
+  .card-columns.masonry-deck.cols-md-5 {
+    column-count: 5; }
+  .card-columns.masonry-deck.cols-md-6 {
+    column-count: 6; } }
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .card-columns.masonry-deck.cols-lg-1 {
+    column-count: 1; }
+  .card-columns.masonry-deck.cols-lg-2 {
+    column-count: 2; }
+  .card-columns.masonry-deck.cols-lg-3 {
+    column-count: 3; }
+  .card-columns.masonry-deck.cols-lg-4 {
+    column-count: 4; }
+  .card-columns.masonry-deck.cols-lg-5 {
+    column-count: 5; }
+  .card-columns.masonry-deck.cols-lg-6 {
+    column-count: 6; } }
+@media (min-width: 1200px) {
+  .card-columns.masonry-deck.cols-xl-1 {
+    column-count: 1; }
+  .card-columns.masonry-deck.cols-xl-2 {
+    column-count: 2; }
+  .card-columns.masonry-deck.cols-xl-3 {
+    column-count: 3; }
+  .card-columns.masonry-deck.cols-xl-4 {
+    column-count: 4; }
+  .card-columns.masonry-deck.cols-xl-5 {
+    column-count: 5; }
+  .card-columns.masonry-deck.cols-xl-6 {
+    column-count: 6; } }
+
 /*# sourceMappingURL=theme-1.0.1.css.map */

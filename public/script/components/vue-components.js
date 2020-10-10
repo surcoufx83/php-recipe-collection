@@ -151,6 +151,16 @@ Vue.component('recipe-actions-container', {
   }
 })
 
+Vue.component('recipes-listing-item', {
+  props: {
+    page: { type: Object, required: true },
+    recipe: { type: Object, required: true },
+    record: { type: Object, required: true }
+  },
+  delimiters: ['${', '}'],
+  template: '#recipes-listing-item-template'
+})
+
 Vue.component('sidebar', {
   props: ['page'],
   delimiters: ['${', '}'],
@@ -285,6 +295,6 @@ const Recipe = {
 
 const RecipesList = {
   delimiters: ['${', '}'],
-  props: ['recipe', 'page', 'user'],
+  props: ['page', 'user'],
   template: '#recipes-listing-template'
 }

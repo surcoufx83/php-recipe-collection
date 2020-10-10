@@ -66,6 +66,7 @@ router.beforeEach((to, from, next) => {
     app.$set(app.page.contentData, 'hasFilters', false)
     app.$set(app.page, 'currentRecipe', {})
     app.$set(app.page, 'currentUser', {})
+    app.$set(app.page, 'customContent', false)
     app.$set(app.page, 'self', {
       currentVote: { cooked: -1, rating: -1, voting: -1},
       hasVoted: false,

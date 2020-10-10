@@ -174,17 +174,77 @@ final class QueryBuilder {
     return '`'.$str.'`'.(!is_null($alias) ? ' `'.$alias.'`' : '');
   }
 
-  private function maskField(string $table, string $alias, string $field, string $fieldalias = '', int $aggregation = 0) : string {
-    if ($aggregation == 0)
-      return $this->maskstr($alias).'.'.($field == DB_ANY ? $field : $this->maskstr($field));
-    $field = ($field != DB_ANY ? $this->maskstr($alias).'.' : '' ).($field == DB_ANY ? $field : $this->maskstr($field));
+  private function maskField(string $table, string $alias, string $field, string $fieldalias = '', int $aggregation = 0, $fnparam1 = null, $fnparam2 = null, $fnparam3 = null) : string {
+    $maskedfield = ($field != DB_ANY ? $this->maskstr($alias).'.'.$this->maskstr($field) : DB_ANY);
+
+    if (Flags::has_flag($aggregation, EAggregationType::atISNULL))
+      $maskedfield = $this->maskedField(EAggregationType::atISNULL, $maskedfield);
+    if (Flags::has_flag($aggregation, EAggregationType::atISNOTNULL))
+      $maskedfield = $this->maskedField(EAggregationType::atISNOTNULL, $maskedfield);
+    if (Flags::has_flag($aggregation, EAggregationType::atDISTINCT))
+      $maskedfield = $this->maskedField(EAggregationType::atDISTINCT, $maskedfield);
+
+    if (Flags::has_flag($aggregation, EAggregationType::atAVG))
+      $maskedfield = $this->maskedField(EAggregationType::atAVG, $maskedfield);
+    if (Flags::has_flag($aggregation, EAggregationType::atCONCAT))
+      $maskedfield = $this->maskedField(EAggregationType::atCONCAT, $maskedfield, $fnparam1);
+    if (Flags::has_flag($aggregation, EAggregationType::atCOUNT))
+      $maskedfield = $this->maskedField(EAggregationType::atCOUNT, $maskedfield);
+    if (Flags::has_flag($aggregation, EAggregationType::atGRPCONCAT))
+      $maskedfield = $this->maskedField(EAggregationType::atGRPCONCAT, $maskedfield, $fnparam1);
+    if (Flags::has_flag($aggregation, EAggregationType::atMAX))
+      $maskedfield = $this->maskedField(EAggregationType::atMAX, $maskedfield);
+    if (Flags::has_flag($aggregation, EAggregationType::atMIN))
+      $maskedfield = $this->maskedField(EAggregationType::atMIN, $maskedfield);
+    if (Flags::has_flag($aggregation, EAggregationType::atSUM))
+      $maskedfield = $this->maskedField(EAggregationType::atSUM, $maskedfield);
+
+    if (Flags::has_flag($aggregation, EAggregationType::atIFNULL))
+      $maskedfield = $this->maskedField(EAggregationType::atIFNULL, $maskedfield, $fnparam1);
+
+    if ($fieldalias != '')
+      $maskedfield .= ' '.$this->maskstr($fieldalias);
+
+    return $maskedfield;
+
     if (Flags::has_flag($aggregation, EAggregationType::atCOUNT) && Flags::has_flag($aggregation, EAggregationType::atDISTINCT))
       return 'COUNT(DISTINCT('.$field.'))'.($fieldalias != '' ? ' '.$this->maskstr($fieldalias) : '');
     if (Flags::has_flag($aggregation, EAggregationType::atCOUNT))
       return 'COUNT('.$field.')'.($fieldalias != '' ? ' '.$this->maskstr($fieldalias) : '');
     if (Flags::has_flag($aggregation, EAggregationType::atDISTINCT))
       return 'DISTINCT('.$field.')'.($fieldalias != '' ? ' '.$this->maskstr($fieldalias) : '');
+    if (Flags::has_flag($aggregation, EAggregationType::atSUM))
+      return 'SUM('.$field.')'.($fieldalias != '' ? ' '.$this->maskstr($fieldalias) : '');
     throw new \Exception('Invalid aggrgation value.');
+  }
+
+  private function maskedField(int $aggregation, string $makedfield, $param = null) : string {
+    switch($aggregation) {
+      case EAggregationType::atAVG:
+        return 'AVG('.$makedfield.')';
+      case EAggregationType::atCONCAT:
+        if (!is_null($param))
+          return 'CONCAT_WS(\''.$param.'\', '.$makedfield.')';
+        return 'CONCAT('.$makedfield.')';
+      case EAggregationType::atCOUNT:
+        return 'COUNT('.$makedfield.')';
+      case EAggregationType::atDISTINCT:
+        return 'DISTINCT('.$makedfield.')';
+      case EAggregationType::atGRPCONCAT:
+        return 'GROUP_CONCAT('.$makedfield.(!is_null($param) ? ' SEPARATOR \''.$param.'\'' : '').')';
+      case EAggregationType::atISNULL:
+        return 'IS NULL '.$makedfield;
+      case EAggregationType::atISNOTNULL:
+        return 'IS NOT NULL '.$makedfield;
+      case EAggregationType::atMAX:
+        return 'MAX('.$makedfield.')';
+      case EAggregationType::atMIN:
+        return 'MIN('.$makedfield.')';
+      case EAggregationType::atSUM:
+        return 'SUM('.$makedfield.')';
+      case EAggregationType::atIFNULL:
+        return 'IFNULL('.$makedfield.', '.$param.')';
+    }
   }
 
   private function maskTablefield(string $table, string $field) : string {
@@ -366,6 +426,19 @@ final class QueryBuilder {
         $this->selectFields($params[0], $params[1]);
     } else
       throw new \Exception('Invalid parameter count.');
+    return $this;
+  }
+
+  public function select2(string $table, string $field, array $params) : QueryBuilder {
+    $alias = $this->getTableAlias($table);
+    if (!array_key_exists($table, $this->selectors))
+      $this->selectors[$table] = array();
+    $fieldalias = array_key_exists('alias', $params) ? $params['alias'] : '';
+    $aggregation = array_key_exists('aggregation', $params) ? $params['aggregation'] : 0;
+    $fnparam1 = array_key_exists('param1', $params) ? $params['param1'] : null;
+    $fnparam2 = array_key_exists('param2', $params) ? $params['param2'] : null;
+    $fnparam3 = array_key_exists('param3', $params) ? $params['param3'] : null;
+    $this->selectors[$table][] = $this->maskField($table, $alias, $field, $fieldalias, $aggregation, $fnparam1, $fnparam2, $fnparam3);
     return $this;
   }
 

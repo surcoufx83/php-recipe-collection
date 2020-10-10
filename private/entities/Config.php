@@ -27,7 +27,7 @@ final class Config implements ConfigInterface {
       'DefaultLongDateTimeFormat'   => 'l, d. F Y H:i:s',
       'DefaultDecimalsCount'        => 2,
       'DefaultDecimalsSeparator'    => ',',
-      'DefaultListEntries'          => 10,
+      'DefaultListEntries'          => 15,
       'DefaultTimeFormat'           => 'H:i:s',
       'DefaultThousandsSeparator'   => '.',
       'HashProvider'                => 'crc32b',

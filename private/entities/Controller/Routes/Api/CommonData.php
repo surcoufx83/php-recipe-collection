@@ -33,6 +33,7 @@ class CommonData extends Route implements RouteInterface {
         'hasActions' => false,
         'hasFilters' => false,
       ],
+      'customContent' => false,
       'iconSet' => [
         'add' => ['icon' => 'plus-circle', 'space' => 'fas'],
         'gallery' => ['icon' => 'camera-retro', 'space' => 'fas'],
@@ -41,6 +42,7 @@ class CommonData extends Route implements RouteInterface {
         'like' => ['icon' => 'heart', 'space' => 'fas'],
         'lock' => ['icon' => 'lock', 'space' => 'fas'],
         'meal' => ['icon' => 'utensils', 'space' => 'fas'],
+        'msg' => ['icon' => 'comment-dots', 'space' => 'fas'],
         'nouser' => ['icon' => 'user-slash', 'space' => 'fas'],
         'play' => ['icon' => 'play', 'space' => 'fas'],
         'reset' => ['icon' => 'times-circle', 'space' => 'fas'],
