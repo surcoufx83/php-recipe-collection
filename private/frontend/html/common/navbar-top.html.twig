@@ -13,12 +13,16 @@
           </li>
         </ul>
       </div>
-      <ul class="navbar-nav ml-md-auto d-none d-md-flex"
+      <ul class="navbar-nav mx-md-auto d-none d-md-flex"
         v-if="user.loggedIn">
+        <li class="nav-item navbar-brand mr-0 mr-md-2">Rezeptsuche:</li>
         <li class="nav-item d-none d-md-inline-block mr-5">
-          <input class="form-control form-control-sm mt-2 bg-dark text-light border-top-0 border-left-0 border-right-0 rounded-0 border-light"
+          <input class="form-control form-control-sm mt-2 bg-dark text-light border-light"
             type="search" placeholder="{{ Controller.l('navigation_topbar_search_placeholder') }}" aria-label="{{ Controller.l('navigation_topbar_search_placeholder') }}">
         </li>
+      </ul>
+      <ul class="navbar-nav ml-md-auto d-none d-md-flex"
+        v-if="user.loggedIn">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle text-uppercase" href="#" id="navbarDropdown"
             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

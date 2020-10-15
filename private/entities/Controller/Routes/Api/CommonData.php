@@ -46,6 +46,7 @@ class CommonData extends Route implements RouteInterface {
         'nouser' => ['icon' => 'user-slash', 'space' => 'fas'],
         'play' => ['icon' => 'play', 'space' => 'fas'],
         'reset' => ['icon' => 'times-circle', 'space' => 'fas'],
+        'search' => ['icon' => 'search', 'space' => 'fas'],
         'spinner' => ['icon' => 'circle-notch', 'space' => 'fas'],
         'unlock' => ['icon' => 'unlock', 'space' => 'fas'],
         'user' => ['icon' => 'user-circle', 'space' => 'far'],
@@ -58,6 +59,23 @@ class CommonData extends Route implements RouteInterface {
           'message' => '',
           'code' => 0,
         ]
+      ],
+      'search' => [
+        'filter' => [
+          'ingredients' => '',
+          'maxTime' => '',
+          'options' => [
+            'onlyWithComments' => false,
+            'onlyWithPic' => false
+          ],
+          'rating' => -1,
+          'sortBy' => '',
+          'tags' => '',
+          'title' => '',
+          'user' => '',
+          'voting' => -1,
+        ],
+        'results' => [],
       ],
       'self' => [
         'currentVote' => [

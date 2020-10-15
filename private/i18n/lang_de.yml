@@ -15,6 +15,8 @@ breadcrumb:
   recipes:
     all: 'Rezeptesammlung'
     my: 'Meine Rezepte'
+  search:
+    main: 'Suche'
 
 common:
   duration:
@@ -55,7 +57,7 @@ modals:
     close: 'Zurück'
 
 newRecipe:
-  header: 'Neues Rezept von %s'
+  header: 'Neues Rezept erfassen'
   intro:
     header: 'Rezepteingabe'
     requiredFields: 'Alle mit <b><span class=\'text-contrast\'>*</span></b> markierten Felder müssen befüllt werden. Der Großteil der Angaben ist optional, aber wir freuen uns, wenn du diese trotzdem befüllst.'
@@ -102,7 +104,7 @@ newRecipe:
   chapter3:
     header: 'Bildergallerie'
     recipePictures: 'Bilder hochladen'
-    recipePicturesDescription: 'Lade ein oder mehrere Bilder von deinem Computer bzw. Handy hoch um diese neben dem Rezept anzuzeigen.<br />Das erste Bild wird immer das Vorschaubild sein.'
+    recipePicturesDescription: 'Lade ein oder mehrere Bilder von deinem Computer bzw. Handy hoch um diese neben dem Rezept anzuzeigen. Das erste Bild wird immer das Vorschaubild sein.'
     recipePicturesRemove: 'Entfernen'
     recipePicturesUpload: 'Hinzufügen'
   chapter4:
@@ -430,6 +432,12 @@ response:
   undefinedException: 'Im Backend ist ein nicht spezifizierter Fehler aufgetreten. Ihre Änderungen wurden nicht akzeptiert.'
   validationSucceeded: 'Die Überprüfung war erfolgreich. Es wurden keine Fehler festgestellt.'
   validationFailed: 'Es sind folgende Fehler aufgetreten: '
+
+search:
+  title: 'Suchfunktion'
+  form:
+    placeholder: 'z. B. Muffins Karotte Ingwer'
+    searchingFor: 'Suche nach'
 
 sendmail:
   registration:

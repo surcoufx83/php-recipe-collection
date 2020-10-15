@@ -23,10 +23,10 @@ const router = new VueRouter({
       { name: 'userRecipes', path: 'user/:id(.+)-:name([^/]*)' }
       ]
     },
-    { name: 'search', path: '/search' },
+    { name: 'search', path: '/search', component: SearchRecipe },
     { name: 'user', path: '/user/:id(.+)-:name([^/]*)', children: [
 
     ]},
-    { name: 'writeRecipe', path: '/write' },
+    { name: 'writeRecipe', path: '/write', component: RecipesCreator },
   ]
 })

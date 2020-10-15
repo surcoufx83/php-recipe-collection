@@ -293,8 +293,69 @@ const Recipe = {
   }
 }
 
+const RecipesCreator = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user'],
+  template: '#recipe-write-template',
+  data: function() {
+    return {
+      title: '',
+      description: '',
+      eater: 4,
+      pictures: [
+        { file: null },
+        { file: null },
+        { file: null }
+      ],
+      ingredients: [
+        { amount: '', unit: { id: '', name: '' }, description: ''},
+        { amount: '', unit: { id: '', name: '' }, description: ''},
+        { amount: '', unit: { id: '', name: '' }, description: ''},
+        { amount: '', unit: { id: '', name: '' }, description: ''},
+        { amount: '', unit: { id: '', name: '' }, description: ''}
+      ],
+      steps: [
+        { title: '', description: '', timePrep: '', timeRest: '', timeCook: '' },
+        { title: '', description: '', timePrep: '', timeRest: '', timeCook: '' },
+        { title: '', description: '', timePrep: '', timeRest: '', timeCook: '' }
+      ],
+      sourceTitle: '',
+      sourceUrl: '',
+      tags: []
+    }
+  },
+  methods: {
+    onSubmit: function() {
+      console.log('RecipesCreator @onSubmit')
+    },
+    onPictureUploadBtnClick: function(i) {
+      console.log('RecipesCreator @onPictureUploadBtnClick', i)
+      console.log(this.pictures)
+      if (this.pictures[i].file)
+        this.pictures[i].file = null
+      else
+        $('#file-' + i).click()
+    },
+    onPictureUploaded: function(i) {
+      console.log('RecipesCreator @onPictureUploaded', i)
+      console.log(this.pictures[i])
+    }
+  }
+}
+
 const RecipesList = {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
   template: '#recipes-listing-template'
+}
+
+const SearchRecipe = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user'],
+  template: '#search-template',
+  methods: {
+    onClick: function() {
+      console.log('SearchRecipe @click')
+    }
+  }
 }

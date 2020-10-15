@@ -107,6 +107,30 @@ h1, h2, h3 {
   }
 }
 
+.btn-light-blue, .btn-outline-light-blue.active {
+  color: $bg-light!important;
+  background-color: $bg-contrast;
+  border-color: $bg-contrast;
+
+  &:hover {
+    color: $bg-light!important;
+    background-color: $bg-contrast-dark;
+    border-color: $bg-contrast-dark;
+  }
+}
+
+.btn-outline-light-blue:not(.active) {
+  color: $text-link!important;
+  background-color: $bg-light;
+  border-color: $bg-contrast;
+
+  &:hover {
+    color: $bg-light!important;
+    background-color: $bg-contrast-dark;
+    border-color: $bg-contrast-dark;
+  }
+}
+
 .custom-control-input:checked~.custom-control-label::before {
   color: $bg-light!important;
   background-color: $bg-contrast-dark;

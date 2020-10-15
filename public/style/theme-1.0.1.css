@@ -47,6 +47,24 @@ h1, h2, h3 {
     background-color: #1C77C3;
     border-color: #1C77C3; }
 
+.btn-light-blue, .btn-outline-light-blue.active {
+  color: #E6E8E6 !important;
+  background-color: #1C77C3;
+  border-color: #1C77C3; }
+  .btn-light-blue:hover, .btn-outline-light-blue.active:hover {
+    color: #E6E8E6 !important;
+    background-color: #0D3759;
+    border-color: #0D3759; }
+
+.btn-outline-light-blue:not(.active) {
+  color: #0D3759 !important;
+  background-color: #E6E8E6;
+  border-color: #1C77C3; }
+  .btn-outline-light-blue:not(.active):hover {
+    color: #E6E8E6 !important;
+    background-color: #0D3759;
+    border-color: #0D3759; }
+
 .custom-control-input:checked ~ .custom-control-label::before {
   color: #E6E8E6 !important;
   background-color: #0D3759;
