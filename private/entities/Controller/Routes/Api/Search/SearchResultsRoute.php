@@ -1,12 +1,13 @@
 <?php
 
-namespace Surcouf\Cookbook\Controller\Routes\Api\Recipe;
+namespace Surcouf\Cookbook\Controller\Routes\Api\Search;
 
 use Surcouf\Cookbook\Controller\Route;
 use Surcouf\Cookbook\Controller\RouteInterface;
 use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
+use Surcouf\Cookbook\Database\Builder\Expression;
 use Surcouf\Cookbook\Helper\Formatter;
 use Surcouf\Cookbook\Recipe\Recipe;
 use Surcouf\Cookbook\Recipe\Pictures\Picture;
@@ -15,17 +16,36 @@ use Surcouf\Cookbook\User\UserInterface;
 if (!defined('CORE2'))
   exit;
 
-class RecipeListRoute extends Route implements RouteInterface {
+class SearchResultsRoute extends Route implements RouteInterface {
 
   static function createOutput(array &$response) : bool {
     global $Controller;
 
-    $filter = $Controller->Dispatcher()->getFromMatches('filter');
     $response = $Controller->Config()->getResponseArray(1);
+    $response['data'] = $Controller->Dispatcher()->getPayload();
+
 
     $countQuery = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
     $countQuery
-      ->select2('recipes', 'recipe_id', ['alias' => 'count', 'aggregation' => EAggregationType::atCOUNT]);
+      ->select2('recipes', 'recipe_id', ['alias' => 'count', 'aggregation' => EAggregationType::atCOUNT])
+      ->setWhere()
+        ->expr()
+          ->equals(['left' => ['table' => 'recipes', 'column' => 'recipe_public'], 'right' => 1])
+        ->and()
+          ->braces()
+          ->e(['expression' => (new Expression())->equals(['left' => ['table' => 'recipes', 'column' => 'recipe_public'], 'right' => true])], true)
+          ->and()
+          ->e(['expression' => (new Expression())->equals(['left' => ['table' => 'recipes', 'column' => 'recipe_public'], 'right' => false], true)])
+        ->ret()
+      ;
+      $response['query'] = $countQuery->__toString();
+
+    return true;
+
+    $countQuery = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
+    $countQuery
+      ->select2('recipes', 'recipe_id', ['alias' => 'count', 'aggregation' => EAggregationType::atCOUNT])
+      ->where('recipes', 'recipe_public', '=', 1);
 
     $baseQuery = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
     $baseQuery
@@ -44,6 +64,7 @@ class RecipeListRoute extends Route implements RouteInterface {
       ->groupBy('recipes', ['recipe_id', 'user_id', 'recipe_public', 'recipe_name', 'recipe_description', 'recipe_eater', 'recipe_source_desc', 'recipe_source_url', 'recipe_created', 'recipe_published'])
       ->groupBy('recipe_pictures', ['picture_id', 'picture_sortindex', 'picture_name', 'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path'])
       ->orderBy2('recipes', 'recipe_name', 'ASC')
+      ->where('recipes', 'recipe_public', '=', 1)
       ->limit($Controller->Config()->DefaultListEntries());
 
     if (is_null($filter) || $filter == '')
@@ -95,39 +116,15 @@ class RecipeListRoute extends Route implements RouteInterface {
     return true;
   }
 
-  static function filterOwnList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
+  static function filterPhrase(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
     global $Controller;
-    $basequery->where('recipes', 'user_id', '=', $Controller->User()->getId());
-    $countquery->where('recipes', 'user_id', '=', $Controller->User()->getId());
-    parent::setTitle($response,  $Controller->l('recipes_filtered_own_title'));
-    parent::setDescription($response, '');
-    parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
-    parent::addBreadcrumb($response, 'myRecipes', $Controller->l('breadcrumb_recipes_my'));
-    return;
-  }
-
-  static function filterUserList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery, UserInterface $user) : void {
-    global $Controller;
-    $basequery
-      ->where('recipes', 'recipe_public', '=', 1)
-      ->andWhere('recipes', 'user_id', '=', $user->getId());
-    $countquery
-      ->where('recipes', 'recipe_public', '=', 1)
-      ->andWhere('recipes', 'user_id', '=', $user->getId());
-    parent::setTitle($response,  $Controller->l('recipes_filtered_user_title', $user->getUsername()));
-    parent::setDescription($response, '');
-    parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
-    parent::addBreadcrumb($response, 'userRecipes', $user->getUsername(), ['id' => $user->getId(), 'name' => Formatter::nice_urlstring($user->getUsername())]);
+    $basequery->andWhere('recipes', 'user_id', '=', $user->getId());
+    $countquery->andWhere('recipes', 'user_id', '=', $user->getId());
     return;
   }
 
   static function unfilteredList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
     global $Controller;
-    $basequery->where('recipes', 'recipe_public', '=', 1);
-    $countquery->where('recipes', 'recipe_public', '=', 1);
-    parent::setTitle($response,  $Controller->l('recipes_unfiltered_title'));
-    parent::setDescription($response, '');
-    parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
     return;
   }
 

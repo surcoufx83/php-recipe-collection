@@ -94,9 +94,9 @@ class CookingStep implements CookingStepInterface, DbObjectInterface, \JsonSeria
       'name' => $this->step_title,
       'userContent' => $this->step_data,
       'timeConsumed' => [
-        'cooking' => ($this->step_time_cooking == -1 ? null : $this->step_time_cooking),
-        'preparing' => ($this->step_time_preparation == -1 ? null : $this->step_time_preparation),
-        'rest' => ($this->step_time_chill == -1 ? null : $this->step_time_chill),
+        'cooking' => ($this->step_time_cooking == -1 ? '' : $this->step_time_cooking),
+        'preparing' => ($this->step_time_preparation == -1 ? '' : $this->step_time_preparation),
+        'rest' => ($this->step_time_chill == -1 ? '' : $this->step_time_chill),
         'unit' => 'minutes',
       ]
     ];

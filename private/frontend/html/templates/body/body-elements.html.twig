@@ -104,10 +104,19 @@
     <template id="recipe-actions-container-template">
       <b-container class="px-0">
         <btn-sm-blue v-if="
+          page.currentRecipe !== null &&
+          ($route.name == 'editRecipe' || $route.name == 'recipe')"
+          subject="toGallery"
+          title="{{ Controller.l('recipe_options_toGallery') }}"
+          :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space"
+          outline
+          @click="onClick"></btn-sm-blue>
+        <btn-sm-blue v-if="
           page.currentRecipe !== null && user !== null &&
           page.currentRecipe.published !== false &&
           ('ownerId' in page.currentRecipe) && ('id' in user) &&
-          page.currentRecipe.ownerId === user.id"
+          page.currentRecipe.ownerId === user.id &&
+          $route.name == 'recipe'"
           :outline="true"
           subject="unpublish"
           title="{{ Controller.l('recipe_options_publication_unpublish') }}"
@@ -116,10 +125,30 @@
           page.currentRecipe !== null && user !== null &&
           page.currentRecipe.published === false &&
           ('ownerId' in page.currentRecipe) && ('id' in user) &&
-          page.currentRecipe.ownerId === user.id"
+          page.currentRecipe.ownerId === user.id &&
+          $route.name == 'recipe'"
           :outline="true"
           subject="publish"
           title="{{ Controller.l('recipe_options_publication_publish') }}"
+          @click="onClick"></btn-sm-blue>
+        <btn-sm-blue v-if="
+          page.currentRecipe !== null && user !== null &&
+          ('ownerId' in page.currentRecipe) && ('id' in user) &&
+          page.currentRecipe.ownerId === user.id &&
+          $route.name == 'recipe'"
+          subject="edit"
+          title="{{ Controller.l('recipe_options_edit') }}"
+          :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
+          @click="onClick"></btn-sm-blue>
+        <btn-sm-blue v-if="
+          page.currentRecipe !== null && user !== null &&
+          ('ownerId' in page.currentRecipe) && ('id' in user) &&
+          page.currentRecipe.ownerId === user.id &&
+          ($route.name == 'editRecipe' || $route.name == 'gallery')"
+          subject="toRecipe"
+          title="{{ Controller.l('recipe_options_toRecipe') }}"
+          :icon="page.iconSet.back.icon" :space="page.iconSet.back.space"
+          outline
           @click="onClick"></btn-sm-blue>
       </b-container>
     </template>

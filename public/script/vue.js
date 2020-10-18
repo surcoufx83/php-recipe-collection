@@ -57,26 +57,14 @@ Vue.http.get('common-data')
 
 router.beforeEach((to, from, next) => {
   if (app) {
-    app.$set(app.page.contentData, 'actions', [])
-    app.$set(app.page.contentData, 'breadcrumbs', [])
-    app.$set(app.page.contentData, 'filters', [])
-    app.$set(app.page.contentData, 'title', '')
-    app.$set(app.page.contentData, 'titleDescription', '')
-    app.$set(app.page.contentData, 'hasActions', false)
-    app.$set(app.page.contentData, 'hasFilters', false)
-    app.$set(app.page, 'currentRecipe', {})
-    app.$set(app.page, 'currentUser', {})
-    app.$set(app.page, 'customContent', false)
-    app.$set(app.page, 'self', {
-      currentVote: { cooked: -1, rating: -1, voting: -1},
-      hasVoted: false,
-      lastVote: { id: '', userId: '', user: '', time: '', comment: '', cooked: '', voting: '', rating: '', formatted: { time: ''}},
-      visitCount: 0,
-      voteCount: 0
-    })
+    if (
+      !((to.name == 'recipe' || to.name == 'editRecipe' || to.name == 'gallery') &&
+        (from.name == 'recipe' || from.name == 'editRecipe' || from.name == 'gallery'))
+    ) {
+      resetPageData(app)
+      refreshPageData(to.path)
+    }
   }
-  if (to.name != 'logout')
-    refreshPageData(to.path)
   next()
 })
 
@@ -89,6 +77,83 @@ router.afterEach((to, from) => {
       })
   }
 })
+
+function resetPageData(app) {
+  app.$set(app.page.contentData, 'actions', [])
+  app.$set(app.page.contentData, 'breadcrumbs', [])
+  app.$set(app.page.contentData, 'filters', [])
+  app.$set(app.page.contentData, 'title', '')
+  app.$set(app.page.contentData, 'titleDescription', '')
+  app.$set(app.page.contentData, 'hasActions', false)
+  app.$set(app.page.contentData, 'hasFilters', false)
+  app.$set(app.page, 'currentRecipe', {})
+  app.$set(app.page, 'currentUser', {})
+  app.$set(app.page, 'customContent', false)
+  app.$set(app.page, 'self', {
+    currentVote: { cooked: -1, rating: -1, voting: -1},
+    hasVoted: false,
+    lastVote: { id: '', userId: '', user: '', time: '', comment: '', cooked: '', voting: '', rating: '', formatted: { time: ''}},
+    visitCount: 0,
+    voteCount: 0
+  })
+}
+
+function initEmptyRecipe(app) {
+  app.$set(app.page.currentRecipe, 'id', 0)
+  app.$set(app.page.currentRecipe, 'name', '')
+  app.$set(app.page.currentRecipe, 'created', false)
+  app.$set(app.page.currentRecipe, 'description', '')
+  app.$set(app.page.currentRecipe, 'eaterCount', 4)
+  app.$set(app.page.currentRecipe, 'eaterCountCalc', 4)
+  app.$set(app.page.currentRecipe, 'ownerId', 0)
+  app.$set(app.page.currentRecipe, 'ownerName', '')
+  app.$set(app.page.currentRecipe, 'published', false)
+  app.$set(app.page.currentRecipe, 'source', { description: '', url: '' })
+  app.$set(app.page.currentRecipe, 'formatted', { created: '', published: '' })
+  app.$set(app.page.currentRecipe, 'pictures', [
+    { file: null },
+    { file: null },
+    { file: null }
+  ])
+  app.$set(app.page.currentRecipe, 'preparation', {
+    ingredients: [
+      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''},
+      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''},
+      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''},
+      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''},
+      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''}
+    ],
+    steps: [
+      { index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } },
+      { index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } },
+      { index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } }
+    ],
+    timeConsumed: {
+      cooking: 0,
+      preparing: 0,
+      rest: 0,
+      total: 0,
+      unit: 'minutes',
+      formatted: {
+        cooking: { valueStr: '', timeStr: '', timeStr2: '' },
+        preparing: { valueStr: '', timeStr: '', timeStr2: '' },
+        rest: { valueStr: '', timeStr: '', timeStr2: '' },
+        total: { valueStr: '', timeStr: '', timeStr2: '' }
+      }
+    }
+  })
+  app.$set(app.page.currentRecipe, 'socials', {
+    cookedCounter: 0,
+    ratedCounter: 0,
+    ratedSum: 0,
+    viewCounter: 0,
+    votedCounter: 0,
+    votedSum: 0,
+    votedAvg1: '0.0',
+    votedAvg0: '0'
+  })
+  app.$set(app.page.currentRecipe, 'tags', { items: [], votes: [] })
+}
 
 function refreshPageData(path, appparam = false) {
   if (appparam !== false && !app)
@@ -112,6 +177,8 @@ function refreshPageData(path, appparam = false) {
       else if (data.page) {
         updateProps(data, app)
       }
+      if (path == '/write')
+        initEmptyRecipe(app)
       app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
       app.$set(app.page, 'loading',false)
     })
@@ -138,6 +205,34 @@ function postPageData(path, data, callback, updateOnSuccess = false) {
     console.log(jqXHR, textStatus)
     app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
     app.$set(app.page, 'updating',false)
+  })
+}
+
+function postFormData(path, data, callback, updateOnSuccess = false) {
+  if (!app)
+    return;
+  app.$set(app.page, 'updating', true)
+  var m0 = performance.now()
+  $.ajax({
+    url: '/api/page-data?' + encodeURI(path),
+    method: 'POST',
+    contentType: false,
+    processData: false,
+    cache: false,
+    data: data
+  })
+  .done(function(data) {
+    if (updateOnSuccess == true && data.success == true)
+      updateProps(data, app)
+    app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+    app.$set(app.page, 'updating',false)
+    callback(data);
+  })
+  .fail(function(jqXHR, textStatus) {
+    console.log(jqXHR, textStatus)
+    app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+    app.$set(app.page, 'updating',false)
+    callback({ success: false, code: -1, message: textStatus })
   })
 }
 

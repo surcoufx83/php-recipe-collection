@@ -25,6 +25,7 @@ class RecipePostRoute extends Route implements RouteInterface {
 
     $recipe = $Controller->Dispatcher()->getObject();
     $payload = $Controller->Dispatcher()->getPayload();
+    $action = $Controller->Dispatcher()->getFromMatches('action');
     $user = $Controller->User();
     if (array_key_exists('publish', $payload))
       return self::publish($response, $recipe, $user);
@@ -32,11 +33,23 @@ class RecipePostRoute extends Route implements RouteInterface {
       return self::unpublish($response, $recipe, $user);
     if (array_key_exists('vote', $payload))
       return self::vote($response, $recipe, $user, $payload['vote']);
+    if ($action == 'edit')
+      return self::edit($response, $recipe, $user, $payload);
 
     $response = $Controller->Config()->getResponseArray(71);
+    parent::addToDictionary($response, ['action' => $action]);
 
     return true;
 
+  }
+
+  static function edit(array &$response, RecipeInterface $recipe, ?UserInterface $user, array $payload) : bool {
+    global $Controller;
+    if (!$user || $recipe->getUserId() != $user->getId()) {
+      $response = $Controller->Config()->getResponseArray(92);
+      return false;
+    }
+    return $recipe->update($response, $payload);
   }
 
   static function publish(array &$response, RecipeInterface $recipe, ?UserInterface $user) : bool {

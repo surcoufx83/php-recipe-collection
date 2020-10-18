@@ -1,30 +1,30 @@
 
     <template id="search-template">
       <b-container fluid>
-        <b-form inline>
-          <b-container>
-            <b-row>
-              <b-col class="col-12 col-md-7">
-                <b-form-group
-                  label-cols="3"
-                  label="{{ Controller.l('search_form_searchingFor') }}: "
-                  label-for="search">
-                  <b-input-group>
-                    <b-input id="search" placeholder="{{ Controller.l('search_form_placeholder') }}"></b-input>
-                    <b-input-group-append>
-                      <b-button
-                        variant="light-blue"
-                        @click="onClick">
-                        <fa-icon v-if="!page.loading" :icon="page.iconSet.search.icon" :space="page.iconSet.search.space" class="mr-2"></fa-icon>
-                        <fa-icon v-if="page.loading" :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space" class="fa-spin mr-2"></fa-icon>
-                        <strong>Finden</strong>
-                      </b-button>
-                    </b-input-group-append>
-                  </b-input-group>
-                </b-form-group>
-              </b-col>
-            </b-row>
-          </b-container>
-        </b-form>
+        <b-container>
+          <b-row>
+            <b-col class="col-12 col-md-7">
+              <b-form-group
+                label-cols="3"
+                label="{{ Controller.l('search_form_searchingFor') }}: "
+                label-for="search">
+                <b-input-group>
+                  <b-input id="search"
+                    placeholder="{{ Controller.l('search_form_placeholder') }}"
+                    v-model="page.search.filter.title"></b-input>
+                  <b-input-group-append>
+                    <b-button
+                      variant="light-blue"
+                      @click="onClick">
+                      <fa-icon v-if="!page.loading" :icon="page.iconSet.search.icon" :space="page.iconSet.search.space" class="mr-2"></fa-icon>
+                      <fa-icon v-if="page.loading" :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space" class="fa-spin mr-2"></fa-icon>
+                      <strong>Finden</strong>
+                    </b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </b-form-group>
+            </b-col>
+          </b-row>
+        </b-container>
       </b-container>
     </template>

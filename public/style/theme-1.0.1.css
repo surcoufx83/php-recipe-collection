@@ -100,6 +100,45 @@ h1, h2, h3 {
 .bg-contrast-darker {
   background-color: #14588F; }
 
+.border-blue {
+  border-color: #0D3759 !important; }
+
+.border-light-blue {
+  border-color: #EDF6FC !important; }
+
+.border-light {
+  border-color: #E6E8E6 !important; }
+
+.border-light-dark {
+  border-color: #BFC4BF !important; }
+
+.border-light-muted {
+  border-color: #D5D8D5 !important; }
+
+.border-contrast {
+  border-color: #1C77C3 !important; }
+
+.border-contrast-brighter {
+  border-color: #3B97E3 !important; }
+
+.border-contrast-darker {
+  border-color: #14588F !important; }
+
+.border-1 {
+  border-width: 1px !important; }
+
+.border-2 {
+  border-width: 2px !important; }
+
+.border-3 {
+  border-width: 3px !important; }
+
+.border-4 {
+  border-width: 4px !important; }
+
+.border-5 {
+  border-width: 5px !important; }
+
 .overflow-x-auto {
   overflow-x: auto; }
 

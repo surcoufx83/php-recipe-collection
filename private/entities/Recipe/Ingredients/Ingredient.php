@@ -71,7 +71,7 @@ class Ingredient implements IngredientInterface, DbObjectInterface, \JsonSeriali
     return [
       'id' => $this->ingredient_id,
       'unitId' => $this->unit_id,
-      'unit' => (!is_null($this->unit_id) ? $this->getUnit() : null),
+      'unit' => (!is_null($this->unit_id) ? $this->getUnit() : ['id' => 0, 'name' => '']),
       'quantity' => $this->ingredient_quantity,
       'quantityCalc' => $this->ingredient_quantity,
       'description' => $this->ingredient_description,

@@ -28,7 +28,7 @@ interface ControllerInterface {
 
   public function cancelTransaction() : bool;
   public function dberror() : string;
-  public function dbescape($value, bool $includeQuotes = true) : string;
+  public function dbescape($value, string $separator = ', ') : string;
   public function delete(QueryBuilder &$qbuilder) : bool;
   public function finishTransaction() : bool;
   public function get(array $params) : void;

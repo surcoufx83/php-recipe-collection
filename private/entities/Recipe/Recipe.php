@@ -333,9 +333,9 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
         'created' => $this->recipe_created->format($Controller->Config()->DefaultDateFormatUi()),
         'published' => ($this->recipe_public ? $this->recipe_published->format($Controller->Config()->DefaultDateFormatUi()) : ''),
       ],
-      'pictures' => $this->pictures,
+      'pictures' => array_values($this->pictures),
       'preparation' => [
-        'ingredients' => $this->ingredients,
+        'ingredients' => array_values($this->ingredients),
         'steps' => $this->steps,
         'timeConsumed' => [
           'cooking' => $this->timecooking,
@@ -468,25 +468,31 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
 
   public function setDescription(string $newDescription) : RecipeInterface {
     global $Controller;
-    $this->recipe_description = $newDescription;
-    $this->changes['recipe_description'] = $newDescription;
-    $Controller->updateDbObject($this);
+    if ($this->recipe_description != $newDescription) {
+      $this->recipe_description = $newDescription;
+      $this->changes['recipe_description'] = $newDescription;
+      $Controller->updateDbObject($this);
+    }
     return $this;
   }
 
   public function setEaterCount(int $newCount) : RecipeInterface {
     global $Controller;
-    $this->recipe_eater = $newCount;
-    $this->changes['recipe_eater'] = $newCount;
-    $Controller->updateDbObject($this);
+    if ($this->recipe_eater != $newCount) {
+      $this->recipe_eater = $newCount;
+      $this->changes['recipe_eater'] = $newCount;
+      $Controller->updateDbObject($this);
+    }
     return $this;
   }
 
   public function setName(string $newName) : RecipeInterface {
     global $Controller;
-    $this->recipe_name = $newName;
-    $this->changes['recipe_name'] = $newName;
-    $Controller->updateDbObject($this);
+    if ($this->recipe_name != $newName) {
+      $this->recipe_name = $newName;
+      $this->changes['recipe_name'] = $newName;
+      $Controller->updateDbObject($this);
+    }
     return $this;
   }
 
@@ -504,18 +510,35 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
 
   public function setSourceDescription(string $newDescription) : RecipeInterface {
     global $Controller;
-    $this->recipe_source_desc = $newDescription;
-    $this->changes['recipe_source_desc'] = $newDescription;
-    $Controller->updateDbObject($this);
+    if ($this->recipe_source_desc != $newDescription) {
+      $this->recipe_source_desc = $newDescription;
+      $this->changes['recipe_source_desc'] = $newDescription;
+      $Controller->updateDbObject($this);
+    }
     return $this;
   }
 
   public function setSourceUrl(string $newUrl) : RecipeInterface {
     global $Controller;
-    $this->recipe_source_url = $newUrl;
-    $this->changes['recipe_source_url'] = $newUrl;
-    $Controller->updateDbObject($this);
+    if ($this->recipe_source_url != $newUrl) {
+      $this->recipe_source_url = $newUrl;
+      $this->changes['recipe_source_url'] = $newUrl;
+      $Controller->updateDbObject($this);
+    }
     return $this;
+  }
+
+  public function update(array &$response, array $payload) : bool {
+    global $Controller;
+    $this
+      ->setDescription($payload['recipe-description'])
+      ->setEaterCount(intval($payload['recipe-eater']))
+      ->setName($payload['recipe-name'])
+      ->setSourceDescription($payload['recipe-source'])
+      ->setSourceUrl($payload['recipe-sourceurl']);
+    
+    $response = $Controller->Config()->getResponseArray(91);
+    return false;
   }
 
 }

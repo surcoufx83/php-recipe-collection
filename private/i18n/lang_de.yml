@@ -107,12 +107,15 @@ newRecipe:
     recipePicturesDescription: 'Lade ein oder mehrere Bilder von deinem Computer bzw. Handy hoch um diese neben dem Rezept anzuzeigen. Das erste Bild wird immer das Vorschaubild sein.'
     recipePicturesRemove: 'Entfernen'
     recipePicturesUpload: 'Hinzufügen'
+    header2: 'Zur Bildergallerie'
+    togalleryLink: 'Die Bilder deiner Rezepte kannst du in der Galerie verwalten.'
   chapter4:
     addButton:
       title: 'Anklicken um einen weiteren Arbeitsschritt einzufügen.'
     description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen. Optional kannst du für jeden Schritt auch noch angeben, wie lange Vorbereitung, Ruhezeit, und das Kochen dauern.'
     header: 'Schritt-für-Schritt Anleitung'
     step:
+      stepname: 'Schritt'
       duration:
         cooking: 'Kochdauer'
         description: 'Zeitaufwand (Minuten)'
@@ -129,14 +132,18 @@ newRecipe:
     header: 'Weitere Optionen'
   modal:
     backButton: 'Zurück'
-    description: 'Einen Moment bitte. Die Rezeptdaten werden gerade ins Kochbuch geschrieben.'
-    error: 'Das hätte nicht passieren sollen, aber beim Speichern ist ein Fehler aufgetreten &#x1F613;. Fehlerinformationen wurden an Stefan gesendet.'
+    preparing: 'Deine Eingaben werden geprüft.'
+    description: 'Die Rezeptdaten werden gerade ins Kochbuch geschrieben. Bitte habe kurz Geduld, es geht gleich weiter...'
+    error: 'Das hätte nicht passieren sollen, aber beim Speichern ist ein Fehler aufgetreten. Die Fehlerinformationen wurden an Stefan gesendet.'
     forwardButton: 'Zum Rezept'
     newButton: 'Noch ein Rezept eintragen'
-    success: 'Das Rezept ist gespeichert. Du wirst gleich weitergeleitet...'
+    success: 'Das Rezept ist gespeichert. Wähle einen der Buttons um fortzufahren.'
     title: 'Rezept wird gespeichert...'
   submitButton:
     title: 'Rezept speichern'
+    editTitle: 'Änderungen speichern'
+    submitted: 'Rezept wurde gespeichert'
+    invalidFeedback: 'Es gibt noch fehlerhafte Felder. Bitte prüfe deine Angaben.'
 
 navigation:
   sidebar:
@@ -361,6 +368,9 @@ recipe:
     publication:
       publish: 'Veröffentlichen'
       unpublish: 'Veröffentlichung zurückziehen'
+    edit: 'Bearbeiten'
+    toGallery: 'Bildergalerie'
+    toRecipe: 'Zurück'
   rate:
     button: 'Bewertung abgeben'
     header: 'Rezept bewerten'

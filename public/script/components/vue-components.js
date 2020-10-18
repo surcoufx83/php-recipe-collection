@@ -20,7 +20,7 @@ Vue.component('btn-sm-blue', {
     `<b-button size="sm"
       v-bind:class="[{ 'btn-blue': !outline }, { 'btn-outline-blue': outline } ]"
       @click="onClick">
-      <fa-icon v-if="icon" :icon="icon" :space="space" class="fs-80 mr-1"></fa-icon>
+      <fa-icon v-if="icon" :icon="icon" :space="space" :class="'fs-80 ' + title == '' ? 'mx-1' : 'mr-1'"></fa-icon>
       {{ title }}
       <b-badge class="ml-1 text-blue" v-if="badge" variant="light">
         {{ badge }} <b-icon class="text-blue"
@@ -146,6 +146,18 @@ Vue.component('recipe-actions-container', {
             }
           }, true)
           break
+        case 'edit':
+          var recipe = this.page.currentRecipe
+          router.push({ name: 'editRecipe', params: { id: recipe.id, name: recipe.name } })
+          break
+        case 'toGallery':
+          var recipe = this.page.currentRecipe
+          router.push({ name: 'gallery', params: { id: recipe.id, name: recipe.name } })
+          break
+        case 'toRecipe':
+          var recipe = this.page.currentRecipe
+          router.push({ name: 'recipe', params: { id: recipe.id, name: recipe.name } })
+          break
       }
     }
   }
@@ -260,7 +272,6 @@ const Recipe = {
       $('#recipe-rating-modal').modal()
     },
     onRatingSubmitPress: function() {
-      console.log('onRatingSubmitPress')
       $('#recipe-rating-modal-save').addClass('d-none')
       $('#recipe-rating-modal-spinner').removeClass('d-none')
       $('#recipe-rating-modal-mainbody').addClass('d-none')
@@ -272,7 +283,6 @@ const Recipe = {
           voting: this.page.self.currentVote.voting
         }
       }, function(data) {
-        console.log('onRatingSubmitPress: ', data)
         if (data.success) {
           app.$set(app.page.self.lastVote, 'cooked', app.page.self.currentVote.cooked)
           app.$set(app.page.self.lastVote, 'rating', app.page.self.currentVote.rating)
@@ -293,56 +303,6 @@ const Recipe = {
   }
 }
 
-const RecipesCreator = {
-  delimiters: ['${', '}'],
-  props: ['page', 'user'],
-  template: '#recipe-write-template',
-  data: function() {
-    return {
-      title: '',
-      description: '',
-      eater: 4,
-      pictures: [
-        { file: null },
-        { file: null },
-        { file: null }
-      ],
-      ingredients: [
-        { amount: '', unit: { id: '', name: '' }, description: ''},
-        { amount: '', unit: { id: '', name: '' }, description: ''},
-        { amount: '', unit: { id: '', name: '' }, description: ''},
-        { amount: '', unit: { id: '', name: '' }, description: ''},
-        { amount: '', unit: { id: '', name: '' }, description: ''}
-      ],
-      steps: [
-        { title: '', description: '', timePrep: '', timeRest: '', timeCook: '' },
-        { title: '', description: '', timePrep: '', timeRest: '', timeCook: '' },
-        { title: '', description: '', timePrep: '', timeRest: '', timeCook: '' }
-      ],
-      sourceTitle: '',
-      sourceUrl: '',
-      tags: []
-    }
-  },
-  methods: {
-    onSubmit: function() {
-      console.log('RecipesCreator @onSubmit')
-    },
-    onPictureUploadBtnClick: function(i) {
-      console.log('RecipesCreator @onPictureUploadBtnClick', i)
-      console.log(this.pictures)
-      if (this.pictures[i].file)
-        this.pictures[i].file = null
-      else
-        $('#file-' + i).click()
-    },
-    onPictureUploaded: function(i) {
-      console.log('RecipesCreator @onPictureUploaded', i)
-      console.log(this.pictures[i])
-    }
-  }
-}
-
 const RecipesList = {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
@@ -356,6 +316,18 @@ const SearchRecipe = {
   methods: {
     onClick: function() {
       console.log('SearchRecipe @click')
+      postPageData(app.$route.path, {
+        search: {
+          phrase: this.page.search.filter.title
+        }
+      }, function(data) {
+        console.log('onRatingSubmitPress: ', data)
+        if (data.success) {
+
+        } else {
+
+        }
+      })
     }
   }
 }

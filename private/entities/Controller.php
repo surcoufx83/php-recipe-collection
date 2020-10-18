@@ -116,10 +116,19 @@ final class Controller implements ControllerInterface {
     return $this->database->error;
   }
 
-  public function dbescape($value, bool $includeQuotes = true) : string {
-    $value = $this->database->real_escape_string($value);
-    if ($includeQuotes && !is_integer($value))
-      $value = '\''.$value.'\'';
+  public function dbescape($value, string $separator = ', ') : string {
+    if (is_null($value))
+      return 'NULL';
+    if (is_integer($value) || is_float($value))
+      return $value;
+    if (is_bool($value))
+      return intval($value);
+    if (is_array($value)) {
+      for ($i=0; $i<count($value); $i++)
+        $value[$i] = $this->dbescape($value[$i], $separator);
+      return join($separator, $value);
+    }
+    $value = '\''.$this->database->real_escape_string($value).'\'';
     return $value;
   }
 
@@ -225,6 +234,7 @@ final class Controller implements ControllerInterface {
     $query->columns($columns)
           ->values($data);
     if ($this->insert($query)) {
+      $id = $this->getInsertId();
       return $this->getInsertId();
     }
     return -1;

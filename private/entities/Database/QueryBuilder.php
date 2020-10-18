@@ -3,11 +3,13 @@
 namespace Surcouf\Cookbook\Database;
 
 use Surcouf\Cookbook\Helper\Flags;
+use Surcouf\Cookbook\Database\Builder\WhereCondition;
 
 if (!defined('CORE2'))
   exit;
 
 define('DB_ANY', '*');
+$dbTableAliase = array();
 
 final class QueryBuilder {
 
@@ -18,14 +20,13 @@ final class QueryBuilder {
   private $updates = array();
   private $joinedTables = array();
   private $conditions = array();
+  private $where;
   private $groups = array();
   private $orders = array();
   private $limitstart = -1;
   private $limitlen = -1;
   private $columns = array();
   private $values = array();
-
-  private $aliases = array();
 
   public function __construct(int $queryType = EQueryType::None, string $table = null, $selector = null) {
     $this->queryType = $queryType;
@@ -37,33 +38,24 @@ final class QueryBuilder {
       $this->columns($selector);
   }
 
-  public function buildStmt() : string {
-
+  public function __toString() : string {
+    if ($this->queryType == EQueryType::None)
+      throw new \Exception('Undefined query type.');
+    if (Flags::has_flag($this->queryType, EQueryType::qtPREPARED_STMT))
+      return $this->buildStmt();
+    if ($this->queryType == EQueryType::qtSELECT)
+      return $this->buildSelectQuery();
+    if ($this->queryType == EQueryType::qtUPDATE)
+      return $this->buildUpdateQuery();
+    if ($this->queryType == EQueryType::qtDELETE)
+      return $this->buildDeleteQuery();
+    if ($this->queryType == EQueryType::qtINSERT)
+      return $this->buildInsertQuery();
+    throw new \Exception("Not yet implemented");
   }
 
   public function buildQuery() : string {
-
-    if ($this->queryType == EQueryType::None)
-      throw new \Exception('Undefined query type.');
-
-    if (Flags::has_flag($this->queryType, EQueryType::qtPREPARED_STMT))
-      return $this->buildStmt();
-
-    if ($this->queryType == EQueryType::qtSELECT)
-      return $this->buildSelectQuery();
-
-    if ($this->queryType == EQueryType::qtUPDATE)
-      return $this->buildUpdateQuery();
-
-    if ($this->queryType == EQueryType::qtDELETE)
-      return $this->buildDeleteQuery();
-
-    if ($this->queryType == EQueryType::qtINSERT)
-      return $this->buildInsertQuery();
-
-    throw new \Exception("Not yet implemented");
-
-
+    return $this->__toString();
   }
 
   private function buildDeleteQuery() : string {
@@ -119,14 +111,15 @@ final class QueryBuilder {
 
     $sel = array();
     foreach ($this->selectors as $key => $value) {
-      $alias = $this->aliases[$key];
+      $alias = $this->getTableAlias($key);
       for ($i=0; $i<count($value); $i++) {
         $sel[] = $value[$i];
       }
     }
-    $tbl = $this->maskstr($this->primaryTable, $this->aliases[$this->primaryTable]);
+    $tbl = $this->maskstr($this->primaryTable, $this->getTableAlias($this->primaryTable));
     $joinsexpr = (count($this->joinedTables) != 0 ? ' '.join(' ', $this->joinedTables) : '');
     $condexpr = (count($this->conditions) != 0 ? ' WHERE '.join(' ', $this->conditions) : '');
+    // $condexpr = (!is_null($this->where) ? ' WHERE '.$this->where : '');
     $groupexpr = (count($this->groups) != 0 ? ' GROUP BY '.join(', ', $this->groups) : '');
     $orderexpr = (count($this->orders) != 0 ? ' ORDER BY '.join(', ', $this->orders) : '');
     $limitexpr = '';
@@ -170,55 +163,46 @@ final class QueryBuilder {
     return $this;
   }
 
-  private function maskstr(string $str, string $alias = null) : string {
+  private static function maskstr(string $str, string $alias = null) : string {
     return '`'.$str.'`'.(!is_null($alias) ? ' `'.$alias.'`' : '');
   }
 
-  private function maskField(string $table, string $alias, string $field, string $fieldalias = '', int $aggregation = 0, $fnparam1 = null, $fnparam2 = null, $fnparam3 = null) : string {
-    $maskedfield = ($field != DB_ANY ? $this->maskstr($alias).'.'.$this->maskstr($field) : DB_ANY);
+  public static function maskField(string $table, string $alias, string $field, string $fieldalias = '', int $aggregation = 0, $fnparam1 = null, $fnparam2 = null, $fnparam3 = null) : string {
+    $maskedfield = ($field != DB_ANY ? self::maskstr($alias).'.'.self::maskstr($field) : DB_ANY);
 
     if (Flags::has_flag($aggregation, EAggregationType::atISNULL))
-      $maskedfield = $this->maskedField(EAggregationType::atISNULL, $maskedfield);
+      $maskedfield = self::maskedField(EAggregationType::atISNULL, $maskedfield);
     if (Flags::has_flag($aggregation, EAggregationType::atISNOTNULL))
-      $maskedfield = $this->maskedField(EAggregationType::atISNOTNULL, $maskedfield);
+      $maskedfield = self::maskedField(EAggregationType::atISNOTNULL, $maskedfield);
     if (Flags::has_flag($aggregation, EAggregationType::atDISTINCT))
-      $maskedfield = $this->maskedField(EAggregationType::atDISTINCT, $maskedfield);
+      $maskedfield = self::maskedField(EAggregationType::atDISTINCT, $maskedfield);
 
     if (Flags::has_flag($aggregation, EAggregationType::atAVG))
-      $maskedfield = $this->maskedField(EAggregationType::atAVG, $maskedfield);
+      $maskedfield = self::maskedField(EAggregationType::atAVG, $maskedfield);
     if (Flags::has_flag($aggregation, EAggregationType::atCONCAT))
-      $maskedfield = $this->maskedField(EAggregationType::atCONCAT, $maskedfield, $fnparam1);
+      $maskedfield = self::maskedField(EAggregationType::atCONCAT, $maskedfield, $fnparam1);
     if (Flags::has_flag($aggregation, EAggregationType::atCOUNT))
-      $maskedfield = $this->maskedField(EAggregationType::atCOUNT, $maskedfield);
+      $maskedfield = self::maskedField(EAggregationType::atCOUNT, $maskedfield);
     if (Flags::has_flag($aggregation, EAggregationType::atGRPCONCAT))
-      $maskedfield = $this->maskedField(EAggregationType::atGRPCONCAT, $maskedfield, $fnparam1);
+      $maskedfield = self::maskedField(EAggregationType::atGRPCONCAT, $maskedfield, $fnparam1);
     if (Flags::has_flag($aggregation, EAggregationType::atMAX))
-      $maskedfield = $this->maskedField(EAggregationType::atMAX, $maskedfield);
+      $maskedfield = self::maskedField(EAggregationType::atMAX, $maskedfield);
     if (Flags::has_flag($aggregation, EAggregationType::atMIN))
-      $maskedfield = $this->maskedField(EAggregationType::atMIN, $maskedfield);
+      $maskedfield = self::maskedField(EAggregationType::atMIN, $maskedfield);
     if (Flags::has_flag($aggregation, EAggregationType::atSUM))
-      $maskedfield = $this->maskedField(EAggregationType::atSUM, $maskedfield);
+      $maskedfield = self::maskedField(EAggregationType::atSUM, $maskedfield);
 
     if (Flags::has_flag($aggregation, EAggregationType::atIFNULL))
-      $maskedfield = $this->maskedField(EAggregationType::atIFNULL, $maskedfield, $fnparam1);
+      $maskedfield = self::maskedField(EAggregationType::atIFNULL, $maskedfield, $fnparam1);
 
     if ($fieldalias != '')
-      $maskedfield .= ' '.$this->maskstr($fieldalias);
+      $maskedfield .= ' '.self::maskstr($fieldalias);
 
     return $maskedfield;
 
-    if (Flags::has_flag($aggregation, EAggregationType::atCOUNT) && Flags::has_flag($aggregation, EAggregationType::atDISTINCT))
-      return 'COUNT(DISTINCT('.$field.'))'.($fieldalias != '' ? ' '.$this->maskstr($fieldalias) : '');
-    if (Flags::has_flag($aggregation, EAggregationType::atCOUNT))
-      return 'COUNT('.$field.')'.($fieldalias != '' ? ' '.$this->maskstr($fieldalias) : '');
-    if (Flags::has_flag($aggregation, EAggregationType::atDISTINCT))
-      return 'DISTINCT('.$field.')'.($fieldalias != '' ? ' '.$this->maskstr($fieldalias) : '');
-    if (Flags::has_flag($aggregation, EAggregationType::atSUM))
-      return 'SUM('.$field.')'.($fieldalias != '' ? ' '.$this->maskstr($fieldalias) : '');
-    throw new \Exception('Invalid aggrgation value.');
   }
 
-  private function maskedField(int $aggregation, string $makedfield, $param = null) : string {
+  private static function maskedField(int $aggregation, string $makedfield, $param = null) : string {
     switch($aggregation) {
       case EAggregationType::atAVG:
         return 'AVG('.$makedfield.')';
@@ -251,19 +235,22 @@ final class QueryBuilder {
     return '`'.$table.'`.`'.$field.'`';
   }
 
-  private function getTableAlias(string $table) : string {
-    if (!array_key_exists($table, $this->aliases)) {
+  public static function getTableAlias(string $table) : string {
+    global $dbTableAliase;
+    if (!is_array($dbTableAliase))
+      $dbTableAliase = array();
+    if (!array_key_exists($table, $dbTableAliase)) {
       $alias = '';
       for ($i = 1; $i < strlen($table); $i++) {
         $str = substr($table, 0, $i);
-        if (!in_array($str, $this->aliases)) {
+        if (!in_array($str, $dbTableAliase)) {
           $alias = $str;
           break;
         }
         if ($i > 1) {
           for ($j = 1; $j < 10; $j++) {
             $str2 = $str.$j;
-            if (!in_array($str2, $this->aliases)) {
+            if (!in_array($str2, $dbTableAliase)) {
               $alias = $str2;
               break;
             }
@@ -272,10 +259,10 @@ final class QueryBuilder {
             break;
         }
       }
-      $this->aliases[$table] = $alias;
+      $dbTableAliase[$table] = $alias;
       return $alias;
     }
-    return $this->aliases[$table];
+    return $dbTableAliase[$table];
   }
 
   public function groupBy(...$params) : QueryBuilder {
@@ -462,6 +449,15 @@ final class QueryBuilder {
       $this->selectors[$table] = array_unique(array_merge($this->selectors[$table], $selector));
   }
 
+  public function setTable(string $table) : QueryBuilder {
+    $alias = $this->getTableAlias($table);
+    if (is_null($this->primaryTable))
+      $this->primaryTable = $table;
+    else
+      $this->joinedTables[$table] = array();
+    return $this;
+  }
+
   public function table(string $table) : QueryBuilder {
     $alias = $this->getTableAlias($table);
     if (is_null($this->primaryTable))
@@ -490,6 +486,12 @@ final class QueryBuilder {
   public function values(array $record) : QueryBuilder {
     $this->values[] = $record;
     return $this;
+  }
+
+  public function setWhere() : WhereCondition {
+    if (is_null($this->where))
+      $this->where = new WhereCondition($this);
+    return $this->where;
   }
 
   public function where(string $table, string $field, string $operator, $value = null) : QueryBuilder {

@@ -153,6 +153,21 @@ h1, h2, h3 {
 .bg-contrast-brighter{ background-color: $bg-contrast-brighter; }
 .bg-contrast-darker { background-color: $bg-contrast-darker; }
 
+.border-blue            { border-color: $text-link!important; }
+.border-light-blue      { border-color: $bg-contrast-light!important; }
+.border-light           { border-color: $bg-light!important; }
+.border-light-dark      { border-color: $bg-gray!important; }
+.border-light-muted     { border-color: $bg-muted!important; }
+.border-contrast        { border-color: $bg-contrast!important; }
+.border-contrast-brighter{ border-color: $bg-contrast-brighter!important; }
+.border-contrast-darker { border-color: $bg-contrast-darker!important; }
+
+.border-1 { border-width: 1px!important; }
+.border-2 { border-width: 2px!important; }
+.border-3 { border-width: 3px!important; }
+.border-4 { border-width: 4px!important; }
+.border-5 { border-width: 5px!important; }
+
 .overflow-x-auto    { overflow-x: auto; }
 .overflow-x-default { overflow-x: visible; }
 .overflow-x-hidden  { overflow-x: hidden; }

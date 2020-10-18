@@ -6,35 +6,3 @@
                 :page="page" :user="user">
               </page-actions-container>
             </b-container>
-
-            <div class="container-fluid container-max1280 breadcrumbs d-none">
-              <div class="header-container header-container-border">
-                <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
-                  {% for Item in Page.Subitems %}
-                    {% if Item.IntraLink %}
-                  <li class="nav-item" role="presentation">
-                    <a class="nav-link {% if Item.active == true %}active{% endif %}"
-                      id="{{ Item.id }}-tab" data-toggle="pill" href="#{{ Item.id }}"
-                      role="tab" aria-controls="{{ Item.id }}" aria-selected="true">
-                      {{ Item.text }}
-                    </a>
-                  </li>
-                    {% else %}
-                  <li class="{% if Item.active == true %}active{% endif %}">
-                    <a href="{{ Item.url }}">{{ Item.text }}
-                  {% if Item.badge != '' %}<span class="badge badge-pill px-0" style="vertical-align:top;">[{{ Item.badge }}]</span></a>{% endif %}
-                  </li>
-                    {% endif %}
-                  {% endfor %}
-                </ul>
-                <div class="text-right nav-buttons">
-                  {% for Item in Page.Actions %}
-                  {% if Item.url %}
-                  <a href="{{ Item.url }}" class="btn {{ Item.class }} btn-sm">{{ Item.text|raw }}</a>
-                  {% else %}
-                  <span id="{{ Item.id }}" class="btn {{ Item.class }} btn-sm">{{ Item.text|raw }}</span>
-                  {% endif %}
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
