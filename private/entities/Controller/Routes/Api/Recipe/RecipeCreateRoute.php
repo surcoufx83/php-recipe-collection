@@ -93,8 +93,8 @@ class RecipeCreateRoute extends Route implements RouteInterface {
           $payload['recipe-step-title'][$i],
           $payload['recipe-step-description'][$i],
           $payload['recipe-step-time-prep'][$i],
-          $payload['recipe-step-time-cook'][$i],
-          $payload['recipe-step-time-rest'][$i]
+          $payload['recipe-step-time-rest'][$i],
+          $payload['recipe-step-time-cook'][$i]
         ));
       }
     }

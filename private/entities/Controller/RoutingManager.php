@@ -46,7 +46,7 @@ final class RoutingManager {
       'method' => ERequestMethod::HTTP_GET,
       'requiresAdmin' => true,
     ],
-    '/api/page-data\?/home' => [ // home page
+    '/api/page-data\?/(home)?' => [ // home page
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\HomePageRoute::class,
       'method' => ERequestMethod::HTTP_GET,
     ],
