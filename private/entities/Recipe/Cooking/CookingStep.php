@@ -102,4 +102,76 @@ class CookingStep implements CookingStepInterface, DbObjectInterface, \JsonSeria
     ];
   }
 
+  public function setContent(string $newContent) : CookingStepInterface {
+    global $Controller;
+    if ($this->step_data != $newContent) {
+      $this->step_data = $newContent;
+      $this->changes['step_data'] = $newContent;
+      $Controller->updateDbObject($this);
+    }
+    return $this;
+  }
+
+  public function setCookingTime(?int $newTime) : CookingStepInterface {
+    global $Controller;
+    if ($this->step_time_cooking != $newTime) {
+      $this->step_time_cooking = $newTime;
+      $this->changes['step_time_cooking'] = $newTime;
+      $Controller->updateDbObject($this);
+    }
+    return $this;
+  }
+
+  public function setPreparationTime(?int $newTime) : CookingStepInterface {
+    global $Controller;
+    if ($this->step_time_preparation != $newTime) {
+      $this->step_time_preparation = $newTime;
+      $this->changes['step_time_preparation'] = $newTime;
+      $Controller->updateDbObject($this);
+    }
+    return $this;
+  }
+
+  public function setRestTime(?int $newTime) : CookingStepInterface {
+    global $Controller;
+    if ($this->step_time_chill != $newTime) {
+      $this->step_time_chill = $newTime;
+      $this->changes['step_time_chill'] = $newTime;
+      $Controller->updateDbObject($this);
+    }
+    return $this;
+  }
+
+  public function setStepNo(int $newNumber) : CookingStepInterface {
+    global $Controller;
+    if ($this->step_no != $newNumber) {
+      $this->step_no = $newNumber;
+      $this->changes['step_no'] = $newNumber;
+      $Controller->updateDbObject($this);
+    }
+    return $this;
+  }
+
+  public function setTitle(string $newTitle) : CookingStepInterface {
+    global $Controller;
+    if ($this->step_title != $newTitle) {
+      $this->step_title = $newTitle;
+      $this->changes['step_title'] = $newTitle;
+      $Controller->updateDbObject($this);
+    }
+    return $this;
+  }
+
+  public function update(array $payload) : bool {
+    global $Controller;
+    $this
+      ->setContent($payload['description'])
+      ->setTitle($payload['title'])
+      ->setStepNo($payload['no'])
+      ->setCookingTime($payload['timeCook'])
+      ->setPreparationTime($payload['timePrep'])
+      ->setRestTime($payload['timeRest']);
+    return true;
+  }
+
 }

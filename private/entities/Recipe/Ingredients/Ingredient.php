@@ -78,4 +78,60 @@ class Ingredient implements IngredientInterface, DbObjectInterface, \JsonSeriali
     ];
   }
 
+  public function setDescription(string $newDescription) : IngredientInterface {
+    global $Controller;
+    if ($this->ingredient_description != $newDescription) {
+      $this->ingredient_description = $newDescription;
+      $this->changes['ingredient_description'] = $newDescription;
+      $Controller->updateDbObject($this);
+    }
+    return $this;
+  }
+
+  public function setQuantity(?string $newValue) : IngredientInterface {
+    global $Controller;
+    $v = (is_null($newValue) || $newValue == '' ? null : floatval($newValue));
+    if ($this->ingredient_quantity != $v) {
+      $this->ingredient_quantity = $v;
+      $this->changes['ingredient_quantity'] = $v;
+      $Controller->updateDbObject($this);
+    }
+    return $this;
+  }
+
+  public function setUnit(?UnitInterface $unit) : IngredientInterface {
+    global $Controller;
+    $curUnit = $this->getUnit();
+    if (!is_null($unit) && !is_null($curUnit)) {
+      if ($unit->getId() != $curUnit->getId()) {
+        $this->unit_id = $unit->getId();
+        $this->changes['unit_id'] = $unit->getId();
+        $Controller->updateDbObject($this);
+      }
+      return $this;
+    }
+    if (!is_null($unit) && is_null($curUnit)) {
+      $this->unit_id = $unit->getId();
+      $this->changes['unit_id'] = $unit->getId();
+      $Controller->updateDbObject($this);
+      return $this;
+    }
+    if (is_null($unit) && !is_null($curUnit)) {
+      $this->unit_id = null;
+      $this->changes['unit_id'] = null;
+      $Controller->updateDbObject($this);
+      return $this;
+    }
+    return $this;
+  }
+
+  public function update(array $payload) : bool {
+    global $Controller;
+    $this
+      ->setDescription($payload['description'])
+      ->setQuantity($payload['quantity'])
+      ->setUnit($payload['unit']);
+    return true;
+  }
+
 }

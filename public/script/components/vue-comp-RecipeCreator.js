@@ -100,6 +100,12 @@ const RecipesCreator = {
       for (i=0; i<3; i++)
         this.page.currentRecipe.preparation.ingredients.push({ amount: '', unit: '', description: '' })
     },
+    onStepDelBtnClick: function(i) {
+      this.page.currentRecipe.preparation.steps.splice(i, 1)
+      if (this.page.currentRecipe.preparation.steps.length == 0) {
+        this.page.currentRecipe.preparation.steps.push({ index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } })
+      }
+    },
     onStepAddBtnClick: function() {
       this.page.currentRecipe.preparation.steps.push({ index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } })
     },

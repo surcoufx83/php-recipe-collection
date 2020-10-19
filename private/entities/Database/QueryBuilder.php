@@ -484,7 +484,13 @@ final class QueryBuilder {
   }
 
   public function values(array $record) : QueryBuilder {
-    $this->values[] = $record;
+    if (is_array($record[0])) {
+      for ($i=0; $i<count($record); $i++) {
+        $this->values[] = $record[$i];
+      }
+    }
+    else
+      $this->values[] = $record;
     return $this;
   }
 

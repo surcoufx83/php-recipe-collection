@@ -49,6 +49,7 @@ class RecipePostRoute extends Route implements RouteInterface {
       $response = $Controller->Config()->getResponseArray(92);
       return false;
     }
+    $recipe->loadComplete();
     return $recipe->update($response, $payload);
   }
 

@@ -10,10 +10,13 @@
           v-if="page != null && !page.loading && page.currentRecipe != null">
 
           <b-row><!-- header title + description -->
-            <b-col cols="12">
+            <b-col cols="12" v-if="page.currentRecipe.id == 0">
               <h4>{{ Controller.l('newRecipe_intro_header') }}</h4>
               <p>{{ Controller.l('newRecipe_intro_subject')|raw }}</p>
               <p>{{ Controller.l('newRecipe_intro_requiredFields')|raw }}</p>
+            </b-col>
+            <b-col cols="12" v-else>
+              <h4>{{ Controller.l('newRecipe_intro_editHeader') }}</h4>
             </b-col>
           </b-row><!-- header title + description -->
 
@@ -26,11 +29,6 @@
             </b-col>
             <b-col cols="12" lg="6" class="d-none d-lg-block" v-else>
               <h5>{{ Controller.l('newRecipe_chapter3_header2') }}</h5>
-              <p><router-link
-                :to="{ name: 'gallery', params: { id: ''+page.currentRecipe.id, name: ''+page.currentRecipe.name } }">
-                <fa-icon :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space" class="mr-2"></fa-icon>
-                {{ Controller.l('newRecipe_chapter3_togalleryLink') }}</router-link>
-              </p>
             </b-col>
           </b-row><!-- heading common data + pictures -->
 
@@ -162,6 +160,16 @@
                   </p>
                 </b-col>
               </b-row><!-- form pictures sm title -->
+
+              <b-row class="d-none d-lg-block row"><!-- form pictures lg title -->
+                <b-col cols="12">
+                  <p><router-link
+                    :to="{ name: 'gallery', params: { id: ''+page.currentRecipe.id, name: ''+page.currentRecipe.name } }">
+                    <fa-icon :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space" class="mr-2"></fa-icon>
+                    {{ Controller.l('newRecipe_chapter3_togalleryLink') }}</router-link>
+                  </p>
+                </b-col>
+              </b-row><!-- form pictures lg title -->
 
             </b-col><!-- form pictures link -->
 
@@ -301,7 +309,7 @@
                     {{ Controller.l('newRecipe_chapter4_step_duration_description') }}
                   </strong>
                 </b-col>
-                <b-col cols="4" md="3" lg="2" class="px-1 px-md-2 mb-2">
+                <b-col cols="3" md="2" lg="2" class="px-1 px-md-2 mb-2">
                   <b-form-input
                     :id="'step-time-prep-' + index"
                     name="recipe-step-time-prep[]"
@@ -310,7 +318,7 @@
                     type="number" min="0" max="43200" placeholder="{{ Controller.l('newRecipe_chapter4_step_duration_preparation') }}">
                   </b-form-input>
                 </b-col>
-                <b-col cols="4" md="3" lg="2" class="px-1 px-md-2 mb-2">
+                <b-col cols="3" md="2" lg="2" class="px-1 px-md-2 mb-2">
                   <b-form-input
                     :id="'step-time-rest-' + index"
                     name="recipe-step-time-rest[]"
@@ -319,7 +327,7 @@
                     type="number" min="0" max="43200" placeholder="{{ Controller.l('newRecipe_chapter4_step_duration_rest') }}">
                   </b-form-input>
                 </b-col>
-                <b-col cols="4" md="3" lg="2" class="px-1 px-md-2 mb-2">
+                <b-col cols="3" md="2" lg="2" class="px-1 px-md-2 mb-2">
                   <b-form-input
                     :id="'step-time-cook-' + index"
                     name="recipe-step-time-cook[]"
@@ -327,6 +335,13 @@
                     v-model="step.timeConsumed.cooking"
                     type="number" min="0" max="43200" placeholder="{{ Controller.l('newRecipe_chapter4_step_duration_cooking') }}">
                   </b-form-input>
+                </b-col>
+                <b-col cols="1" lg="2">&nbsp;</b-col>
+                <b-col cols="2" md="1" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
+                  <btn-sm-blue
+                    title="" class="w-75px"
+                    :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                    @click="onStepDelBtnClick(index)"></btn-sm-blue>
                 </b-col> <!-- prep step time consumed -->
 
               </b-form-row> <!-- preparation step -->

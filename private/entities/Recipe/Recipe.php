@@ -12,10 +12,14 @@ use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\Database\ObjectTableMapper;
 use Surcouf\Cookbook\Helper\ConverterHelper;
 use Surcouf\Cookbook\Helper\Formatter;
+use Surcouf\Cookbook\Recipe\Cooking\BlankCookingStep;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStep;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStepInterface;
+use Surcouf\Cookbook\Recipe\Ingredients\BlankIngredient;
 use Surcouf\Cookbook\Recipe\Ingredients\Ingredient;
 use Surcouf\Cookbook\Recipe\Ingredients\IngredientInterface;
+use Surcouf\Cookbook\Recipe\Ingredients\Units\BlankUnit;
+use Surcouf\Cookbook\Recipe\Pictures\BlankPicture;
 use Surcouf\Cookbook\Recipe\Pictures\Picture;
 use Surcouf\Cookbook\Recipe\Pictures\PictureInterface;
 use Surcouf\Cookbook\Recipe\Social\Ratings\Rating;
@@ -536,9 +540,143 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
       ->setName($payload['recipe-name'])
       ->setSourceDescription($payload['recipe-source'])
       ->setSourceUrl($payload['recipe-sourceurl']);
-    
     $response = $Controller->Config()->getResponseArray(91);
+    //$response = array_merge_recursive($response, ['payload' => $payload]);
+    $this->updateIngredients($response, $payload);
+    $this->updateSteps($response, $payload);
     return false;
+  }
+
+  private function updateIngredients(array &$response, array $payload) : void {
+    global $Controller;
+    $cnew = count($payload['recipe-ingredient-description']);
+    $cold = count($this->ingredients);
+    $min = min($cnew, $cold);
+    $key = array_keys($this->ingredients);
+    $additems = [];
+    $delitems = [];
+    for ($i=0; $i<$min; $i++) {
+      $ingredient = $this->ingredients[$key[$i]];
+      if ($payload['recipe-ingredient-description'][$i] == '') {
+        $delitems[] = $ingredient->getId();
+        continue;
+      }
+      $unit = null;
+      if ($payload['recipe-ingredient-unit'][$i] != '') {
+        $unit = $Controller->OM()->Unit($payload['recipe-ingredient-unit'][$i]);
+        if (is_null($unit)) {
+          $unit = new BlankUnit($payload['recipe-ingredient-unit'][$i]);
+          $res = $Controller->insertSimple('units', ['unit_name'], [$unit->getName()]);
+          if ($res != -1)
+            $unit = $Controller->OM()->Unit($res);
+        }
+      }
+      $ingredient->update([
+        'quantity' => $payload['recipe-ingredient-quantity'][$i],
+        'unit' => $unit,
+        'description' => $payload['recipe-ingredient-description'][$i],
+      ]);
+    }
+    if ($cnew < $cold) {
+      for ($i=$min; $i<$cold; $i++) {
+        $delitems[] = $this->ingredients[$key[$i]]->getId();
+      }
+    } else if ($cnew > $cold) {
+      for ($i=$min; $i<$cnew; $i++) {
+        if ($payload['recipe-ingredient-description'][$i] == '')
+          continue;
+        $unit = null;
+        if ($payload['recipe-ingredient-unit'][$i] != '') {
+          $unit = $Controller->OM()->Unit($payload['recipe-ingredient-unit'][$i]);
+          if (is_null($unit)) {
+            $unit = new BlankUnit($payload['recipe-ingredient-unit'][$i]);
+            $res = $Controller->insertSimple('units', ['unit_name'], [$unit->getName()]);
+            if ($res != -1)
+              $unit = $Controller->OM()->Unit($res);
+          }
+        }
+        $additems[] = [
+          $this->recipe_id,
+          (!is_null($unit) ? $unit->getId() : null),
+          ($payload['recipe-ingredient-quantity'][$i] == '' ? null : floatval($payload['recipe-ingredient-quantity'][$i])),
+          $payload['recipe-ingredient-description'][$i]
+        ];
+      }
+    }
+    if (count($additems) > 0) {
+      $Controller->insertSimple(
+        'recipe_ingredients',
+        ['recipe_id', 'unit_id', 'ingredient_quantity', 'ingredient_description'],
+        $additems
+      );
+    }
+    if (count($delitems) > 0) {
+      $query = new QueryBuilder(EQueryType::qtDELETE, 'recipe_ingredients');
+      $query->where('recipe_ingredients', 'ingredient_id', 'IN', $delitems)
+            ->andWhere('recipe_ingredients', 'recipe_id', '=', $this->recipe_id)
+            ->limit(count($delitems));
+      $Controller->delete($query);
+    }
+  }
+
+  private function updateSteps(array &$response, array $payload) : void {
+    global $Controller;
+    $cnew = count($payload['recipe-step-description']);
+    $cold = count($this->steps);
+    $min = min($cnew, $cold);
+    $key = array_keys($this->steps);
+    $additems = [];
+    $delitems = [];
+    for ($i=0; $i<$min; $i++) {
+      $step = $this->steps[$key[$i]];
+      if ($payload['recipe-step-description'][$i] == '') {
+        $delitems[] = $step->getId();
+        continue;
+      }
+      $step->update([
+        'description' => $payload['recipe-step-description'][$i],
+        'no' => ($i+1),
+        'title' => $payload['recipe-step-title'][$i],
+        'timePrep' => $payload['recipe-step-time-prep'][$i],
+        'timeRest' => $payload['recipe-step-time-rest'][$i],
+        'timeCook' => $payload['recipe-step-time-cook'][$i]
+      ]);
+    }
+    if ($cnew < $cold) {
+      for ($i=$min; $i<$cold; $i++) {
+        $delitems[] = $this->steps[$key[$i]]->getId();
+      }
+    } else if ($cnew > $cold) {
+      for ($i=$min; $i<$cnew; $i++) {
+        if ($payload['recipe-step-description'][$i] == '')
+          continue;
+        $additems[] = [
+          $this->recipe_id,
+          ($i+1),
+          $payload['recipe-step-title'][$i],
+          $payload['recipe-step-description'][$i],
+          ($payload['recipe-step-time-prep'][$i] == '' ? null : intval($payload['recipe-step-time-prep'][$i])),
+          ($payload['recipe-step-time-cook'][$i] == '' ? null : intval($payload['recipe-step-time-cook'][$i])),
+          ($payload['recipe-step-time-rest'][$i] == '' ? null : intval($payload['recipe-step-time-rest'][$i]))
+        ];
+      }
+    }
+    if (count($additems) > 0) {
+      $result = $Controller->insertSimple(
+        'recipe_steps',
+        ['recipe_id', 'step_no', 'step_title', 'step_data',
+         'step_time_preparation', 'step_time_cooking', 'step_time_chill'],
+        $additems
+      );
+
+    }
+    if (count($delitems) > 0) {
+      $query = new QueryBuilder(EQueryType::qtDELETE, 'recipe_steps');
+      $query->where('recipe_steps', 'step_id', 'IN', $delitems)
+            ->andWhere('recipe_steps', 'recipe_id', '=', $this->recipe_id)
+            ->limit(count($delitems));
+      $Controller->delete($query);
+    }
   }
 
 }

@@ -431,6 +431,24 @@ final class Controller implements ControllerInterface {
           $this->update($query);
           break;
 
+        case 'Surcouf\Cookbook\Recipe\Cooking\CookingStep':
+          if (count($object->getDbChanges()) == 0)
+            break;
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_steps');
+          $query->update($object->getDbChanges());
+          $query->where('recipe_steps', 'step_id', '=', $object->getId());
+          $this->update($query);
+          break;
+
+        case 'Surcouf\Cookbook\Recipe\Ingredients\Ingredient':
+          if (count($object->getDbChanges()) == 0)
+            break;
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_ingredients');
+          $query->update($object->getDbChanges());
+          $query->where('recipe_ingredients', 'ingredient_id', '=', $object->getId());
+          $this->update($query);
+          break;
+
         case 'Surcouf\Cookbook\User\BlankUser':
         case 'Surcouf\Cookbook\User\User':
           if (count($object->getDbChanges()) == 0)

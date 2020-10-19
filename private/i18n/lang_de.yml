@@ -62,6 +62,7 @@ newRecipe:
     header: 'Rezepteingabe'
     requiredFields: 'Alle mit <b><span class=\'text-contrast\'>*</span></b> markierten Felder müssen befüllt werden. Der Großteil der Angaben ist optional, aber wir freuen uns, wenn du diese trotzdem befüllst.'
     subject: 'Vielen Dank, dass du ein neues Rezept zu unserer Sammlung beitragen möchtest!<br />Das von dir bereitgestellte Rezept ist anfangs als \'Privat\' markiert. Du bekommst nach dem Speichern die Möglichkeit, dass Rezept zu prüfen und zu veröffentlichen.'
+    editHeader: 'Rezept bearbeiten'
   chapter1:
     header: 'Allgemeine Angaben'
     recipeName: 'Name für dieses Gericht'
