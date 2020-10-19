@@ -214,6 +214,8 @@ Vue.component('sidebar-ul2-li', {
 })
 
 const Home = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user'],
   template: '#home-template'
 }
 
