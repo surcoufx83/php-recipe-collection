@@ -26,6 +26,12 @@ class PageData extends Route implements RouteInterface {
     return false;
   }
 
+  public static function createOutput__logout(array &$response) : bool {
+    global $Controller;
+    parent::setTitle($response, '');
+    return true;
+  }
+
   public static function createOutput__search(array &$response) : bool {
     global $Controller;
     parent::addBreadcrumb($response, 'search', $Controller->l('breadcrumb_search_main'));

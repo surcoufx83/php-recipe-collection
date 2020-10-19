@@ -283,6 +283,8 @@ page:
     submitButton:
       title: 'Anmelden'
     title: 'Benutzer Anmeldung'
+  logout:
+    title: 'Tschüß!'
   random: 'Zufälliges Rezept'
   myrecipes:
     title: 'Meine Rezepte'

@@ -219,6 +219,18 @@ const Home = {
   template: '#home-template'
 }
 
+const Login = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user', 'config'],
+  template: '#login-template'
+}
+
+const Logout = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user', 'config'],
+  template: '#logout-template'
+}
+
 const Recipe = {
   delimiters: ['${', '}'],
   props: ['recipe', 'page', 'user'],

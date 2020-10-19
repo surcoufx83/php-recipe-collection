@@ -12,8 +12,8 @@ Vue.http.get('common-data')
     app = new Vue({
       delimiters: ['${', '}'],
       el: '#vue-app',
-      router,
       data: data,
+      router,
       created: function() {
         window.addEventListener("resize", this.onResize);
       },
@@ -29,6 +29,8 @@ Vue.http.get('common-data')
           $('#sidebar-main').css("display", "none")
           $('#sidebar-main').prop("aria-hidden", "true")
         }
+        if (!this.user.loggedIn)
+          this.$router.push({name: 'login'})
         refreshPageData(this.$route.path, this)
       },
       methods: {
@@ -56,7 +58,12 @@ Vue.http.get('common-data')
   })
 
 router.beforeEach((to, from, next) => {
+  console.log('before', to, from, app)
   if (app) {
+    if (to.name == 'login' && app.user.loggedIn)
+      next(false)
+    if (to.name != 'login' && !app.user.loggedIn)
+      next({ name: 'login' })
     if (
       !((to.name == 'recipe' || to.name == 'editRecipe' || to.name == 'gallery') &&
         (from.name == 'recipe' || from.name == 'editRecipe' || from.name == 'gallery'))
@@ -69,6 +76,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
+  console.log('after', to, from)
   if (to.name == 'logout') {
     Vue.http.post('logout')
       .then(response => response.json())

@@ -119,7 +119,7 @@ class CommonData extends Route implements RouteInterface {
         'initialVisible' => true,
       ]
     ];
-    if ($Controller->User()->isAdmin()) {
+    if (!is_null($Controller->User()) && $Controller->User()->isAdmin()) {
       $response['page']['routes']['sidebar'] = \array_merge_recursive($response['page']['routes']['sidebar'], [
         ['to' => 'admin', 'icon' => 'cogs', 'text' => $Controller->l('sidebar_admin_home'), 'children' => [
           ['to' => 'cronjobs', 'icon' => 'cogs', 'text' => $Controller->l('sidebar_admin_cronjobs')],
