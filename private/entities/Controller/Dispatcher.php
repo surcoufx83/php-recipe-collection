@@ -47,7 +47,7 @@ final class Dispatcher {
 
     if (array_key_exists('output', $params))
       $this->outputMode = $params['output'];
-    else if (strpos($_SERVER['REQUEST_URI'], '/ajax/') === 0)
+    else if (strpos($_SERVER['REQUEST_URI'], '/ajax/') === 0 || strpos($_SERVER['REQUEST_URI'], '/api/') === 0)
       $this->outputMode = EOutputMode::JSON;
     else
       $this->outputMode = EOutputMode::Default;

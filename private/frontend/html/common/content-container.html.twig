@@ -1,0 +1,19 @@
+              <div class="container-fluid container-max1280">
+                <div class="row mb-lg-2"
+                  v-if="user.loggedIn === true && page.contentData.title !== ''">
+                  <div class="col-12 mb-3">
+                    <h3 class="font-weight-bold"
+                      v-if="page.contentData.title !== ''">
+                      ${ page.contentData.title }
+                    </h3>
+                    <p class="text-muted mb-0"
+                      v-if="page.contentData.titleDescription !== ''">${ page.contentData.titleDescription }</p>
+                  </div>
+                </div>
+                <router-view
+                  :config="config"
+                  :page="page"
+                  :recipe="page.currentRecipe"
+                  :user="user">
+                </router-view>
+              </div>

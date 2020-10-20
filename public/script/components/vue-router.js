@@ -1,0 +1,33 @@
+
+const router = new VueRouter({
+  mode: 'history',
+  routes: [
+    { name: 'account', path: '/profile', children: [
+      { name: 'settings', path: 'settings' }
+    ]},
+    { name: 'logout', path: '/logout', component: Logout },
+    { name: 'admin', path: '/admin', children: [
+      { name: 'cronjobs', path: 'cronjobs' },
+      { name: 'translations', path: 'translations' },
+      { name: 'logs', path: 'logs' },
+      { name: 'users', path: 'users' }
+    ]},
+    { name: 'home', path: '/home', alias: '/', component: Home },
+    { name: 'login', path: '/login', component: Login },
+    { name: 'random', path: '/random/:id?' },
+    { name: 'recipe', path: '/recipe/:id(.+)-:name([^/]*)', component: Recipe },
+    { name: 'gallery', path: '/recipe/:id(.+)-:name([^/]*)/gallery', component: Recipe },
+    { name: 'editRecipe', path: '/recipe/:id(.+)-:name([^/]*)/edit', component: RecipeEditor },
+    { name: 'recipes', path: '/recipes', component: RecipesList, children: [
+      { name: 'recipePage', path: ':page' },
+      { name: 'myRecipes', path: 'my' },
+      { name: 'userRecipes', path: 'user/:id(.+)-:name([^/]*)' }
+      ]
+    },
+    { name: 'search', path: '/search', component: SearchRecipe },
+    { name: 'user', path: '/user/:id(.+)-:name([^/]*)', children: [
+
+    ]},
+    { name: 'writeRecipe', path: '/write', component: RecipesCreator },
+  ]
+})

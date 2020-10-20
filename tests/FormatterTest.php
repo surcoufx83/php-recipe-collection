@@ -163,14 +163,18 @@ class FormatterTest extends TestCase
 
   public function min_formatDataProvider() {
     return [
-      [1, 'common_duration_minutes', '1'],
-      [59, 'common_duration_minutes', '59'],
-      [60, 'common_duration_hours', '1'],
-      [90, 'common_duration_hours', '1.5'],
-      [1439, 'common_duration_hours', '23.5'],
-      [1440, 'common_duration_days', '1'],
+      [1, 'common_duration_minute', '1'],
+      [2, 'common_duration_minutes', '2'],
+      [29, 'common_duration_minutes', '29'],
+      [30, 'common_duration_hour', '&frac12;'],
+      [59, 'common_duration_hour', '1'],
+      [60, 'common_duration_hour', '1'],
+      [90, 'common_duration_hours', '1&frac12;'],
+      [719, 'common_duration_hours', '12.0'],
+      [720, 'common_duration_day', '&frac12;'],
+      [1440, 'common_duration_day', '1'],
       [2880, 'common_duration_days', '2'],
-      [3600, 'common_duration_days', '2.5'],
+      [3600, 'common_duration_days', '2&frac12;'],
       [43200, 'common_duration_days', '30'],
     ];
   }

@@ -1,0 +1,21 @@
+
+          <div class="mt-3" v-if="
+            recipe !== null && user !== null &&
+            ('ownerId' in recipe) && ('id' in user) &&
+            recipe.ownerId === user.id">
+            <h5>{{Controller.l('recipe_stats_header')}}</h5>
+            <b-container fluid>
+              <b-row>
+                <b-col cols="12">
+                  <fa-icon :icon="page.iconSet.view.icon"
+                    :space="page.iconSet.view.space" fw class="mr-2"></fa-icon>
+                  ${ recipe.socials.cookedCounter }{{ Controller.l('recipe_stats_views_times')|raw }}
+                </b-col>
+                <b-col cols="12">
+                  <fa-icon :icon="page.iconSet.meal.icon"
+                    :space="page.iconSet.meal.space" fw class="mr-2"></fa-icon>
+                  ${ recipe.socials.viewCounter }{{ Controller.l('recipe_stats_cooked_times')|raw }}
+                </b-col>
+              </b-row>
+            </b-container>
+          </div>

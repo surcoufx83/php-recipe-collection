@@ -1,0 +1,151 @@
+
+    <div class="modal fade" id="recipe-rating-modal"
+      aria-labelledby="recipe-rating-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="recipe-rating-modal-title">
+              {{ Controller.l('recipe_rate_modal_title') }}
+            </h5>
+          </div>
+          <div class="modal-body d-none" id="recipe-rating-modal-submitting">
+            {{ Controller.l('recipe_rate_modal_submitting')|raw }}
+          </div>
+          <div class="modal-body d-none" id="recipe-rating-modal-submitted">
+            {{ Controller.l('recipe_rate_modal_submitted')|raw }}
+          </div>
+          <div class="modal-body bg-warning d-none" id="recipe-rating-modal-error">
+            {{ Controller.l('recipe_rate_modal_error')|raw }}<br />
+            <span id="recipe-rating-modal-error-message"></span>
+          </div>
+          <div class="modal-body" id="recipe-rating-modal-mainbody">
+            <span class="text-muted text-small">
+              {{ Controller.l('recipe_rate_modal_description') }} {{ Controller.l('recipe_rate_modal_description2') }}
+            </span>
+            <h5 class="pt-3">{{ Controller.l('recipe_rate_modal_cooked_title') }}</h5>
+            <div class="pb-3 mt-1 text-center">
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-cooked"
+                    :checked="page.self.currentVote.cooked === 1"
+                    value="1" v-model="page.self.currentVote.cooked"
+                    > {{ Controller.l('common_yesUc') }}
+                </label>
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-cooked"
+                    :checked="page.self.currentVote.cooked === 0"
+                    value="0" v-model="page.self.currentVote.cooked"
+                    > {{ Controller.l('common_noUc') }}
+                </label>
+                <label class="btn btn-outline-blue btn-sm active">
+                  <input type="radio" name="recipe-rating-cooked"
+                    :checked="page.self.currentVote.cooked === -1"
+                    value="-1" v-model="page.self.currentVote.cooked"
+                    > {{ Controller.l('recipe_rate_modal_cooked_none') }}
+                </label>
+              </div>
+            </div>
+            <h5>{{ Controller.l('recipe_rate_modal_rating_title') }}</h5>
+            <span class="text-muted text-small">
+              {{ Controller.l('recipe_rate_modal_rating_description') }}
+            </span>
+            <div class="pb-3 mt-1 text-center">
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-rated"
+                    :checked="page.self.currentVote.rating === 1"
+                    value="1" v-model="page.self.currentVote.rating"
+                    > {{ Controller.l('common_rating_easy') }}
+                </label>
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-rated"
+                    :checked="page.self.currentVote.rating === 2"
+                    value="2" v-model="page.self.currentVote.rating"
+                    > {{ Controller.l('common_rating_medium') }}
+                </label>
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-rated"
+                    :checked="page.self.currentVote.rating === 3"
+                    value="3" v-model="page.self.currentVote.rating"
+                    > {{ Controller.l('common_rating_hard') }}
+                </label>
+                <label class="btn btn-outline-blue btn-sm active">
+                  <input type="radio" name="recipe-rating-rated"
+                    :checked="page.self.currentVote.rating === -1"
+                    value="-1" v-model="page.self.currentVote.rating"
+                    > {{ Controller.l('recipe_rate_modal_rating_none') }}
+                </label>
+              </div>
+            </div>
+            <h5>{{ Controller.l('recipe_rate_modal_voting_title') }}</h5>
+            <span class="text-muted text-small">
+              {{ Controller.l('recipe_rate_modal_voting_description') }}
+            </span>
+            <div class="pb-3 mt-1 text-center">
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-voted"
+                    :checked="page.self.currentVote.voting === 1"
+                    value="1" v-model="page.self.currentVote.voting"
+                    > <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(-2px)"></fa-icon>
+                </label>
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-voted"
+                    :checked="page.self.currentVote.voting === 2"
+                    value="2" v-model="page.self.currentVote.voting"
+                    >
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(-2px)"></fa-icon>
+                </label>
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-voted"
+                    :checked="page.self.currentVote.voting === 3"
+                    value="3" v-model="page.self.currentVote.voting"
+                    >
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(-2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(2px)"></fa-icon>
+                </label>
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-voted"
+                    :checked="page.self.currentVote.voting === 4"
+                    value="4" v-model="page.self.currentVote.voting"
+                    >
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(-2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(-2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(2px)"></fa-icon>
+                </label>
+                <label class="btn btn-outline-blue btn-sm">
+                  <input type="radio" name="recipe-rating-voted"
+                    :checked="page.self.currentVote.voting === 5"
+                    value="5" v-model="page.self.currentVote.voting"
+                    >
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(-2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(-2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(2px)"></fa-icon>
+                    <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" style="transform:translateY(-2px)"></fa-icon>
+                </label>
+                <label class="btn btn-outline-blue btn-sm active">
+                  <input type="radio" name="recipe-rating-voted"
+                    :checked="page.self.currentVote.voting === -1"
+                    value="-1" v-model="page.self.currentVote.voting" selected>
+                    <fa-icon :icon="page.iconSet.reset.icon" :space="page.iconSet.reset.space"></fa-icon>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <b-button type="button" id="recipe-rating-modal-spinner"
+              class="btn-blue d-none" disabled>
+              <fa-icon :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space" spin fw></fa-icon>
+            </b-button>
+            <b-button type="button" id="recipe-rating-modal-save"
+              class="btn-blue" @click="onRatingSubmitPress">{{ Controller.l('recipe_rate_modal_save') }}</b-button>
+            <b-button type="button" id="recipe-rating-modal-close"
+              class="btn-outline-blue" data-dismiss="modal">{{ Controller.l('recipe_rate_modal_close') }}</b-button>
+          </div>
+        </div>
+      </div>
+    </div>

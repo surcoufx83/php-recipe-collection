@@ -1,0 +1,43 @@
+
+    <div class="modal fade" id="new-recipe-modal"
+      data-backdrop="static" data-keyboard="false" tabindex="-1"
+      aria-labelledby="new-recipe-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="new-recipe-modal-title">{{ Controller.l('newRecipe_modal_title') }}</h5>
+          </div>
+          <div class="modal-body"
+            v-if="progress.preparing"><p>{{ Controller.l('newRecipe_modal_preparing') }}</p>
+          </div>
+          <div class="modal-body"
+            v-if="progress.sending"><p>{{ Controller.l('newRecipe_modal_description') }}</p>
+          </div>
+          <div class="modal-body bg-warning"
+            v-if="!progress.sending && progress.gotresponse && !progress.responseSuccess">
+            <p>{{ Controller.l('newRecipe_modal_error') }}</p>
+            <p>${ progress.response.code }: ${ progress.response.message }</p>
+          </div>
+          <div class="modal-body bg-success text-light"
+            v-if="!progress.sending && progress.gotresponse && progress.responseSuccess">
+            {{ Controller.l('newRecipe_modal_success') }}
+          </div>
+          <div class="modal-footer">
+            <b-button type="button" id="new-recipe-modal-spinner"
+              v-if="progress.sending"
+              class="btn-blue" disabled>
+              <fa-icon :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space" spin fw></fa-icon>
+            </b-button>
+            <b-button type="button"
+              v-if="!progress.sending && (progress.responseSuccess || page.currentRecipe.id > 0)"
+              class="btn-outline-blue" data-dismiss="modal">{{ Controller.l('newRecipe_modal_backButton') }}</b-button>
+            <b-button type="button" id="new-recipe-modal-new"
+              v-if="!progress.sending && progress.gotresponse && progress.responseSuccess && page.currentRecipe.id == 0"
+              class="btn-outline-blue" data-dismiss="modal" @click="onNewRecipeBtnClick">{{ Controller.l('newRecipe_modal_newButton') }}</b-button>
+            <b-button type="button" id="new-recipe-modal-new"
+              v-if="!progress.sending && ((progress.gotresponse && progress.responseSuccess) || page.currentRecipe.id > 0)"
+              class="btn-blue" data-dismiss="modal" @click="onGotoRecipeBtnClick">{{ Controller.l('newRecipe_modal_forwardButton') }}</b-button>
+          </div>
+        </div>
+      </div>
+    </div>

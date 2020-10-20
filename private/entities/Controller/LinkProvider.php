@@ -27,6 +27,7 @@ final class LinkProvider {
           'redirect' => ISWEB ? $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/oauth2/callback' : null,
           'token' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_TOKENURL : null,
           'user' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_DATAURL : null,
+          'groups' => class_exists('Surcouf\Cookbook\OAuth2Conf') ? OAuth2Conf::OATH_GROUPSURL : null,
         ],
         'recipe' => [
           'remove' => '/admin/recipe/remove/%d/%s',
@@ -48,28 +49,26 @@ final class LinkProvider {
         'login-oauth2' => '/oauth2/login',
         'logout' => '/logout',
         'home' => '/',
-        'random' => '/random',
-        'recipes' => '/myrecipes',
+        'random' => '/random/%d',
+        'recipes' => '/recipes/my',
         'search' => '/search',
         'self-register' => '/self-register',
-        'settings' => '/settings',
+        'settings' => '/profile/settings',
       ],
       'recipe' => [
-        'new' => '/recipe/new',
         'picture' => [
           'link' => '/pictures/cbimages/%s',
         ],
-        'postnew' => '/recipe/new',
-        'publish' => '/recipe/publish/%d/%s',
-        'show' => '/%d/%s',
-        'sendVoting' => '/recipe/vote/%d/%s',
-        'unpublish' => '/recipe/unpublish/%d/%s',
+        'new' => '/write',
+        'show' => '/recipe/%d-%s',
+        'gallery' => '/recipe/%d-%s/gallery',
+        'edit' => '/recipe/%d-%s/edit',
       ],
       'tag' => [
-        'show' => '/tag/%d/%s',
+        'show' => '/tag/%d-%s',
       ],
       'user' => [
-        'recipes' => '/user-recipes/%d/%s',
+        'recipes' => '/recipes/user/%d-%s',
       ],
     ];
   }

@@ -6,12 +6,14 @@ use Surcouf\Cookbook\HashableInterface;
 use Surcouf\Cookbook\Helper\FilesystemHelper;
 use Surcouf\Cookbook\Helper\HashHelper;
 use Surcouf\Cookbook\DbObjectInterface;
+use Surcouf\Cookbook\Recipe\RecipeInterface;
+use Surcouf\Cookbook\User\UserInterface;
 use BenMajor\ImageResize\Image;
 
 if (!defined('CORE2'))
   exit;
 
-class Picture implements PictureInterface, DbObjectInterface, HashableInterface {
+class Picture implements PictureInterface, DbObjectInterface, HashableInterface, \JsonSerializable {
 
   protected $picture_id,
             $recipe_id,
@@ -136,6 +138,19 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface 
 
   public function hasHash() : bool {
     return !is_null($this->picture_hash);
+  }
+
+  public function jsonSerialize() {
+    global $Controller;
+    return [
+      'id' => $this->picture_id,
+      'index' => $this->picture_sortindex,
+      'uploaderId' => $this->user_id,
+      'uploaderName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : null),
+      'name' => $this->picture_name,
+      'description' => $this->picture_description,
+      'link' => $Controller->getLink('recipe:picture:link', $this->getFilename()),
+    ];
   }
 
 }

@@ -11,12 +11,20 @@ breadcrumb:
     home: 'Meine Kochbücher'
   home: 'Startseite'
   newRecipe: 'Neues Rezept'
-  recipes: 'Rezepte'
+  random: 'Zufällige Rezepte'
+  recipes:
+    all: 'Rezeptesammlung'
+    my: 'Meine Rezepte'
+  search:
+    main: 'Suche'
 
 common:
   duration:
+    minute: '%s Minute'
     minutes: '%s Minuten'
+    hour: '%s Stunde'
     hours: '%s Stunden'
+    day: '%s Tag'
     days: '%s Tage'
   no: 'nein'
   noUc: 'Nein'
@@ -42,12 +50,28 @@ greetings:
   hello: 'Hallo %s'
   recipeFrom: '%s von %s'
 
+home:
+  greeting:
+    description1: 'Schön das du in das Kochbuch schaust. Wir arbeiten permanent dran, es besser zu machen. Wenn dir Fehler auffallen, melde diese gerne an Stefan oder Elias.'
+    description2: 'Auch wenn einige Funktionen noch nicht so ganz hinhauen, Rezepte eintragen, bearbeiten, anschauen und nachkochen klappt schon ganz gut. Probier mal die Funktion'
+  inprogress:
+    workingon: 'An dieser Stelle werden demnächst neue Rezepte vorgestellt. Bis dahin nutze eine der Funktonen aus der Seitenleiste.'
+    mobile1: 'Du kannst die Seitenleiste anzeigen, indem du auf das'
+    mobile2: 'Menü oben vor dem Wort Startseite klickst (manchmal muss man doppelt klicken).'
+
+modals:
+  failed:
+    head: 'Fehler'
+    subject: 'Bei der Aktion ist leider ein Fehler aufgetreten.'
+    close: 'Zurück'
+
 newRecipe:
-  header: 'Neues Rezept von %s'
+  header: 'Neues Rezept erfassen'
   intro:
     header: 'Rezepteingabe'
     requiredFields: 'Alle mit <b><span class=\'text-contrast\'>*</span></b> markierten Felder müssen befüllt werden. Der Großteil der Angaben ist optional, aber wir freuen uns, wenn du diese trotzdem befüllst.'
     subject: 'Vielen Dank, dass du ein neues Rezept zu unserer Sammlung beitragen möchtest!<br />Das von dir bereitgestellte Rezept ist anfangs als \'Privat\' markiert. Du bekommst nach dem Speichern die Möglichkeit, dass Rezept zu prüfen und zu veröffentlichen.'
+    editHeader: 'Rezept bearbeiten'
   chapter1:
     header: 'Allgemeine Angaben'
     recipeName: 'Name für dieses Gericht'
@@ -90,15 +114,18 @@ newRecipe:
   chapter3:
     header: 'Bildergallerie'
     recipePictures: 'Bilder hochladen'
-    recipePicturesDescription: 'Lade ein oder mehrere Bilder von deinem Computer bzw. Handy hoch um diese neben dem Rezept anzuzeigen.<br />Das erste Bild wird immer das Vorschaubild sein.'
+    recipePicturesDescription: 'Lade ein oder mehrere Bilder von deinem Computer bzw. Handy hoch um diese neben dem Rezept anzuzeigen. Das erste Bild wird immer das Vorschaubild sein.'
     recipePicturesRemove: 'Entfernen'
     recipePicturesUpload: 'Hinzufügen'
+    header2: 'Zur Bildergallerie'
+    togalleryLink: 'Die Bilder deiner Rezepte kannst du in der Galerie verwalten.'
   chapter4:
     addButton:
       title: 'Anklicken um einen weiteren Arbeitsschritt einzufügen.'
     description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen. Optional kannst du für jeden Schritt auch noch angeben, wie lange Vorbereitung, Ruhezeit, und das Kochen dauern.'
     header: 'Schritt-für-Schritt Anleitung'
     step:
+      stepname: 'Schritt'
       duration:
         cooking: 'Kochdauer'
         description: 'Zeitaufwand (Minuten)'
@@ -115,16 +142,22 @@ newRecipe:
     header: 'Weitere Optionen'
   modal:
     backButton: 'Zurück'
-    description: 'Einen Moment bitte. Die Rezeptdaten werden gerade ins Kochbuch geschrieben.'
-    error: 'Das hätte nicht passieren sollen, aber beim Speichern ist ein Fehler aufgetreten &#x1F613;. Fehlerinformationen wurden an Stefan gesendet.'
+    preparing: 'Deine Eingaben werden geprüft.'
+    description: 'Die Rezeptdaten werden gerade ins Kochbuch geschrieben. Bitte habe kurz Geduld, es geht gleich weiter...'
+    error: 'Das hätte nicht passieren sollen, aber beim Speichern ist ein Fehler aufgetreten. Die Fehlerinformationen wurden an Stefan gesendet.'
     forwardButton: 'Zum Rezept'
     newButton: 'Noch ein Rezept eintragen'
-    success: 'Das Rezept ist gespeichert. Du wirst gleich weitergeleitet...'
+    success: 'Das Rezept ist gespeichert. Wähle einen der Buttons um fortzufahren.'
     title: 'Rezept wird gespeichert...'
   submitButton:
     title: 'Rezept speichern'
+    editTitle: 'Änderungen speichern'
+    submitted: 'Rezept wurde gespeichert'
+    invalidFeedback: 'Es gibt noch fehlerhafte Felder. Bitte prüfe deine Angaben.'
 
 navigation:
+  sidebar:
+    close: 'Verkleinern'
   topbar:
     search:
       placeholder: 'Suche'
@@ -250,6 +283,8 @@ page:
     submitButton:
       title: 'Anmelden'
     title: 'Benutzer Anmeldung'
+  logout:
+    title: 'Tschüß!'
   random: 'Zufälliges Rezept'
   myrecipes:
     title: 'Meine Rezepte'
@@ -280,18 +315,34 @@ page:
     title: 'Einstellungen'
 
 recipe:
+  loading:
+    title: 'Rezept wird geladen...'
   about:
     header: 'Über dieses Rezept'
-    cooked: 'Es wurde bisher %s mal nachgekocht.'
-    cookedAndRated: 'Es wurde bisher %s mal nachgekocht und mit %s Sternen bewertet.'
+    cooked: 'Es wurde bisher ${ recipe.socials.cookedCounter } mal nachgekocht.'
+    cookedAndRated: 'Es wurde bisher ${ recipe.socials.cookedCounter } mal nachgekocht und mit ${ recipe.socials.votedAvg1 } Sternen bewertet.'
     notCooked: 'Es wurde leider noch nicht nachgekocht.'
-    publication: 'Das Rezept wurde am %s von %s veröffentlicht.'
-    publicationAnonymous: 'Das Rezept wurde am %s veröffentlicht.'
-    unpublished: 'Das Rezept wurde am %s erstellt und bisher nicht für andere User veröffentlicht.'
-    source: 'Herkunft'
+    publication: 'Das Rezept wurde am ${ recipe.formatted.published } von ${ recipe.ownerName } veröffentlicht.'
+    publicationAnonymous: 'Das Rezept wurde am ${ recipe.formatted.published } veröffentlicht.'
+    unpublished: 'Das Rezept wurde am ${ recipe.formatted.created } erstellt und bisher nicht für andere User veröffentlicht.'
+    source:
+      header: 'Herkunft'
+      noSource: 'Keine Angaben gemacht'
+    title:
+      noUser: '%s'
+      withUser: '%s von %s'
+    voting:
+      header: 'Bewertungen'
+      notVoted: 'Bisher noch keine Bewertung erhalten.'
+      voted: ' bei ${ recipe.socials.votedCounter } abgegebenen Stimmen'
+      my:
+        notYetVoted: 'Du hast in den letzten %s Tagen keine Bewertung abgegeben'
+        voted: 'Du hast das Rezept zuletzt am ${ page.self.lastVote.formatted.time } bewertet mit '
+        voteAndVisitCount: 'Insgesamt hast du es ${ page.self.visitCount } mal angesehen und ${ page.self.voteCount } mal bewertet.'
+        visitCount: 'Insgesamt hast du es ${ page.self.visitCount } mal angesehen.'
   admin:
     header: 'Administration'
-    author: 'Verfasst von %s'
+    author: 'Verfasst von ${ recipe.ownerName }'
     deletedAuthorAccount: 'Verfasst von [Gelöschtes Konto]'
     removeRecipe: 'Rezept entfernen'
     unpublishRecipe: 'Nicht-Öffentlich setzen'
@@ -303,13 +354,24 @@ recipe:
     header: 'Bildergalerie'
   ingredients:
     header: 'Zutatenliste'
+    eater:
+      count:
+        prefix: 'Das Rezept ist ausgelegt für '
+        suffix: ' Personen.'
+        inputPrefix: 'Mengenangaben umrechnen für: '
+        inputPersons: ' Personen'
   duration:
     header: 'Zubereitungsdauer'
-    description: 'Die Zubereitung des Gerichts nimmt einige Zeit in Anspruch. Für die gesamte Zubereitung sind angegeben:'
-    description2: 'Folgende Zeiten sind für die Zubereitung des Gerichts angegeben:'
-    preparation: '%s zur Vorbereitung'
-    cooking: '%s zum Kochen/Backen'
-    rest: '%s zum Ziehen/Ruhen lassen'
+    overallPrefix: 'Für dieses Rezept ist eine Zubereitungsdauer von insgesamt '
+    overallSuffix: ' angegeben.'
+    description: 'Hinweis: Die Zubereitung des Gerichts nimmt viel Zeit in Anspruch.'
+    preparation: 'Vorbereitungszeit: %s'
+    preparationHeader: 'Vorbereitungszeit'
+    cooking: 'Kochzeit: %s'
+    cookingHeader: 'Kochzeit'
+    rest: 'Ruhezeit: %s'
+    restHeader: 'Ruhezeit'
+    notSet: 'keine Angabe'
   cookingSteps:
     header: 'Zubereitung'
     placeholder: 'Schritt'
@@ -318,6 +380,9 @@ recipe:
     publication:
       publish: 'Veröffentlichen'
       unpublish: 'Veröffentlichung zurückziehen'
+    edit: 'Bearbeiten'
+    toGallery: 'Bildergalerie'
+    toRecipe: 'Zurück'
   rate:
     button: 'Bewertung abgeben'
     header: 'Rezept bewerten'
@@ -327,7 +392,7 @@ recipe:
     modal:
       title: 'Rezeptbewertung'
       description: 'Mit der Beantwortung der folgenden kurzen Fragen gibst du eine direkte Rückmeldung an den Autoren des Rezepts.'
-      description2: 'Du kannst jederzeit abbrechen. Erst durch einen Klick auf den Button Speichern wird deine Bewertung übernommen.'
+      description2: 'Du kannst jederzeit abbrechen. Erst durch einen Klick auf 'Bewertung speichern' wird deine Bewertung übernommen.'
       cooked:
         title: 'Hast du das Rezept nachgekocht?'
         none: 'Keine Angabe'
@@ -336,8 +401,8 @@ recipe:
         description: 'Wie schwer fandest du es, dass Rezept nachzukochen? War alles beschrieben was du benötigst oder haben sich dir viele Fragezeichen aufgetan?'
         none: 'Keine Angabe'
       voting:
-        title: 'Wieviel Sterne hat das Gericht verdient?'
-        description: 'Bewerte mit 1 (schlecht) bis 5 (sehr gut) Sternen, wie gut dir das Gericht geschmeckt hat.'
+        title: 'Wieviele Herzen hat das Gericht verdient?'
+        description: 'Bewerte mit 1 (schlecht) bis 5 (sehr gut), wie gut dir das Gericht geschmeckt hat.'
       submitting: 'Die Bewertung wird gerade an den Server geschickt. Das sollte nicht länger als eine Sekunde dauern ...'
       submitted: 'Deine Bewertung wurde gespeichert. Vielen Dank!'
       error: 'Es gab einen Fehler bei der Datenübertragung &#x1F613;'
@@ -349,6 +414,22 @@ recipe:
       times: '&times; gekocht'
     views:
       times: '&times; gesehen'
+  tags:
+    header: 'Schlagworte'
+
+recipes:
+  filtered:
+    own:
+      title: 'Meine Rezepte'
+    user:
+      title: 'Rezepte von %s'
+  unfiltered:
+    title: 'Rezepte erkunden'
+  common:
+    goto: 'Zum Rezept'
+    submittedBy: 'Eingetragen von'
+    voting: 'Bewertung'
+    votings: 'Bewertungen'
 
 response:
   badArgumentsException: 'Ungültige Argumente angegeben.'
@@ -357,7 +438,7 @@ response:
   dbSelectException: 'Beim Abrufen von Datensätzen aus der Datenbank ist ein Fehler aufgetreten.'
   dbStmtException: 'Fehler bei der Vorbereitung der Datenbank-Anweisung.'
   dbUpdateException: 'Fehler beim Speichern der Änderungen in der Datenbank.'
-  functionNotFoundException: 'Die Seite, auf die Sie zuzugreifen versuchen, funktioniert derzeit nicht: die angegebene Funktion ist nicht verfügbar.'
+  functionNotFoundException: 'Die angeforderte Funktion ist leider noch nicht programmiert. Stefan hauen, oder etwas Geduld zeigen ;)'
   insufficientPermissionException: 'Unzureichende Berechtigung für diese Aktion.'
   loginFailed: 'Anmeldung fehlgeschlagen.'
   loginSuccessfull: 'Anmeldung erfolgreich.'
@@ -365,6 +446,7 @@ response:
   noApiKeyException: 'Der Zugriff erfordert ein Anmelde-Token. Bitte melden Sie sich zuerst über die Website an, bevor Sie den API-Zugang versuchen.'
   noChanges: 'Es wurden keine Änderungen erkannt.'
   noResults: 'Die Suche hat keine Ergebnisse zurückgeliefert.'
+  notAllowedException: 'Keine Berechtigung für diese Aktion.'
   notAuthenticatedException: 'Benutzer nicht eingeloggt.'
   pageMovedException: 'Die angeforderte Seite wurde verschoben und kann nicht mehr per Webanforderung oder CLI abgerufen werden.'
   parameterException: 'Für die angegebenen Parameter ist keine Verarbeitung konfiguriert.'
@@ -372,6 +454,12 @@ response:
   undefinedException: 'Im Backend ist ein nicht spezifizierter Fehler aufgetreten. Ihre Änderungen wurden nicht akzeptiert.'
   validationSucceeded: 'Die Überprüfung war erfolgreich. Es wurden keine Fehler festgestellt.'
   validationFailed: 'Es sind folgende Fehler aufgetreten: '
+
+search:
+  title: 'Suchfunktion'
+  form:
+    placeholder: 'z. B. Muffins Karotte Ingwer'
+    searchingFor: 'Suche nach'
 
 sendmail:
   registration:
@@ -385,3 +473,19 @@ sendmail:
         subject: 'Bitte klicke auf den folgenden Link: '
         linktitle: 'Anmeldung bestätigen'
       chapter5: 'Wir wünschen dir Alles Gute!'
+
+sidebar:
+  admin:
+    cronjobs: 'Cronjobs'
+    home: 'Administration'
+    logs: 'Logdateien'
+    translations: 'Übersetzung'
+    users: 'Benutzer'
+  home: 'Startseite'
+  recipe:
+    edit: 'Bearbeiten'
+    search: 'Suche'
+    random: 'Zufälliges Rezept'
+    write: 'Neues Rezept'
+  profile:
+    recipes: 'Meine Rezepte'

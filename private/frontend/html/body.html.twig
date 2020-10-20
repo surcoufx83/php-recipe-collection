@@ -9,50 +9,86 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="/style/bootstrap-4.5.2.min.css">
-    <link rel="stylesheet" href="/style/ekko-lightbox-5.3.0.css">
-    <link rel="stylesheet" href="/style/select2-4.0.0.min.css">
-    <link rel="stylesheet" href="/style/fontawesome-all-5.14.0.min.css">
-    <link rel="stylesheet" href="/style/icofont.min.css">
+    <link rel="stylesheet" href="/style/bootstrap-4.5.3.min.css">
+    <link type="text/css" rel="stylesheet" href="/style/bootstrap-vue-2.18.0.min.css" />
+    <link type="text/css" rel="stylesheet" href="/style/bootstrap-vue-icons-2.18.0.min.css" />
+    <link rel="stylesheet" href="/style/fontawesome-5.15.1.min.css">
     <link rel="stylesheet" href="/style/theme-1.0.1.css">
+    <script src="/script/vue-2.6.12.js"></script>
+    <script src="/script/vue-router-3.4.7.min.js"></script>
+    <script src="/script/vue-resource-1.5.1.min.js"></script>
+    <script src="/script/bootstrap-vue-2.18.0.min.js"></script>
+    <script src="/script/bootstrap-vue-icons-2.18.0.min.js"></script>
     {{ Header.JS|raw }}
     <title>{{ Config.PageTitle }}</title>
   </head>
 
   <body>
-    {% include 'body-navbar.html.twig' %}
 
-    <main>
-      <div class="page" {% if Controller.isAuthenticated() == false or Controller.User().hasRegistrationCompleted() == false %}style="padding-left:0!important;"{% endif %}>
-      {% if Controller.isAuthenticated() and Controller.User().hasRegistrationCompleted() %}
-        {% include 'body-sidebar.html.twig' %}
-      {% endif %}
-        <div class="page-wrapper">
-          {% if Controller.isAuthenticated() and Controller.User().hasRegistrationCompleted() %}
-          <div class="page-overlay"></div>
-          <div class="page-header">
-            {% include 'body-header.html.twig' %}
+    <div id="vue-app">
+      {% include 'common/navbar-top.html.twig' %}
+      <main>
+        <div class="page"
+          v-bind:class="{'pl-0': user.loggedIn === false, 'sidebar-visible': page.sidebar.visible}">
+          <sidebar :page="page" v-if="user.loggedIn"></sidebar>
+          <div class="page-wrapper">
+            <div class="page-header-wrapper"
+              v-if="user.loggedIn">
+              <div class="page-header">
+                {% include 'common/breadcrumbs-container.html.twig' %}
+              </div>
+              <div class="page-topbar">
+                {% include 'common/navbar-inpage.html.twig' %}
+              </div>
+            </div>
+            <div class="page-content pt-3">
+              {% include 'common/content-container.html.twig' %}
+            </div>
           </div>
-          <div class="page-topbar">
-            {% include 'body-headingbar.html.twig' %}
-          </div>
-          <div class="page-topbar">
-            {% include 'body-topbar.html.twig' %}
-          </div>
-          {% endif %}
-          <div class="page-content pt-3">
-            {% include 'body-content.html.twig' %}
+        </div>
+      </main>
+      <div class="modal modal-danger" tabindex="-1" role="dialog" id="action-failed-modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">{{Controller.l('modals_failed_head')}}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p class="my-0">${ page.modals.failedModal.message }</p>
+              <p class="text-small my-0">Code: ${ page.modals.failedModal.code }</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-blue" data-dismiss="modal">{{Controller.l('modals_failed_close')}}</button>
+            </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
+    <div id="reactive-size-spy-sm" class="d-block"></div>
+    <div id="reactive-size-spy-lg" class="d-none d-lg-block"></div>
+
+    {% include 'templates/home.html.twig' %}
+    {% include 'templates/body/body-elements.html.twig' %}
+    {% include 'templates/recipe/recipe.html.twig' %}
+    {% include 'templates/write-recipe/form.html.twig' %}
+    {% include 'templates/recipes/recipes-listing-template.html.twig' %}
+    {% include 'templates/search/search.html.twig' %}
+    {% include 'templates/user/login.html.twig' %}
+    {% include 'templates/user/logout.html.twig' %}
 
     <script src="/script/jquery-3.5.1.min.js"></script>
-    <script src="/script/bootstrap-4.5.2.bundle.min.js"></script>
-    <script src="/script/ekko-lightbox-5.3.0.min.js"></script>
-    <script src="/script/select2-4.0.0.min.js"></script>
+    <script src="/script/bootstrap-4.5.3.bundle.min.js"></script>
     <script src="/script/plotly-1.54.1.min.js"></script>{% if Page.Scripts.StarRating == true %}
     <script src="/script/rater.min.js"></script>{% endif %}
+
+    <script src="/script/components/vue-components.js"></script>
+    <script src="/script/components/vue-comp-RecipeCreator.js"></script>
+    <script src="/script/components/vue-comp-RecipeEditor.js"></script>
+    <script src="/script/components/vue-router.js"></script>
+    <script src="/script/vue.js"></script>
 
     <script>
 
@@ -116,29 +152,8 @@
         $('a.sidebar-toggle-nav').addClass('sidebar-opened');
       });
 
-      $('.scroll-to').click(function() {
-        var target = $('#' + $(this).data('target'));
-        if (target) {
-          var pos = target.offset().top - 60;
-          $(window).scrollTop(pos);
-        }
-      });
-
       $(function () {
         $('[data-toggle="tooltip"]').tooltip();
-        $('select.form-select2-multi').select2({
-          closeOnSelect: false,
-          tags: true
-        });
-        $('select.form-select2-single').select2({
-          tags: true
-        });
-        $('[data-toggle="lightbox"]').click(function(event) {
-          event.preventDefault();
-          $(this).ekkoLightbox({
-            alwaysShowClose: true
-          });
-        });
       });
 
       $(document).ready(function() {

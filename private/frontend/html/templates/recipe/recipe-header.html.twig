@@ -1,0 +1,42 @@
+          <div class="mt-5 mt-lg-0 pb-3">
+            <h4>{{Controller.l('recipe_about_header')}}</h4>
+            <p class="mb-1">
+              <span v-if="recipe.published === false">{{ Controller.l('recipe_about_unpublished') }}</span>
+              <span v-if="recipe.published && recipe.ownerId !== false">{{ Controller.l('recipe_about_publication') }}</span>
+              <span v-if="recipe.published && recipe.ownerId === false">{{ Controller.l('recipe_about_publicationAnonymous') }}</span>
+              <span v-if="recipe.socials.cookedCounter == 0">{{ Controller.l('recipe_about_notCooked') }}</span>
+              <span v-if="recipe.socials.cookedCounter > 0 && recipe.socials.votedCounter === 0">{{ Controller.l('recipe_about_cooked') }}</span>
+              <span v-if="recipe.socials.cookedCounter > 0 && recipe.socials.votedCounter > 0">{{ Controller.l('recipe_about_cookedAndRated') }}</span>
+            </p>
+            <table class="table table-borderless table-sm">
+              <tr>
+                <th class="pl-0">{{ Controller.l('recipe_about_source_header') }}:</th>
+                <td class="w-100">
+                  <span v-if="recipe.source.description === ''">{{ Controller.l('recipe_about_source_noSource') }}</span>
+                  <span v-if="recipe.source.description !== '' && recipe.source.url === ''" v-text="recipe.source.description"></span>
+                  <span v-if="recipe.source.description !== '' && recipe.source.url !== ''">
+                    <a :href="recipe.source.url" target="_blank">${recipe.source.description}</a>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th class="pl-0">{{ Controller.l('recipe_about_voting_header') }}:</th>
+                <td>
+                  <span v-if="recipe.socials.votedCounter === 0">{{ Controller.l('recipe_about_voting_notVoted') }}<br /></span>
+                  <span v-if="recipe.socials.votedCounter !== 0">
+                    ${ recipe.socials.votedAvg1 }<fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="fs-80 mx-1 text-contrast"></fa-icon>
+                    {{ Controller.l('recipe_about_voting_voted') }}.<br />
+                    <span v-if="page.self.lastVote === false">{{ Controller.l('recipe_about_voting_my_notYetVoted', Config.RecipeRatingClearance().d) }}.</span>
+                    <span v-if="page.self.lastVote">
+                      {{ Controller.l('recipe_about_voting_my_voted') }}
+                      ${ page.self.lastVote.voting }<fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="fs-80 ml-1 text-contrast"></fa-icon>.
+                    </span>
+                  </span>
+                  <span v-if="page.self.visitCount > 1">
+                    <span v-if="page.self.voteCount !== 0">{{ Controller.l('recipe_about_voting_my_voteAndVisitCount') }}</span>
+                    <span v-if="page.self.voteCount === 0">{{ Controller.l('recipe_about_voting_my_visitCount') }}</span>
+                  </span>
+                </td>
+              </tr>
+            </table>
+          </div>
