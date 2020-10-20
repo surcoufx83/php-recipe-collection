@@ -160,7 +160,7 @@ navigation:
     close: 'Verkleinern'
   topbar:
     search:
-      placeholder: 'Suche'
+      placeholder: 'Suche nach Rezepten oder Zutaten, z.B. Kartoffelauflauf'
     user:
       account: 'Account'
       login: 'Anmelden'

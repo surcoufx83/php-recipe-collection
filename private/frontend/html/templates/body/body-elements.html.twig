@@ -5,7 +5,8 @@
           :page="page"
           bg-variant="light-blue"
           @change="toggleSidebar"
-          shadow visible
+          shadow
+          :visible="page.sidebar.visible"
           no-header
           :no-close-on-route-change="page.sidebar.initialVisible"
           no-close-on-esc>

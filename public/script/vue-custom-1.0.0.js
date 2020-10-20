@@ -345,15 +345,15 @@ const SearchRecipe = {
     }
   }
 }
-const Header = {
+Vue.component('rc-navbar', {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
-  template: '#header-template',
+  template: '#rc-navbar-template',
   data: function() {
     return { }
   },
   methods: { }
-}
+})
 const RecipesCreator = {
   delimiters: ['${', '}'],
   props: ['page', 'user'],

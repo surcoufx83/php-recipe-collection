@@ -198,6 +198,7 @@ h1, h2, h3 {
 .w-30 { width: 30%!important; }
 .w-40 { width: 40%!important; }
 .w-50 { width: 50%!important; }
+.w-50px { width: 50px!important; }
 .w-60 { width: 60%!important; }
 .w-70 { width: 70%!important; }
 .w-75 { width: 75%!important; }
@@ -206,7 +207,10 @@ h1, h2, h3 {
 .w-min-content { width: min-content!important; }
 .w-75px { width: 75px!important; }
 .w-100px { width: 100px!important; }
+.mw-100px { max-width: 100px!important; }
 .w-200px { width: 200px!important; }
+.mw-200px { max-width: 200px!important; }
+.mw-400px { max-width: 400px!important; }
 
 .h-10 { height: 10%!important; }
 .h-20 { height: 20%!important; }
@@ -243,19 +247,23 @@ h1, h2, h3 {
   }
 }
 
-header.navbar {
-  box-shadow: 0 1px 0 0 $bg-dark;
-
-  .navbar-nav {
-
-    .form-control {
-      color: $bg-light!important;
-    }
-
-    .nav-link {
-      color: $bg-light!important;
-    }
+.input-dark {
+  background-color: $bg-contrast-darker;
+  color: $text-light;
+  border-color: $text-light;
+  &:focus {
+    background-color: $bg-contrast;
+    color: $text-light;
+    border-color: $text-light;
   }
+  &::placeholder {
+    color: $bg-gray;
+  }
+}
+
+.navbar {
+  box-shadow: 0 2px 0 0 $bg-contrast-darker;
+  z-index: 1200;
 }
 
 ul.list-group-sm li.list-group-item {
