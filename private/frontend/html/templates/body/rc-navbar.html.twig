@@ -25,7 +25,7 @@
 
                 <b-row cols="12" align-h="end" class="w-100">
 
-                  <b-col cols="9" sm="8" md="7" lg="6" xl="5">
+                  <b-col cols="10" sm="9" md="7" lg="6" xl="5" class="pr-0">
                     <b-form-input
                       type="search" size="sm"
                       v-model="page.search.filter.global"
@@ -33,11 +33,11 @@
                       class="input-dark mw-400px my-2"></b-form-input>
                   </b-col>
 
-                  <b-col cols="3" class="text-right">
+                  <b-col cols="2" class="text-right pl-0">
                     <b-button v-b-toggle.sidebar-main
-                      class="header-toggle-nav h-100 w-100px"
+                      class="header-toggle-nav h-100 w-75px"
                       style="background-color: transparent; border-color: transparent;"
-                      v-if="page.sidebar.visible !== true">
+                      v-if="page.sidebar.visible !== true || page.sidebar.initialVisible !== true">
                       <span class="sr-only">Toggle sidebar</span>
                       {{ Config.Icons.Menu()|raw }}
                     </b-button>
@@ -46,37 +46,6 @@
                 </b-row>
 
               </b-container>
-
-            <div class="d-none"
-              v-if="user.loggedIn === false && config.maintenanceEnabled === false">
-              <ul class="navbar-nav flex-row">
-                <li class="nav-item text-uppercase">
-                  <a class="nav-link" href="/login">{{ Controller.l('navigation_topbar_user_login') }}</a>
-                </li>
-              </ul>
-            </div>
-            <ul class="navbar-nav mx-md-auto d-none"
-              v-if="user.loggedIn">
-              <li class="nav-item navbar-brand mr-0 mr-md-2">Rezeptsuche:</li>
-              <li class="nav-item d-none d-md-inline-block mr-5">
-                <input class="form-control form-control-sm mt-2 bg-dark text-light border-light"
-                  type="search" placeholder="{{ Controller.l('navigation_topbar_search_placeholder') }}" aria-label="{{ Controller.l('navigation_topbar_search_placeholder') }}">
-              </li>
-            </ul>
-            <ul class="navbar-nav ml-md-auto d-none"
-              v-if="user.loggedIn">
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-uppercase" href="#" id="navbarDropdown"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <b-avatar rounded :src="user.avatar.url" :text="user.meta.initials" :size="24" class="mr-1 bg-blue"></b-avatar> ${ user.meta.un }
-                </a>
-                <div class="dropdown-menu dropdown-menu-right small p-1" aria-labelledby="navbarDropdown">
-                  <router-link class="dropdown-item" :to="{ name: 'settings'}">{{ Controller.l('navigation_topbar_user_settings') }}</router-link>
-                  <div class="dropdown-divider"></div>
-                  <router-link class="dropdown-item" to="/logout">{{ Controller.l('navigation_topbar_user_logout') }}</router-link>
-                </div>
-              </li>
-            </ul>
-
+            </b-navbar>
           </header> <!-- rc-navbar sticky top navigation -->
         </template>
