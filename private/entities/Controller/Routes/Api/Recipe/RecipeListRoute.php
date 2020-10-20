@@ -103,7 +103,6 @@ class RecipeListRoute extends Route implements RouteInterface {
     parent::setDescription($response, '');
     parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
     parent::addBreadcrumb($response, 'myRecipes', $Controller->l('breadcrumb_recipes_my'));
-    return;
   }
 
   static function filterUserList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery, UserInterface $user) : void {
@@ -118,7 +117,6 @@ class RecipeListRoute extends Route implements RouteInterface {
     parent::setDescription($response, '');
     parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
     parent::addBreadcrumb($response, 'userRecipes', $user->getUsername(), ['id' => $user->getId(), 'name' => Formatter::nice_urlstring($user->getUsername())]);
-    return;
   }
 
   static function unfilteredList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
@@ -128,7 +126,6 @@ class RecipeListRoute extends Route implements RouteInterface {
     parent::setTitle($response,  $Controller->l('recipes_unfiltered_title'));
     parent::setDescription($response, '');
     parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
-    return;
   }
 
 }
