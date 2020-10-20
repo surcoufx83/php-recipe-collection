@@ -49,22 +49,26 @@ final class LinkProvider {
         'login-oauth2' => '/oauth2/login',
         'logout' => '/logout',
         'home' => '/',
-        'random' => '/random',
-        'recipes' => '/myrecipes',
+        'random' => '/random/%d',
+        'recipes' => '/recipes/my',
         'search' => '/search',
         'self-register' => '/self-register',
-        'settings' => '/settings',
+        'settings' => '/profile/settings',
       ],
       'recipe' => [
         'picture' => [
           'link' => '/pictures/cbimages/%s',
         ],
+        'new' => '/write',
+        'show' => '/recipe/%d-%s',
+        'gallery' => '/recipe/%d-%s/gallery',
+        'edit' => '/recipe/%d-%s/edit',
       ],
       'tag' => [
-        'show' => '/tag/%d/%s',
+        'show' => '/tag/%d-%s',
       ],
       'user' => [
-        'recipes' => '/user-recipes/%d/%s',
+        'recipes' => '/recipes/user/%d-%s',
       ],
     ];
   }
