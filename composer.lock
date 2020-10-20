@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "adhocore/cli",
-            "version": "0.8.3",
+            "version": "0.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/adhocore/php-cli.git",
-                "reference": "70d4a37d202174699dd0f4799ccb014c252a92b1"
+                "reference": "c17fdec05954b3bd2df49adff56284a511dd1083"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adhocore/php-cli/zipball/70d4a37d202174699dd0f4799ccb014c252a92b1",
-                "reference": "70d4a37d202174699dd0f4799ccb014c252a92b1",
+                "url": "https://api.github.com/repos/adhocore/php-cli/zipball/c17fdec05954b3bd2df49adff56284a511dd1083",
+                "reference": "c17fdec05954b3bd2df49adff56284a511dd1083",
                 "shasum": ""
             },
             "require": {
@@ -60,7 +60,13 @@
                 "stream-input",
                 "stream-output"
             ],
-            "time": "2020-01-05T00:12:35+00:00"
+            "funding": [
+                {
+                    "url": "https://paypal.me/ji10",
+                    "type": "custom"
+                }
+            ],
+            "time": "2020-10-09T00:51:05+00:00"
         },
         {
             "name": "benmajor/php-image-resize",
