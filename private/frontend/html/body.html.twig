@@ -154,19 +154,6 @@
 
       $(function () {
         $('[data-toggle="tooltip"]').tooltip();
-        $('select.form-select2-multi').select2({
-          closeOnSelect: false,
-          tags: true
-        });
-        $('select.form-select2-single').select2({
-          tags: true
-        });
-        $('[data-toggle="lightbox"]').click(function(event) {
-          event.preventDefault();
-          $(this).ekkoLightbox({
-            alwaysShowClose: true
-          });
-        });
       });
 
       $(document).ready(function() {

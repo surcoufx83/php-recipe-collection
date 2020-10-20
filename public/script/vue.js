@@ -1,6 +1,5 @@
 
 var app;
-var isAuthenticated;
 
 Vue.config.productionTip = false
 Vue.use(VueResource)
@@ -21,7 +20,6 @@ Vue.http.get('common-data')
         window.removeEventListener("resize", this.onResize);
       },
       mounted: function() {
-        var smspy = $('#reactive-size-spy-sm');
         var lgspy = $('#reactive-size-spy-lg');
         this.$set(this.page.sidebar, 'visible', (lgspy.css("display") == "block"))
         this.$set(this.page.sidebar, 'initialVisible', (lgspy.css("display") == "block"))
@@ -54,7 +52,6 @@ Vue.http.get('common-data')
         }
       }
     })
-    isAuthenticated = app.user.loggedIn
   })
 
 router.beforeEach((to, from, next) => {
@@ -80,7 +77,7 @@ router.afterEach((to, from) => {
   if (to.name == 'logout') {
     Vue.http.post('logout')
       .then(response => response.json())
-      .then((data) => {
+      .then(() => {
         window.location = '/';
       })
   }
