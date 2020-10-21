@@ -34,14 +34,11 @@ class RecipePageRoute extends Route implements RouteInterface {
 
     $userVote = self::getMyVote($recipe);
 
-    parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
     if (!is_null($recipe->getUserId())) {
       parent::setTitle($response,  $Controller->l('recipe_about_title_withUser', $recipe->getName(), $recipe->getUser()->getUsername()));
-      parent::addBreadcrumb($response, 'userRecipes', $recipe->getUser()->getUsername(), ['id' => $recipe->getUserId(), 'name' => Formatter::nice_urlstring($recipe->getUser()->getUsername())]);
     } else {
       parent::setTitle($response,  $Controller->l('recipe_about_title_noUser', $recipe->getName()));
     }
-    parent::addBreadcrumb($response, 'recipe', $recipe->getName(), ['id' => $recipe->getId(), 'name' => Formatter::nice_urlstring($recipe->getName())]);
 
     parent::setDescription($response, $recipe->getDescription());
 

@@ -27,7 +27,6 @@ class Route implements RouteInterface {
   }
 
   static function createOutput(array &$response) : bool {
-    self::addBreadcrumb($Controller->getLink('private:home'), $Controller->l('breadcrumb_home'));
     self::setPage('private:home');
     self::setTitle($Controller->l('greetings_hello', ''));
     return self::render(self::$template, $response);

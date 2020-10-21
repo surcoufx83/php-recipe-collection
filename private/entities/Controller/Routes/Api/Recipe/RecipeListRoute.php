@@ -101,8 +101,6 @@ class RecipeListRoute extends Route implements RouteInterface {
     $countquery->where('recipes', 'user_id', '=', $Controller->User()->getId());
     parent::setTitle($response,  $Controller->l('recipes_filtered_own_title'));
     parent::setDescription($response, '');
-    parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
-    parent::addBreadcrumb($response, 'myRecipes', $Controller->l('breadcrumb_recipes_my'));
   }
 
   static function filterUserList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery, UserInterface $user) : void {
@@ -115,8 +113,6 @@ class RecipeListRoute extends Route implements RouteInterface {
       ->andWhere('recipes', 'user_id', '=', $user->getId());
     parent::setTitle($response,  $Controller->l('recipes_filtered_user_title', $user->getUsername()));
     parent::setDescription($response, '');
-    parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
-    parent::addBreadcrumb($response, 'userRecipes', $user->getUsername(), ['id' => $user->getId(), 'name' => Formatter::nice_urlstring($user->getUsername())]);
   }
 
   static function unfilteredList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
@@ -125,7 +121,6 @@ class RecipeListRoute extends Route implements RouteInterface {
     $countquery->where('recipes', 'recipe_public', '=', 1);
     parent::setTitle($response,  $Controller->l('recipes_unfiltered_title'));
     parent::setDescription($response, '');
-    parent::addBreadcrumb($response, 'recipes', $Controller->l('breadcrumb_recipes_all'));
   }
 
 }

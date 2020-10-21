@@ -62,11 +62,6 @@ class RecipeRoute extends Route implements RouteInterface {
     if ($result && $result->num_rows > 0)
       $myvote = $Controller->OM()->Rating($result->fetch_assoc());
 
-    parent::addBreadcrumb($Controller->getLink('private:home'), $Controller->l('breadcrumb_recipes'));
-    if (!is_null($recipe->getUserId()))
-      parent::addBreadcrumb($Controller->getLink('user:recipes', $recipe->getUserId(), $recipe->getUser()->getFirstname()), $recipe->getUser()->getName());
-    parent::addBreadcrumb($Controller->getLink('recipe:show', $recipe->getId(), $recipe->getName()), $recipe->getName());
-
     $pics = $recipe->getPictures();
     if (count($pics) > 0) {
       $carousel = CarouselHelper::createNew('recipe-'.$recipe->getId().'-pictures', true, true);

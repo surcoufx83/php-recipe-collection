@@ -19,8 +19,6 @@ final class AnonymousHomeRoute extends Route implements RouteInterface {
 
   static function createOutput(array &$response) : bool {
     global $Controller, $OUT;
-
-    parent::addBreadcrumb($Controller->getLink('private:home'), $Controller->l('breadcrumb_home'));
     parent::setPage('private:home');
     parent::setTitle($Controller->l('greetings_hello', ''));
 

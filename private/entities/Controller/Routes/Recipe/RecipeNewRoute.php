@@ -17,9 +17,6 @@ class RecipeNewRoute extends Route implements RouteInterface {
   static function createOutput(array &$response) : bool {
     global $Controller, $OUT;
 
-    parent::addBreadcrumb($Controller->getLink('private:home'), $Controller->l('breadcrumb_recipes'));
-    parent::addBreadcrumb($Controller->getLink('recipe:new'), $Controller->l('breadcrumb_newRecipe'));
-
     $units = [];
     $query = new QueryBuilder(EQueryType::qtSELECT, 'units', DB_ANY);
     $query->orderBy('unit_name');

@@ -326,7 +326,7 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
       'description' => $this->recipe_description,
       'eaterCount' => $this->recipe_eater,
       'eaterCountCalc' => $this->recipe_eater,
-      'ownerId' => (!is_null($this->user_id) ? $this->user_id : false),
+      'ownerId' => (!is_null($this->user_id) ? $this->user_id : 0),
       'ownerName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : ''),
       'published' => ($this->recipe_public ? $this->recipe_published->format(DateTime::ISO8601) : false),
       'source' => [

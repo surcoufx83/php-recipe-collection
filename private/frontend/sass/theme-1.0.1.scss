@@ -367,9 +367,9 @@ div.page {
     transition: padding 0.3s;
   }
 
-  div.breadcrumbs {
-    display: flex;
-    min-height: 48px;
+  div.breadcrumbs-container {
+    min-height: 36px;
+    border-bottom: 1px solid $border-light;
 
     div.breadcrumbs-items {
       flex: 1;

@@ -1,22 +1,6 @@
-breadcrumb:
-  admin:
-    cronjobs: 'Cronjobs'
-    home: 'Administration'
-    logs: 'Log file viewer'
-    newUser: 'Neuer Benutzer'
-    settings: 'Konfiguration'
-    translation: 'Übersetzung'
-    user: 'Benutzerverwaltung'
-  books:
-    home: 'Meine Kochbücher'
-  home: 'Startseite'
-  newRecipe: 'Neues Rezept'
-  random: 'Zufällige Rezepte'
-  recipes:
-    all: 'Rezeptesammlung'
-    my: 'Meine Rezepte'
-  search:
-    main: 'Suche'
+
+# for breadcrumbs see /public/script/components/vue-i18n.de.js
+
 
 common:
   duration:

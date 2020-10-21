@@ -397,34 +397,34 @@ div.page {
     margin-bottom: 60px;
     width: 100%;
     transition: padding 0.3s; }
-  div.page div.breadcrumbs {
-    display: flex;
-    min-height: 48px; }
-    div.page div.breadcrumbs div.breadcrumbs-items {
+  div.page div.breadcrumbs-container {
+    min-height: 36px;
+    border-bottom: 1px solid #BFC4BF; }
+    div.page div.breadcrumbs-container div.breadcrumbs-items {
       flex: 1;
       align-self: center;
       color: #313531; }
-      div.page div.breadcrumbs div.breadcrumbs-items ul.breadcrumbs-list {
+      div.page div.breadcrumbs-container div.breadcrumbs-items ul.breadcrumbs-list {
         display: flex;
         margin-bottom: 0;
         margin-top: 0;
         line-height: 16px;
         padding-left: 0;
         list-style: none; }
-        div.page div.breadcrumbs div.breadcrumbs-items ul.breadcrumbs-list li {
+        div.page div.breadcrumbs-container div.breadcrumbs-items ul.breadcrumbs-list li {
           display: flex;
           align-items: center;
           position: relative;
           padding: 2px 0;
           overflow: hidden; }
-          div.page div.breadcrumbs div.breadcrumbs-items ul.breadcrumbs-list li a {
+          div.page div.breadcrumbs-container div.breadcrumbs-items ul.breadcrumbs-list li a {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             flex: 0 1 auto; }
-          div.page div.breadcrumbs div.breadcrumbs-items ul.breadcrumbs-list li:not(:last-child) {
+          div.page div.breadcrumbs-container div.breadcrumbs-items ul.breadcrumbs-list li:not(:last-child) {
             padding-right: 13px; }
-            div.page div.breadcrumbs div.breadcrumbs-items ul.breadcrumbs-list li:not(:last-child)::after {
+            div.page div.breadcrumbs-container div.breadcrumbs-items ul.breadcrumbs-list li:not(:last-child)::after {
               content: '›';
               position: absolute;
               right: 4px;
