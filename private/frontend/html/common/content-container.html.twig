@@ -1,15 +1,15 @@
-              <div class="container-fluid container-max1280">
-                <div class="row mb-lg-2"
+              <b-container class="container-fluid container-max1280">
+                <b-container class="row mb-lg-2"
                   v-if="user.loggedIn === true && title !== ''">
-                  <div class="col-12 mb-3">
-                    <h3 class="font-weight-bold">${ title }</h3>
-                    <p class="text-muted mb-0" v-if="subtitle !== ''">${ subtitle }</p>
-                  </div>
-                </div>
+                  <b-container class="col-12 mb-3">
+                    <h3 class="font-weight-bold" v-text="title"></h3>
+                    <p class="text-muted mb-0" v-if="subtitle !== ''" v-text="subtitle"></p>
+                  </b-container>
+                </b-container>
                 <router-view
                   :config="config"
                   :page="page"
                   :recipe="page.currentRecipe"
                   :user="user">
                 </router-view>
-              </div>
+              </b-container>

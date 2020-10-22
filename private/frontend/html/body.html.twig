@@ -29,25 +29,25 @@
     <div id="vue-app">
       <rc-navbar :page="page" :user="user"></rc-navbar>
       <main>
-        <div class="page"
-          v-bind:class="{'pl-0': user.loggedIn === false, 'sidebar-visible': page.sidebar.visible}">
+        <b-container class="page"
+          v-bind:class="{'pl-0': user.loggedIn === false, 'sidebar-visible': page.sidebar.visible}"> <!-- page -->
           <sidebar :page="page" v-if="user.loggedIn"></sidebar>
-          <div class="page-wrapper">
-            <div class="page-header-wrapper"
-              v-if="user.loggedIn">
-              <div class="page-header">
+          <b-container class="page-wrapper"> <!-- page-wrapper -->
+            <b-container class="page-header-wrapper"
+              v-if="user.loggedIn"> <!-- page-header-wrapper -->
+              <b-container class="page-header"> <!-- page-header -->
                 <rc-breadcrumbbar :page="page" :recipe="page.currentRecipe"
                   v-if="user.loggedIn"></rc-breadcrumbbar>
-              </div>
-              <div class="page-topbar">
+              </b-container> <!-- page-header -->
+              <b-container class="page-topbar"> <!-- page-topbar -->
                 {% include 'common/navbar-inpage.html.twig' %}
-              </div>
-            </div>
-            <div class="page-content pt-3">
+              </b-container> <!-- page-topbar -->
+            </b-container> <!-- page-header-wrapper -->
+            <b-container class="page-content pt-3"> <!-- page-content -->
               {% include 'common/content-container.html.twig' %}
-            </div>
-          </div>
-        </div>
+            </b-container> <!-- page-content -->
+          </b-container> <!-- page-wrapper -->
+        </b-container> <!-- page -->
       </main>
       <div class="modal modal-danger" tabindex="-1" role="dialog" id="action-failed-modal">
         <div class="modal-dialog" role="document">
