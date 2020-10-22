@@ -1,7 +1,4 @@
 
-# for breadcrumbs see /public/script/components/vue-i18n.de.js
-
-
 common:
   duration:
     minute: '%s Minute'
@@ -33,15 +30,6 @@ dev:
 greetings:
   hello: 'Hallo %s'
   recipeFrom: '%s von %s'
-
-home:
-  greeting:
-    description1: 'Schön das du in das Kochbuch schaust. Wir arbeiten permanent dran, es besser zu machen. Wenn dir Fehler auffallen, melde diese gerne an Stefan oder Elias.'
-    description2: 'Auch wenn einige Funktionen noch nicht so ganz hinhauen, Rezepte eintragen, bearbeiten, anschauen und nachkochen klappt schon ganz gut. Probier mal die Funktion'
-  inprogress:
-    workingon: 'An dieser Stelle werden demnächst neue Rezepte vorgestellt. Bis dahin nutze eine der Funktonen aus der Seitenleiste.'
-    mobile1: 'Du kannst die Seitenleiste anzeigen, indem du auf das'
-    mobile2: 'Menü oben vor dem Wort Startseite klickst (manchmal muss man doppelt klicken).'
 
 modals:
   failed:

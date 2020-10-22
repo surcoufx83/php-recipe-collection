@@ -46,8 +46,6 @@ class CommonData extends Route implements RouteInterface {
         'actions' => [],
         'breadcrumbs' => [],
         'filters' => [],
-        'title' => '',
-        'titleDescription' => '',
         'hasActions' => false,
         'hasFilters' => false,
       ],

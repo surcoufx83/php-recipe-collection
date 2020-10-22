@@ -1,29 +1,3 @@
-
-
-const i18n = new VueI18n({
-  locale: navigator.language,
-  messages: {
-    'de-DE': {
-      breadcrumb: {
-        home: 'Startseite',
-        recipes: {
-          common: 'Alle Rezepte',
-          my: 'Meine Rezepte',
-          users: '{user}\'s Rezepte'
-        },
-        recipe: {
-          edit: 'Editor',
-          gallery: 'Bildersammlung'
-        },
-        search: {
-          common: 'Rezeptsuche'
-        },
-        write: 'Neues Rezept'
-      }
-    }
-  }
-});
-
 Vue.component('btn-sm-blue', {
   props: {
     badge: { type: String, required: false },
@@ -234,7 +208,12 @@ Vue.component('sidebar-ul2-li', {
 const Home = {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
-  template: '#home-template'
+  template: '#home-template',
+  computed: {
+    title: function() {
+      return i18n.$t('pages.home.title')
+    }
+  }
 }
 
 const Login = {
@@ -666,7 +645,6 @@ const RecipeEditor = {
     }
   }
 }
-
 const router = new VueRouter({
   mode: 'history',
   routes: [
@@ -733,6 +711,20 @@ Vue.http.get('common-data')
           this.$router.push({name: 'login'})
         refreshPageData(this.$route.path, this)
       },
+      computed: {
+        title: function() {
+          switch(this.$route.name) {
+            case 'recipe':
+              if (this.page.currentRecipe.ownerId > 0)
+                return this.$t('pages.recipe.titleWithUser', { recipe: this.page.currentRecipe.name, user: this.page.currentRecipe.ownerName })
+              return this.$t('pages.recipe.title', { recipe: this.page.currentRecipe.name })
+          }
+          return this.$t('pages.' + this.$route.name + '.title')
+        },
+        subtitle: function() {
+          return this.$t('pages.' + this.$route.name + '.subtitle')
+        }
+      },
       methods: {
         onResize: function() {
           var smspy = $('#reactive-size-spy-sm');
@@ -757,13 +749,14 @@ Vue.http.get('common-data')
   })
 
 router.beforeEach((to, from, next) => {
-  console.log('before', to, from, app)
   if (app) {
     if (to.name == 'login' && app.user.loggedIn)
       next(false)
     if (to.name != 'login' && !app.user.loggedIn)
       next({ name: 'login' })
-    if (
+    if (to.name == 'home' || to.name == 'writeRecipe' || to.name == 'search') {
+      resetCustomPageData(app, to.name)
+    } else if (
       !((to.name == 'recipe' || to.name == 'editRecipe' || to.name == 'gallery') &&
         (from.name == 'recipe' || from.name == 'editRecipe' || from.name == 'gallery'))
     ) {
@@ -775,7 +768,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log('after', to, from)
   if (to.name == 'logout') {
     Vue.http.post('logout')
       .then(response => response.json())
@@ -789,8 +781,6 @@ function resetPageData(app) {
   app.$set(app.page.contentData, 'actions', [])
   app.$set(app.page.contentData, 'breadcrumbs', [])
   app.$set(app.page.contentData, 'filters', [])
-  app.$set(app.page.contentData, 'title', '')
-  app.$set(app.page.contentData, 'titleDescription', '')
   app.$set(app.page.contentData, 'hasActions', false)
   app.$set(app.page.contentData, 'hasFilters', false)
   app.$set(app.page, 'currentRecipe', {})
@@ -803,6 +793,21 @@ function resetPageData(app) {
     visitCount: 0,
     voteCount: 0
   })
+}
+
+function resetCustomPageData(app, route) {
+  switch (route) {
+    case 'home':
+    case 'writeRecipe':
+      app.$set(app.page.contentData, 'actions', [])
+      app.$set(app.page.contentData, 'breadcrumbs', [])
+      app.$set(app.page.contentData, 'filters', [])
+      app.$set(app.page.contentData, 'hasActions', false)
+      app.$set(app.page.contentData, 'hasFilters', false)
+      app.$set(app.page, 'customContent', false)
+      app.$set(app.page.currentRecipe, 'id', 0)
+      break;
+  }
 }
 
 function initEmptyRecipe(app) {

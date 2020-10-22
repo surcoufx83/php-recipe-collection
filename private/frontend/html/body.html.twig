@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/style/fontawesome-5.15.1.min.css">
     <link rel="stylesheet" href="/style/theme-1.0.1.css">
     <script src="/script/vue-2.6.12.js"></script>
-    <script src="/script/vue-i18n-8.22.1.min.js"></script>
+    <script src="/script/vue-loaders-4.1.1.umd.js"></script>
     <script src="/script/vue-router-3.4.7.min.js"></script>
     <script src="/script/vue-resource-1.5.1.min.js"></script>
     <script src="/script/bootstrap-vue-2.18.0.min.js"></script>
@@ -83,10 +83,15 @@
     {% include 'templates/user/login.html.twig' %}
     {% include 'templates/user/logout.html.twig' %}
 
+    {% include 'i18n.html.twig' %}
+
     <script src="/script/jquery-3.5.1.min.js"></script>
     <script src="/script/bootstrap-4.5.3.bundle.min.js"></script>
     <script src="/script/plotly-1.54.1.min.js"></script>{% if Page.Scripts.StarRating == true %}
     <script src="/script/rater.min.js"></script>{% endif %}
+
+    <script src="/script/vue-i18n-8.22.1.min.js"></script>
+    <script src="/script/vue-i18n-locales-1.0.0.js"></script>
 
     <script src="/script/vue-custom-1.0.0.js"></script>
 
