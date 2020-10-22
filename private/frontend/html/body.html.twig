@@ -29,11 +29,11 @@
     <div id="vue-app">
       <rc-navbar :page="page" :user="user"></rc-navbar>
       <main>
-        <b-container class="page"
-          v-bind:class="{'pl-0': user.loggedIn === false, 'sidebar-visible': page.sidebar.visible}"> <!-- page -->
+        <b-container class="page" fluid
+          v-bind:class="{'p-0': true, 'pl-0': user.loggedIn === false, 'sidebar-visible': page.sidebar.visible}"> <!-- page -->
           <sidebar :page="page" v-if="user.loggedIn"></sidebar>
-          <b-container class="page-wrapper"> <!-- page-wrapper -->
-            <b-container class="page-header-wrapper"
+          <b-container class="page-wrapper p-0" fluid> <!-- page-wrapper -->
+            <b-container class="page-header-wrapper p-0"
               v-if="user.loggedIn"> <!-- page-header-wrapper -->
               <b-container class="page-header"> <!-- page-header -->
                 <rc-breadcrumbbar :page="page" :recipe="page.currentRecipe"
@@ -43,9 +43,7 @@
                 {% include 'common/navbar-inpage.html.twig' %}
               </b-container> <!-- page-topbar -->
             </b-container> <!-- page-header-wrapper -->
-            <b-container class="page-content pt-3"> <!-- page-content -->
-              {% include 'common/content-container.html.twig' %}
-            </b-container> <!-- page-content -->
+            {% include 'common/content-container.html.twig' %}
           </b-container> <!-- page-wrapper -->
         </b-container> <!-- page -->
       </main>
