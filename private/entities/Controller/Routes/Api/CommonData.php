@@ -75,6 +75,11 @@ class CommonData extends Route implements RouteInterface {
           'user' => '',
           'voting' => -1,
         ],
+        'records' => [
+          'total' => 0,
+          'numpages' => 0,
+          'page' => 1,
+        ],
         'results' => [],
       ],
       'self' => [

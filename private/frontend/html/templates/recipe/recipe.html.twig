@@ -1,6 +1,6 @@
 
     <template id="recipe-template">
-      <div v-if="page.loading !== true && recipe !== undefined && recipe.id !== undefined">
+      <b-container v-if="page.loading !== true && recipe !== undefined && recipe.id !== undefined">
         <b-row>
           <b-col class="col-12 col-md-5 order-0 order-md-1">
             {% include 'templates/recipe/recipe-gallery.html.twig' %}
@@ -17,7 +17,7 @@
         </b-row>
         {% include 'templates/recipe/recipe-voting-modal.html.twig' %}
         {% include 'templates/recipe/recipe-mobile-footer.html.twig' %}
-      </div>
+      </b-container>
     </template>
 
     <template id="recipe-ingredient-template">

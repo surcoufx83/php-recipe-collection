@@ -118,8 +118,10 @@ final class QueryBuilder {
     }
     $tbl = $this->maskstr($this->primaryTable, $this->getTableAlias($this->primaryTable));
     $joinsexpr = (count($this->joinedTables) != 0 ? ' '.join(' ', $this->joinedTables) : '');
-    $condexpr = (count($this->conditions) != 0 ? ' WHERE '.join(' ', $this->conditions) : '');
-    // $condexpr = (!is_null($this->where) ? ' WHERE '.$this->where : '');
+    if (!is_null($this->where))
+      $condexpr = ' WHERE '.$this->where;
+    else
+      $condexpr = (count($this->conditions) != 0 ? ' WHERE '.join(' ', $this->conditions) : '');
     $groupexpr = (count($this->groups) != 0 ? ' GROUP BY '.join(', ', $this->groups) : '');
     $orderexpr = (count($this->orders) != 0 ? ' ORDER BY '.join(', ', $this->orders) : '');
     $limitexpr = '';

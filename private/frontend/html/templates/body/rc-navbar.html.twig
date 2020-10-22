@@ -1,6 +1,6 @@
         <template id="rc-navbar-template">
           <b-navbar type="light" variant="contrast-darker" sticky
-            class="py-0" tag="header"
+            class="py-0" tag="header" id="header-navbar"
             v-if="user.loggedIn === true"> <!-- rc-navbar sticky top navigation -->
 
             <router-link
@@ -26,10 +26,12 @@
 
                 <b-col cols="10" sm="9" md="7" lg="6" xl="5" class="pr-0">
                   <b-form-input
-                    type="search" size="sm"
+                    type="search" size="sm" id="global-search-input"
                     v-model="page.search.filter.global"
                     placeholder="{{ Controller.l('navigation_topbar_search_placeholder') }}"
-                    class="input-dark mw-400px my-2"></b-form-input>
+                    class="input-dark mw-400px my-2"
+                    @update="onSearchInput">
+                  </b-form-input>
                 </b-col>
 
                 <b-col cols="2" class="text-right pl-0">

@@ -23,6 +23,7 @@ final class EExpressionType {
   const etNOTBETWEEN = 14;
   const etLIKE = 15;
   const etNOTLIKE = 16;
+  const etCONTAINS = 17;
 
   public static function getString(int $expr) : string {
     switch($expr) {
@@ -55,6 +56,8 @@ final class EExpressionType {
       case EExpressionType::etNOTBETWEEN:
         return 'NOT BETWEEN';
       case EExpressionType::etLIKE:
+        return 'LIKE';
+      case EExpressionType::etCONTAINS:
         return 'LIKE';
       case EExpressionType::etNOTLIKE:
         return 'NOT LIKE';

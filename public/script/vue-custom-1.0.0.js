@@ -319,29 +319,6 @@ const RecipesList = {
   props: ['page', 'user'],
   template: '#recipes-listing-template'
 }
-
-const SearchRecipe = {
-  delimiters: ['${', '}'],
-  props: ['page', 'user'],
-  template: '#search-template',
-  methods: {
-    onClick: function() {
-      console.log('SearchRecipe @click')
-      postPageData(app.$route.path, {
-        search: {
-          phrase: this.page.search.filter.title
-        }
-      }, function(data) {
-        console.log('onRatingSubmitPress: ', data)
-        if (data.success) {
-
-        } else {
-
-        }
-      })
-    }
-  }
-}
 Vue.component('rc-breadcrumbitem', {
   delimiters: ['${', '}'],
   props: {
@@ -419,8 +396,29 @@ Vue.component('rc-navbar', {
   data: function() {
     return { }
   },
-  methods: { }
+  methods: {
+    onSearchInput: function() {
+      if (app.$route.name != 'search')
+        app.$router.push({name: 'search'})
+      console.log(app.$route)
+      console.log(this.page.search.filter.global)
+    }
+  }
 })
+const SearchRecipe = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user'],
+  template: '#rc-search-template',
+  methods: {
+    onClick: function() {
+      console.log('SearchRecipe @click')
+      if (this.page.search.filter.global.length >= 3)
+        app.debouncedSearch()
+      else
+        app.$router.push({ name: 'recipes' })
+    }
+  }
+}
 const RecipesCreator = {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
@@ -694,10 +692,11 @@ Vue.http.get('common-data')
       router,
       i18n,
       created: function() {
-        window.addEventListener("resize", this.onResize);
+        window.addEventListener("resize", this.onResize)
+        this.debouncedSearch = _.debounce(this.getSearchResults, 500)
       },
       destroyed: function() {
-        window.removeEventListener("resize", this.onResize);
+        window.removeEventListener("resize", this.onResize)
       },
       mounted: function() {
         var lgspy = $('#reactive-size-spy-lg');
@@ -741,8 +740,26 @@ Vue.http.get('common-data')
           }
         },
         onClick: function(e) {
-          console.log('@onClick', e, this.target)
           this.$emit('click', this.subject ? this.subject : this.title)
+        },
+        getSearchResults: function() {
+          console.log('getSearchResults')
+          postPageData(this.$route.path, {
+            search: {
+              phrase: this.page.search.filter.global
+            }
+          }, function(data) {
+            console.log('onSearch: ', data)
+
+          })
+        }
+      },
+      watch: {
+        'page.search.filter.global': function() {
+          console.log('page.search.filter.global has changed')
+          if (this.page.search.filter.global.length >= 3)
+            this.debouncedSearch()
+
         }
       }
     })
@@ -806,6 +823,8 @@ function resetCustomPageData(app, route) {
       app.$set(app.page.contentData, 'hasFilters', false)
       app.$set(app.page, 'customContent', false)
       app.$set(app.page.currentRecipe, 'id', 0)
+      if (route == 'writeRecipe')
+        initEmptyRecipe(app)
       break;
   }
 }

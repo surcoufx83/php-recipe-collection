@@ -20,13 +20,8 @@ class Expression {
   }
 
   public function __toString() : String {
-    var_dump($this->items);
     for ($i=0; $i<count($this->items); $i++) {
-      var_dump($i, $this->items[$i]);
-      if ($i > 0 && $i % 2 == 0)
-        $this->items[$i] = $this->formattype($this->items[$i]);
-      else
-        $this->items[$i] = $this->formatitem($this->items[$i]);
+      $this->items[$i] = $this->formatitem($this->items[$i]);
     }
     $str = join(' ', $this->items);
     if ($this->braces)
@@ -45,11 +40,21 @@ class Expression {
   private function formatitem($item) : string {
     if (is_a($item, Expression::class))
       return ''.$item;
-    return join(' ', [
-      $this->format1item($item['left']),
-      $this->formattype($item['type']),
-      $this->format1item($item['right']),
-    ]);
+    if (\array_key_exists('left', $item) && \array_key_exists('type', $item) && \array_key_exists('right', $item))
+      return join(' ', [
+        $this->format1item($item['left']),
+        $this->formattype($item['type']),
+        $this->format1item($item['right']),
+      ]);
+    if (\array_key_exists('left', $item) && \array_key_exists('type', $item))
+      return join(' ', [
+        $this->format1item($item['left']),
+        $this->formattype($item['type']),
+      ]);
+    if (\array_key_exists('type', $item))
+      return $this->formattype($item['type']);
+    throw new \Exception("Error Processing Request Expression::formatitem", 1);
+
   }
 
   private function format1item($item) : string {
@@ -68,8 +73,15 @@ class Expression {
     return $this;
   }
 
-  public function e(array $params, bool $returnSelf = false) {
-    $this->items[] = $params['expression'];
+  public function e() : Expression {
+    $i = count($this->items);
+    $this->items[$i] = new Expression($this);
+    return $this->items[$i];
+  }
+
+  public function contains(array $params, bool $returnSelf = false) {
+    $params['right'] = '%'.$params['right'].'%';
+    $this->expr(EExpressionType::etCONTAINS, $params);
     return $returnSelf ? $this : $this->parent;
   }
 
@@ -84,12 +96,12 @@ class Expression {
   }
 
   public function and(bool $returnSelf = true) {
-    $this->items[] = EExpressionType::etAND;
+    $this->expr(EExpressionType::etAND, []);
     return $returnSelf ? $this : $this->parent;
   }
 
   public function or(bool $returnSelf = true) {
-    $this->items[] = EExpressionType::etOR;
+    $this->expr(EExpressionType::etOR, []);
     return $returnSelf ? $this : $this->parent;
   }
 

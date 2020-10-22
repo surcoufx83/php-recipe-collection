@@ -21,24 +21,61 @@ class SearchResultsRoute extends Route implements RouteInterface {
   static function createOutput(array &$response) : bool {
     global $Controller;
 
+    $request = $Controller->Dispatcher()->getPayload();
+    if (!\array_key_exists('search', $request) || !\is_array($request['search']) || !\array_key_exists('phrase', $request['search'])) {
+      $response = $Controller->Config()->getResponseArray(80);
+      return false;
+    }
+
     $response = $Controller->Config()->getResponseArray(1);
-    $response['data'] = $Controller->Dispatcher()->getPayload();
+    $querystring = $request['search']['phrase'];
+    $queryitems = preg_split("/[\s,]*\\\"([^\\\"]+)\\\"[\s,]*|"."[\s,]*'([^']+)'[\s,]*|"."[\s,]+/", $querystring, 0, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
+    if (count($queryitems) == 0) {
+      $response = $Controller->Config()->getResponseArray(80);
+      return false;
+    }
 
-    $countQuery = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
-    $countQuery
-      ->select2('recipes', 'recipe_id', ['alias' => 'count', 'aggregation' => EAggregationType::atCOUNT])
+    var_dump($querystring);
+    var_dump($Controller->dbescape($querystring));
+
+    $countQuery = new QueryBuilder(EQueryType::qtSELECT, 'allrecipetextdata');
+
+    $countQuery = $countQuery
+      ->select2('allrecipetextdata', 'recipe_id', ['alias' => 'count', 'aggregation' => EAggregationType::atCOUNT])
       ->setWhere()
-        ->expr()
-          ->equals(['left' => ['table' => 'recipes', 'column' => 'recipe_public'], 'right' => 1])
-        ->and()
+        ->expr();
+
+
+    for ($i=0; $i<count($queryitems); $i++) {
+      if ($i > 0)
+        $countQuery->and();
+      $countQuery
+        ->e()
           ->braces()
-          ->e(['expression' => (new Expression())->equals(['left' => ['table' => 'recipes', 'column' => 'recipe_public'], 'right' => true])], true)
-          ->and()
-          ->e(['expression' => (new Expression())->equals(['left' => ['table' => 'recipes', 'column' => 'recipe_public'], 'right' => false], true)])
-        ->ret()
-      ;
-      $response['query'] = $countQuery->__toString();
+          ->contains(['left' => ['table' => 'allrecipetextdata', 'column' => 'recipe_name'], 'right' => $queryitems[$i]], true)
+          ->or()
+          ->contains(['left' => ['table' => 'allrecipetextdata', 'column' => 'recipe_description'], 'right' => $queryitems[$i]], true)
+          ->or()
+          ->contains(['left' => ['table' => 'allrecipetextdata', 'column' => 'recipe_ingredients'], 'right' => $queryitems[$i]], true)
+          ->or()
+          ->contains(['left' => ['table' => 'allrecipetextdata', 'column' => 'recipe_steps'], 'right' => $queryitems[$i]], false);
+    }
+
+    $countQuery = $countQuery->ret()->ret();
+    $records = $Controller->select($countQuery)->fetch_assoc()['count'];
+    $response['page'] = [
+      'search' => [
+        'records' => [
+          'total' => $records,
+          'numpages' => ceil($records / $Controller->Config()->DefaultListEntries()),
+          'page' => 1
+        ],
+        'results' => []
+      ]
+    ];
+
+
 
     return true;
 
