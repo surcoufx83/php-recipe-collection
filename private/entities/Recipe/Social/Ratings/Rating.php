@@ -117,7 +117,7 @@ class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
       'voting' => $this->entry_vote,
       'rating' => $this->entry_rate,
       'formatted' => [
-        'time' => $this->entry_datetime->format($Controller->Config()->DefaultDateFormatUi()),
+        'time' => $this->entry_datetime->format($Controller->Config()->Defaults('Formats', 'UiLongDate')),
       ]
     ];
   }

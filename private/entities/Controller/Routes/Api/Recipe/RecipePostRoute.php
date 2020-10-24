@@ -93,7 +93,7 @@ class RecipePostRoute extends Route implements RouteInterface {
       $response = $Controller->Config()->getResponseArray(80);
       return false;
     }
-    $maxage = (new DateTime())->sub($Controller->Config()->RecipeRatingClearance());
+    $maxage = (new DateTime())->sub(new \DateInterval($Controller->Config()->Page('Timespans', 'BetweenVotes')));
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
     $query->where('recipe_ratings', 'entry_datetime', '>=', Formatter::date_format($maxage, DTF_SQL))
           ->andWhere('recipe_ratings', 'recipe_id', '=', $recipe->getId())

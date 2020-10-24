@@ -50,7 +50,7 @@ class SearchResultsRoute extends Route implements RouteInterface {
       ->join('allrecipetextdata', ['allrecipetextdata', 'recipe_id', '=', 'allrecipes', 'recipe_id'])
       ->joinLeft('users', ['users', 'user_id', '=', 'allrecipes', 'user_id'])
       ->orderBy2('allrecipes', 'recipe_name', 'ASC')
-      ->limit($searchpage * $Controller->Config()->DefaultListEntries(), $Controller->Config()->DefaultListEntries())
+      ->limit($searchpage * $Controller->Config()->Defaults('Lists', 'Entries'), $Controller->Config()->Defaults('Lists', 'Entries'))
       ->setWhere()->expr();
 
     for ($i=0; $i<count($queryitems); $i++) {
@@ -86,7 +86,7 @@ class SearchResultsRoute extends Route implements RouteInterface {
       'search' => [
         'records' => [
           'total' => $records,
-          'numpages' => ceil($records / $Controller->Config()->DefaultListEntries()),
+          'numpages' => ceil($records / $Controller->Config()->Defaults('Lists', 'Entries')),
           'page' => $searchpage
         ],
         'results' => []
@@ -135,7 +135,7 @@ class SearchResultsRoute extends Route implements RouteInterface {
       ->groupBy('recipe_pictures', ['picture_id', 'picture_sortindex', 'picture_name', 'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path'])
       ->orderBy2('recipes', 'recipe_name', 'ASC')
       ->where('recipes', 'recipe_public', '=', 1)
-      ->limit($Controller->Config()->DefaultListEntries());
+      ->limit($Controller->Config()->Defaults('Lists', 'Entries'));
 
     if (is_null($filter) || $filter == '')
       self::unfilteredList($response, $baseQuery, $countQuery);
@@ -160,8 +160,8 @@ class SearchResultsRoute extends Route implements RouteInterface {
     $data = [
       'count' => $count,
       'page' => 0,
-      'pages' => ceil($count / $Controller->Config()->DefaultListEntries()),
-      'itemsPerPage' => $Controller->Config()->DefaultListEntries(),
+      'pages' => ceil($count / $Controller->Config()->Defaults('Lists', 'Entries')),
+      'itemsPerPage' => $Controller->Config()->Defaults('Lists', 'Entries'),
       'records' => []
     ];
 

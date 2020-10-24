@@ -1,0 +1,18 @@
+#
+# This file is a template.
+# To create the configuration file, create a duplicate of this file without the
+#  .template extension. In the so created cbconfig.yml you can change all
+#  settings as needed. This file will be used when a web page of the cookbook
+#  is opened.
+# For security reasons, the cbconfig.yml is excluded from the Git Repository
+#  because it may contain sensitive information. Never enter data in this
+#  template, as the template is automatically overwritten when updating to a
+#  new version.
+#
+
+
+
+
+Platform:
+  DebugMode: false,
+  MaintenanceMode: null

@@ -2,16 +2,6 @@
 
 namespace Surcouf\Cookbook;
 
-require_once DIR_BACKEND    .'/core.php';
-require_once DIR_BACKEND    .'/I18N.php';
-
-// Functions without classes yet
-require_once DIR_BACKEND    .'/conf.mysql.php';
-require_once DIR_BACKEND    .'/conf.sendmail.php';
-
-if (file_exists(DIR_BACKEND.DS.'conf.oauth2.php'))
-    require_once DIR_BACKEND.DS.'conf.oauth2.php';
-
 spl_autoload_register(function($className)
 {
   $className = str_replace(__NAMESPACE__.'\\', '', $className);
@@ -19,6 +9,9 @@ spl_autoload_register(function($className)
   if (file_exists($file))
     include_once($file);
 });
+
+require_once DIR_BACKEND    .'/core.php';
+require_once DIR_BACKEND    .'/I18N.php';
 
 $Controller = new Controller();
 $Controller->init();

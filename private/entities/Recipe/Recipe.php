@@ -334,8 +334,8 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
         'url' => $this->getSourceUrl(),
       ],
       'formatted' => [
-        'created' => $this->recipe_created->format($Controller->Config()->DefaultDateFormatUi()),
-        'published' => ($this->recipe_public ? $this->recipe_published->format($Controller->Config()->DefaultDateFormatUi()) : ''),
+        'created' => $this->recipe_created->format($Controller->Config()->Defaults('Formats', 'UiLongDate')),
+        'published' => ($this->recipe_public ? $this->recipe_published->format($Controller->Config()->Defaults('Formats', 'UiLongDate')) : ''),
       ],
       'pictures' => array_values($this->pictures),
       'preparation' => [

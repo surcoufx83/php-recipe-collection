@@ -10,7 +10,6 @@ if (!defined('CORE2'))
 interface ConfigInterface {
 
   public function __call(string $methodName, array $params);
-  public function __get(string $propertyName);
   public function getResponseArray(int $responseCode) : array;
   public function Icons() : IconConfigInterface;
 

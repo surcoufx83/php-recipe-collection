@@ -25,10 +25,10 @@ class CommonData extends Route implements RouteInterface {
     global $Controller;
     parent::addToDictionary($response, ['config' => [
       'login' => [
-        'defaultEnabled' => $Controller->Config()->PasswordLoginEnabled(),
-        'oauth2Enabled' => $Controller->Config()->OAuth2Enabled(),
+        'defaultEnabled' => $Controller->Config()->Users('LoginMethods', 'Password'),
+        'oauth2Enabled' => $Controller->Config()->Users('LoginMethods', 'OAuth2'),
       ],
-      'maintenanceEnabled' => $Controller->Config()->MaintenanceMode(),
+      'maintenanceEnabled' => $Controller->Config()->System('MaintenanceMode'),
     ]]);
   }
 
@@ -133,16 +133,16 @@ class CommonData extends Route implements RouteInterface {
         ],
         'settings' => [
           'formatters' => [
-            'dateFormat' => $Controller->Config()->DefaultDateFormatUi(),
-            'dateTimeFormat' => $Controller->Config()->DefaultDateTimeFormat(),
-            'longDateFormat' => $Controller->Config()->DefaultLongDateTimeFormat(),
-            'timeFormat' => $Controller->Config()->DefaultTimeFormat(),
-            'decimals' => $Controller->Config()->DefaultDecimalsCount(),
-            'decimalsSeparator' => $Controller->Config()->DefaultDecimalsSeparator(),
-            'thousandsSeparator' => $Controller->Config()->DefaultThousandsSeparator(),
+            'dateFormat' => $Controller->Config()->Defaults('Formats', 'UiShortDate'),
+            'dateTimeFormat' => $Controller->Config()->Defaults('Formats', 'UiShortDatetime'),
+            'longDateFormat' => $Controller->Config()->Defaults('Formats', 'UiLongDatetime'),
+            'timeFormat' => $Controller->Config()->Defaults('Formats', 'UiTime'),
+            'decimals' => $Controller->Config()->Defaults('Formats', 'Decimals'),
+            'decimalsSeparator' => $Controller->Config()->Defaults('Formats', 'DecimalsSeparator'),
+            'thousandsSeparator' => $Controller->Config()->Defaults('Formats', 'ThousandsSeparator'),
           ],
           'views' => [
-            'listLength' => $Controller->Config()->DefaultListEntries(),
+            'listLength' => $Controller->Config()->Defaults('Lists', 'Entries'),
           ]
         ],
       ]]);
@@ -162,16 +162,16 @@ class CommonData extends Route implements RouteInterface {
         ],
         'settings' => [
           'formatters' => [
-            'dateFormat' => $Controller->Config()->DefaultDateFormatUi(),
-            'dateTimeFormat' => $Controller->Config()->DefaultDateTimeFormat(),
-            'longDateFormat' => $Controller->Config()->DefaultLongDateTimeFormat(),
-            'timeFormat' => $Controller->Config()->DefaultTimeFormat(),
-            'decimals' => $Controller->Config()->DefaultDecimalsCount(),
-            'decimalsSeparator' => $Controller->Config()->DefaultDecimalsSeparator(),
-            'thousandsSeparator' => $Controller->Config()->DefaultThousandsSeparator(),
+            'dateFormat' => $Controller->Config()->Defaults('Formats', 'UiShortDate'),
+            'dateTimeFormat' => $Controller->Config()->Defaults('Formats', 'UiShortDatetime'),
+            'longDateFormat' => $Controller->Config()->Defaults('Formats', 'UiLongDatetime'),
+            'timeFormat' => $Controller->Config()->Defaults('Formats', 'UiTime'),
+            'decimals' => $Controller->Config()->Defaults('Formats', 'Decimals'),
+            'decimalsSeparator' => $Controller->Config()->Defaults('Formats', 'DecimalsSeparator'),
+            'thousandsSeparator' => $Controller->Config()->Defaults('Formats', 'ThousandsSeparator'),
           ],
           'views' => [
-            'listLength' => $Controller->Config()->DefaultListEntries(),
+            'listLength' => $Controller->Config()->Defaults('Lists', 'Entries'),
           ]
         ],
       ]]);
