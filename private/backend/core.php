@@ -5,6 +5,8 @@ namespace Surcouf\Cookbook;
 use Surcouf\Cookbook\Config;
 use Symfony\Component\Yaml\Yaml;
 
+spddg(__FILE__);
+
 if (!defined('CORE1'))
   exit;
 define('CORE2',  microtime(true));

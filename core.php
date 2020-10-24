@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+spddg(__FILE__);
+
 define('CORE1', microtime(true));
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', realpath(__DIR__));
@@ -19,4 +21,5 @@ define('DIR_PUBLIC_IMAGES', realpath(__DIR__.DS.'public'.DS.'pictures'));
 
 require_once realpath(__DIR__.DS.'vendor'.DS.'autoload.php');
 require_once __DIR__.DS.'vendor'.DS.'surcoufx83'.DS.'php-i18n'.DS.'i18n.class.php';
+spddg(__FILE__, 'Vendors done');
 require_once realpath(__DIR__.DS.'private'.DS.'autoload.php');

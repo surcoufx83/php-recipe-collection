@@ -21,6 +21,8 @@ class SearchResultsRoute extends Route implements RouteInterface {
   static function createOutput(array &$response) : bool {
     global $Controller;
 
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
+
     $request = $Controller->Dispatcher()->getPayload();
     if (!\array_key_exists('search', $request) || !\is_array($request['search']) || !\array_key_exists('phrase', $request['search'])) {
       $response = $Controller->Config()->getResponseArray(80);

@@ -2,6 +2,8 @@
 
 namespace Surcouf\Cookbook;
 
+spddg(__FILE__);
+
 spl_autoload_register(function($className)
 {
   $className = str_replace(__NAMESPACE__.'\\', '', $className);
@@ -15,9 +17,9 @@ require_once DIR_BACKEND    .'/I18N.php';
 
 $Controller = new Controller();
 $Controller->init();
+spddg(__FILE__, 'Backend done');
 
 if (ISWEB) {
-  require_once DIR_BACKEND  .'/web.php';
   if (Controller\RoutingManager::registerRoutes()) {
     $Controller->Dispatcher()->dispatchRoute();
     exit;

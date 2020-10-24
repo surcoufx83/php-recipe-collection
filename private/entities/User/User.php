@@ -42,6 +42,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   private $changes = array();
 
   public function __construct(?array $record=null) {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     if (!is_null($record)) {
       $this->user_id = intval($dr['user_id']);
       $this->user_name = $dr['user_name'];
@@ -83,6 +84,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function calculateHash() : string {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     global $Controller;
     $data = [
       $this->user_id,
@@ -98,14 +100,15 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function createNewSession(bool $keepSession, ?AccessToken $token=null) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     global $Controller;
     $session_token = HashHelper::generate_token(16);
     $session_password = HashHelper::generate_token(24);
     $session_password4hash = HashHelper::hash(substr($session_token, 0, 16));
     $session_password4hash .= $session_password;
     $session_password4hash .= HashHelper::hash(substr($session_token, 16));
-    $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => 12]);
-    $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => 12]);
+    $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
+    $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
 
     if ($Controller->setSessionCookies($this->user_email, $session_token, $session_password, $keepSession)) {
       $tokenstr = (!is_null($token) ? json_encode($token->jsonSerialize()) : NULL);
@@ -127,6 +130,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function getAvatarUrl() : string {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     global $Controller;
     if (is_null($this->user_avatar) || !AvatarsHelper::exists($this->user_avatar)) {
       $data = [
@@ -283,7 +287,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   public function setPassword(string $newPassword, string $oldPassword) : bool {
     global $Controller;
     if ($this->user_password == '********' || password_verify($oldPassword, $this->user_password)) {
-      $this->user_password = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => 12]);
+      $this->user_password = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
       $this->changes['user_password'] = $this->user_password;
       $Controller->updateDbObject($this);
       return true;
@@ -312,10 +316,14 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function verify(string $password) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     global $Controller;
     if (password_verify($password, $this->user_password)) {
-      if (password_needs_rehash($this->user_password, PASSWORD_ARGON2I, ['threads' => 12])) {
-        $this->user_password = password_hash($password, PASSWORD_ARGON2I, ['threads' => 12]);
+      spddg(__FILE__, '', __CLASS__, 'password_verify');
+      if (password_needs_rehash($this->user_password, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')])) {
+        spddg(__FILE__, '', __CLASS__, 'password_needs_rehash');
+        $this->user_password = password_hash($password, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
+          spddg(__FILE__, '', __CLASS__, 'password_hash');
         $this->changes['user_password'] = $this->user_password;
         $Controller->updateDbObject($this);
       }
@@ -325,6 +333,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function verifySession(string $session_token, string $session_password) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     global $Controller;
     $query = new QueryBuilder(EQueryType::qtSELECT, 'user_logins', DB_ANY);
     $query->where('user_logins', 'user_id', '=', $this->user_id)
@@ -333,12 +342,15 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
     if (!$result || $result->num_rows == 0)
       return false;
     while ($record = $result->fetch_assoc()) {
+      spddg(__FILE__, '', __CLASS__, __METHOD__.' while');
       if (password_verify($session_token, $record['login_token'])) {
+        spddg(__FILE__, '', __CLASS__, __METHOD__.' password_verify');
         $pwdhash = HashHelper::hash(substr($session_token, 0, 16));
         $pwdhash .= $session_password;
         $pwdhash .= HashHelper::hash(substr($session_token, 16));
 
         if (password_verify($pwdhash, $record['login_password'])) {
+          spddg(__FILE__, '', __CLASS__, __METHOD__.' password_verify');
           $uptime = new DateTime();
 
           $query = new QueryBuilder(EQueryType::qtUPDATE, 'user_logins');

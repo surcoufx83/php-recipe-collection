@@ -12,9 +12,10 @@ if (!defined('CORE2'))
 class OAuthUser extends User {
 
   public function __construct(string $userid) {
-    $this->user_name = 'OAuth2::'.$userid.'@'.OAuth2Conf::OATH_PROVIDER;
+    global $Controller;
+    $this->user_name = 'OAuth2::'.$userid.'@'.$Controller->Config()->System('OAUTH2', 'DisplayName');
     $this->oauth_user_name = $userid;
-    $this->user_email = 'OAuth2::'.$userid.'@'.OAuth2Conf::OATH_PROVIDER;
+    $this->user_email = 'OAuth2::'.$userid.'@'.$Controller->Config()->System('OAUTH2', 'DisplayName');
   }
 
   public function save(array &$response) : bool {

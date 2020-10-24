@@ -1,5 +1,7 @@
 <?php
 
+spddg(__FILE__);
+
 if (!defined('CORE2'))
   exit;
 

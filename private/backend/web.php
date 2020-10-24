@@ -6,6 +6,8 @@ use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
+spddg(__FILE__);
+
 if (!defined('CORE2'))
   exit;
 

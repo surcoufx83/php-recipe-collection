@@ -29,6 +29,7 @@ final class Dispatcher {
 
 
   function __construct() {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     if (ISWEB)
       $this->requestMethod = $this->getHttpRequestMethod();
     else
@@ -43,6 +44,7 @@ final class Dispatcher {
   * @return bool true if route matches the current request.
   */
   public function addRoute(string $routePattern, array $params) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     global $Controller;
 
     if (array_key_exists('output', $params))
@@ -82,10 +84,14 @@ final class Dispatcher {
    * Generates the output data for the called Url.
    */
   public function dispatchRoute() : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     global $Controller, $OUT, $twig;
 
     if (!$this->matched)
       $this->exitError(70, null, null, null, $Controller->getLink('private:home'));
+
+    if ($this->outputMode == EOutputMode::Default)
+      require_once DIR_BACKEND  .'/web.php';
 
     $response = [];
     $result = $this->matchedHandler::createOutput($response);
@@ -110,6 +116,7 @@ final class Dispatcher {
    * @return bool true if matching method.
    */
   private function evaluateRouteMaintenance(array $params) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     if ((array_key_exists('ignoreMaintenance', $params) && $params['ignoreMaintenance'] === true && MAINTENANCE == true ) ||
         MAINTENANCE === false)
       return true;
@@ -123,6 +130,7 @@ final class Dispatcher {
    * @return bool true if matching method.
    */
   private function evaluateRouteMethod(array $params) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     if ((!array_key_exists('method', $params) && $this->requestMethod == ERequestMethod::HTTP_GET) ||
         (array_key_exists('method', $params) && $params['method'] == $this->requestMethod))
       return true;
@@ -135,6 +143,7 @@ final class Dispatcher {
    * @return bool true if matching pattern.
    */
   private function evaluateRoutePattern(string $routePattern) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $pattern = str_replace('/', '\\/', $routePattern);
     $this->routePatternMatches = array();
     if (preg_match('/^'.$pattern.'$/', $_SERVER['REQUEST_URI'], $this->routePatternMatches)) {
@@ -151,6 +160,7 @@ final class Dispatcher {
    * @return bool true if matching method.
    */
   private function evaluateRoutePayload(array $params) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     if ($this->requestMethod != ERequestMethod::HTTP_POST)
       return true;
     if (array_key_exists('requiresPayload', $params)) {
@@ -171,6 +181,7 @@ final class Dispatcher {
    * @return bool true if matching method.
    */
   private function evaluateRouteUser(array $params) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     global $Controller;
     if (!$Controller->isAuthenticated()) {
       // if no user logged in, route must define 'requiresUser' with false
@@ -230,8 +241,11 @@ final class Dispatcher {
   * @param  Array $response   A preconfigured response array.
   */
   function exitJson(Array $response) : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->tearDown();
     if (ISWEB) {
+      global $speeddiag;
+      $response['speeddiag'] = $speeddiag;
       header('Content-Type: application/json');
       echo json_encode($response);
       exit;

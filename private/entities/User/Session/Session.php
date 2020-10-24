@@ -20,6 +20,7 @@ class Session implements SessionInterface, DbObjectInterface {
   private $changes = array();
 
   public function __construct(UserInterface $user, $data) {
+    spddg(__FILE__, '', __CLASS__, __METHOD__.' password_verify');
     $this->id = intval($data['login_id']);
     $this->userid = intval($data['user_id']);
     $this->time = new DateTime($data['login_time']);
@@ -30,6 +31,7 @@ class Session implements SessionInterface, DbObjectInterface {
   }
 
   public function destroy() : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__.' password_verify');
     global $Controller;
     $query = new QueryBuilder(EQueryType::qtDELETE, 'user_logins');
     $query->where('user_logins', 'login_id', '=', $this->id)

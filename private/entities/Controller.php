@@ -57,6 +57,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   private $changedObjects = array();
 
   public function __construct() {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->ObjectManager = new ObjectManager();
   }
 
@@ -137,6 +138,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function delete(QueryBuilder &$qbuilder) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $query = $qbuilder->buildQuery();
     $result = $this->database->query($query);
     return $result;
@@ -152,14 +154,17 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function get(array $params) : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->dispatcher->get($params);
   }
 
   public function getInsertId() : ?int {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     return $this->database->insert_id;
   }
 
   public function getLink(string $filter, ...$args) : ?string {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $filter2 = str_replace(':', '_', $filter);
     return $this->linkProvider->$filter2($args);
   }
@@ -176,6 +181,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function init() : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     global $i18n;
     $this->langcode = $i18n->getAppliedLang();
     $this->linkProvider = new Controller\LinkProvider();
@@ -188,11 +194,13 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   private function init_Config() : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->Config()->initController();
     return true;
   }
 
   private function init_Database() : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     if (!$this->Config()->getCredentials($this, Config::CTYPE_DBCREDENTIALS)) {
       exit('Error loading database setup');
     }
@@ -216,18 +224,21 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   private function init_Dispatcher() : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->dispatcher = new Dispatcher($this);
     $this->login();
     return true;
   }
 
   public function insert(QueryBuilder &$qbuilder) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $query = $qbuilder->buildQuery();
     $result = $this->database->query($query);
     return $result;
   }
 
   public function insertSimple(string $table, array $columns, array $data) : int {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $query = new QueryBuilder(EQueryType::qtINSERT, $table);
     $query->columns($columns)
           ->values($data);
@@ -239,15 +250,18 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function isAuthenticated() : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     return !is_null($this->currentUser);
   }
 
   public function l(string $key, ...$params) : string {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $outval = lang($key, $params);
     return ($outval == '' ? 'MISSING translation: '.$key : $outval);
   }
 
   private function login() : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     if (ISWEB)
       return $this->loginWithCookies();
     else
@@ -255,11 +269,13 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   private function loginCli() : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->currentUser = $this->loadUser(1);
     return !is_null($this->currentUser);
   }
 
   private function loginWithCookies() : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     if (count($_COOKIE) == 0)
       return false;
     if (!array_key_exists($this->Config()->System('Cookies', 'UserCookieName'), $_COOKIE) ||
@@ -279,6 +295,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function loginWithOAuth(AccessToken $token, bool &$userCreated) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $values = $token->getValues();
     if (!array_key_exists('user_id', $values))
       return false;
@@ -297,6 +314,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function loginWithPassword(string $email, string $password, bool $keepSession, array &$response = null) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     if ($email == '' || $password == '') {
       $response = $this->Config()->getResponseArray(30);
       return false;
@@ -322,14 +340,17 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function on(string $method, array $params) : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->dispatcher->on($method, $params);
   }
 
   public function post(array $params) : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->dispatcher->post($params);
   }
 
   public function put(array $params) : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->dispatcher->put($params);
   }
 
@@ -344,6 +365,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
 
   /** todo: move to session or helper class */
   private function renewSession() : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $session = $this->currentUser->getSession();
     $expires = 0;
     $this->setSessionCookies(
@@ -355,10 +377,12 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function select(QueryBuilder &$queryBuilder) : ?\mysqli_result {
+    spddg(__FILE__, '', __CLASS__, __METHOD__, $queryBuilder->buildQuery());
     return DatabaseHelper::select($this->database, $queryBuilder);
   }
 
   public function selectCountSimple(string $table, string $filterColumn=null, string $filterValue=null) : int {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $query = new QueryBuilder(EQueryType::qtSELECT, $table);
     $query->select([['*', EAggregationType::atCOUNT, 'count']]);
     if (!is_null($filterColumn))
@@ -367,40 +391,48 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function selectFirst(QueryBuilder &$queryBuilder) : ?array {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     return DatabaseHelper::selectFirst($this->database, $queryBuilder);
   }
 
   public function selectObject(QueryBuilder &$queryBuilder, string $className) : ?object {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     return DatabaseHelper::selectObject($this->database, $queryBuilder, $className);
   }
 
   /** todo: move to session or helper class */
   private function setCookie(string $name, string $value, int $expiration) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     return setcookie($name, $value, $expiration, '/');
   }
 
   public function setDatabaseDbName(string $dbname) : DatabaseManagerInterface {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->dbname = $dbname;
     return $this;
   }
 
   public function setDatabaseHost(string $hostname) : DatabaseManagerInterface {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->dbhost = $hostname;
     return $this;
   }
 
   public function setDatabasePassword(string $password) : DatabaseManagerInterface {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->dbpwd = $password;
     return $this;
   }
 
   public function setDatabaseUser(string $username) : DatabaseManagerInterface {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $this->dbuser = $username;
     return $this;
   }
 
   /** todo: move to session or helper class */
   public function setSessionCookies(string $userCookie, string $tokenCookie, string $passwordCookie, bool $longDuration) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $expires = 0;
     if ($longDuration) {
       $NOW = new \DateTime();
@@ -418,6 +450,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function tearDown() : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
 
     foreach ($this->changedObjects as $key => $object) {
 
@@ -477,12 +510,14 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function update(QueryBuilder &$qbuilder) : bool {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $query = $qbuilder->buildQuery();
     $result = $this->database->query($query);
     return $result;
   }
 
   public function updateDbObject(DbObjectInterface &$object) : void {
+    spddg(__FILE__, '', __CLASS__, __METHOD__);
     $key = get_class($object).$object->getId();
     if (!array_key_exists($key, $this->changedObjects))
       $this->changedObjects[$key] = $object;
