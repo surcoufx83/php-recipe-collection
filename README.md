@@ -26,17 +26,17 @@ Use [Composer](https://getcomposer.org/) to install necessary dependencies:
 composer install
 ```
 
-### Edit configuration files
-The configuration files are located in the `/private/backend` folder and have the
+### Edit configuration file
+The configuration files are located in the `/config` folder and have the
 file extension `.template`. To set up the system configuration:
 1. duplicate the `.template`-files.
 1. name the duplicated files like the original but without the `.template` extension.
 1. edit the files thus duplicated and enter the required values.
 
-#### Database configuration
-Open the file conf.mysql.php and enter valid values in lines 16 to 19. Please
-note that the database specified here must already exist and the user specified
-has permission to create new tables and also to delete unused tables.
+#### cbconfig.yml
+Open the cbconfig.yml and check all settings. Many of them are only used
+to configure the website, but some must also contain data like database
+access data.
 
 ##### Database server
 If the database is not located on the same computer as the web server, the
@@ -86,16 +86,14 @@ file, rename, edit). The following parameters are required:
 The digital cookbook also sends e-mails, for example to validate an e-mail
 address or when a user wants to be notified of various events.
 
-This configuration is mandatory and is done in the same way as for database
-configuration (duplicate file, rename, edit) with the file `conf.sendmail.php`.
 The following parameters are required for this:
-- `SMTP_HOST`: The SMTP server host name.
-- `SMTP_USER`: The SMTP login user name.
-- `SMTP_PASSWORD`: The SMTP login user's password.
-- `SMTP_PORT`: The network port of the SMTP server.
-- `SMTP_SECURE`: Encryption settings (see https://github.com/PHPMailer/PHPMailer).
-- `SMTP_FROM_NAME`: The sender name that is shown to recipients.
-- `SMTP_FROM_MAIL`: The sender mail address that is shown to recipients.
+- `System:SMTP:Host`: The SMTP server host name.
+- `System:SMTP:Credentials:Name`: The SMTP login user name.
+- `System:SMTP:Credentials:Password`: The SMTP login user's password.
+- `System:SMTP:Port`: The network port of the SMTP server.
+- `System:SMTP:Security`: Encryption settings (see https://github.com/PHPMailer/PHPMailer).
+- `System:SMTP:Sender:Name`: The sender name that is shown to recipients.
+- `System:SMTP:Sender:Mail`: The sender mail address that is shown to recipients.
 
 ### Create your first user
 If you are using a Nextcloud integration via OAuth2, just load the cookbook's

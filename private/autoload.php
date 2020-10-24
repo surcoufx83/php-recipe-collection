@@ -17,7 +17,6 @@ $Controller = new Controller();
 $Controller->init();
 
 if (ISWEB) {
-  require_once DIR_BACKEND  .'/web.php';
   if (Controller\RoutingManager::registerRoutes()) {
     $Controller->Dispatcher()->dispatchRoute();
     exit;
