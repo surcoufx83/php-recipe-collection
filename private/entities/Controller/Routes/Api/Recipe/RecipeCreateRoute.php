@@ -211,10 +211,9 @@ class RecipeCreateRoute extends Route implements RouteInterface {
     global $Controller;
     for ($i=0; $i<$recipe->getPictureCount(); $i++) {
       $obj = $recipe->getPictures()[$i];
-      if (!$obj->moveTo(FilesystemHelper::paths_combine(
-          DIR_PUBLIC_IMAGES, 'cbimages'), $recipe->getId())) {
-            $failed = true;
-            return false;
+      if (!$obj->moveTo($recipe->getId())) {
+        $failed = true;
+        return false;
       }
       $res = $Controller->insertSimple(
         'recipe_pictures',

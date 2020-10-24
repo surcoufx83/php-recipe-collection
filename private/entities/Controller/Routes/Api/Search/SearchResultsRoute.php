@@ -29,6 +29,7 @@ class SearchResultsRoute extends Route implements RouteInterface {
 
     $response = $Controller->Config()->getResponseArray(1);
     $querystring = $request['search']['phrase'];
+    $searchpage = !\array_key_exists('page', $request['search']) ? 0 : intval($request['search']['page']);
     $queryitems = preg_split("/[\s,]*\\\"([^\\\"]+)\\\"[\s,]*|"."[\s,]*'([^']+)'[\s,]*|"."[\s,]+/", $querystring, 0, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
     if (count($queryitems) == 0) {
@@ -36,20 +37,37 @@ class SearchResultsRoute extends Route implements RouteInterface {
       return false;
     }
 
-    var_dump($querystring);
-    var_dump($Controller->dbescape($querystring));
-
     $countQuery = new QueryBuilder(EQueryType::qtSELECT, 'allrecipetextdata');
-
     $countQuery = $countQuery
       ->select2('allrecipetextdata', 'recipe_id', ['alias' => 'count', 'aggregation' => EAggregationType::atCOUNT])
       ->setWhere()
         ->expr();
 
+    $baseQuery = new QueryBuilder(EQueryType::qtSELECT, 'allrecipes');
+    $baseQuery = $baseQuery
+      ->select(DB_ANY)
+      ->select('users', ['user_name', 'oauth_user_name', 'user_firstname'])
+      ->join('allrecipetextdata', ['allrecipetextdata', 'recipe_id', '=', 'allrecipes', 'recipe_id'])
+      ->joinLeft('users', ['users', 'user_id', '=', 'allrecipes', 'user_id'])
+      ->orderBy2('allrecipes', 'recipe_name', 'ASC')
+      ->limit($searchpage * $Controller->Config()->DefaultListEntries(), $Controller->Config()->DefaultListEntries())
+      ->setWhere()->expr();
 
     for ($i=0; $i<count($queryitems); $i++) {
-      if ($i > 0)
+      if ($i > 0) {
+        $baseQuery->and();
         $countQuery->and();
+      }
+      $baseQuery
+        ->e()
+          ->braces()
+          ->contains(['left' => ['table' => 'allrecipetextdata', 'column' => 'recipe_name'], 'right' => $queryitems[$i]], true)
+          ->or()
+          ->contains(['left' => ['table' => 'allrecipetextdata', 'column' => 'recipe_description'], 'right' => $queryitems[$i]], true)
+          ->or()
+          ->contains(['left' => ['table' => 'allrecipetextdata', 'column' => 'recipe_ingredients'], 'right' => $queryitems[$i]], true)
+          ->or()
+          ->contains(['left' => ['table' => 'allrecipetextdata', 'column' => 'recipe_steps'], 'right' => $queryitems[$i]], false);
       $countQuery
         ->e()
           ->braces()
@@ -61,28 +79,43 @@ class SearchResultsRoute extends Route implements RouteInterface {
           ->or()
           ->contains(['left' => ['table' => 'allrecipetextdata', 'column' => 'recipe_steps'], 'right' => $queryitems[$i]], false);
     }
-
+    $baseQuery = $baseQuery->ret()->ret();
     $countQuery = $countQuery->ret()->ret();
-    $records = $Controller->select($countQuery)->fetch_assoc()['count'];
+    $records = $Controller->selectFirst($countQuery)['count'];
     $response['page'] = [
       'search' => [
         'records' => [
           'total' => $records,
           'numpages' => ceil($records / $Controller->Config()->DefaultListEntries()),
-          'page' => 1
+          'page' => $searchpage
         ],
         'results' => []
       ]
     ];
 
+    if ($searchpage > $response['page']['search']['records']['numpages'])
+      return true;
 
+    $result = $Controller->select($baseQuery);
+    if (!is_null($result)) {
+      while($record = $result->fetch_assoc()) {
+        if (is_null($record['user_id']))
+          $username = '';
+        else
+          $username = $record['user_firstname'] != '' ? $record['user_firstname'] : ( !is_null($record['oauth_user_name']) ? $record['oauth_user_name'] : $record['user_name'] );
+        $response['page']['search']['results'][] = [
+          'id' => $record['recipe_id'],
+          'name' => $record['recipe_name'],
+          'ownerId' => !is_null($record['user_id']) ? intval($record['user_id']) : 0,
+          'ownerName' => $username,
+          'description' => $record['recipe_description'],
+          'eater' => intval($record['recipe_eater']),
+          'pictureId' => !is_null($record['picture_id']) ? intval($record['picture_id']) : 0,
+        ];
+      }
+    }
 
     return true;
-
-    $countQuery = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
-    $countQuery
-      ->select2('recipes', 'recipe_id', ['alias' => 'count', 'aggregation' => EAggregationType::atCOUNT])
-      ->where('recipes', 'recipe_public', '=', 1);
 
     $baseQuery = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
     $baseQuery

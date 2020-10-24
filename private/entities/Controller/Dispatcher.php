@@ -335,6 +335,16 @@ final class Dispatcher {
     return $this->matchedPattern;
   }
 
+  public function moved(string $url) : void {
+    header('Location: '.$url, true, 301);
+    exit();
+  }
+
+  public function notFound() : void {
+    header('HTTP/1.0 404 Not Found', true, 404);
+    exit;
+  }
+
   public function queryOAuthUserData() : bool {
     global $Controller;
     $provider = $Controller->getOAuthProvider();

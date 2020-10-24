@@ -59,25 +59,6 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
     return $this->picture_hash;
   }
 
-  private function cropImage(?int $width=null, ?int $height=null) : string {
-    $sizestr = sprintf('%dx%d', $width ?? 0, $height ?? 0);
-    $filename =  $this->picture_hash.$this->recipe_id.$sizestr.'.'.$this->getExtension();
-    $path = FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages', $filename);
-    if (FilesystemHelper::file_exists($path))
-      return $filename;
-    $copyfile = copy($this->picture_full_path, $path);
-    $img = new Image($path);
-    $img->disableRename();
-    if (!is_null($width) && !is_null($height))
-      $img->resizeCrop($width, $height);
-    else if (!is_null($width))
-      $img->resizeCrop($width);
-    else
-      $img->resizeCrop($height);
-    $img->output(FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages'));
-    return $filename;
-  }
-
   public function getDbChanges() : array {
     return $this->changes;
   }
@@ -90,14 +71,20 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
     return pathinfo($this->picture_filename, PATHINFO_EXTENSION);
   }
 
-  public function getFilename(?int $width=null, ?int $height=null) : string {
-    if (is_null($height) && is_null($width))
+  public function getFilename(?int $width=0, ?int $height=0) : string {
+    if ($width == 0 && $height == 0)
       return $this->picture_filename;
-    return $this->cropImage($width, $height);
+    return sprintf('%s-%dx%d.jpg', pathinfo($this->picture_filename, PATHINFO_FILENAME), $width, $height);
   }
 
-  public function getFullpath() : string {
-    return $this->picture_full_path;
+  public function getFolderName() : string {
+    return substr($this->picture_filename, 0, 2);
+  }
+
+  public function getFullpath(?int $width=0, ?int $height=0) : string {
+    if ($width == 0 && $height == 0)
+      return $this->picture_full_path;
+    return FilesystemHelper::paths_combine(pathinfo($this->picture_full_path, PATHINFO_DIRNAME), $this->getFilename($width, $height));
   }
 
   public function getHash(bool $calculateIfNull = true) : ?string {
@@ -116,6 +103,10 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
 
   public function getName() : string {
     return $this->picture_name;
+  }
+
+  public function getPublicPath(?int $width=0, ?int $height=0) : string {
+    return FilesystemHelper::paths_combine('/pictures/cbimages', $this->getFolderName(), $this->getFilename($width, $height));
   }
 
   public function getRecipe() : RecipeInterface {
@@ -149,7 +140,7 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
       'uploaderName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : null),
       'name' => $this->picture_name,
       'description' => $this->picture_description,
-      'link' => $Controller->getLink('recipe:picture:link', $this->getFilename()),
+      'link' => $this->getPublicPath(),
     ];
   }
 

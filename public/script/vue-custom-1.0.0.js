@@ -411,11 +411,14 @@ const SearchRecipe = {
   template: '#rc-search-template',
   methods: {
     onClick: function() {
-      console.log('SearchRecipe @click')
       if (this.page.search.filter.global.length >= 3)
         app.debouncedSearch()
       else
         app.$router.push({ name: 'recipes' })
+    },
+    onSearchItemClicked: function(index, id, name) {
+      console.log('onSearchItemClicked', index, id, name)
+      app.$router.push({ name: 'recipe', params: { id: id, name: name } })
     }
   }
 }
@@ -744,13 +747,14 @@ Vue.http.get('common-data')
         },
         getSearchResults: function() {
           console.log('getSearchResults')
+          resetSearchData(this)
           postPageData(this.$route.path, {
             search: {
               phrase: this.page.search.filter.global
             }
           }, function(data) {
             console.log('onSearch: ', data)
-
+            updateProps(data, app)
           })
         }
       },
@@ -827,6 +831,13 @@ function resetCustomPageData(app, route) {
         initEmptyRecipe(app)
       break;
   }
+}
+
+function resetSearchData(app) {
+  app.$set(app.page.search.records, 'total', 0)
+  app.$set(app.page.search.records, 'numpages', 0)
+  app.$set(app.page.search.records, 'page', 0)
+  app.$set(app.page.search, 'results', [])
 }
 
 function initEmptyRecipe(app) {

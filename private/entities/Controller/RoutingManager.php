@@ -97,6 +97,9 @@ final class RoutingManager {
       'class' => \Surcouf\Cookbook\Controller\Routes\User\OAuth2InitRoute::class,
       'requiresUser' => false,
     ],
+    '/images(/(?<w>\d+)x(?<h>\d+))?/((?<recipeid>\d+)/(?<pictureid>\d+)|(?<dummy>dummy))' => [ // init oauth login
+      'class' => \Surcouf\Cookbook\Controller\Routes\ImageRoute::class,
+    ],
     '/.*' => [
       'class' => \Surcouf\Cookbook\Controller\Routes\CommonRoute::class,
       'requiresUser' => false,

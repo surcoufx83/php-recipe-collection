@@ -170,7 +170,7 @@ final class QueryBuilder {
   }
 
   public static function maskField(string $table, string $alias, string $field, string $fieldalias = '', int $aggregation = 0, $fnparam1 = null, $fnparam2 = null, $fnparam3 = null) : string {
-    $maskedfield = ($field != DB_ANY ? self::maskstr($alias).'.'.self::maskstr($field) : DB_ANY);
+    $maskedfield = ($aggregation == 0 ? self::maskstr($alias).'.' : '').($field != DB_ANY ? self::maskstr($field) : DB_ANY);
 
     if (Flags::has_flag($aggregation, EAggregationType::atISNULL))
       $maskedfield = self::maskedField(EAggregationType::atISNULL, $maskedfield);

@@ -363,8 +363,6 @@ ul.list-group-sm li.list-group-item {
 div.page {
   transition: padding-left 0.3s;
   width: 100%; }
-  div.page.sidebar-visible {
-    padding-left: 320px; }
   div.page .b-sidebar-outer {
     z-index: 600; }
   div.page .b-sidebar {
@@ -432,55 +430,6 @@ div.page {
               transform: translateY(-50%); }
   div.page div.container-max1280 {
     max-width: 1280px; }
-  div.page ul.content-list {
-    margin: 0;
-    padding: 0;
-    list-style: none; }
-    div.page ul.content-list li.item {
-      padding: .6rem 1.0rem;
-      position: relative;
-      display: block;
-      margin: 0;
-      word-break: break-word; }
-      div.page ul.content-list li.item.item-hoverable:hover {
-        background-color: #D5D8D5; }
-      div.page ul.content-list li.item:not(:last-child) {
-        border-bottom: 1px solid #BFC4BF; }
-      div.page ul.content-list li.item::after {
-        display: block;
-        clear: both;
-        content: ""; }
-      div.page ul.content-list li.item div.item-flexbox {
-        display: flex;
-        flex: 1; }
-        div.page ul.content-list li.item div.item-flexbox div.item-icon {
-          height: 60px;
-          width: 60px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-right: 0.5rem; }
-          div.page ul.content-list li.item div.item-flexbox div.item-icon i {
-            color: #0D3759 !important; }
-          div.page ul.content-list li.item div.item-flexbox div.item-icon img {
-            border: 1px solid #BFC4BF; }
-        div.page ul.content-list li.item div.item-flexbox div.item-major {
-          flex: 1 auto;
-          margin-right: 1.0rem; }
-          div.page ul.content-list li.item div.item-flexbox div.item-major .title {
-            margin: .2rem 0; }
-            div.page ul.content-list li.item div.item-flexbox div.item-major .title a {
-              font-weight: bold; }
-          div.page ul.content-list li.item div.item-flexbox div.item-major .info span:not(:first-child) {
-            margin-left: .3rem; }
-          div.page ul.content-list li.item div.item-flexbox div.item-major .info span:not(:last-child) {
-            margin-right: .3rem; }
-        div.page ul.content-list li.item div.item-flexbox div.item-minor {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          flex: 1 0 auto;
-          margin-left: 1.0rem; }
   div.page div.header-container {
     display: flex;
     width: 100%;
@@ -507,6 +456,23 @@ div.page {
     div.page div.header-container div.nav-buttons a.btn {
       padding: .2rem .5rem;
       margin: .4rem 0; }
+  div.page .search-result-list {
+    /* for displaying search results */ }
+    div.page .search-result-list .search-result-item {
+      /* item per search result */
+      background-color: #EDF6FC;
+      box-shadow: 1px 1px 5px 0px #BFC4BF; }
+      div.page .search-result-list .search-result-item:hover {
+        box-shadow: 1px 1px 7px 0px #313531; }
+      div.page .search-result-list .search-result-item .image-box {
+        /* contains the recipe image or a placeholder */
+        height: 90px !important;
+        width: 90px !important; }
+        div.page .search-result-list .search-result-item .image-box img {
+          /* image withing the image box */
+          border-radius: 5px;
+          border: 1px solid #BFC4BF;
+          box-shadow: 0px 0px 6px 0px #BFC4BF; }
   div.page button.header-toggle-nav {
     background-color: transparent;
     border: 0;
@@ -590,7 +556,10 @@ nav.nav-recipe-sm {
   .card-columns.masonry-deck.cols-lg-5 {
     column-count: 5; }
   .card-columns.masonry-deck.cols-lg-6 {
-    column-count: 6; } }
+    column-count: 6; }
+
+  div.page.sidebar-visible {
+    padding-left: 320px !important; } }
 @media (min-width: 1200px) {
   .card-columns.masonry-deck.cols-xl-1 {
     column-count: 1; }
@@ -603,6 +572,9 @@ nav.nav-recipe-sm {
   .card-columns.masonry-deck.cols-xl-5 {
     column-count: 5; }
   .card-columns.masonry-deck.cols-xl-6 {
-    column-count: 6; } }
+    column-count: 6; }
+
+  div.page.sidebar-visible {
+    padding-left: 320px !important; } }
 
 /*# sourceMappingURL=theme-1.0.1.css.map */

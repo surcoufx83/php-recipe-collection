@@ -40,6 +40,10 @@ class Expression {
   private function formatitem($item) : string {
     if (is_a($item, Expression::class))
       return ''.$item;
+    if (is_int($item))
+      return $this->formattype($item);
+    if (is_string($item))
+      return $item;
     if (\array_key_exists('left', $item) && \array_key_exists('type', $item) && \array_key_exists('right', $item))
       return join(' ', [
         $this->format1item($item['left']),
