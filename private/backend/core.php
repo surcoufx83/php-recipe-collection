@@ -3,16 +3,12 @@
 namespace Surcouf\Cookbook;
 
 use Surcouf\Cookbook\Config;
-use Symfony\Component\Yaml\Yaml;
 
 if (!defined('CORE1'))
   exit;
 define('CORE2',  microtime(true));
 
-if (!\file_exists(DIR_CONFIG.DS.'cbconfig.yml'))
-  throw new \Exception("cbconfig.yml not found in folder config. Please check cbconfig.yml.templat for more information", 1);
-
-$Config = new Config(Yaml::parse(file_get_contents(DIR_CONFIG.DS.'cbconfig.yml')));
+$Config = new Config();
 
 define('DEBUG', $Config->System('DebugMode'));
 define('DTF_SQL', 'Y-m-d H:i:s');

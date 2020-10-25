@@ -7,7 +7,7 @@ if (!defined('CORE2'))
 
 interface IconInterface {
 
-  public function getIcon(?string $cssClass=null, ?string $customStyle=null, ?string $id=null) : string;
-  public function getDataArray() : array;
+  public function getIcon() : string;
+  public function getSpace() : string;
 
 }

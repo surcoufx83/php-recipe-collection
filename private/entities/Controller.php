@@ -5,8 +5,6 @@ namespace Surcouf\Cookbook;
 use Surcouf\Cookbook\Config;
 use Surcouf\Cookbook\ConfigInterface;
 use Surcouf\Cookbook\Config\DatabaseManagerInterface;
-use Surcouf\Cookbook\Config\Icon;
-use Surcouf\Cookbook\Config\IconConfig;
 use Surcouf\Cookbook\Controller\Dispatcher;
 use Surcouf\Cookbook\Controller\ObjectManager;
 use Surcouf\Cookbook\Database\DbConf;

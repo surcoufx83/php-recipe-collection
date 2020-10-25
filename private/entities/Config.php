@@ -4,8 +4,7 @@ namespace Surcouf\Cookbook;
 
 use \DateInterval;
 use Surcouf\Cookbook\Config\DatabaseManagerInterface;
-use Surcouf\Cookbook\Config\IconConfig;
-use Surcouf\Cookbook\Config\IconConfigInterface;
+use Symfony\Component\Yaml\Yaml;
 
 if (!defined('CORE2'))
   exit;
@@ -16,59 +15,22 @@ final class Config implements ConfigInterface {
   public const CTYPE_MAILCREDENTIALS = 2;
   public const CTYPE_OAUTHCREDENTIALS = 3;
 
-  private $config, $icocfg, $responses;
+  private $config, $icons, $responses;
 
-  public function __construct(array $configuration) {
-    $this->config = $configuration;
+  public function __construct() {
+    if (!\file_exists(DIR_CONFIG.DS.'cbconfig.yml'))
+      throw new \Exception("cbconfig.yml not found in folder config. Please check cbconfig.yml.templat for more information.", 1);
+    if (!\file_exists(DIR_CONFIG.DS.'cbicons.yml'))
+      throw new \Exception("cbicons.yml not found in folder config.", 1);
+
+    $this->config = Yaml::parse(file_get_contents(DIR_CONFIG.DS.'cbconfig.yml'));
     $this->config['System']['MaintenanceMode'] = file_exists(ROOT.DS.'.maintenance.tmp');
+    $this->icons = Yaml::parse(file_get_contents(DIR_CONFIG.DS.'cbicons.yml'));
     define('MAINTENANCE', $this->config['System']['MaintenanceMode']);
-    return;
-    $this->config = [
-      # 'AllowRegistration'           => false,
-      # 'ChecksumProvider'            => 'adler32',
-      # 'ConsentCookieName'           => 'kbconsenttoken',
-      # 'CronjobsEnabled'             => true,
-      # 'DbDateFormat'                => 'Y-m-d',
-      # 'DefaultDateFormat'           => 'd.m.Y',
-      # 'DefaultDateFormatUi'         => 'd. F Y',
-      # 'DefaultDateTimeFormat'       => 'd.m.Y H:i:s',
-      # 'DefaultLongDateTimeFormat'   => 'l, d. F Y H:i:s',
-      # 'DefaultDecimalsCount'        => 2,
-      # 'DefaultDecimalsSeparator'    => ',',
-      # 'DefaultListEntries'          => 15,
-      # 'DefaultTimeFormat'           => 'H:i:s',
-      # 'DefaultThousandsSeparator'   => '.',
-      # 'HashProvider'                => 'crc32b',
-      # 'LogCleanupTime'              => new DateInterval('P1M'),
-      # 'LongTimeWarning'             => 180,
-      # 'MaintenanceMode'             => file_exists(ROOT.DS.'.maintenance.tmp'),
-      # 'OAuth2Enabled'               => file_exists(DIR_BACKEND.DS.'conf.oauth2.php'),
-      # 'PageForceHttps'              => false,
-      # 'PageHeader'                  => 'Kochbuch',
-      # 'PageTitle'                   => 'Kochbuch',
-      # 'PageUrls'                    => [
-      #                                   'kochbuch.mogul.network',
-      #                                   'localhost',
-      #                                   '127.0.0.1',
-      #                                  ],
-      # 'PasswordCookieName'          => 'kbpasstoken',
-      # 'PasswordLoginEnabled'        => false,
-      # 'PublicContact'               => 'Elias und Stefan',
-      # 'PublicSignature'             => 'Kochbuch-Team',
-      # 'PublicUrl'                   => 'kochbuch.mogul.network',
-      # 'RecipeRatingClearance'       => new DateInterval('P30D'),
-      # 'RecipeVisitedClearance'      => new DateInterval('P1DT12H'),
-      # 'SessionCookieName'           => 'kbsessiontoken',
-      # 'SessionCleanupTime'          => new DateInterval('PT15M'),
-      # 'SessionLongExpirationTime'   => new DateInterval('P1Y'),
-      # 'SessionShortExpirationTime'  => new DateInterval('PT1H'),
-      # 'UserCookieName'              => 'kbusertoken',
-    ];
   }
 
   public function initController() : void {
     global $Controller;
-    $this->icocfg = new IconConfig();
     $this->responses = [
         1 => ['code' =>   1, 'message' => '', 'success' => true],
         2 => ['code' =>   2, 'message' => $Controller->l('response_noChanges'), 'success' => true],
@@ -120,12 +82,18 @@ final class Config implements ConfigInterface {
     return false;
   }
 
-  public function getResponseArray(int $responseCode) : array {
-    return array_key_exists($responseCode, $this->responses) ? $this->responses[$responseCode] : $this->responses[10];
+  public function getIcon(string $key) : ?array {
+    if (!array_key_exists($key, $this->icons))
+      return null;
+    return $this->icons[$key];
   }
 
-  public function Icons() : IconConfigInterface {
-    return $this->icocfg;
+  public function getIconKeys() : array {
+    return array_keys($this->icons);
+  }
+
+  public function getResponseArray(int $responseCode) : array {
+    return array_key_exists($responseCode, $this->responses) ? $this->responses[$responseCode] : $this->responses[10];
   }
 
 }

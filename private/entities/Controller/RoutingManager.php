@@ -11,12 +11,7 @@ if (!defined('CORE2'))
 final class RoutingManager {
 
   static $routes = [
-    '/api/common-data' => [ // common data request
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\CommonData::class,
-      'method' => ERequestMethod::HTTP_GET,
-      'requiresUser' => false,
-    ],
-    '/api/logout' => [ // common data request
+    '/api/logout' => [ // logout request
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\User\LogoutRoute::class,
       'method' => ERequestMethod::HTTP_POST,
       'requiresUser' => false,
@@ -84,7 +79,7 @@ final class RoutingManager {
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipeCreateRoute::class,
       'method' => ERequestMethod::HTTP_POST,
     ],
-    '/api/page-data\?(?<page>.*)' => [ // common data request
+    '/api/page-data\?(?<page>.*)' => [ // common page request
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\PageData::class,
       'method' => ERequestMethod::HTTP_GET,
       'requiresUser' => false,

@@ -1,0 +1,184 @@
+<script>
+  const CommonData = {
+    config: {
+      login: {
+        defaultEnabled: {% if Config.Users('LoginMethods', 'Password') == true %}true{% else %}false{% endif %},
+        oauth2Enabled: {% if Config.Users('LoginMethods', 'OAuth2') == true %}true{% else %}false{% endif %}
+
+      },
+      maintenanceEnabled: {% if Config.System('MaintenanceMode') == true %}true{% else %}false{% endif %}
+
+    },
+    forward: { },
+    page: {
+      contentData: {
+        actions: [],
+        breadcrumbs: [],
+        filters: [],
+        hasActions: false,
+        hasFilters: false
+      },
+      currentRecipe: {
+        id: 0,
+        name: '',
+        created: 0,
+        description: '',
+        eaterCount: 0,
+        eaterCountCalc: 0,
+        ownerId: 0,
+        ownerName: '',
+        published: false,
+        source: {
+          description: '',
+          url: ''
+        },
+        pictures: [],
+        preparation: {
+          ingredients: [],
+          steps: [],
+          timeConsumed: {
+            cooking: 0,
+            preparing: 0,
+            rest: 0,
+            total: 0,
+            unit: 'minutes'
+          }
+        },
+        socials: {
+          cookedCounter: 0,
+          ratedCounter: 0,
+          ratedSum: 0,
+          viewCounter: 0,
+          votedCounter: 0,
+          votedSum: 0,
+          votedAvg0: 0,
+          votedAvg1: 0
+        },
+        tags: []
+      },
+      customContent: false,
+      iconSet: {
+      {% for key in Config.getIconKeys() %}
+        {{ key }}: { icon: '{{ Config.getIcon(key).icon }}', space: '{{ Config.getIcon(key).space }}' }{% if loop.last == false %},{% endif %}
+
+      {% endfor %}
+      },
+      loading: false,
+      updating: false,
+      modals: {
+        failedModal: {
+          code: 0,
+          message: ''
+        }
+      },
+      search: {
+        filter: {
+          global: '',
+          ingredients: '',
+          maxTime: 0,
+          options: {
+            onlyWithComments: false,
+            onlyWithPic: false
+          },
+          rating: 0,
+          sortBy: '',
+          tags: '',
+          title: '',
+          user: '',
+          voting: 0
+        },
+        records: {
+          total: 0,
+          numpages: 0,
+          page: 0
+        },
+        results: []
+      },
+      self: {
+        currentVote: {
+          cooked: -1,
+          rating: -1,
+          voting: -1
+        },
+        hasVoted: false,
+        lastVote: {
+          id: 0,
+          userId: 0,
+          user: '',
+          time: '',
+          comment: '',
+          cooked: false,
+          voting: 0,
+          rating: 0
+        },
+        visitCount: 0,
+        voteCount: 0
+      },
+      sidebar: {
+        initialVisible: true,
+        routes: [
+          { to: 'home', text: 'sidebar.home', icon: '{{ Config.getIcon("home").icon }}', space: '{{ Config.getIcon("home").space }}'},
+          { to: 'writeRecipe', text: 'sidebar.writeRecipe', icon: '{{ Config.getIcon("add").icon }}', space: '{{ Config.getIcon("add").space }}'},
+          { to: 'search', text: 'sidebar.search', icon: '{{ Config.getIcon("search").icon }}', space: '{{ Config.getIcon("search").space }}'},
+          { to: 'myRecipes', text: 'sidebar.myRecipes', icon: '{{ Config.getIcon("recipes").icon }}', space: '{{ Config.getIcon("recipes").space }}'},
+          { to: 'random', text: 'sidebar.random', icon: '{{ Config.getIcon("random").icon }}', space: '{{ Config.getIcon("random").space }}'}{% if Controller.isAuthenticated() and Controller.User().isAdmin() %},
+          { to: 'admin', text: 'sidebar.admin.title', icon: '{{ Config.getIcon("settings").icon }}', space: '{{ Config.getIcon("settings").space }}', children: [
+            { to: 'configuration', text: 'sidebar.admin.configuration', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'},
+            { to: 'cronjobs', text: 'sidebar.admin.cronjobs', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'},
+            { to: 'translations', text: 'sidebar.admin.translations', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'},
+            { to: 'logs', text: 'sidebar.admin.logs', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'},
+            { to: 'users', text: 'sidebar.admin.users', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'}
+          ]},
+          {% endif %}
+        ],
+        visible: true
+      }
+    },
+    user: {% if Controller.isAuthenticated() == false %}{
+      avatar: { url: '' },
+      loggedIn: false,
+      id: 0,
+      isAdmin: false,
+      meta: { fn: '', ln: '', un: '', initials: '' },
+      customSettings: { }
+    }{% else %}{
+      avatar: {
+        url: '{{ Controller.User().getAvatarUrl() }}'
+      },
+      loggedIn: true,
+      id: {{ Controller.User().getId() }},
+      isAdmin: {% if Controller.User().isAdmin() %}true{% else %}false{% endif %},
+      meta: {
+        fn: '{{ Controller.User().getFirstname() }}',
+        ln: '{{ Controller.User().getLastname() }}',
+        un: '{{ Controller.User().getUsername() }}',
+        initials: '{{ Controller.User().getInitials() }}'
+      },
+      customSettings: {
+        formats: {
+          date: {
+            long: '{{ Config.Defaults("Formats", "UiLongDate") }}',
+            short: '{{ Config.Defaults("Formats", "UiShortDate") }}'
+          },
+          datetime: {
+            long: '{{ Config.Defaults("Formats", "UiLongDatetime") }}',
+            short: '{{ Config.Defaults("Formats", "UiShortDatetime") }}'
+          },
+          decimals: {{ Config.Defaults("Formats", "Decimals") }},
+          decimalSeparator: '{{ Config.Defaults("Formats", "DecimalsSeparator") }}',
+          thousandsSeparator: '{{ Config.Defaults("Formats", "ThousandsSeparator") }}',
+          time: '{{ Config.Defaults("Formats", "UiTime") }}'
+        },
+        lists: {
+          entries: {{ Config.Defaults("Lists", "Entries") }}
+        },
+        recipes: {
+          ltwarning: {
+            enabled: {% if Config.Defaults("Recipes", "LtWarning") %}true{% else %}false{% endif %},
+            minutes: {{ Config.Defaults("Recipes", "LtMinutes") }}
+          }
+        }
+      }
+    }{% endif %}
+  }
+</script>

@@ -12,7 +12,7 @@
           no-close-on-esc>
           <ul class="nav-sidebar-level1">
             <sidebar-ul1-li
-              v-for="route in page.routes.sidebar"
+              v-for="route in page.sidebar.routes"
               v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
               :to="route.to"
               :params="route.to != 'recipe' && route.to != 'random' ? { } :
@@ -23,7 +23,7 @@
                   )
                 )"
               :icon="route.icon"
-              :text="route.to != 'recipe' ? route.text : page.currentRecipe.name"
+              :text="route.to != 'recipe' ? $t(route.text) : page.currentRecipe.name"
               :children="route.children"
               :exact="route.exact"
               ></sidebar-ul1-li>
@@ -54,7 +54,7 @@
             :to="route.to"
             :params="route.to != 'recipe' ? { } : { id: page.currentRecipe.id, name: page.currentRecipe.name}"
             :icon="route.icon"
-            :text="route.to != 'recipe' ? route.text : page.currentRecipe.name"
+            :text="route.to != 'recipe' ? $t(route.text) : page.currentRecipe.name"
             :exact="route.exact"
             ></sidebar-ul2-li>
         </ul>
