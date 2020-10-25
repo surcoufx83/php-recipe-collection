@@ -26,7 +26,8 @@ final class Config implements ConfigInterface {
     $this->config = Yaml::parse(file_get_contents(DIR_CONFIG.DS.'cbconfig.yml'));
     $this->config['System']['MaintenanceMode'] = file_exists(ROOT.DS.'.maintenance.tmp');
     $this->icons = Yaml::parse(file_get_contents(DIR_CONFIG.DS.'cbicons.yml'));
-    define('MAINTENANCE', $this->config['System']['MaintenanceMode']);
+    if (!defined('MAINTENANCE'))
+      define('MAINTENANCE', $this->config['System']['MaintenanceMode']);
   }
 
   public function initController() : void {

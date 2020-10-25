@@ -34,7 +34,7 @@ class HashHelperTest extends TestCase
     $Controller = $this->createStub(ControllerInterface::class);
     $stubConfig = $this->createStub(ConfigInterface::class);
     $Controller->method('Config')->willReturn($stubConfig);
-    $stubConfig->method('__get')->willReturn('adler32');
+    $stubConfig->method('__call')->willReturn('adler32');
     $this->assertEquals('adler32', HashHelper::getChecksumAlgo());
   }
 
@@ -46,7 +46,7 @@ class HashHelperTest extends TestCase
     $Controller = $this->createStub(ControllerInterface::class);
     $stubConfig = $this->createStub(ConfigInterface::class);
     $Controller->method('Config')->willReturn($stubConfig);
-    $stubConfig->method('__get')->willReturn('crc32b');
+    $stubConfig->method('__call')->willReturn('crc32b');
     $this->assertEquals('crc32b', HashHelper::getHashAlgo());
   }
 
@@ -69,7 +69,7 @@ class HashHelperTest extends TestCase
     $Controller = $this->createStub(ControllerInterface::class);
     $stubConfig = $this->createStub(ConfigInterface::class);
     $Controller->method('Config')->willReturn($stubConfig);
-    $stubConfig->method('__get')->willReturn($algo);
+    $stubConfig->method('__call')->willReturn($algo);
     $this->assertEquals($expected, HashHelper::hash($input));
     $this->assertEquals($expected, HashHelper::hash($input, $algo));
   }
