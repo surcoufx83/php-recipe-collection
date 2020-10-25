@@ -12,7 +12,7 @@ cloud:
   icon: cloud
   space: fas
 delete:
-  icon: delete
+  icon: trash-alt
   space: far
 edit:
   icon: edit

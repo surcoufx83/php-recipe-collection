@@ -377,6 +377,10 @@ Vue.component('rc-breadcrumbbar', {
           items.push(bciSearch)
           return items
 
+        case 'userRecipes':
+          items.push({ target: 'userRecipes', title: this.$t("breadcrumb.recipes.users", { user: this.$route.params.name }), params: { id: this.$route.params.id, name: this.$route.params.name } })
+          return items
+
         case 'writeRecipe':
           items.push(bciWriteRecipe)
           return items
@@ -713,6 +717,8 @@ var app = new Vue({
           if (this.page.currentRecipe.ownerId > 0)
             return this.$t('pages.recipe.titleWithUser', { recipe: this.page.currentRecipe.name, user: this.page.currentRecipe.ownerName })
           return this.$t('pages.recipe.title', { recipe: this.page.currentRecipe.name })
+        case 'userRecipes':
+          return this.$t('pages.userRecipes.title', { name: this.$route.params.name })
       }
       return this.$t('pages.' + this.$route.name + '.title')
     },

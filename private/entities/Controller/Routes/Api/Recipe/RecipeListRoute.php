@@ -99,8 +99,6 @@ class RecipeListRoute extends Route implements RouteInterface {
     global $Controller;
     $basequery->where('recipes', 'user_id', '=', $Controller->User()->getId());
     $countquery->where('recipes', 'user_id', '=', $Controller->User()->getId());
-    parent::setTitle($response,  $Controller->l('recipes_filtered_own_title'));
-    parent::setDescription($response, '');
   }
 
   static function filterUserList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery, UserInterface $user) : void {
@@ -111,16 +109,12 @@ class RecipeListRoute extends Route implements RouteInterface {
     $countquery
       ->where('recipes', 'recipe_public', '=', 1)
       ->andWhere('recipes', 'user_id', '=', $user->getId());
-    parent::setTitle($response,  $Controller->l('recipes_filtered_user_title', $user->getUsername()));
-    parent::setDescription($response, '');
   }
 
   static function unfilteredList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
     global $Controller;
     $basequery->where('recipes', 'recipe_public', '=', 1);
     $countquery->where('recipes', 'recipe_public', '=', 1);
-    parent::setTitle($response,  $Controller->l('recipes_unfiltered_title'));
-    parent::setDescription($response, '');
   }
 
 }
