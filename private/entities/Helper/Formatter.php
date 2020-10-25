@@ -37,7 +37,7 @@ final class Formatter implements FormatterInterface {
   public static function date_format(?DateTime $dt = null, ?string $format = null) : string {
     global $Controller;
     $dt = $dt ?? new DateTime();
-    return $dt->format(is_null($format) ? $Controller->Config()->DefaultDateFormatUi() : $format);
+    return $dt->format(is_null($format) ? $Controller->Config()->Defaults('Formats', 'UiLongDate') : $format);
   }
 
   /**
@@ -49,9 +49,9 @@ final class Formatter implements FormatterInterface {
    */
   public static function float_format(float $value, int $precission = -1) : string {
     global $Controller;
-    $decplcs = $Controller->Config()->DefaultDecimalsCount();
-    $decsep = $Controller->Config()->DefaultDecimalsSeparator();
-    $thsdsep = $Controller->Config()->DefaultThousandsSeparator();
+    $decplcs = $Controller->Config()->Defaults('Formats', 'Decimals');
+    $decsep = $Controller->Config()->Defaults('Formats', 'DecimalsSeparator');
+    $thsdsep = $Controller->Config()->Defaults('Formats', 'ThousandsSeparator');
     return number_format($value, $precission > -1 ? $precission : $decplcs, $decsep, $thsdsep);
   }
 
@@ -63,7 +63,7 @@ final class Formatter implements FormatterInterface {
    */
   public static function int_format(int $value) : string {
     global $Controller;
-    $thsdsep = $Controller->Config()->DefaultThousandsSeparator();
+    $thsdsep = $Controller->Config()->Defaults('Formats', 'ThousandsSeparator');
     return number_format($value, 0, '', $thsdsep);
   }
 

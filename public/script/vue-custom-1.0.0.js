@@ -313,6 +313,7 @@ const Recipe = {
     }
   }
 }
+console.log(Recipe)
 
 const RecipesList = {
   delimiters: ['${', '}'],
@@ -376,13 +377,16 @@ Vue.component('rc-breadcrumbbar', {
           items.push(bciSearch)
           return items
 
+        case 'userRecipes':
+          items.push({ target: 'userRecipes', title: this.$t("breadcrumb.recipes.users", { user: this.$route.params.name }), params: { id: this.$route.params.id, name: this.$route.params.name } })
+          return items
+
         case 'writeRecipe':
           items.push(bciWriteRecipe)
           return items
 
       }
 
-      console.log(this.$route.name)
       // fallback: return no breadcrumb
       return [ ]
 
@@ -400,8 +404,6 @@ Vue.component('rc-navbar', {
     onSearchInput: function() {
       if (app.$route.name != 'search')
         app.$router.push({name: 'search'})
-      console.log(app.$route)
-      console.log(this.page.search.filter.global)
     }
   }
 })
@@ -417,7 +419,6 @@ const SearchRecipe = {
         app.$router.push({ name: 'recipes' })
     },
     onSearchItemClicked: function(index, id, name) {
-      console.log('onSearchItemClicked', index, id, name)
       app.$router.push({ name: 'recipe', params: { id: id, name: name } })
     }
   }
@@ -654,6 +655,7 @@ const router = new VueRouter({
     ]},
     { name: 'logout', path: '/logout', component: Logout },
     { name: 'admin', path: '/admin', children: [
+      { name: 'configuration', path: 'configuration' },
       { name: 'cronjobs', path: 'cronjobs' },
       { name: 'translations', path: 'translations' },
       { name: 'logs', path: 'logs' },
@@ -679,97 +681,91 @@ const router = new VueRouter({
   ]
 })
 
-var app;
-
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
 Vue.use(VueResource)
 Vue.http.options.root = '/api/'
 
-Vue.http.get('common-data')
-  .then(response => response.json())
-  .then((data) => {
-    app = new Vue({
-      delimiters: ['${', '}'],
-      el: '#vue-app',
-      data: data,
-      router,
-      i18n,
-      created: function() {
-        window.addEventListener("resize", this.onResize)
-        this.debouncedSearch = _.debounce(this.getSearchResults, 500)
-      },
-      destroyed: function() {
-        window.removeEventListener("resize", this.onResize)
-      },
-      mounted: function() {
-        var lgspy = $('#reactive-size-spy-lg');
+var app = new Vue({
+  delimiters: ['${', '}'],
+  el: '#vue-app',
+  data: CommonData,
+  router,
+  i18n,
+  created: function() {
+    window.addEventListener("resize", this.onResize)
+    this.debouncedSearch = _.debounce(this.getSearchResults, 500)
+    var lgspy = $('#reactive-size-spy-lg');
+    CommonData.page.sidebar.visible = (lgspy.css("display") == "block")
+    CommonData.page.sidebar.initialVisible = (lgspy.css("display") == "block")
+    if (CommonData.page.sidebar.visible == false) {
+      $('#sidebar-main').css("display", "none")
+      $('#sidebar-main').prop("aria-hidden", "true")
+    }
+  },
+  destroyed: function() {
+    window.removeEventListener("resize", this.onResize)
+  },
+  mounted: function() {
+    if (!CommonData.user.loggedIn)
+      this.$router.push({name: 'login'})
+    refreshPageData(this.$route.path, this)
+  },
+  computed: {
+    title: function() {
+      switch(this.$route.name) {
+        case 'recipe':
+          if (this.page.currentRecipe.ownerId > 0)
+            return this.$t('pages.recipe.titleWithUser', { recipe: this.page.currentRecipe.name, user: this.page.currentRecipe.ownerName })
+          return this.$t('pages.recipe.title', { recipe: this.page.currentRecipe.name })
+        case 'userRecipes':
+          return this.$t('pages.userRecipes.title', { name: this.$route.params.name })
+      }
+      return this.$t('pages.' + this.$route.name + '.title')
+    },
+    subtitle: function() {
+      return this.$t('pages.' + this.$route.name + '.subtitle')
+    }
+  },
+  methods: {
+    onResize: function() {
+      var smspy = $('#reactive-size-spy-sm');
+      var lgspy = $('#reactive-size-spy-lg');
+      if (this.page.sidebar.visible != (lgspy.css("display") == "block")) {
         this.$set(this.page.sidebar, 'visible', (lgspy.css("display") == "block"))
-        this.$set(this.page.sidebar, 'initialVisible', (lgspy.css("display") == "block"))
         if (this.page.sidebar.visible == false) {
           $('#sidebar-main').css("display", "none")
           $('#sidebar-main').prop("aria-hidden", "true")
-        }
-        if (!this.user.loggedIn)
-          this.$router.push({name: 'login'})
-        refreshPageData(this.$route.path, this)
-      },
-      computed: {
-        title: function() {
-          switch(this.$route.name) {
-            case 'recipe':
-              if (this.page.currentRecipe.ownerId > 0)
-                return this.$t('pages.recipe.titleWithUser', { recipe: this.page.currentRecipe.name, user: this.page.currentRecipe.ownerName })
-              return this.$t('pages.recipe.title', { recipe: this.page.currentRecipe.name })
-          }
-          return this.$t('pages.' + this.$route.name + '.title')
-        },
-        subtitle: function() {
-          return this.$t('pages.' + this.$route.name + '.subtitle')
-        }
-      },
-      methods: {
-        onResize: function() {
-          var smspy = $('#reactive-size-spy-sm');
-          var lgspy = $('#reactive-size-spy-lg');
-          if (this.page.sidebar.visible != (lgspy.css("display") == "block")) {
-            this.$set(this.page.sidebar, 'visible', (lgspy.css("display") == "block"))
-            if (this.page.sidebar.visible == false) {
-              $('#sidebar-main').css("display", "none")
-              $('#sidebar-main').prop("aria-hidden", "true")
-            } else {
-              $('#sidebar-main').css("display", "")
-              $('#sidebar-main').prop("aria-hidden", "")
-            }
-          }
-        },
-        onClick: function(e) {
-          this.$emit('click', this.subject ? this.subject : this.title)
-        },
-        getSearchResults: function() {
-          console.log('getSearchResults')
-          resetSearchData(this)
-          postPageData(this.$route.path, {
-            search: {
-              phrase: this.page.search.filter.global
-            }
-          }, function(data) {
-            console.log('onSearch: ', data)
-            updateProps(data, app)
-          })
-        }
-      },
-      watch: {
-        'page.search.filter.global': function() {
-          console.log('page.search.filter.global has changed')
-          if (this.page.search.filter.global.length >= 3)
-            this.debouncedSearch()
-
+        } else {
+          $('#sidebar-main').css("display", "")
+          $('#sidebar-main').prop("aria-hidden", "")
         }
       }
-    })
-  })
+    },
+    onClick: function(e) {
+      this.$emit('click', this.subject ? this.subject : this.title)
+    },
+    getSearchResults: function() {
+      resetSearchData(this)
+      postPageData(this.$route.path, {
+        search: {
+          phrase: this.page.search.filter.global
+        }
+      }, function(data) {
+        updateProps(data, app)
+      })
+    }
+  },
+  watch: {
+    'page.search.filter.global': function() {
+      if (this.page.search.filter.global.length >= 3)
+        this.debouncedSearch()
+
+    }
+  }
+})
 
 router.beforeEach((to, from, next) => {
+  console.log('beforeEach', to, from)
   if (app) {
     if (to.name == 'login' && app.user.loggedIn)
       next(false)
@@ -789,6 +785,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
+  console.log('afterEach', to, from)
   if (to.name == 'logout') {
     Vue.http.post('logout')
       .then(response => response.json())

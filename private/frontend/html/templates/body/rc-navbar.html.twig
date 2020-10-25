@@ -7,7 +7,7 @@
               :to="{ name: 'home' }"
               class="navbar-brand text-light mr-0 mr-md-2 my-2">
               <!-- page title -->
-              {{ Config.PageHeader }}</router-link>
+              ${ $t('pages.common.navtitle') }</router-link>
 
             <fa-icon
               :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"
@@ -19,6 +19,11 @@
               v-if="page.loading === false && page.updating === false && user.isAdmin">
               <!-- page loading time for admins -->
               ${ page.loadingTime}</span>
+
+            <span class="small text-light ml-2 my-2 text-nowrap"
+              v-if="user.isAdmin">
+              <!-- current route -->
+              ${ $route.name }</span>
 
             <b-container fluid class="ml-3 mr-0 pr-0">
 
@@ -40,7 +45,7 @@
                     style="background-color: transparent; border-color: transparent;"
                     v-if="page.sidebar.visible !== true || page.sidebar.initialVisible !== true">
                     <span class="sr-only">Toggle sidebar</span>
-                    {{ Config.Icons.Menu()|raw }}
+                    <fa-icon :icon="page.iconSet.menu.icon" :space="page.iconSet.menu.space"></fa-icon>
                   </b-button>
                 </b-col>
 

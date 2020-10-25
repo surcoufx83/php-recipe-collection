@@ -57,7 +57,7 @@ class RecipePageRoute extends Route implements RouteInterface {
 
   private static function addViewer(RecipeInterface $recipe) : void {
     global $Controller;
-    $maxage = (new DateTime())->sub($Controller->Config()->RecipeVisitedClearance());
+    $maxage = (new DateTime())->sub(new \DateInterval($Controller->Config()->Page('Timespans', 'BetweenVisitCounts')));
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
     $query->where('recipe_ratings', 'entry_datetime', '>=', Formatter::date_format($maxage, DTF_SQL))
           ->andWhere('recipe_ratings', 'recipe_id', '=', $recipe->getId())
@@ -83,7 +83,7 @@ class RecipePageRoute extends Route implements RouteInterface {
 
   private static function getMyVote(RecipeInterface $recipe) : ?RatingInterface {
     global $Controller;
-    $maxage = (new DateTime())->sub($Controller->Config()->RecipeRatingClearance());
+    $maxage = (new DateTime())->sub(new \DateInterval($Controller->Config()->Page('Timespans', 'BetweenVotes')));
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings', DB_ANY);
     $query->where('recipe_ratings', 'entry_datetime', '>=', Formatter::date_format($maxage, DTF_SQL))
           ->andWhere('recipe_ratings', 'recipe_id', '=', $recipe->getId())

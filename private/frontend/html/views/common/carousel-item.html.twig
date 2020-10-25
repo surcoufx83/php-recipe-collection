@@ -1,9 +1,0 @@
-          <div class="carousel-item {{ item.active }}">
-            <a href="{% if item.href != false %}{{ item.href }}{% else %}#{% endif %}"{% if carousel.lightbox %} data-toggle="lightbox"{% endif %}>
-              <img src="/pictures/{{ item.image }}" class="d-block w-100">
-            </a>
-            <div class="carousel-caption d-none d-md-block">
-              <h4><a href="{{ item.href }}">{{ item.title }}</a></h4>
-              <p>{{ item.description }}</p>
-            </div>
-          </div>

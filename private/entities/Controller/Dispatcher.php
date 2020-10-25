@@ -87,6 +87,9 @@ final class Dispatcher {
     if (!$this->matched)
       $this->exitError(70, null, null, null, $Controller->getLink('private:home'));
 
+    if ($this->outputMode == EOutputMode::Default)
+      require_once DIR_BACKEND  .'/web.php';
+
     $response = [];
     $result = $this->matchedHandler::createOutput($response);
 

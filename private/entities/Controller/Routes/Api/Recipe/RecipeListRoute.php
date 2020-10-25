@@ -44,7 +44,7 @@ class RecipeListRoute extends Route implements RouteInterface {
       ->groupBy('recipes', ['recipe_id', 'user_id', 'recipe_public', 'recipe_name', 'recipe_description', 'recipe_eater', 'recipe_source_desc', 'recipe_source_url', 'recipe_created', 'recipe_published'])
       ->groupBy('recipe_pictures', ['picture_id', 'picture_sortindex', 'picture_name', 'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path'])
       ->orderBy2('recipes', 'recipe_name', 'ASC')
-      ->limit($Controller->Config()->DefaultListEntries());
+      ->limit($Controller->Config()->Defaults('Lists', 'Entries'));
 
     if (is_null($filter) || $filter == '')
       self::unfilteredList($response, $baseQuery, $countQuery);
@@ -69,8 +69,8 @@ class RecipeListRoute extends Route implements RouteInterface {
     $data = [
       'count' => $count,
       'page' => 0,
-      'pages' => ceil($count / $Controller->Config()->DefaultListEntries()),
-      'itemsPerPage' => $Controller->Config()->DefaultListEntries(),
+      'pages' => ceil($count / $Controller->Config()->Defaults('Lists', 'Entries')),
+      'itemsPerPage' => $Controller->Config()->Defaults('Lists', 'Entries'),
       'records' => []
     ];
 
@@ -99,8 +99,6 @@ class RecipeListRoute extends Route implements RouteInterface {
     global $Controller;
     $basequery->where('recipes', 'user_id', '=', $Controller->User()->getId());
     $countquery->where('recipes', 'user_id', '=', $Controller->User()->getId());
-    parent::setTitle($response,  $Controller->l('recipes_filtered_own_title'));
-    parent::setDescription($response, '');
   }
 
   static function filterUserList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery, UserInterface $user) : void {
@@ -111,16 +109,12 @@ class RecipeListRoute extends Route implements RouteInterface {
     $countquery
       ->where('recipes', 'recipe_public', '=', 1)
       ->andWhere('recipes', 'user_id', '=', $user->getId());
-    parent::setTitle($response,  $Controller->l('recipes_filtered_user_title', $user->getUsername()));
-    parent::setDescription($response, '');
   }
 
   static function unfilteredList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
     global $Controller;
     $basequery->where('recipes', 'recipe_public', '=', 1);
     $countquery->where('recipes', 'recipe_public', '=', 1);
-    parent::setTitle($response,  $Controller->l('recipes_unfiltered_title'));
-    parent::setDescription($response, '');
   }
 
 }

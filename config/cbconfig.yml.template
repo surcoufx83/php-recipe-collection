@@ -1,0 +1,96 @@
+#
+# This file is a template.
+# To create the configuration file, create a duplicate of this file without the
+#  .template extension. In the so created cbconfig.yml you can change all
+#  settings as needed. This file will be used when a web page of the cookbook
+#  is opened.
+# For security reasons, the cbconfig.yml is excluded from the Git Repository
+#  because it may contain sensitive information. Never enter data in this
+#  template, as the template is automatically overwritten when updating to a
+#  new version.
+#
+
+Defaults:
+  Formats:
+    DbDate: "Y-m-d"
+    UiLongDate: "d. F Y"
+    UiShortDate: "d.m.Y"
+    UiLongDatetime: "d.m.Y H:i:s"
+    UiShortDatetime: "l, d. F Y H:i:s"
+    UiTime: "H:i:s"
+    Decimals: 2
+    DecimalsSeparator: ","
+    ThousandsSeparator: "."
+  Lists:
+    Entries: 15
+  Recipes:
+    LtMinutes: 180
+    LtWarning: true
+
+Page:
+  PublicContact: "Your name here"
+  PublicSignature: "Kochbuch-Team"
+  Title: "My private recipe book"
+  PublicUrl: "cookbook.example.com"
+  Urls:
+    - "cookbook.example.com"
+    - "dev.cookbook.example.com"
+    - "localhost"
+    - "127.0.0.1"
+  Timespans:
+    BetweenVisitCounts: "P1DT12H"
+    BetweenVotes: "P30D"
+
+System:
+  DebugMode: false
+  ForceHttps: false
+  MaintenanceMode: null
+  Checksums:
+    CsProvider: "adler32"
+    HashProvider: "crc32b"
+    PwHashThreads: 6
+  Cookies:
+    ConsentCookieName: "kbconsenttoken"
+    PasswordCookieName: "kbpasstoken"
+    SessionCookieName: "kbsessiontoken"
+    UserCookieName: "kbusertoken"
+  Cronjobs:
+    Enabled: true
+    Service: 'cron'
+    LogCleanupTime: "P1M"
+  Database:
+    Host: "db.example.com"
+    Credentials:
+      Name: "db-user-name"
+      Password: "db-user-secret-password!"
+    Database: "db-database-name"
+  OAUTH2:
+    Provider: "Nextcloud"
+    DisplayName: "cloud.example.com"
+    ClientId: "really-secret-client-id"
+    ClientSecret: "my-client-secret"
+    OAuthUrl: "https://cloud.example.com/apps/oauth2/authorize"
+    OAuthDataUrl: "https://cloud.example.com/ocs/v1.php/cloud/user"
+    OAuthGroupsUrl: "https://cloud.example.com/ocs/v1.php/cloud/users/%s/groups"
+    OAuthTokenUrl: "https://cloud.example.com/apps/oauth2/api/v1/token"
+  SMTP:
+    Host: "smtp.example.com"
+    Credentials:
+      Name: "smtp-user-name"
+      Password: "smtp-user-secret-password!"
+    Port: 587
+    Security: "tls"
+    Sender:
+      Name: "Your name here"
+      Mail: "recipebook@example.com"
+
+Users:
+  LoginMethods:
+    OAuth2: true
+    Password: false
+  Registration: false
+  Sessions:
+    CleanupTime: "PT15M"
+    LongExpiry: "P1Y"
+    OAuthExpiry: "P1M"
+    ShortExpiry: "PT1H"

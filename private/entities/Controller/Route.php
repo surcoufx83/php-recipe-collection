@@ -27,9 +27,7 @@ class Route implements RouteInterface {
   }
 
   static function createOutput(array &$response) : bool {
-    self::setPage('private:home');
-    self::setTitle($Controller->l('greetings_hello', ''));
-    return self::render(self::$template, $response);
+    return true;
   }
 
   static function forwardResponse(array &$response, string $pageTarget, ?array $params = []) : void {
@@ -49,15 +47,11 @@ class Route implements RouteInterface {
   }
 
   static function setDescription(array &$response, string $newDescription, ?array $arguments = null) : void {
-    $response = \array_merge_recursive($response, ['page' => ['contentData' => [
-                  'titleDescription' => (is_null($arguments) ? $newDescription : vsprintf($newDescription, $arguments))
-                ]]]);
+
   }
 
   static function setTitle(array &$response, string $newTitle, ?array $arguments = null) : void {
-    $response = \array_merge_recursive($response, ['page' => ['contentData' => [
-                  'title' => (is_null($arguments) ? $newTitle : vsprintf($newTitle, $arguments))
-                ]]]);
+
   }
 
 }

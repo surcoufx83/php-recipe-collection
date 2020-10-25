@@ -1,0 +1,82 @@
+#
+# This file configures all icons displayed on the website.
+#
+
+add:
+  icon: plus-circle
+  space: fas
+back:
+  icon: arrow-left
+  space: fas
+cloud:
+  icon: cloud
+  space: fas
+delete:
+  icon: trash-alt
+  space: far
+edit:
+  icon: edit
+  space: fas
+gallery:
+  icon: camera-retro
+  space: fas
+home:
+  icon: home
+  space: fas
+info:
+  icon: info-circle
+  space: fas
+ingredient:
+  icon: carrot
+  space: fas
+like:
+  icon: heart
+  space: fas
+lock:
+  icon: lock
+  space: fas
+meal:
+  icon: utensils
+  space: fas
+menu:
+  icon: bars
+  space: fas
+msg:
+  icon: comment-dots
+  space: fas
+nouser:
+  icon: user-slash
+  space: fas
+play:
+  icon: play
+  space: fas
+random:
+  icon: dice
+  space: fas
+recipes:
+  icon: copy
+  space: fas
+reset:
+  icon: times-circle
+  space: fas
+search:
+  icon: search
+  space: fas
+setting:
+  icon: cog
+  space: fas
+settings:
+  icon: cogs
+  space: fas
+spinner:
+  icon: circle-notch
+  space: fas
+unlock:
+  icon: unlock
+  space: fas
+user:
+  icon: user-circle
+  space: far
+view:
+  icon: eye
+  space: fas
