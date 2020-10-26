@@ -240,9 +240,16 @@ const Recipe = {
       return 'width: ' + (this.pbCookValue <2 ? 1 : this.pbCookValue - 1) + '%'
     },
     pbCookLabel: function() {
+      if (this.pbCookValue > 40)
+        return app.$t('pages.recipe.preparation.timeconsumption.cookingShort') + ': ' + this.duration(this.recipe.preparation.timeConsumed.cooking)
       if (this.pbCookValue > 20)
-        return this.recipe.preparation.timeConsumed.cooking
+        return this.duration(this.recipe.preparation.timeConsumed.cooking)
       return ''
+    },
+    pbCookLabelFull: function() {
+      if (this.recipe.preparation.timeConsumed.cooking == 0)
+        return app.$t('pages.recipe.preparation.timeconsumption.cookingShort') + ': ' + app.$t('pages.recipe.preparation.timeconsumption.notset')
+      return app.$t('pages.recipe.preparation.timeconsumption.cookingShort') + ': ' + this.duration(this.recipe.preparation.timeConsumed.cooking)
     },
     pbPrepValue: function() {
       return Math.floor(this.recipe.preparation.timeConsumed.preparing / this.recipe.preparation.timeConsumed.total * 100)
@@ -251,9 +258,16 @@ const Recipe = {
       return 'width: ' + (this.pbPrepValue <2 ? 1 : this.pbPrepValue - 1) + '%'
     },
     pbPrepLabel: function() {
+      if (this.pbPrepValue > 40)
+        return app.$t('pages.recipe.preparation.timeconsumption.preparingShort') + ': ' + this.duration(this.recipe.preparation.timeConsumed.preparing)
       if (this.pbPrepValue > 20)
-        return this.recipe.preparation.timeConsumed.preparing
+        return this.duration(this.recipe.preparation.timeConsumed.preparing)
       return ''
+    },
+    pbPrepLabelFull: function() {
+      if (this.recipe.preparation.timeConsumed.preparing == 0)
+        return app.$t('pages.recipe.preparation.timeconsumption.preparingShort') + ': ' + app.$t('pages.recipe.preparation.timeconsumption.notset')
+      return app.$t('pages.recipe.preparation.timeconsumption.preparingShort') + ': ' + this.duration(this.recipe.preparation.timeConsumed.preparing)
     },
     pbRestValue: function() {
       return Math.floor(this.recipe.preparation.timeConsumed.rest / this.recipe.preparation.timeConsumed.total * 100)
@@ -262,12 +276,28 @@ const Recipe = {
       return 'width: ' + (this.pbRestValue <2 ? 1 : this.pbRestValue - 1) + '%'
     },
     pbRestLabel: function() {
+      if (this.pbRestValue > 40)
+        return app.$t('pages.recipe.preparation.timeconsumption.restingShort') + ': ' + this.duration(this.recipe.preparation.timeConsumed.rest)
       if (this.pbRestValue > 20)
-        return this.recipe.preparation.timeConsumed.rest
+        return this.duration(this.recipe.preparation.timeConsumed.rest)
+      return ''
+    },
+    pbRestLabelFull: function() {
+      if (this.recipe.preparation.timeConsumed.rest == 0)
+        return app.$t('pages.recipe.preparation.timeconsumption.restingShort') + ': ' + app.$t('pages.recipe.preparation.timeconsumption.notset')
+      return app.$t('pages.recipe.preparation.timeconsumption.restingShort') + ': ' + this.duration(this.recipe.preparation.timeConsumed.rest)
+    },
+    published: function() {
+      if (this.recipe.published !== false)
+        return moment(this.recipe.published, moment.ISO_8601).format(this.user.customSettings.formats.date.long)
       return ''
     }
   },
   methods: {
+    duration: function(value) {
+      duration = moment.duration(value, 'minutes')
+      return duration.humanize()
+    },
     onActionClicked: function(e) {
       console.log('@onActionClicked', e)
     },
@@ -646,6 +676,17 @@ const RecipeEditor = {
     }
   }
 }
+
+Vue.filter('date', function(value) {
+  if (value) {
+    return moment(String(value)).format()
+  }
+  return ""
+});
+
+function date(value) {
+  return moment(String(value)).format()
+}
 const router = new VueRouter({
   mode: 'history',
   routes: [
@@ -801,6 +842,32 @@ function resetPageData(app) {
   app.$set(app.page.contentData, 'hasActions', false)
   app.$set(app.page.contentData, 'hasFilters', false)
   app.$set(app.page.currentRecipe, 'id', 0)
+  app.$set(app.page.currentRecipe, 'name', '')
+  app.$set(app.page.currentRecipe, 'created', 0)
+  app.$set(app.page.currentRecipe, 'description', '')
+  app.$set(app.page.currentRecipe, 'eaterCount', 4)
+  app.$set(app.page.currentRecipe, 'eaterCountCalc', 4)
+  app.$set(app.page.currentRecipe, 'ownerId', 0)
+  app.$set(app.page.currentRecipe, 'ownerName', '')
+  app.$set(app.page.currentRecipe, 'published', false)
+  app.$set(app.page.currentRecipe.source, 'description', '')
+  app.$set(app.page.currentRecipe.source, 'url', '')
+  app.$set(app.page.currentRecipe, 'pictures', [])
+  app.$set(app.page.currentRecipe.preparation, 'ingredients', [])
+  app.$set(app.page.currentRecipe.preparation, 'steps', [])
+  app.$set(app.page.currentRecipe.preparation.timeConsumed, 'cooking', 0)
+  app.$set(app.page.currentRecipe.preparation.timeConsumed, 'preparing', 0)
+  app.$set(app.page.currentRecipe.preparation.timeConsumed, 'rest', 0)
+  app.$set(app.page.currentRecipe.preparation.timeConsumed, 'total', 0)
+  app.$set(app.page.currentRecipe.socials, 'cookedCounter', 0)
+  app.$set(app.page.currentRecipe.socials, 'ratedCounter', 0)
+  app.$set(app.page.currentRecipe.socials, 'ratedSum', 0)
+  app.$set(app.page.currentRecipe.socials, 'viewCounter', 0)
+  app.$set(app.page.currentRecipe.socials, 'votedCounter', 0)
+  app.$set(app.page.currentRecipe.socials, 'votedSum', 0)
+  app.$set(app.page.currentRecipe.socials, 'votedAvg0', 0)
+  app.$set(app.page.currentRecipe.socials, 'votedAvg1', 0)
+  app.$set(app.page.currentRecipe, 'tags', [])
   app.$set(app.page.customContent, 'count', 0)
   app.$set(app.page.customContent, 'page', 0)
   app.$set(app.page.customContent, 'pages', 0)
@@ -871,14 +938,14 @@ function initEmptyRecipe(app) {
   app.$set(app.page.currentRecipe.preparation.timeConsumed, 'preparing', 0)
   app.$set(app.page.currentRecipe.preparation.timeConsumed, 'rest', 0)
   app.$set(app.page.currentRecipe.preparation.timeConsumed, 'total', 0)
-  app.$set(app.page.currentRecipe.preparation.socials, 'cookedCounter', 0)
-  app.$set(app.page.currentRecipe.preparation.socials, 'ratedCounter', 0)
-  app.$set(app.page.currentRecipe.preparation.socials, 'ratedSum', 0)
-  app.$set(app.page.currentRecipe.preparation.socials, 'viewCounter', 0)
-  app.$set(app.page.currentRecipe.preparation.socials, 'votedCounter', 0)
-  app.$set(app.page.currentRecipe.preparation.socials, 'votedSum', 0)
-  app.$set(app.page.currentRecipe.preparation.socials, 'votedAvg0', 0)
-  app.$set(app.page.currentRecipe.preparation.socials, 'votedAvg1', 0)
+  app.$set(app.page.currentRecipe.socials, 'cookedCounter', 0)
+  app.$set(app.page.currentRecipe.socials, 'ratedCounter', 0)
+  app.$set(app.page.currentRecipe.socials, 'ratedSum', 0)
+  app.$set(app.page.currentRecipe.socials, 'viewCounter', 0)
+  app.$set(app.page.currentRecipe.socials, 'votedCounter', 0)
+  app.$set(app.page.currentRecipe.socials, 'votedSum', 0)
+  app.$set(app.page.currentRecipe.socials, 'votedAvg0', 0)
+  app.$set(app.page.currentRecipe.socials, 'votedAvg1', 0)
   app.$set(app.page.currentRecipe, 'tags', [])
 }
 

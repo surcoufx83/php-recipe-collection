@@ -2,7 +2,7 @@
     <template id="recipes-listing-template">
       <b-container fluid>
         <b-card-group columns class="masonry-deck cols-1 cols-sm-2 cols-md-2 cols-lg-2 cols-xl-3">
-          <recipes-listing-item v-for="record in page.customContent.records" :recipe="record.recipe" :record="record" :page="page">
+          <recipes-listing-item v-for="(record, index) in page.customContent.records" :key="index" :recipe="record.recipe" :record="record" :page="page">
           </recipes-listing-item>
         </b-card-group>
       </b-container>

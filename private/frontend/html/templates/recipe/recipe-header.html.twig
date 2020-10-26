@@ -2,8 +2,8 @@
             <h4 v-text="$t('pages.recipe.header.about.title')"></h4>
             <span class="mb-1" v-if="recipe.published !== false">
               <p>
-                <span v-if="recipe.ownerId !== 0" v-text="$t('pages.recipe.header.about.publication.fromuser', { date: recipe.published, user: recipe.ownerName })"></span>
-                <span v-if="recipe.ownerId === 0" v-text="$t('pages.recipe.header.about.publication.nouser', { date: recipe.published })"></span>
+                <span v-if="recipe.ownerId !== 0" v-text="$t('pages.recipe.header.about.publication.fromuser', { date: published, user: recipe.ownerName })"></span>
+                <span v-if="recipe.ownerId === 0" v-text="$t('pages.recipe.header.about.publication.nouser', { date: published })"></span>
                 <span v-if="recipe.socials.cookedCounter === 0 && recipe.socials.votedCounter === 0" v-text="$t('pages.recipe.header.about.socialstats.nothingyet')"></span>
                 <span v-if="recipe.socials.cookedCounter > 0 && recipe.socials.votedCounter === 0" v-text="$t('pages.recipe.header.about.socialstats.cookedonly', { count: recipe.socials.cookedCounter })"></span>
                 <span v-if="recipe.socials.cookedCounter === 0 && recipe.socials.votedCounter === 1" v-text="$tc('pages.recipe.header.about.socialstats.votedonce', recipe.socials.votedAvg0, { value: recipe.socials.votedAvg0 })"></span>

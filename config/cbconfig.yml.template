@@ -13,16 +13,17 @@
 Defaults:
   Formats:
     DbDate: "Y-m-d"
-    UiLongDate: "d. F Y"
-    UiShortDate: "d.m.Y"
-    UiLongDatetime: "d.m.Y H:i:s"
-    UiShortDatetime: "l, d. F Y H:i:s"
-    UiTime: "H:i:s"
+    UiLongDate: "LL"
+    UiShortDate: "L"
+    UiLongDatetime: "LLLL"
+    UiShortDatetime: "LLL"
+    UiTime: "LT"
     Decimals: 2
     DecimalsSeparator: ","
     ThousandsSeparator: "."
   Lists:
     Entries: 15
+  Locale: "de"
   Recipes:
     LtMinutes: 180
     LtWarning: true
