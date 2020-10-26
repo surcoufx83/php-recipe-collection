@@ -290,13 +290,6 @@ recipe:
   loading:
     title: 'Rezept wird geladen...'
   about:
-    header: 'Über dieses Rezept'
-    cooked: 'Es wurde bisher ${ recipe.socials.cookedCounter } mal nachgekocht.'
-    cookedAndRated: 'Es wurde bisher ${ recipe.socials.cookedCounter } mal nachgekocht und mit ${ recipe.socials.votedAvg1 } Sternen bewertet.'
-    notCooked: 'Es wurde leider noch nicht nachgekocht.'
-    publication: 'Das Rezept wurde am ${ recipe.formatted.published } von ${ recipe.ownerName } veröffentlicht.'
-    publicationAnonymous: 'Das Rezept wurde am ${ recipe.formatted.published } veröffentlicht.'
-    unpublished: 'Das Rezept wurde am ${ recipe.formatted.created } erstellt und bisher nicht für andere User veröffentlicht.'
     source:
       header: 'Herkunft'
       noSource: 'Keine Angaben gemacht'
@@ -306,15 +299,15 @@ recipe:
     voting:
       header: 'Bewertungen'
       notVoted: 'Bisher noch keine Bewertung erhalten.'
-      voted: ' bei ${ recipe.socials.votedCounter } abgegebenen Stimmen'
+      voted: ' bei .. recipe.socials.votedCounter } abgegebenen Stimmen'
       my:
         notYetVoted: 'Du hast in den letzten %s Tagen keine Bewertung abgegeben'
-        voted: 'Du hast das Rezept zuletzt am ${ page.self.lastVote.formatted.time } bewertet mit '
-        voteAndVisitCount: 'Insgesamt hast du es ${ page.self.visitCount } mal angesehen und ${ page.self.voteCount } mal bewertet.'
-        visitCount: 'Insgesamt hast du es ${ page.self.visitCount } mal angesehen.'
+        voted: 'Du hast das Rezept zuletzt am .. page.self.lastVote.formatted.time } bewertet mit '
+        voteAndVisitCount: 'Insgesamt hast du es .. page.self.visitCount } mal angesehen und .. page.self.voteCount } mal bewertet.'
+        visitCount: 'Insgesamt hast du es .. page.self.visitCount } mal angesehen.'
   admin:
     header: 'Administration'
-    author: 'Verfasst von ${ recipe.ownerName }'
+    author: 'Verfasst von .. recipe.ownerName }'
     deletedAuthorAccount: 'Verfasst von [Gelöschtes Konto]'
     removeRecipe: 'Rezept entfernen'
     unpublishRecipe: 'Nicht-Öffentlich setzen'
@@ -333,7 +326,6 @@ recipe:
         inputPrefix: 'Mengenangaben umrechnen für: '
         inputPersons: ' Personen'
   duration:
-    header: 'Zubereitungsdauer'
     overallPrefix: 'Für dieses Rezept ist eine Zubereitungsdauer von insgesamt '
     overallSuffix: ' angegeben.'
     description: 'Hinweis: Die Zubereitung des Gerichts nimmt viel Zeit in Anspruch.'

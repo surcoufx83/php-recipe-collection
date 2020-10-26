@@ -333,10 +333,6 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
         'description' => $this->getSourceDescription(),
         'url' => $this->getSourceUrl(),
       ],
-      'formatted' => [
-        'created' => $this->recipe_created->format($Controller->Config()->Defaults('Formats', 'UiLongDate')),
-        'published' => ($this->recipe_public ? $this->recipe_published->format($Controller->Config()->Defaults('Formats', 'UiLongDate')) : ''),
-      ],
       'pictures' => array_values($this->pictures),
       'preparation' => [
         'ingredients' => array_values($this->ingredients),
@@ -347,26 +343,6 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
           'rest' => $this->timerest,
           'total' => $this->timetotal,
           'unit' => 'minutes',
-          'formatted' => [
-            'cooking' => [
-              'valueStr' => Formatter::min_format($this->timecooking),
-              'timeStr' => $Controller->l('recipe_duration_cooking', $this->timecooking > 0 ? Formatter::min_format($this->timecooking) : $Controller->l('recipe_duration_notSet')),
-              'timeStr2' => $Controller->l('recipe_duration_cooking', $this->timecooking > 0 ? Formatter::min_format($this->timecooking, false) : $Controller->l('recipe_duration_notSet')),
-            ],
-            'preparing' => [
-              'valueStr' => Formatter::min_format($this->timepreparation),
-              'timeStr' => $Controller->l('recipe_duration_preparation', $this->timepreparation > 0 ? Formatter::min_format($this->timepreparation) : $Controller->l('recipe_duration_notSet')),
-              'timeStr2' => $Controller->l('recipe_duration_preparation', $this->timepreparation > 0 ? Formatter::min_format($this->timepreparation, false) : $Controller->l('recipe_duration_notSet')),
-            ],
-            'rest' => [
-              'valueStr' => Formatter::min_format($this->timerest),
-              'timeStr' => $Controller->l('recipe_duration_rest', $this->timerest > 0 ? Formatter::min_format($this->timerest) : $Controller->l('recipe_duration_notSet')),
-              'timeStr2' => $Controller->l('recipe_duration_rest', $this->timerest > 0 ? Formatter::min_format($this->timerest, false) : $Controller->l('recipe_duration_notSet')),
-            ],
-            'total' => [
-              'valueStr' => Formatter::min_format($this->timetotal),
-            ]
-          ]
         ]
       ],
       'socials' => [
@@ -376,13 +352,10 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
         'viewCounter' => $this->countviewed,
         'votedCounter' => $this->countvoted,
         'votedSum' => $this->sumvoted,
-        'votedAvg1' => ($this->countvoted > 0 ? Formatter::float_format($this->sumvoted / $this->countvoted, 1) : null),
-        'votedAvg0' => ($this->countvoted > 0 ? Formatter::float_format($this->sumvoted / $this->countvoted, 0) : null),
+        'votedAvg1' => ($this->countvoted > 0 ? Formatter::float_format($this->sumvoted / $this->countvoted, 1) : 0),
+        'votedAvg0' => ($this->countvoted > 0 ? Formatter::float_format($this->sumvoted / $this->countvoted, 0) : 0),
       ],
-      'tags' => [
-        'items' => $this->tags,
-        'votes' => $this->tagvotes,
-      ]
+      'tags' => $this->tags
     ];
   }
 

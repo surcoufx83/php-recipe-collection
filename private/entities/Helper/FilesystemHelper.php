@@ -24,7 +24,7 @@ final class FilesystemHelper implements FilesystemHelperInterface {
       $copyfile = copy($picture->getFullpath(), $outname);
       $img = new Image($outname);
       $img->disableRename();
-      if ($width == 0 && $height == 0)
+      if ($width != 0 && $height != 0)
         $img->resizeCrop($width, $height);
       else if ($width != 0)
         $img->resizeCrop($width);

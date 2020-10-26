@@ -241,7 +241,7 @@ const Recipe = {
     },
     pbCookLabel: function() {
       if (this.pbCookValue > 20)
-        return this.recipe.preparation.timeConsumed.formatted.cooking.timeStr
+        return this.recipe.preparation.timeConsumed.cooking
       return ''
     },
     pbPrepValue: function() {
@@ -252,7 +252,7 @@ const Recipe = {
     },
     pbPrepLabel: function() {
       if (this.pbPrepValue > 20)
-        return this.recipe.preparation.timeConsumed.formatted.preparing.timeStr
+        return this.recipe.preparation.timeConsumed.preparing
       return ''
     },
     pbRestValue: function() {
@@ -263,7 +263,7 @@ const Recipe = {
     },
     pbRestLabel: function() {
       if (this.pbRestValue > 20)
-        return this.recipe.preparation.timeConsumed.formatted.rest.timeStr
+        return this.recipe.preparation.timeConsumed.rest
       return ''
     }
   },
@@ -313,7 +313,6 @@ const Recipe = {
     }
   }
 }
-console.log(Recipe)
 
 const RecipesList = {
   delimiters: ['${', '}'],
@@ -801,16 +800,25 @@ function resetPageData(app) {
   app.$set(app.page.contentData, 'filters', [])
   app.$set(app.page.contentData, 'hasActions', false)
   app.$set(app.page.contentData, 'hasFilters', false)
-  app.$set(app.page, 'currentRecipe', {})
-  app.$set(app.page, 'currentUser', {})
-  app.$set(app.page, 'customContent', false)
-  app.$set(app.page, 'self', {
-    currentVote: { cooked: -1, rating: -1, voting: -1},
-    hasVoted: false,
-    lastVote: { id: '', userId: '', user: '', time: '', comment: '', cooked: '', voting: '', rating: '', formatted: { time: ''}},
-    visitCount: 0,
-    voteCount: 0
-  })
+  app.$set(app.page.currentRecipe, 'id', 0)
+  app.$set(app.page.customContent, 'count', 0)
+  app.$set(app.page.customContent, 'page', 0)
+  app.$set(app.page.customContent, 'pages', 0)
+  app.$set(app.page.customContent, 'records', [])
+  app.$set(app.page.self.currentVote, 'cooked', -1)
+  app.$set(app.page.self.currentVote, 'rating', -1)
+  app.$set(app.page.self.currentVote, 'voting', -1)
+  app.$set(app.page.self, 'hasVoted', false)
+  app.$set(app.page.self.lastVote, 'id', 0)
+  app.$set(app.page.self.lastVote, 'userId', 0)
+  app.$set(app.page.self.lastVote, 'user', '')
+  app.$set(app.page.self.lastVote, 'time', '')
+  app.$set(app.page.self.lastVote, 'comment', '')
+  app.$set(app.page.self.lastVote, 'cooked', false)
+  app.$set(app.page.self.lastVote, 'voting', 0)
+  app.$set(app.page.self.lastVote, 'rating', 0)
+  app.$set(app.page.self, 'visitCount', 0)
+  app.$set(app.page.self, 'voteCount', 0)
 }
 
 function resetCustomPageData(app, route) {
@@ -822,8 +830,11 @@ function resetCustomPageData(app, route) {
       app.$set(app.page.contentData, 'filters', [])
       app.$set(app.page.contentData, 'hasActions', false)
       app.$set(app.page.contentData, 'hasFilters', false)
-      app.$set(app.page, 'customContent', false)
       app.$set(app.page.currentRecipe, 'id', 0)
+      app.$set(app.page.customContent, 'count', 0)
+      app.$set(app.page.customContent, 'page', 0)
+      app.$set(app.page.customContent, 'pages', 0)
+      app.$set(app.page.customContent, 'records', [])
       if (route == 'writeRecipe')
         initEmptyRecipe(app)
       break;
@@ -840,58 +851,35 @@ function resetSearchData(app) {
 function initEmptyRecipe(app) {
   app.$set(app.page.currentRecipe, 'id', 0)
   app.$set(app.page.currentRecipe, 'name', '')
-  app.$set(app.page.currentRecipe, 'created', false)
+  app.$set(app.page.currentRecipe, 'created', 0)
   app.$set(app.page.currentRecipe, 'description', '')
   app.$set(app.page.currentRecipe, 'eaterCount', 4)
   app.$set(app.page.currentRecipe, 'eaterCountCalc', 4)
   app.$set(app.page.currentRecipe, 'ownerId', 0)
   app.$set(app.page.currentRecipe, 'ownerName', '')
   app.$set(app.page.currentRecipe, 'published', false)
-  app.$set(app.page.currentRecipe, 'source', { description: '', url: '' })
-  app.$set(app.page.currentRecipe, 'formatted', { created: '', published: '' })
+  app.$set(app.page.currentRecipe.source, 'description', '')
+  app.$set(app.page.currentRecipe.source, 'url', '')
   app.$set(app.page.currentRecipe, 'pictures', [
     { file: null },
     { file: null },
     { file: null }
   ])
-  app.$set(app.page.currentRecipe, 'preparation', {
-    ingredients: [
-      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''},
-      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''},
-      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''},
-      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''},
-      { id: 0, unitId: 0, unit: { id: 0, name: '' }, quantity: '', quantityCalc: '', description: ''}
-    ],
-    steps: [
-      { index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } },
-      { index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } },
-      { index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } }
-    ],
-    timeConsumed: {
-      cooking: 0,
-      preparing: 0,
-      rest: 0,
-      total: 0,
-      unit: 'minutes',
-      formatted: {
-        cooking: { valueStr: '', timeStr: '', timeStr2: '' },
-        preparing: { valueStr: '', timeStr: '', timeStr2: '' },
-        rest: { valueStr: '', timeStr: '', timeStr2: '' },
-        total: { valueStr: '', timeStr: '', timeStr2: '' }
-      }
-    }
-  })
-  app.$set(app.page.currentRecipe, 'socials', {
-    cookedCounter: 0,
-    ratedCounter: 0,
-    ratedSum: 0,
-    viewCounter: 0,
-    votedCounter: 0,
-    votedSum: 0,
-    votedAvg1: '0.0',
-    votedAvg0: '0'
-  })
-  app.$set(app.page.currentRecipe, 'tags', { items: [], votes: [] })
+  app.$set(app.page.currentRecipe.preparation, 'ingredients', [])
+  app.$set(app.page.currentRecipe.preparation, 'steps', [])
+  app.$set(app.page.currentRecipe.preparation.timeConsumed, 'cooking', 0)
+  app.$set(app.page.currentRecipe.preparation.timeConsumed, 'preparing', 0)
+  app.$set(app.page.currentRecipe.preparation.timeConsumed, 'rest', 0)
+  app.$set(app.page.currentRecipe.preparation.timeConsumed, 'total', 0)
+  app.$set(app.page.currentRecipe.preparation.socials, 'cookedCounter', 0)
+  app.$set(app.page.currentRecipe.preparation.socials, 'ratedCounter', 0)
+  app.$set(app.page.currentRecipe.preparation.socials, 'ratedSum', 0)
+  app.$set(app.page.currentRecipe.preparation.socials, 'viewCounter', 0)
+  app.$set(app.page.currentRecipe.preparation.socials, 'votedCounter', 0)
+  app.$set(app.page.currentRecipe.preparation.socials, 'votedSum', 0)
+  app.$set(app.page.currentRecipe.preparation.socials, 'votedAvg0', 0)
+  app.$set(app.page.currentRecipe.preparation.socials, 'votedAvg1', 0)
+  app.$set(app.page.currentRecipe, 'tags', [])
 }
 
 function refreshPageData(path, appparam = false) {

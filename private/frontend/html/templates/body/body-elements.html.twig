@@ -12,7 +12,7 @@
           no-close-on-esc>
           <ul class="nav-sidebar-level1">
             <sidebar-ul1-li
-              v-for="route in page.sidebar.routes"
+              v-for="(route, index) in page.sidebar.routes" :key="index"
               v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
               :to="route.to"
               :params="route.to != 'recipe' && route.to != 'random' ? { } :
@@ -49,7 +49,7 @@
         <ul class="nav-sidebar-level2"
           v-if="children && children.length > 0 && ($route.name === to || ($route.matched.length > 0 && $route.matched[0].name === to))">
           <sidebar-ul2-li
-            v-for="route in children"
+            v-for="(route, index) in children" :key="index"
             v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
             :to="route.to"
             :params="route.to != 'recipe' ? { } : { id: page.currentRecipe.id, name: page.currentRecipe.name}"
@@ -85,10 +85,6 @@
       <b-container fluid class="header-container header-container-border">
         <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
         </ul>
-        <b-container class="text-right nav-buttons"
-          v-if="page.contentData.hasActions === true && page.contentData.actions.length > 0"
-          >miau1
-        </b-container>
         <b-container class="text-right nav-buttons px-0"
           v-if="page.contentData.hasActions === true && page.contentData.actions.length === 0 && page.currentRecipe !== null && page.currentRecipe.id > 0"
           >
@@ -101,40 +97,12 @@
     <template id="recipe-actions-container-template">
       <b-container class="px-0">
         <btn-sm-blue v-if="
-          page.currentRecipe !== null &&
-          ($route.name == 'editRecipe' || $route.name == 'recipe')"
-          subject="toGallery"
-          title="{{ Controller.l('recipe_options_toGallery') }}"
-          :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space"
-          outline
-          @click="onClick"></btn-sm-blue>
-        <btn-sm-blue v-if="
-          page.currentRecipe !== null && user !== null &&
-          page.currentRecipe.published !== false &&
-          ('ownerId' in page.currentRecipe) && ('id' in user) &&
-          page.currentRecipe.ownerId === user.id &&
-          $route.name == 'recipe'"
-          :outline="true"
-          subject="unpublish"
-          title="{{ Controller.l('recipe_options_publication_unpublish') }}"
-          @click="onClick"></btn-sm-blue>
-        <btn-sm-blue v-if="
-          page.currentRecipe !== null && user !== null &&
-          page.currentRecipe.published === false &&
-          ('ownerId' in page.currentRecipe) && ('id' in user) &&
-          page.currentRecipe.ownerId === user.id &&
-          $route.name == 'recipe'"
-          :outline="true"
-          subject="publish"
-          title="{{ Controller.l('recipe_options_publication_publish') }}"
-          @click="onClick"></btn-sm-blue>
-        <btn-sm-blue v-if="
           page.currentRecipe !== null && user !== null &&
           ('ownerId' in page.currentRecipe) && ('id' in user) &&
           page.currentRecipe.ownerId === user.id &&
           $route.name == 'recipe'"
           subject="edit"
-          title="{{ Controller.l('recipe_options_edit') }}"
+          :title="$t('pages.recipe.actionbtn.edit')"
           :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
           @click="onClick"></btn-sm-blue>
         <btn-sm-blue v-if="

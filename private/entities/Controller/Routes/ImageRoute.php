@@ -56,8 +56,6 @@ class ImageRoute extends Route implements RouteInterface {
       $Controller->Dispatcher()->moved($picture->getPublicPath($w, $h));
       exit;
     }
-    $inpath = FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages', $picture->getFilename());
-
     if (FilesystemHelper::crop_image($picture, $w, $h))
       $Controller->Dispatcher()->moved($picture->getPublicPath($w, $h));
     else

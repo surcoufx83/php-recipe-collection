@@ -23,7 +23,7 @@
                 <th class="w-100">Zutatenbeschreibung</th>
               </tr>
               <tr is="recipe-ingredient"
-                v-for="ingredient in recipe.preparation.ingredients"
+                v-for="(ingredient, index) in recipe.preparation.ingredients" :key="index"
                 :description="ingredient.description"
                 :quantity="ingredient.quantityCalc"
                 :unit="ingredient.unit"
