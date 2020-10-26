@@ -1,3 +1,36 @@
+function eatercalc(value, eater, neweater) {
+  if (eater == neweater)
+    return value
+  if (neweater <= 0)
+    return 0
+  var calc = value * neweater / eater
+  var factor = evaluateFactor(calc)
+  console.log(value, eater, neweater)
+  console.log(calc, factor)
+  if (calc < 1)
+    return calc
+  calc = Math.round(calc / factor) * factor
+
+  return calc
+}
+
+function evaluateFactor(value) {
+  if (value < 1)
+    return .1
+  if (value < 2)
+    return .5
+  if (value < 10)
+    return 1
+  if (value < 25)
+    return 2.5
+  if (value < 50)
+    return 5
+  if (value < 100)
+    return 10
+  if (value < 1000)
+    return 25
+  return 50
+}
 Vue.component('btn-sm-blue', {
   props: {
     badge: { type: String, required: false },
@@ -304,9 +337,9 @@ const Recipe = {
     onEaterCountChanged: function() {
       for (key in this.recipe.preparation.ingredients) {
         this.recipe.preparation.ingredients[key].quantityCalc =
-          this.recipe.preparation.ingredients[key].quantity /
-          this.recipe.eaterCount *
-          this.recipe.eaterCountCalc
+          eatercalc(this.recipe.preparation.ingredients[key].quantity,
+          this.recipe.eaterCount,
+          this.recipe.eaterCountCalc)
       }
     },
     onRatingStartButtonPress: function() {
@@ -675,17 +708,6 @@ const RecipeEditor = {
       router.push({ name: 'recipe', params: { id: this.page.currentRecipe.id, name: this.page.currentRecipe.name } })
     }
   }
-}
-
-Vue.filter('date', function(value) {
-  if (value) {
-    return moment(String(value)).format()
-  }
-  return ""
-});
-
-function date(value) {
-  return moment(String(value)).format()
 }
 const router = new VueRouter({
   mode: 'history',

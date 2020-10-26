@@ -24,7 +24,8 @@
       <tr
         v-if="description !== null && description !== ''">
         <td class="ml-0 text-right pr-1 pr-lg-2">
-          <span v-if="quantity !== null && quantity > 0.0">${ quantity }</span>
+          <span v-if="quantity !== null && quantity > 0.0 && quantity < 1.0">&lt; 1</span>
+          <span v-if="quantity !== null && quantity > 0.0 && quantity >= 1.0">${ quantity }</span>
           <span class="ml-1" v-if="unit !== null && ('name' in unit) && unit.name !== null">${ unit.name }</span>
         </td>
         <td class="w-100">
