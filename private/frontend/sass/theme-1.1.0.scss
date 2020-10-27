@@ -528,6 +528,26 @@ nav.nav-recipe-sm {
   border-top: 1px solid $border-light;
 }
 
+div.removable-image-area {
+  position: relative;
+  width: 100%;
+
+  img {
+    width: 100%;
+    height: auto;
+    max-height: 180px;
+  }
+
+  .remove-image {
+    display: none;
+    position: absolute;
+    top: -2px;
+    right: -2px;
+
+  }
+
+}
+
 // Extra small devices (portrait phones, less than 576px)
 @media (max-width: 575.98px) {
   body {

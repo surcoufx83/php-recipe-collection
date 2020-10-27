@@ -36,16 +36,18 @@ Vue.component('btn-sm-blue', {
     badge: { type: String, required: false },
     badgeicon: { type: Object, required: false },
     outline: { type: Boolean, default: false, required: false },
-    title: { type: String, required: true },
+    title: { type: String, required: false, default: '' },
     subject: { type: String, required: false },
     icon: { type: String, required: false },
-    space: { type: String, required: false }
+    space: { type: String, required: false },
+    iconClass: { type: String, required: false, default: '' }
   },
   template:
     `<b-button size="sm"
       v-bind:class="[{ 'btn-blue': !outline }, { 'btn-outline-blue': outline } ]"
       @click="onClick">
-      <fa-icon v-if="icon" :icon="icon" :space="space" :class="'fs-80 ' + title == '' ? 'mx-1' : 'mr-1'"></fa-icon>
+      <fa-icon v-if="icon" :icon="icon" :space="space"
+      :class="['fs-80 ', title === '' ? 'mx-1' : 'mr-1']"></fa-icon>
       {{ title }}
       <b-badge class="ml-1 text-blue" v-if="badge" variant="light">
         {{ badge }} <b-icon class="text-blue"
@@ -516,6 +518,9 @@ const RecipesCreator = {
         return
       }
       var missinginfo = false
+      if ( this.page.currentRecipe.preparation.ingredients.length == 0
+        || this.page.currentRecipe.preparation.steps.length == 0)
+        missinginfo = true
       $('.needs-validation').find('input,select,textarea').each(function () {
         // check element validity and change class
         $(this).removeClass('is-valid is-invalid')
@@ -547,11 +552,18 @@ const RecipesCreator = {
          })
        }
     },
-    onPictureUploadBtnClick: function(i) {
-      if (this.page.currentRecipe.pictures[i].file)
-        this.page.currentRecipe.pictures[i].file = null
-      else
+    onPictureAddBtnClick: function() {
+      var i = this.page.currentRecipe.pictures.length
+      this.page.currentRecipe.pictures.push({ file: null })
+      const parent = this
+      setTimeout(function() {
+        // wait for upload button to be created
+        var i = parent.page.currentRecipe.pictures.length - 1
         $('#file-' + i).click()
+      }, 100)
+    },
+    onPictureDelBtnClick: function(i) {
+      this.page.currentRecipe.pictures.splice(i, 1)
     },
     onPictureInput: function(i) {
       if (!window.FileReader)
@@ -568,30 +580,15 @@ const RecipesCreator = {
           }
         }
       }
-      var freeslots = 0
-      for (j=0; j<this.page.currentRecipe.pictures.length; j++) {
-        if (!this.page.currentRecipe.pictures[j].file)
-          freeslots++
-      }
-      if (freeslots == 0)
-        this.page.currentRecipe.pictures.push({ file: null })
     },
     onIngredientDelBtnClick: function(i) {
       this.page.currentRecipe.preparation.ingredients.splice(i, 1)
-      if (this.page.currentRecipe.preparation.ingredients.length == 0) {
-        for (i=0; i<3; i++)
-          this.page.currentRecipe.preparation.ingredients.push({ amount: '', unit: '', description: '' })
-      }
     },
     onIngredientAddBtnClick: function() {
-      for (i=0; i<3; i++)
-        this.page.currentRecipe.preparation.ingredients.push({ amount: '', unit: '', description: '' })
+      this.page.currentRecipe.preparation.ingredients.push({ amount: '', unit: '', description: '' })
     },
     onStepDelBtnClick: function(i) {
       this.page.currentRecipe.preparation.steps.splice(i, 1)
-      if (this.page.currentRecipe.preparation.steps.length == 0) {
-        this.page.currentRecipe.preparation.steps.push({ index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } })
-      }
     },
     onStepAddBtnClick: function() {
       this.page.currentRecipe.preparation.steps.push({ index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } })
@@ -945,11 +942,7 @@ function initEmptyRecipe(app) {
   app.$set(app.page.currentRecipe, 'published', false)
   app.$set(app.page.currentRecipe.source, 'description', '')
   app.$set(app.page.currentRecipe.source, 'url', '')
-  app.$set(app.page.currentRecipe, 'pictures', [
-    { file: null },
-    { file: null },
-    { file: null }
-  ])
+  app.$set(app.page.currentRecipe, 'pictures', [])
   app.$set(app.page.currentRecipe.preparation, 'ingredients', [])
   app.$set(app.page.currentRecipe.preparation, 'steps', [])
   app.$set(app.page.currentRecipe.preparation.timeConsumed, 'cooking', 0)

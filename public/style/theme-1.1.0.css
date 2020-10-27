@@ -506,6 +506,19 @@ nav.nav-recipe-sm {
   background-color: #E6E8E6;
   border-top: 1px solid #BFC4BF; }
 
+div.removable-image-area {
+  position: relative;
+  width: 100%; }
+  div.removable-image-area img {
+    width: 100%;
+    height: auto;
+    max-height: 180px; }
+  div.removable-image-area .remove-image {
+    display: none;
+    position: absolute;
+    top: -2px;
+    right: -2px; }
+
 @media (max-width: 575.98px) {
   body {
     font-size: 1.2rem; }
