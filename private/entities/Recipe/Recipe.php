@@ -513,11 +513,10 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
       ->setName($payload['recipe-name'])
       ->setSourceDescription($payload['recipe-source'])
       ->setSourceUrl($payload['recipe-sourceurl']);
-    $response = $Controller->Config()->getResponseArray(91);
-    //$response = array_merge_recursive($response, ['payload' => $payload]);
+    $response = $Controller->Config()->getResponseArray(1);
     $this->updateIngredients($response, $payload);
     $this->updateSteps($response, $payload);
-    return false;
+    return true;
   }
 
   private function updateIngredients(array &$response, array $payload) : void {

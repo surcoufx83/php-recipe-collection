@@ -644,10 +644,6 @@ const RecipeEditor = {
   methods: {
     onSubmit: function(e) {
       e.preventDefault()
-      if (this.form.completed) {
-        $('#new-recipe-modal').modal('show')
-        return
-      }
       var missinginfo = false
       $('.needs-validation').find('input,select,textarea').each(function () {
         // check element validity and change class
