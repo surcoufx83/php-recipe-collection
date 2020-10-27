@@ -440,7 +440,7 @@
               </b-container>
               <b-container v-else>
                 <b-button type="submit"
-                  v-if="!progress.sending && !form.completed"
+                  v-if="!progress.sending && this.$route.name == 'editRecipe'"
                   class="btn-blue">
                   <fa-icon :icon="page.iconSet.play.icon" :space="page.iconSet.play.space"></fa-icon>
                   {{ Controller.l('newRecipe_submitButton_editTitle') }}

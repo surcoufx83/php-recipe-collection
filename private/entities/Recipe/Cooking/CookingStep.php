@@ -167,10 +167,10 @@ class CookingStep implements CookingStepInterface, DbObjectInterface, \JsonSeria
     $this
       ->setContent($payload['description'])
       ->setTitle($payload['title'])
-      ->setStepNo($payload['no'])
-      ->setCookingTime($payload['timeCook'])
-      ->setPreparationTime($payload['timePrep'])
-      ->setRestTime($payload['timeRest']);
+      ->setStepNo(intval($payload['no']))
+      ->setCookingTime(intval($payload['timeCook']))
+      ->setPreparationTime(intval($payload['timePrep']))
+      ->setRestTime(intval($payload['timeRest']));
     return true;
   }
 
