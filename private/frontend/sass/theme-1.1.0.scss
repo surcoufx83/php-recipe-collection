@@ -68,6 +68,7 @@ body {
   color: $text-primary;
   font-family: SourceSansPro;
   height:100%;
+  font-size: 1.05rem;
 }
 
 a {
@@ -529,6 +530,9 @@ nav.nav-recipe-sm {
 
 // Extra small devices (portrait phones, less than 576px)
 @media (max-width: 575.98px) {
+  body {
+    font-size: 1.2rem;
+  }
   .card-columns.masonry-deck {
     &.cols-1 { column-count: 1; }
     &.cols-2 { column-count: 2; }
@@ -541,6 +545,9 @@ nav.nav-recipe-sm {
 
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) and (max-width: 767.98px) {
+  body {
+    font-size: 1.2rem;
+  }
   .card-columns.masonry-deck {
     &.cols-sm-1 { column-count: 1; }
     &.cols-sm-2 { column-count: 2; }

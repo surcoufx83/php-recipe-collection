@@ -18,7 +18,8 @@ body {
   background-color: #E6E8E6;
   color: #141514;
   font-family: SourceSansPro;
-  height: 100%; }
+  height: 100%;
+  font-size: 1.05rem; }
 
 a {
   color: #0D3759; }
@@ -506,6 +507,9 @@ nav.nav-recipe-sm {
   border-top: 1px solid #BFC4BF; }
 
 @media (max-width: 575.98px) {
+  body {
+    font-size: 1.2rem; }
+
   .card-columns.masonry-deck.cols-1 {
     column-count: 1; }
   .card-columns.masonry-deck.cols-2 {
@@ -519,6 +523,9 @@ nav.nav-recipe-sm {
   .card-columns.masonry-deck.cols-6 {
     column-count: 6; } }
 @media (min-width: 576px) and (max-width: 767.98px) {
+  body {
+    font-size: 1.2rem; }
+
   .card-columns.masonry-deck.cols-sm-1 {
     column-count: 1; }
   .card-columns.masonry-deck.cols-sm-2 {
