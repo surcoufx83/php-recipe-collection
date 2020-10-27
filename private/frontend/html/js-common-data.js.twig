@@ -151,8 +151,31 @@
       id: 0,
       isAdmin: false,
       meta: { fn: '', ln: '', un: '', initials: '' },
-      customSettings: { }
-    }{% else %}{
+      customSettings: {
+        formats: {
+          date: {
+            long: '{{ Config.Defaults("Formats", "UiLongDate") }}',
+            short: '{{ Config.Defaults("Formats", "UiShortDate") }}'
+          },
+          datetime: {
+            long: '{{ Config.Defaults("Formats", "UiLongDatetime") }}',
+            short: '{{ Config.Defaults("Formats", "UiShortDatetime") }}'
+          },
+          decimals: {{ Config.Defaults("Formats", "Decimals") }},
+          decimalSeparator: '{{ Config.Defaults("Formats", "DecimalsSeparator") }}',
+          thousandsSeparator: '{{ Config.Defaults("Formats", "ThousandsSeparator") }}',
+          time: '{{ Config.Defaults("Formats", "UiTime") }}'
+        },
+        lists: {
+          entries: {{ Config.Defaults("Lists", "Entries") }}
+        },
+        recipes: {
+          ltwarning: {
+            enabled: {% if Config.Defaults("Recipes", "LtWarning") %}true{% else %}false{% endif %},
+            minutes: {{ Config.Defaults("Recipes", "LtMinutes") }}
+          }
+        }
+      }{% else %}{
       avatar: {
         url: '{{ Controller.User().getAvatarUrl() }}'
       },
