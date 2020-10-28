@@ -33,6 +33,7 @@
                   <b-form-input
                     type="search" size="sm" id="global-search-input"
                     v-model="page.search.filter.global"
+                    v-if="$route.name !== 'search'"
                     placeholder="{{ Controller.l('navigation_topbar_search_placeholder') }}"
                     class="input-dark mw-400px my-2"
                     @update="onSearchInput">
