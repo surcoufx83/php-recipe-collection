@@ -8,6 +8,9 @@ add:
 back:
   icon: arrow-left
   space: fas
+calendar:
+  icon: calendar-check
+  space: far
 cloud:
   icon: cloud
   space: fas

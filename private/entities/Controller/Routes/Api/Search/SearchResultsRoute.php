@@ -2,6 +2,7 @@
 
 namespace Surcouf\Cookbook\Controller\Routes\Api\Search;
 
+use DateTime;
 use Surcouf\Cookbook\Controller\Route;
 use Surcouf\Cookbook\Controller\RouteInterface;
 use Surcouf\Cookbook\Database\EAggregationType;
@@ -111,6 +112,7 @@ class SearchResultsRoute extends Route implements RouteInterface {
           'description' => $record['recipe_description'],
           'eater' => intval($record['recipe_eater']),
           'pictureId' => !is_null($record['picture_id']) ? intval($record['picture_id']) : 0,
+          'published' => (new \DateTime($record['recipe_published']))->format(DateTime::ISO8601),
         ];
       }
     }
