@@ -71,6 +71,9 @@ h1, h2, h3 {
   background-color: #0D3759;
   border-color: #1C77C3; }
 
+.form-control-sm {
+  font-size: 1.05rem; }
+
 .page-link {
   color: #0D3759 !important; }
   .page-link:hover {
@@ -329,7 +332,7 @@ h1, h2, h3 {
     color: #E6E8E6;
     border-color: #E6E8E6; }
   .input-dark::placeholder {
-    color: #BFC4BF; }
+    color: #E6E8E6; }
 
 .navbar {
   box-shadow: 0 2px 0 0 #14588F;
@@ -523,6 +526,9 @@ div.removable-image-area {
   body {
     font-size: 1.2rem; }
 
+  .form-control-sm {
+    font-size: 1.2rem; }
+
   .card-columns.masonry-deck.cols-1 {
     column-count: 1; }
   .card-columns.masonry-deck.cols-2 {
@@ -537,6 +543,9 @@ div.removable-image-area {
     column-count: 6; } }
 @media (min-width: 576px) and (max-width: 767.98px) {
   body {
+    font-size: 1.2rem; }
+
+  .form-control-sm {
     font-size: 1.2rem; }
 
   .card-columns.masonry-deck.cols-sm-1 {
@@ -597,4 +606,4 @@ div.removable-image-area {
   div.page.sidebar-visible {
     padding-left: 320px !important; } }
 
-/*# sourceMappingURL=theme-1.1.0.css.map */
+/*# sourceMappingURL=theme-1.1.1.css.map */

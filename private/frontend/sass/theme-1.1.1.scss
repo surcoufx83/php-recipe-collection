@@ -138,6 +138,10 @@ h1, h2, h3 {
   border-color: $bg-contrast;
 }
 
+.form-control-sm {
+  font-size: 1.05rem;
+}
+
 .page-link {
   color: $text-link!important;
   &:hover {
@@ -258,7 +262,7 @@ h1, h2, h3 {
     border-color: $text-light;
   }
   &::placeholder {
-    color: $bg-gray;
+    color: $text-light;
   }
 }
 
@@ -553,6 +557,9 @@ div.removable-image-area {
   body {
     font-size: 1.2rem;
   }
+  .form-control-sm {
+    font-size: 1.2rem;
+  }
   .card-columns.masonry-deck {
     &.cols-1 { column-count: 1; }
     &.cols-2 { column-count: 2; }
@@ -566,6 +573,9 @@ div.removable-image-area {
 // Small devices (landscape phones, 576px and up)
 @media (min-width: 576px) and (max-width: 767.98px) {
   body {
+    font-size: 1.2rem;
+  }
+  .form-control-sm {
     font-size: 1.2rem;
   }
   .card-columns.masonry-deck {
