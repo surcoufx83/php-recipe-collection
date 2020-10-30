@@ -37,10 +37,6 @@
           <b-container class="page-wrapper p-0" fluid> <!-- page-wrapper -->
             <b-container class="page-header-wrapper p-0"
               v-if="user.loggedIn"> <!-- page-header-wrapper -->
-              <b-container class="page-header"> <!-- page-header -->
-                <rc-breadcrumbbar :page="page" :recipe="page.currentRecipe"
-                  v-if="user.loggedIn"></rc-breadcrumbbar>
-              </b-container> <!-- page-header -->
               <b-container class="page-topbar"> <!-- page-topbar -->
                 {% include 'common/navbar-inpage.html.twig' %}
               </b-container> <!-- page-topbar -->
@@ -73,7 +69,6 @@
     <div id="reactive-size-spy-lg" class="d-none d-lg-block"></div>
 
     {% include 'templates/home.html.twig' %}
-    {% include 'templates/body/rc-breadcrumbbar.html.twig' %}
     {% include 'templates/body/rc-navbar.html.twig' %}
     {% include 'templates/body/body-elements.html.twig' %}
     {% include 'templates/recipe/recipe.html.twig' %}
