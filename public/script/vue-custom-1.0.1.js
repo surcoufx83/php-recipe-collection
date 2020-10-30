@@ -753,6 +753,12 @@ var app = new Vue({
     'page.search.filter.global': function() {
       if (this.page.search.filter.global.length >= 3)
         this.debouncedSearch()
+    },
+    'user.isAdmin': function() {
+      location.reload()
+    },
+    'user.loggedIn': function() {
+      location.reload()
     }
   }
 })
