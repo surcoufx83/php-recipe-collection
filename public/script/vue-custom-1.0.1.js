@@ -393,8 +393,13 @@ Vue.component('rc-navbar', {
   },
   methods: {
     onSearchInput: function() {
-      if (app.$route.name != 'search')
-        app.$router.push({name: 'search'})
+      app.debouncedSearch()
+    },
+    onSearchInputFocused: function() {
+      this.page.search.filter.hasFocus = true;
+    },
+    onSearchInputBlurred: function() {
+      this.page.search.filter.hasFocus = false;
     }
   }
 })
@@ -732,6 +737,8 @@ var app = new Vue({
       this.$emit('click', this.subject ? this.subject : this.title)
     },
     getSearchResults: function() {
+      if (this.$route.name != 'search')
+        this.$router.push({ name: 'search' });
       resetSearchData(this)
       postPageData(this.$route.path, {
         search: {
@@ -746,7 +753,6 @@ var app = new Vue({
     'page.search.filter.global': function() {
       if (this.page.search.filter.global.length >= 3)
         this.debouncedSearch()
-
     }
   }
 })
