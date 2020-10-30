@@ -1,7 +1,24 @@
 
 const rc_i18n_de = {
+  common: {
+    yesno: {
+      no: {
+        uc: 'Nein',
+        lc: 'nein'
+      },
+      yes: {
+        uc: 'Ja',
+        lc: 'ja'
+      }
+    }
+  },
   greetings: {
     hello: 'Hallo {user}'
+  },
+  navbar: {
+    search: {
+      placeholder: 'Suche nach Rezepten oder Zutaten, z.B. Kartoffelauflauf'
+    }
   },
   pages: {
     common: {
@@ -40,6 +57,37 @@ const rc_i18n_de = {
       actionbtn: {
         edit: 'Bearbeiten'
       },
+      administration: {
+        title: 'Administration',
+        author: 'Verfasst von {0}',
+        deletedAuthorAccount: 'Verfasst von [Gelöschtes Konto]',
+        removeRecipe: 'Rezept entfernen',
+        unpublishRecipe: 'Nicht-Öffentlich setzen'
+      },
+      cookingSteps: {
+        header: 'Zubereitung',
+        placeholder: 'Schritt'
+      },
+      duration: {
+        overallPrefix: 'Für dieses Rezept ist eine Zubereitungsdauer von insgesamt ',
+        overallSuffix: ' angegeben.',
+        description: 'Hinweis: Die Zubereitung des Gerichts nimmt viel Zeit in Anspruch.',
+        preparation: 'Vorbereitungszeit: %s',
+        preparationHeader: 'Vorbereitungszeit',
+        cooking: 'Kochzeit: %s',
+        cookingHeader: 'Kochzeit',
+        rest: 'Ruhezeit: %s',
+        restHeader: 'Ruhezeit',
+        notSet: 'keine Angabe'
+      },
+      footer: {
+        gallery: 'Galerie',
+        ingredients: 'Zutaten',
+        steps: 'Zubereitung'
+      },
+      gallery: {
+        header: 'Bildergalerie'
+      },
       header: {
         unpublishedAlert: {
           description: 'Das Rezept wurde bisher nicht veröffentlicht und ist damit für andere Benutzer nicht zu finden.',
@@ -61,6 +109,24 @@ const rc_i18n_de = {
           source: 'Herkunft:'
         }
       },
+      ingredients: {
+        header: 'Zutatenliste',
+        description: 'Das Rezept ist ausgelegt für <strong>{0}</strong> Personen.',
+        ingredient: 'Zutatenbeschreibung',
+        inputPrefix: 'Mengenangaben umrechnen für: ',
+        inputPersons: ' Personen',
+        quantity: 'Mengenangabe'
+      },
+      options: {
+        header: 'Optionen',
+        publication: {
+          publish: 'Veröffentlichen',
+          unpublish: 'Veröffentlichung zurückziehen'
+        },
+        edit: 'Bearbeiten',
+        toGallery: 'Bildergalerie',
+        toRecipe: 'Zurück'
+      },
       preparation: {
         timeconsumption: {
           title: 'Zubereitungsdauer',
@@ -73,6 +139,45 @@ const rc_i18n_de = {
           cooking: 'Koch-/Backzeit:',
           cookingShort: 'Kochen',
           notset: 'keine Angabe'
+        }
+      },
+      rate: {
+        button: 'Bewertung abgeben',
+        header: 'Rezept bewerten',
+        subject: 'Wenn du das Rezept nachgekocht hast, würden wir uns freuen, wenn du deine Meinung dazu teilst.',
+        voted: {
+          subject: 'Du hast bereits eine Bewertung abgegeben. Du kannst das Rezept erst in einigen Tagen erneut bewerten.'
+        },
+        modal: {
+          title: 'Rezeptbewertung',
+          description: 'Mit der Beantwortung der folgenden kurzen Fragen gibst du eine direkte Rückmeldung an den Autoren des Rezepts. Du kannst jederzeit abbrechen. Erst durch einen Klick auf <i>Bewertung speichern</i> wird deine Bewertung übernommen.',
+          cooked: {
+            title: 'Hast du das Rezept nachgekocht?',
+            none: 'Keine Angabe'
+          },
+          rating: {
+            title: 'Wie schwierig war es?',
+            description: 'Wie schwer fandest du es, dass Rezept nachzukochen? War alles beschrieben was du benötigst oder haben sich dir viele Fragezeichen aufgetan?',
+            none: 'Keine Angabe'
+          },
+          voting: {
+            title: 'Wieviele Herzen hat das Gericht verdient?',
+            description: 'Bewerte mit 1 (schlecht) bis 5 (sehr gut), wie gut dir das Gericht geschmeckt hat.'
+          },
+          submitting: 'Die Bewertung wird gerade an den Server geschickt. Das sollte nicht länger als eine Sekunde dauern ...',
+          submitted: 'Deine Bewertung wurde gespeichert. Vielen Dank!',
+          error: 'Es gab einen Fehler bei der Datenübertragung &#x1F613;',
+          save: 'Bewertung speichern',
+          close: 'Zurück'
+        }
+      },
+      stats: {
+        header: 'Statistiken',
+        cooked: {
+          times: '{0} &times; gekocht'
+        },
+        views: {
+          times: '{0} &times; gesehen'
         }
       }
     },
@@ -258,6 +363,7 @@ const rc_i18n_de = {
       translations: 'Übersetzung',
       users: 'Benutzer'
     },
+    close: 'Ausblenden',
     home: 'Startseite',
     myRecipes: 'Meine Rezepte',
     random: 'Zufallsrezept',

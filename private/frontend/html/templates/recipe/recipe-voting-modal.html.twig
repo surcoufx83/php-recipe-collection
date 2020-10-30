@@ -4,44 +4,43 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="recipe-rating-modal-title">
-              {{ Controller.l('recipe_rate_modal_title') }}
+            <h5 class="modal-title" id="recipe-rating-modal-title"
+              v-text="$t('pages.recipe.rate.modal.title')">
             </h5>
           </div>
-          <div class="modal-body d-none" id="recipe-rating-modal-submitting">
-            {{ Controller.l('recipe_rate_modal_submitting')|raw }}
+          <div class="modal-body d-none" id="recipe-rating-modal-submitting"
+            v-text="$t('pages.recipe.rate.modal.submitting')">
           </div>
-          <div class="modal-body d-none" id="recipe-rating-modal-submitted">
-            {{ Controller.l('recipe_rate_modal_submitted')|raw }}
+          <div class="modal-body d-none" id="recipe-rating-modal-submitted"
+            v-text="$t('pages.recipe.rate.modal.submitted')">
           </div>
           <div class="modal-body bg-warning d-none" id="recipe-rating-modal-error">
-            {{ Controller.l('recipe_rate_modal_error')|raw }}<br />
+            <span v-html="$t('pages.recipe.rate.modal.error')"></span><br />
             <span id="recipe-rating-modal-error-message"></span>
           </div>
           <div class="modal-body" id="recipe-rating-modal-mainbody">
-            <span class="text-muted text-small">
-              {{ Controller.l('recipe_rate_modal_description') }} {{ Controller.l('recipe_rate_modal_description2') }}
+            <span class="text-muted text-small" v-html="$t('pages.recipe.rate.modal.description')">
             </span>
-            <h5 class="pt-3">{{ Controller.l('recipe_rate_modal_cooked_title') }}</h5>
+            <h5 class="pt-3" v-text="$t('pages.recipe.rate.modal.cooked.title')"></h5>
             <div class="pb-3 mt-1 text-center">
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-outline-blue btn-sm">
                   <input type="radio" name="recipe-rating-cooked"
                     :checked="page.self.currentVote.cooked === 1"
                     value="1" v-model="page.self.currentVote.cooked"
-                    > {{ Controller.l('common_yesUc') }}
+                    > ${ $t('common.yesno.yes.uc') }</input>
                 </label>
                 <label class="btn btn-outline-blue btn-sm">
                   <input type="radio" name="recipe-rating-cooked"
                     :checked="page.self.currentVote.cooked === 0"
                     value="0" v-model="page.self.currentVote.cooked"
-                    > {{ Controller.l('common_noUc') }}
+                    > ${ $t('common.yesno.no.uc') }</input>
                 </label>
                 <label class="btn btn-outline-blue btn-sm active">
                   <input type="radio" name="recipe-rating-cooked"
                     :checked="page.self.currentVote.cooked === -1"
                     value="-1" v-model="page.self.currentVote.cooked"
-                    > {{ Controller.l('recipe_rate_modal_cooked_none') }}
+                    > ${ $t('pages.recipe.rate.modal.cooked.none') }</input>
                 </label>
               </div>
             </div>
