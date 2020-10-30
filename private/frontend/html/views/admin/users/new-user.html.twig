@@ -1,0 +1,109 @@
+    <div class="container">
+      <form action="{{ Controller.getlink('admin:new-user-post') }}"
+        class="needs-validation" method="post" autocomplete="off" novalidate id="new-user-form">
+        <div class="row justify-content-between">
+          <div class="col-12">
+            <h4>{{ Controller.l('page_admin_newUser_header') }}</h4>
+            <p>{{ Controller.l('page_admin_newUser_subject')|raw }}</p>
+            <p><b>{{ Controller.l('page_admin_newUser_dataprivacy')|raw }}</b></p>
+            <p>{{ Controller.l('page_admin_newUser_requiredFields')|raw }}</p>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12 col-lg-6">
+            <h5>{{ Controller.l('page_admin_newUser_chapter1_header') }}</h5>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-12 col-lg-6">
+            <div class="form-row">
+              <div class="form-group col-12">
+                <label for="user-firstname" class="col-form-label-sm">
+                  <b>{{ Controller.l('page_admin_newUser_chapter1_firstname_header') }} <span class="text-contrast">*</span></b>
+                </label>
+                <input class="form-control form-control-sm" type="text" id="user-firstname" name="firstname"
+                  placeholder="{{ Controller.l('page_admin_newUser_chapter1_firstname_placeholder') }}"
+                  aria-describedby="user-firstname-invalidFeedback"
+                  required>
+                <div class="invalid-feedback" id="user-firstname-invalidFeedback">
+                  {{ Controller.l('page_admin_newUser_chapter1_firstname_feedback') }}
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-12">
+                <label for="user-lastname" class="col-form-label-sm">
+                  <b>{{ Controller.l('page_admin_newUser_chapter1_lastname_header') }} <span class="text-contrast">*</span></b>
+                </label>
+                <input class="form-control form-control-sm" type="text" id="user-lastname" name="lastname"
+                  placeholder="{{ Controller.l('page_admin_newUser_chapter1_lastname_placeholder') }}"
+                  aria-describedby="user-lastname-invalidFeedback"
+                  required>
+                <div class="invalid-feedback" id="user-lastname-invalidFeedback">
+                  {{ Controller.l('page_admin_newUser_chapter1_lastname_feedback') }}
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-12">
+                <label for="user-email" class="col-form-label-sm">
+                  <b>{{ Controller.l('page_admin_newUser_chapter1_email_header') }} <span class="text-contrast">*</span></b>
+                </label>
+                <input class="form-control form-control-sm" type="email" id="user-email" name="email"
+                  placeholder="{{ Controller.l('page_admin_newUser_chapter1_email_placeholder') }}"
+                  aria-describedby="user-email-invalidFeedback"
+                  required>
+                <div class="invalid-feedback" id="user-email-invalidFeedback">
+                  {{ Controller.l('page_admin_newUser_chapter1_email_feedback') }}
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-12">
+                <label for="user-name" class="col-form-label-sm">
+                  <b>{{ Controller.l('page_admin_newUser_chapter1_name_header') }} <span class="text-contrast">*</span></b>
+                </label>
+                <input class="form-control form-control-sm" type="text" id="user-name" name="name"
+                  placeholder="{{ Controller.l('page_admin_newUser_chapter1_name_placeholder') }}"
+                  aria-describedby="user-name-invalidFeedback"
+                  required>
+                <div class="invalid-feedback" id="user-name-invalidFeedback">
+                  {{ Controller.l('page_admin_newUser_chapter1_name_feedback') }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-12">
+            <button class="btn btn-blue" id="submitButton" type="submit">{{ Controller.l('page_admin_newUser_chapter1_submitButton_title') }}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal fade" id="new-user-modal"
+      data-backdrop="static" data-keyboard="false" tabindex="-1"
+      aria-labelledby="new-user-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="new-user-modal-title">{{ Controller.l('page_admin_newUser_modal_title') }}</h5>
+          </div>
+          <div class="modal-body" id="new-user-modal-description">
+            {{ Controller.l('page_admin_newUser_modal_description') }}
+          </div>
+          <div class="modal-body bg-warning d-none" id="new-user-modal-error">
+            {{ Controller.l('page_admin_newUser_modal_error')|raw }} <span id="new-user-modal-error-msg"></span>
+          </div>
+          <div class="modal-body bg-success text-light d-none" id="new-user-modal-success">
+            {{ Controller.l('page_admin_newUser_modal_success')|raw }} <span id="new-user-modal-success-userid"></span>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="new-user-modal-spinner" class="btn btn-blue" disabled>{{ Config.Icons.Spinner('fa-fw fa-pulse')|raw }}</button>
+            <button type="button" id="new-user-modal-close" class="btn btn-blue d-none" data-dismiss="modal">{{ Controller.l('page_admin_newUser_modal_backButton') }}</button>
+            <button type="button" id="new-user-modal-new" class="btn btn-outline-blue d-none">{{ Controller.l('page_admin_newUser_modal_newButton') }}</button>
+          </div>
+        </div>
+      </div>
+    </div>

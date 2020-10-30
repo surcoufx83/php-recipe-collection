@@ -4,7 +4,8 @@ namespace Surcouf\Cookbook;
 
 use Surcouf\Cookbook\Config;
 use Surcouf\Cookbook\ConfigInterface;
-use Surcouf\Cookbook\Config\DatabaseManagerInterface;
+use Surcouf\Cookbook\Config\Icon;
+use Surcouf\Cookbook\Config\IconConfig;
 use Surcouf\Cookbook\Controller\Dispatcher;
 use Surcouf\Cookbook\Controller\ObjectManager;
 use Surcouf\Cookbook\Database\DbConf;
@@ -39,10 +40,10 @@ use \League\OAuth2\Client\Provider\GenericProvider;
 if (!defined('CORE2'))
   exit;
 
-final class Controller implements ControllerInterface, DatabaseManagerInterface {
+final class Controller implements ControllerInterface {
 
   private $database, $currentUser;
-  private $dispatcher, $langcode, $linkProvider;
+  private $config, $dispatcher, $langcode, $linkProvider;
   private $ObjectManager;
 
   private $pictures = array();
@@ -59,8 +60,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function Config() : ConfigInterface {
-    global $Config;
-    return $Config;
+    return $this->config;
   }
 
   public function Dispatcher() : Dispatcher {
@@ -83,7 +83,6 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
     return $this->currentUser;
   }
 
-  /** todo: move to a helper class **/
   public function addActivity(int $type, array $data, RecipeInterface $recipe, ?int $pictureId=null, ?int $ratingId=null, ?int $tagId=null) : void {
     $query = new QueryBuilder(EQueryType::qtINSERT, 'activities');
     $data = array_merge(
@@ -117,20 +116,10 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
     return $this->database->error;
   }
 
-  /** todo: move to query builder */
-  public function dbescape($value, string $separator = ', ') : string {
-    if (is_null($value))
-      return 'NULL';
-    if (is_integer($value) || is_float($value))
-      return $value;
-    if (is_bool($value))
-      return intval($value);
-    if (is_array($value)) {
-      for ($i=0; $i<count($value); $i++)
-        $value[$i] = $this->dbescape($value[$i], $separator);
-      return join($separator, $value);
-    }
-    $value = '\''.$this->database->real_escape_string($value).'\'';
+  public function dbescape($value, bool $includeQuotes = true) : string {
+    $value = $this->database->real_escape_string($value);
+    if ($includeQuotes && !is_integer($value))
+      $value = '\''.$value.'\'';
     return $value;
   }
 
@@ -164,13 +153,21 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
 
   public function getOAuthProvider() : GenericProvider {
     return new GenericProvider([
-      'clientId'                => $this->Config()->System('OAUTH2', 'ClientId'),
-      'clientSecret'            => $this->Config()->System('OAUTH2', 'ClientSecret'),
+      'clientId'                => OAuth2Conf::OATH_CLIENTID,    // The client ID assigned to you by the provider
+      'clientSecret'            => OAuth2Conf::OATH_CLIENT_SECRET,   // The client password assigned to you by the provider
       'redirectUri'             => $this->getLink('admin:oauth:redirect'),
-      'urlAuthorize'            => $this->Config()->System('OAUTH2', 'OAuthUrl'),
-      'urlAccessToken'          => $this->Config()->System('OAUTH2', 'OAuthTokenUrl'),
-      'urlResourceOwnerDetails' => $this->Config()->System('OAUTH2', 'OAuthDataUrl'),
+      'urlAuthorize'            => $this->getLink('admin:oauth:auth'),
+      'urlAccessToken'          => $this->getLink('admin:oauth:token'),
+      'urlResourceOwnerDetails' => $this->getLink('admin:oauth:user'),
     ]);
+  }
+
+  public function getObject(string $className, int $id) : ?object {
+    if (array_key_exists($className, $this->objects)
+     && array_key_exists($id, $this->objects[$className])) {
+      return $this->objects[$className][$id];
+    }
+    return null;
   }
 
   public function init() : void {
@@ -178,24 +175,22 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
     $this->langcode = $i18n->getAppliedLang();
     $this->linkProvider = new Controller\LinkProvider();
     if (!$this->init_Database())
-      exit('Error loading database');
+      exit;
     if (!$this->init_Config())
-      exit('Error loading configuration');
+      exit;
     if (!$this->init_Dispatcher())
-      exit('Error loading dispatcher');
+      exit;
   }
 
   private function init_Config() : bool {
-    $this->Config()->initController();
+    $this->config = new Config();
+    define('MAINTENANCE', $this->config->MaintenanceMode);
     return true;
   }
 
   private function init_Database() : bool {
-    if (!$this->Config()->getCredentials($this, Config::CTYPE_DBCREDENTIALS)) {
-      exit('Error loading database setup');
-    }
     try {
-      $this->database = new \Mysqli($this->dbhost, $this->dbuser, $this->dbpwd, $this->dbname);
+      $this->database = new \Mysqli(DbConf::DB_HOST, DbConf::DB_USER, DbConf::DB_PASSWORD, DbConf::DB_DATABASE);
       if ($this->database->connect_errno != 0) {
         exit('Error connecting to the database.');
       }
@@ -230,7 +225,6 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
     $query->columns($columns)
           ->values($data);
     if ($this->insert($query)) {
-      $id = $this->getInsertId();
       return $this->getInsertId();
     }
     return -1;
@@ -260,14 +254,14 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   private function loginWithCookies() : bool {
     if (count($_COOKIE) == 0)
       return false;
-    if (!array_key_exists($this->Config()->System('Cookies', 'UserCookieName'), $_COOKIE) ||
-        !array_key_exists($this->Config()->System('Cookies', 'SessionCookieName'), $_COOKIE) ||
-        !array_key_exists($this->Config()->System('Cookies', 'PasswordCookieName'), $_COOKIE)) {
+    if (!array_key_exists($this->config->UserCookieName, $_COOKIE) ||
+        !array_key_exists($this->config->SessionCookieName, $_COOKIE) ||
+        !array_key_exists($this->config->PasswordCookieName, $_COOKIE)) {
       return false;
     }
-    $uname = $_COOKIE[$this->Config()->System('Cookies', 'UserCookieName')];
+    $uname = $_COOKIE[$this->config->UserCookieName];
     $user = $this->OM()->User($uname);
-    if (is_null($user) || !$user->verifySession($_COOKIE[$this->Config()->System('Cookies', 'SessionCookieName')], $_COOKIE[$this->Config()->System('Cookies', 'PasswordCookieName')])) {
+    if (is_null($user) || !$user->verifySession($_COOKIE[$this->config->SessionCookieName], $_COOKIE[$this->config->PasswordCookieName])) {
       $this->removeCookies();
       return false;
     }
@@ -280,7 +274,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
     $values = $token->getValues();
     if (!array_key_exists('user_id', $values))
       return false;
-    $userid = 'OAuth2::'.$values['user_id'].'@'.$this->Config()->System('OAUTH2', 'DisplayName');
+    $userid = 'OAuth2::'.$values['user_id'].'@'.OAuth2Conf::OATH_PROVIDER;
     $user = $this->OM()->User($userid);
     if (is_null($user)) {
       $user = new OAuthUser($values['user_id']);
@@ -296,17 +290,17 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
 
   public function loginWithPassword(string $email, string $password, bool $keepSession, array &$response = null) : bool {
     if ($email == '' || $password == '') {
-      $response = $this->Config()->getResponseArray(30);
+      $response = $this->config->getResponseArray(30);
       return false;
     }
     $user = $this->OM()->User($email);
     if (is_null($user) || !$user->verify($password)) {
-      $response = $this->Config()->getResponseArray(30);
+      $response = $this->config->getResponseArray(30);
       return false;
     }
     $this->currentUser =& $user;
     $this->currentUser->createNewSession($keepSession);
-    $response = $this->Config()->getResponseArray(31);
+    $response = $this->config->getResponseArray(31);
     return true;
   }
 
@@ -331,7 +325,6 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
     $this->dispatcher->put($params);
   }
 
-  /** todo: move to session or helper class */
   private function removeCookies() : void {
     $keys = array_keys($_COOKIE);
     for($i=0; $i<count($keys); $i++) {
@@ -340,20 +333,26 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
     }
   }
 
-  /** todo: move to session or helper class */
   private function renewSession() : void {
     $session = $this->currentUser->getSession();
     $expires = 0;
-    $this->setSessionCookies(
-      $_COOKIE[$this->Config()->System('Cookies', 'UserCookieName')],
-      $_COOKIE[$this->Config()->System('Cookies', 'SessionCookieName')],
-      $_COOKIE[$this->Config()->System('Cookies', 'PasswordCookieName')],
-      $session->keep()
-    );
+    if ($session->keep()) {
+      global $NOW;
+      $expdatetime = $NOW->add($this->config->SessionLongExpirationTime);
+      $expires = $expdatetime->getTimestamp();
+    }
+    $this->setCookie($this->config->UserCookieName, $_COOKIE[$this->config->UserCookieName], $expires);
+    $this->setCookie($this->config->SessionCookieName, $_COOKIE[$this->config->SessionCookieName], $expires);
+    $this->setCookie($this->config->PasswordCookieName, $_COOKIE[$this->config->PasswordCookieName], $expires);
   }
 
   public function select(QueryBuilder &$queryBuilder) : ?\mysqli_result {
     return DatabaseHelper::select($this->database, $queryBuilder);
+    /*$query = $qbuilder->buildQuery();
+    $result = $this->database->query($query);
+    if (!is_a($result, 'mysqli_result'))
+      return null;
+    return $result;*/
   }
 
   public function selectCountSimple(string $table, string $filterColumn=null, string $filterValue=null) : int {
@@ -366,48 +365,40 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
 
   public function selectFirst(QueryBuilder &$queryBuilder) : ?array {
     return DatabaseHelper::selectFirst($this->database, $queryBuilder);
+    /*$query = $qbuilder->buildQuery();
+    $result = $this->database->query($query);
+    if (!is_a($result, 'mysqli_result'))
+      return null;
+    if ($result->num_rows == 0)
+      return null;
+    return $result->fetch_assoc();*/
   }
 
   public function selectObject(QueryBuilder &$queryBuilder, string $className) : ?object {
     return DatabaseHelper::selectObject($this->database, $queryBuilder, $className);
+    /*$query = $qbuilder->buildQuery();
+    $result = $this->database->query($query);
+    if (!is_a($result, 'mysqli_result'))
+      return null;
+    if ($result->num_rows == 0)
+      return null;
+    return $result->fetch_assoc();*/
   }
 
-  /** todo: move to session or helper class */
   private function setCookie(string $name, string $value, int $expiration) : bool {
     return setcookie($name, $value, $expiration, '/');
   }
 
-  public function setDatabaseDbName(string $dbname) : DatabaseManagerInterface {
-    $this->dbname = $dbname;
-    return $this;
-  }
-
-  public function setDatabaseHost(string $hostname) : DatabaseManagerInterface {
-    $this->dbhost = $hostname;
-    return $this;
-  }
-
-  public function setDatabasePassword(string $password) : DatabaseManagerInterface {
-    $this->dbpwd = $password;
-    return $this;
-  }
-
-  public function setDatabaseUser(string $username) : DatabaseManagerInterface {
-    $this->dbuser = $username;
-    return $this;
-  }
-
-  /** todo: move to session or helper class */
   public function setSessionCookies(string $userCookie, string $tokenCookie, string $passwordCookie, bool $longDuration) : bool {
     $expires = 0;
     if ($longDuration) {
-      $NOW = new \DateTime();
-      $expdatetime = $NOW->add(new \DateInterval($this->Config()->Users('Sessions', 'LongExpiry')));
+      global $NOW;
+      $expdatetime = $NOW->add($this->config->SessionLongExpirationTime);
       $expires = $expdatetime->getTimestamp();
     }
-    return ($this->setCookie($this->Config()->System('Cookies', 'UserCookieName'), $userCookie, $expires)
-      && $this->setCookie($this->Config()->System('Cookies', 'SessionCookieName'), $tokenCookie, $expires)
-      && $this->setCookie($this->Config()->System('Cookies', 'PasswordCookieName'), $passwordCookie, $expires));
+    return ($this->setCookie($this->config->UserCookieName, $userCookie, $expires)
+      && $this->setCookie($this->config->SessionCookieName, $tokenCookie, $expires)
+      && $this->setCookie($this->config->PasswordCookieName, $passwordCookie, $expires));
   }
 
   public function startTransaction() : bool {
@@ -427,24 +418,6 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
           $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipes');
           $query->update($object->getDbChanges());
           $query->where('recipes', 'recipe_id', '=', $object->getId());
-          $this->update($query);
-          break;
-
-        case 'Surcouf\Cookbook\Recipe\Cooking\CookingStep':
-          if (count($object->getDbChanges()) == 0)
-            break;
-          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_steps');
-          $query->update($object->getDbChanges());
-          $query->where('recipe_steps', 'step_id', '=', $object->getId());
-          $this->update($query);
-          break;
-
-        case 'Surcouf\Cookbook\Recipe\Ingredients\Ingredient':
-          if (count($object->getDbChanges()) == 0)
-            break;
-          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_ingredients');
-          $query->update($object->getDbChanges());
-          $query->where('recipe_ingredients', 'ingredient_id', '=', $object->getId());
           $this->update($query);
           break;
 

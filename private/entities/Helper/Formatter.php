@@ -37,7 +37,7 @@ final class Formatter implements FormatterInterface {
   public static function date_format(?DateTime $dt = null, ?string $format = null) : string {
     global $Controller;
     $dt = $dt ?? new DateTime();
-    return $dt->format(is_null($format) ? $Controller->Config()->Defaults('Formats', 'UiLongDate') : $format);
+    return $dt->format(is_null($format) ? $Controller->Config()->DefaultDateFormatUi() : $format);
   }
 
   /**
@@ -49,9 +49,9 @@ final class Formatter implements FormatterInterface {
    */
   public static function float_format(float $value, int $precission = -1) : string {
     global $Controller;
-    $decplcs = $Controller->Config()->Defaults('Formats', 'Decimals');
-    $decsep = $Controller->Config()->Defaults('Formats', 'DecimalsSeparator');
-    $thsdsep = $Controller->Config()->Defaults('Formats', 'ThousandsSeparator');
+    $decplcs = $Controller->Config()->DefaultDecimalsCount();
+    $decsep = $Controller->Config()->DefaultDecimalsSeparator();
+    $thsdsep = $Controller->Config()->DefaultThousandsSeparator();
     return number_format($value, $precission > -1 ? $precission : $decplcs, $decsep, $thsdsep);
   }
 
@@ -63,7 +63,7 @@ final class Formatter implements FormatterInterface {
    */
   public static function int_format(int $value) : string {
     global $Controller;
-    $thsdsep = $Controller->Config()->Defaults('Formats', 'ThousandsSeparator');
+    $thsdsep = $Controller->Config()->DefaultThousandsSeparator();
     return number_format($value, 0, '', $thsdsep);
   }
 
@@ -71,55 +71,20 @@ final class Formatter implements FormatterInterface {
    * Formats an integer specifying a number of minutes.
    *
    * @param int $value The value to be formatted.
-   * @param Boolean $useFractals default: true, True if 1/2 instead of .5
    * @return string    The formatted string.
    */
-  public static function min_format(int $minutes, bool $useFractals = true) : string {
+  public static function min_format(int $minutes) : string {
     global $Controller;
-    $minutes = floatval($minutes);
-    if ($minutes < 30.0){
-      if ($minutes == 1)
-        return $Controller->l('common_duration_minute', $minutes);
+    if ($minutes < 60)
       return $Controller->l('common_duration_minutes', $minutes);
+    if ($minutes < 1440) {
+      $hrs = floor(floatval($minutes) / 60.0 * 2.0) / 2.0;
+      $hrs = Formatter::float_format($hrs, $hrs - floor($hrs) == 0 ? 0 : 1);
+      return $Controller->l('common_duration_hours', $hrs);
     }
-    if ($minutes < 720.0) {
-      $halfhour = ceil($minutes / 60.0 * 2.0) / 2.0;
-      if ($useFractals) {
-        if ($halfhour == .5)
-          return $Controller->l('common_duration_hour', '&frac12;');
-        if ($halfhour == 1.0)
-          return $Controller->l('common_duration_hour', $halfhour);
-        if (floor($halfhour) != $halfhour)
-          return $Controller->l('common_duration_hours', floor($halfhour).'&frac12;');
-        return $Controller->l('common_duration_hours', floor($halfhour));
-      }
-      if ($halfhour == 1.0)
-        return $Controller->l('common_duration_hour', Formatter::float_format($halfhour, $halfhour - floor($halfhour) == 0 ? 0 : 1));
-      return $Controller->l('common_duration_hours', Formatter::float_format($halfhour, $halfhour - floor($halfhour) == 0 ? 0 : 1));
-    }
-    $halfdays = ceil($minutes / 1440.0 * 2.0) / 2.0;
-    if ($useFractals) {
-      if ($halfdays == .5)
-        return $Controller->l('common_duration_day', '&frac12;');
-      if ($halfdays == 1.0)
-        return $Controller->l('common_duration_day', $halfdays);
-      if (floor($halfdays) != $halfdays)
-        return $Controller->l('common_duration_days', floor($halfdays).'&frac12;');
-      return $Controller->l('common_duration_days', floor($halfdays));
-    }
-    if ($halfdays == 1.0)
-      return $Controller->l('common_duration_day', Formatter::float_format($halfdays, $halfdays - floor($halfdays) == 0 ? 0 : 1));
-    return $Controller->l('common_duration_days', Formatter::float_format($halfdays, $halfdays - floor($halfdays) == 0 ? 0 : 1));
-  }
-
-  /**
-   * Formats an string for an url.
-   *
-   * @param string $value The value to be formatted.
-   * @return string    The formatted string.
-   */
-  public static function nice_urlstring(string $value) : string {
-    return str_replace('/', '-', str_replace(' ', '_', $value));
+    $days = floor(floatval($minutes) / 60.0 / 24.0 * 2.0) / 2.0;
+    $days = Formatter::float_format($days, $days - floor($days) == 0 ? 0 : 1);
+    return $Controller->l('common_duration_days', $days);
   }
 
   /**

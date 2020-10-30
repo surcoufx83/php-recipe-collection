@@ -21,7 +21,6 @@ final class IconConfig implements IconConfigInterface {
       'Calendar'          => ['space' => 'far', 'icon' => 'calendar-alt'],
       'Cloud'             => ['space' => 'fas', 'icon' => 'cloud'],
       'Copy'              => ['space' => 'fas', 'icon' => 'copy'],
-      'Cronjob'           => ['space' => 'fas', 'icon' => 'sync'],
       'Delete'            => ['space' => 'far', 'icon' => 'trash-alt'],
       'DoubleAngleLeft'   => ['space' => 'fas', 'icon' => 'angle-double-left'],
       'DoubleAngleRight'  => ['space' => 'fas', 'icon' => 'angle-double-right'],
@@ -33,12 +32,10 @@ final class IconConfig implements IconConfigInterface {
       'Group'             => ['space' => 'fas', 'icon' => 'users'],
       'Home'              => ['space' => 'fas', 'icon' => 'home'],
       'Ingredient'        => ['space' => 'fas', 'icon' => 'carrot'],
-      'Language'          => ['space' => 'fas', 'icon' => 'language'],
       'Link'              => ['space' => 'fas', 'icon' => 'link'],
       'Lock'              => ['space' => 'fas', 'icon' => 'lock'],
       'Login'             => ['space' => 'fas', 'icon' => 'key'],
       'LoginError'        => ['space' => 'fas', 'icon' => 'skull-crossbones'],
-      'Logs'              => ['space' => 'fas', 'icon' => 'bars'],
       'Logout'            => ['space' => 'fas', 'icon' => 'sign-out-alt'],
       'Meal'              => ['space' => 'fas', 'icon' => 'utensils'],
       'Menu'              => ['space' => 'fas', 'icon' => 'bars'],
@@ -54,7 +51,6 @@ final class IconConfig implements IconConfigInterface {
       'Start'             => ['space' => 'fas', 'icon' => 'play'],
       'Unlock'            => ['space' => 'fas', 'icon' => 'lock-open'],
       'User'              => ['space' => 'fas', 'icon' => 'user-circle'],
-      'Users'             => ['space' => 'fas', 'icon' => 'users'],
       'View'              => ['space' => 'far', 'icon' => 'eye'],
     ];
   }

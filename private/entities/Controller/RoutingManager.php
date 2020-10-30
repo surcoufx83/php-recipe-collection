@@ -11,78 +11,92 @@ if (!defined('CORE2'))
 final class RoutingManager {
 
   static $routes = [
-    '/api/logout' => [ // logout request
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\User\LogoutRoute::class,
-      'method' => ERequestMethod::HTTP_POST,
+    '/' => [
+      [ // landing page user logged in
+        'class' => \Surcouf\Cookbook\Controller\Routes\UserHomeRoute::class,
+      ],
+      [ // landing page no user
+        'class' => \Surcouf\Cookbook\Controller\Routes\AnonymousHomeRoute::class,
+        'requiresUser' => false,
+      ],
+    ],
+    '/(?<id>\d+)(/[^/]+)?' => [ // recipe page
+      'class' => \Surcouf\Cookbook\Controller\Routes\Recipe\RecipeRoute::class,
+      'createObject' => [
+        'idkey' => 'id',
+        'method' => 'Recipe',
+      ],
+    ],
+    '/activate/(?<token>[0-9a-z]{12,})' => [ // email activation page
+      'class' => \Surcouf\Cookbook\Controller\Routes\User\ActivateRoute::class,
       'requiresUser' => false,
     ],
-    '/api/page-data\?/admin' => [ // administration page
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Admin\AdminPageRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
+    '/activate-account/(?<token>[0-9a-z]{12,})' => [ // post email activation
+      'class' => \Surcouf\Cookbook\Controller\Routes\User\ActivateAccountRoute::class,
+      'method' => ERequestMethod::HTTP_POST,
+      'output' => EOutputMode::JSON,
+      'requiresPayload' => [
+        'user', 'password1', 'password2', 'keepSession'
+      ],
+      'requiresUser' => false,
+    ],
+    '/admin' => [ // list of users recipes
+      'class' => \Surcouf\Cookbook\Controller\Routes\Admin\AdminHomeRoute::class,
       'requiresAdmin' => true,
     ],
-    '/api/page-data\?/admin/cronjobs' => [ // cronjobs administration page
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Admin\CronjobsPageRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
-      'requiresAdmin' => true,
-    ],
-    '/api/page-data\?/admin/logs' => [ // logs administration page
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Admin\LogsPageRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
-      'requiresAdmin' => true,
-    ],
-    '/api/page-data\?/admin/translations' => [ // translations administration page
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Admin\TranslationsPageRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
-      'requiresAdmin' => true,
-    ],
-    '/api/page-data\?/admin/users' => [ // user administration page
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Admin\UsersPageRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
-      'requiresAdmin' => true,
-    ],
-    '/api/page-data\?/(home)?' => [ // home page
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\HomePageRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
-    ],
-    '/api/page-data\?/random(/-(?<id>\d+))?' => [ // random recipe page
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RandomRecipePageRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
-    ],
-    '/api/page-data\?/recipe/(?<id>\d+)-(?<name>[^/]+)(/(?<action>[^/]+))?' => [ // recipe page
-      [ // recipe display page
-        'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipePageRoute::class,
-        'method' => ERequestMethod::HTTP_GET,
-        'createObject' => [
-          'idkey' => 'id',
-          'method' => 'Recipe',
+    '/admin/new-user' => [
+        [ // new user page
+        'class' => \Surcouf\Cookbook\Controller\Routes\Admin\Users\NewUserRoute::class,
+        'requiresAdmin' => true,
+      ],
+      [ // post new user page
+        'class' => \Surcouf\Cookbook\Controller\Routes\Admin\Users\NewUserPostRoute::class,
+        'method' => ERequestMethod::HTTP_POST,
+        'output' => EOutputMode::JSON,
+        'requiresAdmin' => true,
+        'requiresPayload' => [
+          'firstname', 'lastname', 'email', 'username'
         ],
       ],
-      [ // recipe actions (vote, publish, etc)
-        'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipePostRoute::class,
+    ],
+    '/admin/test/entity' => [ // ajax query for existing entity
+      'class' => \Surcouf\Cookbook\Controller\Routes\Admin\TestEntityRoute::class,
+      'method' => ERequestMethod::HTTP_POST,
+      'output' => EOutputMode::JSON,
+      'requiresAdmin' => true,
+    ],
+    '/admin/users' => [ // list of users recipes
+      'class' => \Surcouf\Cookbook\Controller\Routes\Admin\Users\UsersRoute::class,
+      'requiresAdmin' => true,
+    ],
+    '/books' => [ // list of users books
+      'class' => \Surcouf\Cookbook\Controller\Routes\CommonRoute::class,
+    ],
+    '/login' => [
+        [ // login page
+        'class' => \Surcouf\Cookbook\Controller\Routes\User\LoginRoute::class,
+        'requiresUser' => false,
+      ],
+      [ // post login
+        'class' => \Surcouf\Cookbook\Controller\Routes\User\LoginSubmitRoute::class,
         'method' => ERequestMethod::HTTP_POST,
-        'createObject' => [
-          'idkey' => 'id',
-          'method' => 'Recipe',
+        'output' => EOutputMode::JSON,
+        'requiresPayload' => [
+          'loginUsername', 'loginPassword', 'keepSession'
         ],
+        'requiresUser' => false,
       ]
     ],
-    '/api/page-data\?/search' => [ // search query
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Search\SearchResultsRoute::class,
-      'method' => ERequestMethod::HTTP_POST,
+    '/logout' => [ // logout
+      'class' => \Surcouf\Cookbook\Controller\Routes\User\LogoutRoute::class,
     ],
-    '/api/page-data\?/recipes(/(?<filter>[^/]+)(/(?<id>\d+)-(?<name>.+))?)?' => [ // recipe listing page with filter
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipeListRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
-    ],
-    '/api/page-data\?/write' => [ // post new recipe
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipeCreateRoute::class,
-      'method' => ERequestMethod::HTTP_POST,
-    ],
-    '/api/page-data\?(?<page>.*)' => [ // common page request
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\PageData::class,
-      'method' => ERequestMethod::HTTP_GET,
+    '/maintenance' => [ // maintenance page
+      'class' => \Surcouf\Cookbook\Controller\Routes\MaintenanceRoute::class,
+      'ignoreMaintenance' => true,
       'requiresUser' => false,
+    ],
+    '/myrecipes' => [ // list of users recipes
+      'class' => \Surcouf\Cookbook\Controller\Routes\User\RecipesRoute::class,
     ],
     '/oauth2/callback\?[^/]+' => [ // callback from oauth server
       'class' => \Surcouf\Cookbook\Controller\Routes\User\OAuth2CallbackRoute::class,
@@ -92,10 +106,47 @@ final class RoutingManager {
       'class' => \Surcouf\Cookbook\Controller\Routes\User\OAuth2InitRoute::class,
       'requiresUser' => false,
     ],
-    '/images(/(?<w>\d+)x(?<h>\d+))?/((?<recipeid>\d+)/(?<pictureid>\d+)|(?<dummy>dummy))' => [ // init oauth login
-      'class' => \Surcouf\Cookbook\Controller\Routes\ImageRoute::class,
+    '/random' => [ // random recipe
+      'class' => \Surcouf\Cookbook\Controller\Routes\RandomRecipeRoute::class,
     ],
-    '/.*' => [
+    '/recipe/new' => [
+        [ // new recipe page
+        'class' => \Surcouf\Cookbook\Controller\Routes\Recipe\RecipeNewRoute::class,
+      ],
+      [ // post new recipe page
+        'class' => \Surcouf\Cookbook\Controller\Routes\Recipe\RecipeNewSubmitRoute::class,
+        'method' => ERequestMethod::HTTP_POST,
+        'output' => EOutputMode::JSON,
+        'requiresPayload' => [
+          'description', 'eater', 'name', 'ingredient_description',
+          'ingredient_unit', 'ingredient_quantity', 'step_description', 'step_title',
+          'step_duration_preparation', 'step_duration_cooking', 'step_duration_rest'
+        ],
+      ],
+    ],
+    '/recipe/(un)?publish/(?<id>\d+)(/[^/]+)?' => [ // recipe publish/unpublish page
+      'class' => \Surcouf\Cookbook\Controller\Routes\Recipe\RecipePublishRoute::class,
+      'createObject' => [
+        'idkey' => 'id',
+        'method' => 'Recipe',
+      ],
+    ],
+    '/recipe/vote/(?<id>\d+)(/[^/]+)?' => [ // recipe post vote
+      'class' => \Surcouf\Cookbook\Controller\Routes\Recipe\RecipVoteRoute::class,
+      'createObject' => [
+        'idkey' => 'id',
+        'method' => 'Recipe',
+      ],
+      'method' => ERequestMethod::HTTP_POST,
+      'output' => EOutputMode::JSON,
+      'requiresPayload' => [
+        'cooked', 'rated', 'voted'
+      ],
+    ],
+    '/self-register' => [ // dummy page after oauth login
+      'class' => \Surcouf\Cookbook\Controller\Routes\User\SelfRegisterRoute::class,
+    ],
+    '/.*' => [ // fallback to dummy page if no match
       'class' => \Surcouf\Cookbook\Controller\Routes\CommonRoute::class,
       'requiresUser' => false,
     ],
