@@ -1,0 +1,63 @@
+
+    <div class="container">
+      <div class="row pb-3">
+        <div class="col-12 col-md-6">
+          <h3 class="mb-3 font-weight-bold">{{ Controller.l('page_activation_title') }}</h3>
+          <p>
+            {{ Config.Icons().Books('fa-fw mr-2')|raw }} {{ Controller.l('page_activation_alreadyActivated_description') }}
+          </p>
+          <form id="login-form" action="#">
+            <div class="form-group mb-3">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">{{ Config.Icons().Authentication('fa-fw')|raw }}</div>
+                </div>
+                <input type="text" class="form-control" id="login-user"
+                  name="login-user" placeholder="{{ Controller.l('page_login_nameField_placeholder') }}"
+                  value="" autofocus autocomplete="username" maxlength="32" />
+                <div class="invalid-feedback" style="padding-left:48px;"
+                  id="login-user-feedback">
+                  {{ Controller.l('page_login_nameField_invalidFeedback') }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">{{ Config.Icons.Password('fa-fw')|raw }}</div>
+                </div>
+                <input type="password" class="form-control" id="login-password"
+                  name="login-password" placeholder="{{ Controller.l('page_login_passwordField_placeholder') }}" value=""
+                  autocomplete="current-password" />
+                <div class="invalid-feedback" style="padding-left:48px;"
+                  id="login-password-feedback">
+                  {{ Controller.l('page_login_passwordField_invalidFeedback') }}
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <input class="ml-0 form-check-input" type="checkbox" value="1"
+                  id="login-keepsession" name="login-keepsession" />
+                <span class="ml-4 form-check-label" data-toggle="tooltip"
+                  data-placement="right" title="{{ Controller.l('page_login_keepSession_description') }}" for="login-keepsession">
+                  {{ Controller.l('page_login_keepSession_title') }}
+                  <sup class="text-blue">{{ Config.Icons.QuestionMark('fa-fw fa-sm')|raw }}</sup>
+                </span>
+              </div>
+              <div class="col-6 text-right">
+                <a class="small" href="/password-lost">{{ Controller.l('page_login_lostPassword_title') }}</a>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <button type="submit" id="login-submit-button" class="btn btn-blue font-weight-bold">
+                  {{ Config.Icons.Spinner('fa-fw fa-spin d-none', '', 'login-submit-spinner')|raw }}
+                  {{ Controller.l('page_login_submitButton_title') }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>

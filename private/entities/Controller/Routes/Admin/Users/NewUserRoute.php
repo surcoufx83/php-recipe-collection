@@ -15,6 +15,10 @@ class NewUserRoute extends Route implements RouteInterface {
   static function createOutput(array &$response) : bool {
     global $Controller, $OUT;
 
+    parent::addBreadcrumb($Controller->getLink('admin:main'), $Controller->l('breadcrumb_admin_home'));
+    parent::addBreadcrumb($Controller->getLink('admin:users'), $Controller->l('breadcrumb_admin_user'));
+    parent::addBreadcrumb($Controller->getLink('admin:new-user'), $Controller->l('breadcrumb_admin_newUser'));
+
     parent::addScript('admin-new-user');
     parent::addValidationScript();
     parent::setPage('admin:main');

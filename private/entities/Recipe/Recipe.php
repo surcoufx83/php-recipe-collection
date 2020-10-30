@@ -12,14 +12,10 @@ use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\Database\ObjectTableMapper;
 use Surcouf\Cookbook\Helper\ConverterHelper;
 use Surcouf\Cookbook\Helper\Formatter;
-use Surcouf\Cookbook\Recipe\Cooking\BlankCookingStep;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStep;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStepInterface;
-use Surcouf\Cookbook\Recipe\Ingredients\BlankIngredient;
 use Surcouf\Cookbook\Recipe\Ingredients\Ingredient;
 use Surcouf\Cookbook\Recipe\Ingredients\IngredientInterface;
-use Surcouf\Cookbook\Recipe\Ingredients\Units\BlankUnit;
-use Surcouf\Cookbook\Recipe\Pictures\BlankPicture;
 use Surcouf\Cookbook\Recipe\Pictures\Picture;
 use Surcouf\Cookbook\Recipe\Pictures\PictureInterface;
 use Surcouf\Cookbook\Recipe\Social\Ratings\Rating;
@@ -31,7 +27,7 @@ use Surcouf\Cookbook\User\UserInterface;
 if (!defined('CORE2'))
   exit;
 
-class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
+class Recipe implements RecipeInterface, DbObjectInterface {
 
   protected $recipe_id,
             $user_id,
@@ -43,7 +39,7 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
             $recipe_source_url,
             $recipe_created,
             $recipe_published;
-  protected $timecooking = 0, $timepreparation = 0, $timerest = 0, $timetotal = 0;
+  protected $timecooking = 0, $timepreparation = 0, $timerest = 0;
   protected $countcooked = 0, $countrated = 0, $countviewed = 0, $countvoted = 0;
   protected $sumvoted = 0, $sumrated = 0;
   protected $ingredients = array();
@@ -82,7 +78,6 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
       $this->timecooking += $step->getCookingTime();
     if ($step->getChillTime() > 0)
       $this->timerest += $step->getChillTime();
-    $this->timetotal = $this->timepreparation + $this->timecooking + $this->timerest;
     $this->steps[$step->getIndex()] = $step;
   }
 
@@ -243,12 +238,6 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
   }
 
   public function getSourceDescription() : string {
-    if (is_null($this->recipe_source_desc) || $this->recipe_source_desc == '') {
-      if (is_null($this->recipe_source_url) || $this->recipe_source_url == '')
-        return '';
-      $pi = parse_url($this->recipe_source_url);
-      return $pi['host'];
-    }
     return $this->recipe_source_desc;
   }
 
@@ -315,48 +304,6 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
 
   public function isPublished() : bool {
     return $this->recipe_public;
-  }
-
-  public function jsonSerialize() {
-    global $Controller;
-    return [
-      'id' => $this->recipe_id,
-      'name' => $this->recipe_name,
-      'created' => $this->recipe_created->format(DateTime::ISO8601),
-      'description' => $this->recipe_description,
-      'eaterCount' => $this->recipe_eater,
-      'eaterCountCalc' => $this->recipe_eater,
-      'ownerId' => (!is_null($this->user_id) ? $this->user_id : 0),
-      'ownerName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : ''),
-      'published' => ($this->recipe_public ? $this->recipe_published->format(DateTime::ISO8601) : false),
-      'source' => [
-        'description' => $this->getSourceDescription(),
-        'url' => $this->getSourceUrl(),
-      ],
-      'pictures' => array_values($this->pictures),
-      'preparation' => [
-        'ingredients' => array_values($this->ingredients),
-        'steps' => $this->steps,
-        'timeConsumed' => [
-          'cooking' => $this->timecooking,
-          'preparing' => $this->timepreparation,
-          'rest' => $this->timerest,
-          'total' => $this->timetotal,
-          'unit' => 'minutes',
-        ]
-      ],
-      'socials' => [
-        'cookedCounter' => $this->countcooked,
-        'ratedCounter' => $this->countrated,
-        'ratedSum' => $this->sumrated,
-        'viewCounter' => $this->countviewed,
-        'votedCounter' => $this->countvoted,
-        'votedSum' => $this->sumvoted,
-        'votedAvg1' => ($this->countvoted > 0 ? Formatter::float_format($this->sumvoted / $this->countvoted, 1) : 0),
-        'votedAvg0' => ($this->countvoted > 0 ? Formatter::float_format($this->sumvoted / $this->countvoted, 0) : 0),
-      ],
-      'tags' => $this->tags
-    ];
   }
 
   public function hasPictures() : bool {
@@ -445,31 +392,25 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
 
   public function setDescription(string $newDescription) : RecipeInterface {
     global $Controller;
-    if ($this->recipe_description != $newDescription) {
-      $this->recipe_description = $newDescription;
-      $this->changes['recipe_description'] = $newDescription;
-      $Controller->updateDbObject($this);
-    }
+    $this->recipe_description = $newDescription;
+    $this->changes['recipe_description'] = $newDescription;
+    $Controller->updateDbObject($this);
     return $this;
   }
 
   public function setEaterCount(int $newCount) : RecipeInterface {
     global $Controller;
-    if ($this->recipe_eater != $newCount) {
-      $this->recipe_eater = $newCount;
-      $this->changes['recipe_eater'] = $newCount;
-      $Controller->updateDbObject($this);
-    }
+    $this->recipe_eater = $newCount;
+    $this->changes['recipe_eater'] = $newCount;
+    $Controller->updateDbObject($this);
     return $this;
   }
 
   public function setName(string $newName) : RecipeInterface {
     global $Controller;
-    if ($this->recipe_name != $newName) {
-      $this->recipe_name = $newName;
-      $this->changes['recipe_name'] = $newName;
-      $Controller->updateDbObject($this);
-    }
+    $this->recipe_name = $newName;
+    $this->changes['recipe_name'] = $newName;
+    $Controller->updateDbObject($this);
     return $this;
   }
 
@@ -487,168 +428,18 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
 
   public function setSourceDescription(string $newDescription) : RecipeInterface {
     global $Controller;
-    if ($this->recipe_source_desc != $newDescription) {
-      $this->recipe_source_desc = $newDescription;
-      $this->changes['recipe_source_desc'] = $newDescription;
-      $Controller->updateDbObject($this);
-    }
+    $this->recipe_source_desc = $newDescription;
+    $this->changes['recipe_source_desc'] = $newDescription;
+    $Controller->updateDbObject($this);
     return $this;
   }
 
   public function setSourceUrl(string $newUrl) : RecipeInterface {
     global $Controller;
-    if ($this->recipe_source_url != $newUrl) {
-      $this->recipe_source_url = $newUrl;
-      $this->changes['recipe_source_url'] = $newUrl;
-      $Controller->updateDbObject($this);
-    }
+    $this->recipe_source_url = $newUrl;
+    $this->changes['recipe_source_url'] = $newUrl;
+    $Controller->updateDbObject($this);
     return $this;
-  }
-
-  public function update(array &$response, array $payload) : bool {
-    global $Controller;
-    $this
-      ->setDescription($payload['recipe-description'])
-      ->setEaterCount(intval($payload['recipe-eater']))
-      ->setName($payload['recipe-name'])
-      ->setSourceDescription($payload['recipe-source'])
-      ->setSourceUrl($payload['recipe-sourceurl']);
-    $response = $Controller->Config()->getResponseArray(1);
-    $this->updateIngredients($response, $payload);
-    $this->updateSteps($response, $payload);
-    return true;
-  }
-
-  private function updateIngredients(array &$response, array $payload) : void {
-    global $Controller;
-    $cnew = count($payload['recipe-ingredient-description']);
-    $cold = count($this->ingredients);
-    $min = min($cnew, $cold);
-    $key = array_keys($this->ingredients);
-    $additems = [];
-    $delitems = [];
-    for ($i=0; $i<$min; $i++) {
-      $ingredient = $this->ingredients[$key[$i]];
-      if ($payload['recipe-ingredient-description'][$i] == '') {
-        $delitems[] = $ingredient->getId();
-        continue;
-      }
-      $unit = null;
-      if ($payload['recipe-ingredient-unit'][$i] != '') {
-        $unit = $Controller->OM()->Unit($payload['recipe-ingredient-unit'][$i]);
-        if (is_null($unit)) {
-          $unit = new BlankUnit($payload['recipe-ingredient-unit'][$i]);
-          $res = $Controller->insertSimple('units', ['unit_name'], [$unit->getName()]);
-          if ($res != -1)
-            $unit = $Controller->OM()->Unit($res);
-        }
-      }
-      $ingredient->update([
-        'quantity' => $payload['recipe-ingredient-quantity'][$i],
-        'unit' => $unit,
-        'description' => $payload['recipe-ingredient-description'][$i],
-      ]);
-    }
-    if ($cnew < $cold) {
-      for ($i=$min; $i<$cold; $i++) {
-        $delitems[] = $this->ingredients[$key[$i]]->getId();
-      }
-    } else if ($cnew > $cold) {
-      for ($i=$min; $i<$cnew; $i++) {
-        if ($payload['recipe-ingredient-description'][$i] == '')
-          continue;
-        $unit = null;
-        if ($payload['recipe-ingredient-unit'][$i] != '') {
-          $unit = $Controller->OM()->Unit($payload['recipe-ingredient-unit'][$i]);
-          if (is_null($unit)) {
-            $unit = new BlankUnit($payload['recipe-ingredient-unit'][$i]);
-            $res = $Controller->insertSimple('units', ['unit_name'], [$unit->getName()]);
-            if ($res != -1)
-              $unit = $Controller->OM()->Unit($res);
-          }
-        }
-        $additems[] = [
-          $this->recipe_id,
-          (!is_null($unit) ? $unit->getId() : null),
-          ($payload['recipe-ingredient-quantity'][$i] == '' ? null : floatval($payload['recipe-ingredient-quantity'][$i])),
-          $payload['recipe-ingredient-description'][$i]
-        ];
-      }
-    }
-    if (count($additems) > 0) {
-      $Controller->insertSimple(
-        'recipe_ingredients',
-        ['recipe_id', 'unit_id', 'ingredient_quantity', 'ingredient_description'],
-        $additems
-      );
-    }
-    if (count($delitems) > 0) {
-      $query = new QueryBuilder(EQueryType::qtDELETE, 'recipe_ingredients');
-      $query->where('recipe_ingredients', 'ingredient_id', 'IN', $delitems)
-            ->andWhere('recipe_ingredients', 'recipe_id', '=', $this->recipe_id)
-            ->limit(count($delitems));
-      $Controller->delete($query);
-    }
-  }
-
-  private function updateSteps(array &$response, array $payload) : void {
-    global $Controller;
-    $cnew = count($payload['recipe-step-description']);
-    $cold = count($this->steps);
-    $min = min($cnew, $cold);
-    $key = array_keys($this->steps);
-    $additems = [];
-    $delitems = [];
-    for ($i=0; $i<$min; $i++) {
-      $step = $this->steps[$key[$i]];
-      if ($payload['recipe-step-description'][$i] == '') {
-        $delitems[] = $step->getId();
-        continue;
-      }
-      $step->update([
-        'description' => $payload['recipe-step-description'][$i],
-        'no' => ($i+1),
-        'title' => $payload['recipe-step-title'][$i],
-        'timePrep' => $payload['recipe-step-time-prep'][$i],
-        'timeRest' => $payload['recipe-step-time-rest'][$i],
-        'timeCook' => $payload['recipe-step-time-cook'][$i]
-      ]);
-    }
-    if ($cnew < $cold) {
-      for ($i=$min; $i<$cold; $i++) {
-        $delitems[] = $this->steps[$key[$i]]->getId();
-      }
-    } else if ($cnew > $cold) {
-      for ($i=$min; $i<$cnew; $i++) {
-        if ($payload['recipe-step-description'][$i] == '')
-          continue;
-        $additems[] = [
-          $this->recipe_id,
-          ($i+1),
-          $payload['recipe-step-title'][$i],
-          $payload['recipe-step-description'][$i],
-          ($payload['recipe-step-time-prep'][$i] == '' ? null : intval($payload['recipe-step-time-prep'][$i])),
-          ($payload['recipe-step-time-cook'][$i] == '' ? null : intval($payload['recipe-step-time-cook'][$i])),
-          ($payload['recipe-step-time-rest'][$i] == '' ? null : intval($payload['recipe-step-time-rest'][$i]))
-        ];
-      }
-    }
-    if (count($additems) > 0) {
-      $result = $Controller->insertSimple(
-        'recipe_steps',
-        ['recipe_id', 'step_no', 'step_title', 'step_data',
-         'step_time_preparation', 'step_time_cooking', 'step_time_chill'],
-        $additems
-      );
-
-    }
-    if (count($delitems) > 0) {
-      $query = new QueryBuilder(EQueryType::qtDELETE, 'recipe_steps');
-      $query->where('recipe_steps', 'step_id', 'IN', $delitems)
-            ->andWhere('recipe_steps', 'recipe_id', '=', $this->recipe_id)
-            ->limit(count($delitems));
-      $Controller->delete($query);
-    }
   }
 
 }

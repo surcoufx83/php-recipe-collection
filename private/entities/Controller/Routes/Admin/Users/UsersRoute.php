@@ -18,6 +18,9 @@ class UsersRoute extends Route implements RouteInterface {
   static function createOutput(array &$response) : bool {
     global $Controller, $OUT;
 
+    parent::addBreadcrumb($Controller->getLink('admin:main'), $Controller->l('breadcrumb_admin_home'));
+    parent::addBreadcrumb($Controller->getLink('admin:users'), $Controller->l('breadcrumb_admin_user'));
+
     parent::addButton($Controller->getLink('admin:new-user'), $Controller->Config()->Icons()->Add('fa-fw mr-1').$Controller->l('page_admin_user_btnCreate'));
 
     parent::setPage('admin:main');

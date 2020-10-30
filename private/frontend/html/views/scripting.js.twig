@@ -1,0 +1,10 @@
+
+    <script>
+
+      $(document).ready(function () {
+
+        {% if Dispatcher.getPattern() == '\\/' %}{% include 'views/dashboard/page-dashboard-script.js.twig' %}{% endif %}
+
+      });
+
+    </script>
