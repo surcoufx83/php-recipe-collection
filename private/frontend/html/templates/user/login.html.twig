@@ -1,0 +1,85 @@
+
+    <template id="login-template">
+      <b-container>
+        <div class="row pb-3">
+          <div class="col-12 col-md-6">
+            <h3 class="mb-3 font-weight-bold">{{ Controller.l('page_login_title') }}</h3>
+          </div>
+        </div>
+        <div class="row mb-3"
+          v-if="config.login.oauth2Enabled">
+          <div class="col-12 col-md-6 pb-4 "
+            v-bind:class="{'border-bottom': config.login.defaultEnabled}">
+            <h5 class="mb-3 font-weight-bold">{{ Controller.l('page_login_cloud_header') }}</h5>
+            <p class="text-muted text-small">{{ Controller.l('page_login_cloud_description') }}</p>
+            <p class="text-danger d-none">{{ Controller.l('page_login_cloud_failed') }}</p>
+            <form id="oauth2-form" method="get" action="{{ Controller.getLink('private:login-oauth2') }}">
+              <button type="submit" id="oauth2-submit-button" class="btn btn-blue font-weight-bold">
+                <fa-icon :icon="page.iconSet.cloud.icon" :space="page.iconSet.cloud.space"
+                  class="fa-fa mr-2"></fa-icon>
+                {{ Controller.l('page_login_cloud_submit') }}
+              </button>
+            </form>
+          </div>
+        </div>
+        <div class="row mb-3 d-none"
+          v-if="config.login.defaultEnabled">
+          <div class="col-12 col-md-6">
+            <h5 class="mb-3 font-weight-bold">{{ Controller.l('page_login_regular_header') }}</h5>
+            <p class="text-muted text-small">{{ Controller.l('page_login_regular_description') }}</p>
+            <form id="login-form" action="#">
+              <div class="form-group mb-3">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">{{ Config.Icons().Authentication('fa-fw')|raw }}</div>
+                  </div>
+                  <input type="text" class="form-control" id="login-user"
+                    name="login-user" placeholder="{{ Controller.l('page_login_nameField_placeholder') }}"
+                    value="" autofocus autocomplete="username" maxlength="32" />
+                  <div class="invalid-feedback" style="padding-left:48px;"
+                    id="login-user-feedback">
+                    {{ Controller.l('page_login_nameField_invalidFeedback') }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group mb-3">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">{{ Config.Icons.Password('fa-fw')|raw }}</div>
+                  </div>
+                  <input type="password" class="form-control" id="login-password"
+                    name="login-password" placeholder="{{ Controller.l('page_login_passwordField_placeholder') }}" value=""
+                    autocomplete="current-password" />
+                  <div class="invalid-feedback" style="padding-left:48px;"
+                    id="login-password-feedback">
+                    {{ Controller.l('page_login_passwordField_invalidFeedback') }}
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6">
+                  <input class="ml-0 form-check-input" type="checkbox" value="1"
+                    id="login-keepsession" name="login-keepsession" />
+                  <span class="ml-4 form-check-label" data-toggle="tooltip"
+                    data-placement="right" title="{{ Controller.l('page_login_keepSession_description') }}" for="login-keepsession">
+                    {{ Controller.l('page_login_keepSession_title') }}
+                    <sup class="text-blue">{{ Config.Icons.QuestionMark('fa-fw fa-sm')|raw }}</sup>
+                  </span>
+                </div>
+                <div class="col-6 text-right">
+                  <a class="small" href="/password-lost">{{ Controller.l('page_login_lostPassword_title') }}</a>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col">
+                  <button type="submit" id="login-submit-button" class="btn btn-blue font-weight-bold">
+                    {{ Config.Icons.Spinner('fa-fw fa-spin d-none', '', 'login-submit-spinner')|raw }}
+                    {{ Controller.l('page_login_submitButton_title') }}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </b-container>
+    </template>

@@ -14,12 +14,12 @@ interface RatingInterface {
   public function getComment() : string;
   public function getDate() : DateTime;
   public function getId() : int;
-  public function getRating() : int;
+  public function getRating() : ?int;
   public function getRecipe() : RecipeInterface;
   public function getRecipeId() : int;
   public function getUser() : UserInterface;
   public function getUserId() : int;
-  public function getVoting() : int;
+  public function getVoting() : ?int;
   public function hasCooked() : bool;
   public function hasRated() : bool;
   public function hasViewed() : bool;

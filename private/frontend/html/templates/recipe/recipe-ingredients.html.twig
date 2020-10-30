@@ -1,0 +1,32 @@
+          <div class="pt-5 pb-3 border-top border-light-dark" id="ingredients-anchor">
+            <h4>{{Controller.l('recipe_ingredients_header')}}</h4>
+            <p>
+              {{ Controller.l('recipe_ingredients_eater_count_prefix') }}
+              <strong class="mx-1">${ recipe.eaterCount }</strong>
+              {{ Controller.l('recipe_ingredients_eater_count_suffix') }}
+            </p>
+            <b-alert show variant="outline-blue"
+              class="px-2 px-lg-3 p-1">
+              <b-form inline>
+                {{ Controller.l('recipe_ingredients_eater_count_inputPrefix') }}
+                <input type="number" min="1" max="99"
+                  class="form-control form-control-sm text-center w-75px mx-2 py-0 fs-110 text-contrast bg-light"
+                  v-model="recipe.eaterCountCalc"
+                  @change="onEaterCountChanged"
+                  ></input>
+                {{ Controller.l('recipe_ingredients_eater_count_inputPersons') }}
+              </b-form>
+            </b-alert>
+            <table class="table table-borderless table-sm">
+              <tr>
+                <th class="pl-0">Mengenangabe</th>
+                <th class="w-100">Zutatenbeschreibung</th>
+              </tr>
+              <tr is="recipe-ingredient"
+                v-for="(ingredient, index) in recipe.preparation.ingredients" :key="index"
+                :description="ingredient.description"
+                :quantity="ingredient.quantityCalc"
+                :unit="ingredient.unit"
+                ></recipe-ingredient>
+            </table>
+          </div>

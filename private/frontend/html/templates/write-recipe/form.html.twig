@@ -1,0 +1,486 @@
+    <template id="recipe-write-template">
+      <b-container>
+
+        <b-form
+          @submit="onSubmit"
+          class="needs-validation"
+          autocomplete="off" novalidate
+          enctype="multipart/form-data"
+          id="new-recipe-form"
+          v-if="page != null && !page.loading && page.currentRecipe != null">
+
+          <b-row><!-- header title + description -->
+            <b-col cols="12" v-if="page.currentRecipe.id == 0">
+              <h4>{{ Controller.l('newRecipe_intro_header') }}</h4>
+              <p>{{ Controller.l('newRecipe_intro_subject')|raw }}</p>
+              <p>{{ Controller.l('newRecipe_intro_requiredFields')|raw }}</p>
+            </b-col>
+            <b-col cols="12" v-else>
+              <h4>{{ Controller.l('newRecipe_intro_editHeader') }}</h4>
+            </b-col>
+          </b-row><!-- header title + description -->
+
+          <b-row class="mt-3" align-h="between"><!-- heading common data + pictures -->
+            <b-col cols="12" lg="5">
+              <h5>{{ Controller.l('newRecipe_chapter1_header') }}</h5>
+            </b-col>
+            <b-col cols="12" lg="6" class="d-none d-lg-block" v-if="page.currentRecipe.id == 0">
+              <h5>{{ Controller.l('newRecipe_chapter3_header') }}</h5>
+            </b-col>
+            <b-col cols="12" lg="6" class="d-none d-lg-block" v-else>
+              <h5>{{ Controller.l('newRecipe_chapter3_header2') }}</h5>
+            </b-col>
+          </b-row><!-- heading common data + pictures -->
+
+          <b-row align-h="between" class="mt-2"><!-- form common data + pictures -->
+
+            <b-col cols="12" lg="5"><!-- form common data -->
+
+              <b-form-row><!-- form recipe name -->
+                <b-form-group
+                  id="recipe-name-group"
+                  label-for="recipe-name-input"
+                  description="{{ Controller.l('newRecipe_chapter1_recipeNameDescription') }}"
+                  invalid-feedback="{{ Controller.l('newRecipe_chapter1_recipeNameInvalidFb') }}"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b>{{ Controller.l('newRecipe_chapter1_recipeName') }} <span class='text-contrast'>*</span></b>
+                  </template>
+                  <b-form-input
+                    id="recipe-name-input"
+                    name="recipe-name"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.name"
+                    placeholder="{{ Controller.l('newRecipe_chapter1_recipeNamePlaceholder') }}"
+                    required trim>
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row><!-- form recipe name -->
+
+              <b-form-row><!-- form recipe description -->
+                <b-form-group
+                  id="recipe-description-group"
+                  label-for="recipe-description-input"
+                  description="{{ Controller.l('newRecipe_chapter1_recipeDescDescription') }}"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b>{{ Controller.l('newRecipe_chapter1_recipeDesc') }}</b>
+                  </template>
+                  <b-form-textarea
+                    id="recipe-description-input"
+                    name="recipe-description"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.description"
+                    rows="3" max-rows="10"
+                    placeholder="{{ Controller.l('newRecipe_chapter1_recipeDescPlaceholder') }}"
+                    trim>
+                  </b-form-textarea>
+                </b-form-group>
+              </b-form-row><!-- form recipe description -->
+
+              <b-form-row><!-- form recipe eater -->
+                <b-form-group
+                  id="recipe-eater-group"
+                  label-for="recipe-eater-input"
+                  description="{{ Controller.l('newRecipe_chapter1_recipeEaterDescription') }}"
+                  invalid-feedback="{{ Controller.l('newRecipe_chapter1_recipeEaterInvalidFb') }}"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b>{{ Controller.l('newRecipe_chapter1_recipeEater') }} <span class='text-contrast'>*</span></b>
+                  </template>
+                  <b-form-input
+                    id="recipe-eater-input"
+                    name="recipe-eater"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.eaterCount"
+                    type="number" min="1" max="100"
+                    :class="'w-75px'"
+                    required>
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row><!-- form recipe eater -->
+
+            </b-col><!-- form common data -->
+
+            <b-col cols="12" lg="6" v-if="page.currentRecipe.id == 0"><!-- form pictures -->
+
+              <b-row class="d-block d-lg-none row mt-3"><!-- form pictures sm title -->
+                <b-col cols="12">
+                  <h5>{{ Controller.l('newRecipe_chapter3_header') }}</h5>
+                </b-col>
+              </b-row><!-- form pictures sm title -->
+
+              <b-form-row>
+                <b-form-group
+                  id="recipe-pictures-group"
+                  description="{{ Controller.l('newRecipe_chapter3_recipePicturesDescription') }}"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b>{{ Controller.l('newRecipe_chapter3_recipePictures') }}</b>
+                  </template>
+                  <b-row>
+                    <b-col
+                      v-for="(picture, index) in page.currentRecipe.pictures"
+                      :key="index"
+                      class="p-1 col-6">
+                      <div class="removable-image-area">
+                        <b-img src="/pictures/_dummy.jpg"
+                          :id="'picture-image-' + index"
+                          thumbnail fluid class="rounded of-cover"></b-img>
+                        <btn-sm-blue
+                          title="" class="remove-image fs-80 p-0" style="display: inline;"
+                          :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                          @click="onPictureDelBtnClick(index)">
+                        </btn-sm-blue>
+                        <b-form-file
+                          v-model="picture.file"
+                          :id="'file-' + index"
+                          :name="'recipe-picture-' + index"
+                          accept="image/jpeg, image/png"
+                          class="image-upload-input" style="width: 0px; height: 0px; overflow: hidden;"
+                          @input="onPictureInput(index)"></b-form-file>
+                      </div>
+                    </b-col>
+                  </b-row>
+
+                  <b-form-row
+                    class="mb-2"> <!-- add ingredient button -->
+                    <b-col cols="5" md="2" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
+                      <btn-sm-blue
+                        title="" class="w-75px"
+                        :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+                        @click="onPictureAddBtnClick()">
+                      </btn-sm-blue>
+                    </b-col>
+                  </b-form-row> <!-- add ingredient button -->
+
+                </b-form-group>
+              </b-form-row>
+
+            </b-col><!-- form pictures -->
+            <b-col cols="12" lg="6" v-else><!-- form pictures link -->
+
+              <b-row class="d-block d-lg-none row mt-3"><!-- form pictures sm title -->
+                <b-col cols="12">
+                  <h5>{{ Controller.l('newRecipe_chapter3_header2') }}</h5>
+                  <p><router-link
+                    :to="{ name: 'gallery', params: { id: ''+page.currentRecipe.id, name: ''+page.currentRecipe.name } }">
+                    <fa-icon :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space" class="mr-2"></fa-icon>
+                    {{ Controller.l('newRecipe_chapter3_togalleryLink') }}</router-link>
+                  </p>
+                </b-col>
+              </b-row><!-- form pictures sm title -->
+
+              <b-row class="d-none d-lg-block row"><!-- form pictures lg title -->
+                <b-col cols="12">
+                  <p><router-link
+                    :to="{ name: 'gallery', params: { id: ''+page.currentRecipe.id, name: ''+page.currentRecipe.name } }">
+                    <fa-icon :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space" class="mr-2"></fa-icon>
+                    {{ Controller.l('newRecipe_chapter3_togalleryLink') }}</router-link>
+                  </p>
+                </b-col>
+              </b-row><!-- form pictures lg title -->
+
+            </b-col><!-- form pictures link -->
+
+          </b-row><!-- form common data + pictures -->
+
+          <b-row class="mt-3"><!-- heading ingredients -->
+            <b-col cols="12" lg="6">
+              <h5>{{ Controller.l('newRecipe_chapter2_header') }} <span class="text-contrast">*</span></h5>
+              <p>{{ Controller.l('newRecipe_chapter2_description')|raw }}</p>
+            </b-col>
+          </b-row><!-- heading ingredients -->
+
+          <b-row class="mt-3"><!-- ingredients -->
+            <b-col cols="12" class="px-3 px-lg-5"
+              v-if="page.currentRecipe != undefined && page.currentRecipe.preparation != undefined">
+
+              <b-form-row><!-- ingredients header -->
+                <b-col cols="3" md="2" class="px-1 px-md-2 mb-2">
+                  <b class="ml-1">{{ Controller.l('newRecipe_chapter2_quantity_header') }}</b><br />
+                  <span class="ml-2 text-muted text-small text-nowrap">{{ Controller.l('newRecipe_chapter2_quantity_placeholder') }}</span>
+                </b-col>
+                <b-col cols="3" class="px-1 px-md-2 mb-2">
+                  <b class="ml-1">{{ Controller.l('newRecipe_chapter2_unit_header') }}</b><br />
+                  <span class="ml-2 text-muted text-small text-nowrap">{{ Controller.l('newRecipe_chapter2_unit_placeholder') }}</span>
+                </b-col>
+                <b-col cols="6" class="px-1 px-md-2 mb-2">
+                  <b class="ml-1">{{ Controller.l('newRecipe_chapter2_ingredient_header') }} <span class="text-contrast">*</span></b><br />
+                  <span class="ml-2 text-muted text-small text-nowrap">{{ Controller.l('newRecipe_chapter2_ingredient_placeholder') }}</span>
+                </b-col>
+              </b-form-row><!-- ingredients header -->
+
+              <b-form-row
+                class="mb-2 draggable-item"
+                v-for="(ingredient, index) in page.currentRecipe.preparation.ingredients"> <!-- ingredient -->
+                <b-col cols="5" md="2" class="px-1 px-md-2 mb-2 mb-md-0">
+                  <b-form-input
+                    :id="'ingredient-quantity-' + index"
+                    name="recipe-ingredient-quantity[]"
+                    size="sm"
+                    v-model="ingredient.quantity"
+                    type="number" placeholder="{{ Controller.l('newRecipe_chapter2_quantity_header') }}"
+                    >
+                  </b-form-input>
+                </b-col>
+                <b-col cols="5" md="3" class="px-1 px-md-2 mb-2 mb-md-0">
+                  <b-form-input
+                    :id="'ingredient-unit-' + index"
+                    name="recipe-ingredient-unit[]"
+                    size="sm"
+                    v-model="ingredient.unit.name"
+                    type="text" placeholder="{{ Controller.l('newRecipe_chapter2_unit_noUnit') }}"
+                    >
+                  </b-form-input>
+                </b-col>
+                <b-col cols="10" md="6" class="px-1 px-md-2 mb-2 mb-md-0">
+                  <b-form-input
+                    :id="'ingredient-description-' + index"
+                    name="recipe-ingredient-description[]"
+                    size="sm"
+                    v-model="ingredient.description"
+                    type="text" placeholder="{{ Controller.l('newRecipe_chapter2_ingredient_header') }}"
+                    :required="index == 0">
+                  </b-form-input>
+                </b-col>
+                <b-col cols="2" md="1" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
+                  <btn-sm-blue
+                    title="" class="w-75px"
+                    :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                    @click="onIngredientDelBtnClick(index)"></btn-sm-blue>
+                </b-col>
+              </b-form-row><!-- ingredient -->
+
+              <b-row
+                class="mb-2"  align-h="center"> <!-- add ingredient button -->
+                <b-col cols="12" md="6" class="px-1 px-md-2 mb-2 mb-md-0 text-center" align-self="center">
+                  <btn-sm-blue
+                    title="" class="w-75px"
+                    :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+                    @click="onIngredientAddBtnClick()">
+                  </btn-sm-blue>
+                  <b-alert variant="danger"
+                    :show="form.validationFailed && page.currentRecipe.preparation.ingredients.length == 0"
+                    class="p-1 mt-2">
+                    <fa-icon
+                      :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"
+                      ></fa-icon>
+                    ${ $t('pages.writeRecipe.validation.missingIngredient') }
+                  </b-alert>
+                </b-col>
+              </b-row> <!-- add ingredient button -->
+
+            </b-col>
+          </b-row><!-- ingredients -->
+
+          <b-row class="mt-3"><!-- heading preparation -->
+            <b-col cols="12" lg="6">
+              <h5>{{ Controller.l('newRecipe_chapter4_header') }} <span class="text-contrast">*</span></h5>
+              <p>{{ Controller.l('newRecipe_chapter4_description')|raw }}</p>
+            </b-col>
+          </b-row><!-- heading preparation -->
+
+          <b-row class="mt-3"><!-- preparation -->
+            <b-col cols="12" class="px-3 px-lg-5"
+              v-if="page.currentRecipe != undefined && page.currentRecipe.preparation != undefined">
+
+              <b-form-row
+                class="mb-3 draggable-item"
+                v-for="(step, index) in page.currentRecipe.preparation.steps"> <!-- preparation step -->
+
+                <b-col cols="12" class="px-1 px-md-2 mb-2"> <!-- prep step header -->
+                  <h6><strong>${ index+1 }. {{ Controller.l('newRecipe_chapter4_step_stepname') }}${ step.name != '' ? ': ' : '' }${ step.name }</strong></h6>
+                </b-col> <!-- prep step header -->
+
+                <b-col cols="12" md="4" lg="3" class="px-1 px-md-2 mb-2"> <!-- prep step title -->
+                  <strong class="fs-80">{{ Controller.l('newRecipe_chapter4_step_title_description') }}</strong>
+                </b-col>
+                <b-col cols="12" md="8" lg="9" class="px-1 px-md-2 mb-2">
+                  <b-form-input
+                    :id="'step-title-' + index"
+                    name="recipe-step-title[]"
+                    size="sm"
+                    v-model="step.name"
+                    type="text" placeholder="{{ Controller.l('newRecipe_chapter4_step_title_placeholder') }}">
+                  </b-form-input>
+                </b-col> <!-- prep step title -->
+
+                <b-col cols="12" md="4" lg="3" class="px-1 px-md-2 mb-2"> <!-- prep step description -->
+                  <strong class="fs-80">
+                    {{ Controller.l('newRecipe_chapter4_step_preparation_description') }}
+                    <span class="text-contrast" v-if="index == 0"> *</span>
+                  </strong>
+                </b-col>
+                <b-col cols="12" md="8" lg="9" class="px-1 px-md-2 mb-2">
+                  <b-form-textarea
+                    :id="'step-description-' + index"
+                    name="recipe-step-description[]"
+                    size="sm" rows="4"
+                    v-model="step.userContent"
+                    placeholder="{{ Controller.l('newRecipe_chapter4_step_duration_preparation') }}"
+                    :required="index == 0">
+                  </b-form-textarea>
+                </b-col> <!-- prep step description -->
+
+                <b-col cols="12" md="4" lg="3" class="px-1 px-md-2 mb-2"> <!-- prep step time consumed -->
+                  <strong class="fs-80">
+                    {{ Controller.l('newRecipe_chapter4_step_duration_description') }}
+                  </strong>
+                </b-col>
+                <b-col cols="3" md="2" lg="2" class="px-1 px-md-2 mb-2">
+                  <b-form-input
+                    :id="'step-time-prep-' + index"
+                    name="recipe-step-time-prep[]"
+                    size="sm"
+                    v-model="step.timeConsumed.preparing"
+                    type="number" min="0" max="43200" placeholder="{{ Controller.l('newRecipe_chapter4_step_duration_preparation') }}">
+                  </b-form-input>
+                </b-col>
+                <b-col cols="3" md="2" lg="2" class="px-1 px-md-2 mb-2">
+                  <b-form-input
+                    :id="'step-time-rest-' + index"
+                    name="recipe-step-time-rest[]"
+                    size="sm"
+                    v-model="step.timeConsumed.rest"
+                    type="number" min="0" max="43200" placeholder="{{ Controller.l('newRecipe_chapter4_step_duration_rest') }}">
+                  </b-form-input>
+                </b-col>
+                <b-col cols="3" md="2" lg="2" class="px-1 px-md-2 mb-2">
+                  <b-form-input
+                    :id="'step-time-cook-' + index"
+                    name="recipe-step-time-cook[]"
+                    size="sm"
+                    v-model="step.timeConsumed.cooking"
+                    type="number" min="0" max="43200" placeholder="{{ Controller.l('newRecipe_chapter4_step_duration_cooking') }}">
+                  </b-form-input>
+                </b-col>
+                <b-col cols="1" lg="2">&nbsp;</b-col>
+                <b-col cols="2" md="1" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
+                  <btn-sm-blue
+                    title="" class="w-75px"
+                    :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                    @click="onStepDelBtnClick(index)"></btn-sm-blue>
+                </b-col> <!-- prep step time consumed -->
+
+              </b-form-row> <!-- preparation step -->
+
+              <b-row
+                class="mb-2" align-h="center"> <!-- add prep step button -->
+                <b-col cols="12" md="6" class="px-1 px-md-2 mb-2 mb-md-0 text-center" align-self="center">
+                  <btn-sm-blue
+                    title="" class="w-75px"
+                    :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+                    @click="onStepAddBtnClick()"></btn-sm-blue>
+                  <b-alert variant="danger"
+                    :show="form.validationFailed && page.currentRecipe.preparation.steps.length == 0"
+                    class="p-1 mt-2">
+                    <fa-icon
+                      :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"
+                      ></fa-icon>
+                    ${ $t('pages.writeRecipe.validation.missingStep') }
+                  </b-alert>
+                </b-col>
+              </b-row> <!-- add prep step button -->
+
+            </b-col>
+          </b-row><!-- preparation -->
+
+          <b-row class="mt-3"><!-- heading others -->
+            <b-col cols="12" lg="6">
+              <h5>{{ Controller.l('newRecipe_chapter5_header') }}</h5>
+            </b-col>
+          </b-row><!-- heading others -->
+
+          <b-row class="mt-3"
+            v-if="page.currentRecipe != undefined && page.currentRecipe.source != undefined"><!-- others -->
+            <b-col cols="12" md="6"> <!-- source description -->
+
+              <b-form-row>
+                <b-form-group
+                  id="recipe-source"
+                  label-for="recipe-source-input"
+                  description="{{ Controller.l('newRecipe_chapter1_recipeSourceTextDescription') }}"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b>{{ Controller.l('newRecipe_chapter1_recipeSourceText') }}</b>
+                  </template>
+                  <b-form-input
+                    id="recipe-source-input"
+                    name="recipe-source"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.source.description"
+                    placeholder="{{ Controller.l('newRecipe_chapter1_recipeSourceTextPlaceholder') }}"
+                    trim>
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row>
+
+            </b-col> <!-- source description -->
+
+            <b-col cols="12" md="6"> <!-- source url -->
+
+              <b-form-row>
+                <b-form-group
+                  id="recipe-sourceourl"
+                  label-for="recipe-sourceurl-input"
+                  description="{{ Controller.l('newRecipe_chapter1_recipeSourceUrlDescription') }}"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b>{{ Controller.l('newRecipe_chapter1_recipeSourceUrl') }}</b>
+                  </template>
+                  <b-form-input
+                    id="recipe-sourceurl-input"
+                    name="recipe-sourceurl"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.source.url"
+                    placeholder="{{ Controller.l('newRecipe_chapter1_recipeSourceUrlPlaceholder') }}"
+                    trim>
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row>
+
+            </b-col> <!-- source url -->
+
+          </b-row><!-- others -->
+
+          <b-row class="mt-3" align-h="center"><!-- submit -->
+            <b-col cols="12" md="6" class="text-center" align-self="center">
+              <b-container
+                v-if="page.currentRecipe.id == 0">
+                <b-button type="submit"
+                  v-if="!progress.sending && !form.completed"
+                  class="btn-blue">
+                  <fa-icon :icon="page.iconSet.play.icon" :space="page.iconSet.play.space"></fa-icon>
+                  {{ Controller.l('newRecipe_submitButton_title') }}
+                </b-button>
+                <b-button type="submit"
+                  v-if="!progress.sending && form.completed"
+                  class="btn-success">
+                  <fa-icon :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"></fa-icon>
+                  {{ Controller.l('newRecipe_submitButton_submitted') }}
+                </b-button>
+              </b-container>
+              <b-container v-else>
+                <b-button type="submit"
+                  v-if="!progress.sending && this.$route.name == 'editRecipe'"
+                  class="btn-blue">
+                  <fa-icon :icon="page.iconSet.play.icon" :space="page.iconSet.play.space"></fa-icon>
+                  {{ Controller.l('newRecipe_submitButton_editTitle') }}
+                </b-button>
+              </b-container>
+              <b-alert variant="danger"
+                :show="form.validationFailed"
+                class="p-1 mt-2">
+                <fa-icon
+                  :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"
+                  ></fa-icon>
+                ${ $t('pages.writeRecipe.validation.missingInfo') }
+              </b-alert>
+            </b-col>
+          </b-row><!-- submit -->
+
+        </b-form>
+        {% include 'templates/write-recipe/modal.html.twig' %}
+      </b-container>
+    </template>

@@ -1,0 +1,132 @@
+
+    <template id="sidebar-template">
+      <div>
+        <b-sidebar id="sidebar-main"
+          :page="page"
+          bg-variant="light-blue"
+          @change="toggleSidebar"
+          shadow
+          :visible="page.sidebar.visible"
+          no-header
+          :no-close-on-route-change="page.sidebar.initialVisible"
+          no-close-on-esc>
+          <ul class="nav-sidebar-level1">
+            <sidebar-ul1-li
+              v-for="(route, index) in page.sidebar.routes" :key="index"
+              v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
+              :to="route.to"
+              :params="route.to != 'recipe' && route.to != 'random' ? { } :
+                (
+                  route.to == 'recipe' ? { id: page.currentRecipe.id, name: page.currentRecipe.name} :
+                  (
+                    page.currentRecipe.id != undefined ? { id: '-'+page.currentRecipe.id } : { }
+                  )
+                )"
+              :icon="route.icon"
+              :text="route.to != 'recipe' ? $t(route.text) : page.currentRecipe.name"
+              :children="route.children"
+              :exact="route.exact"
+              ></sidebar-ul1-li>
+          </ul>
+          <template slot="footer">
+            <div v-b-toggle.sidebar-main class="d-flex bg-dark text-gray align-items-center px-3 py-2 fs-80">
+              <span class="mr-auto">
+                <b-icon icon="chevron-double-left" class="text-100"></b-icon>
+                {{ Controller.l('navigation_sidebar_close') }}
+              </span>
+            </div>
+          </template>
+        </b-sidebar>
+      </div>
+    </template>
+
+    <template id="sidebar-ul1-li-template">
+      <li>
+        <router-link :to="{ name: to, params: params }">
+          <fa-icon :fas="fas" :far="far" :icon="icon"></fa-icon>
+          ${text}
+        </router-link>
+        <ul class="nav-sidebar-level2"
+          v-if="children && children.length > 0 && ($route.name === to || ($route.matched.length > 0 && $route.matched[0].name === to))">
+          <sidebar-ul2-li
+            v-for="(route, index) in children" :key="index"
+            v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
+            :to="route.to"
+            :params="route.to != 'recipe' ? { } : { id: page.currentRecipe.id, name: page.currentRecipe.name}"
+            :icon="route.icon"
+            :text="route.to != 'recipe' ? $t(route.text) : page.currentRecipe.name"
+            :exact="route.exact"
+            ></sidebar-ul2-li>
+        </ul>
+      </li>
+    </template>
+
+    <template id="sidebar-ul2-li-template">
+      <li>
+        <router-link :to="{ name: to, params: params }">
+          <fa-icon :fas="fas" :far="far" :icon="icon"></fa-icon>
+          ${text}
+        </router-link>
+      </li>
+    </template>
+
+    <template id="fa-icon-template">
+      <i :class="[
+          {fas: (fas && !far && !space) || space === 'fas'},
+          {far: ((far || !fas) && !space) || space === 'far'},
+          {'fa-fw': fw === true},
+          {'fa-spin': spin === true},
+          {'fa-pulse': pulse === true},
+          icon ? 'fa-' + icon : 'fa-question'
+        ]"></i>
+    </template>
+
+    <template id="page-actions-container-template">
+      <b-container fluid class="header-container header-container-border">
+        <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+        </ul>
+        <b-container class="text-right nav-buttons px-0"
+          v-if="page.contentData.hasActions === true && page.contentData.actions.length === 0 && page.currentRecipe !== null && page.currentRecipe.id > 0"
+          >
+          <recipe-actions-container :page="page" :user="user"
+            @click="onClick"></recipe-actions-container>
+        </b-container>
+      </b-container>
+    </template>
+
+    <template id="recipe-actions-container-template">
+      <b-container class="px-0">
+        <btn-sm-blue v-if="
+          page.currentRecipe !== null && user !== null &&
+          ('ownerId' in page.currentRecipe) && ('id' in user) &&
+          page.currentRecipe.ownerId === user.id &&
+          $route.name == 'recipe'"
+          subject="edit"
+          :title="$t('pages.recipe.actionbtn.edit')"
+          :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
+          @click="onClick"></btn-sm-blue>
+        <btn-sm-blue v-if="
+          page.currentRecipe !== null && user !== null &&
+          ('ownerId' in page.currentRecipe) && ('id' in user) &&
+          page.currentRecipe.ownerId === user.id &&
+          ($route.name == 'editRecipe' || $route.name == 'gallery')"
+          subject="toRecipe"
+          title="{{ Controller.l('recipe_options_toRecipe') }}"
+          :icon="page.iconSet.back.icon" :space="page.iconSet.back.space"
+          outline
+          @click="onClick"></btn-sm-blue>
+      </b-container>
+    </template>
+
+    <template id="btn-scrollto-template">
+      <btn-sm-blue
+        :badge="badge"
+        :badgeicon="badgeicon"
+        :outline="outline"
+        :title="title"
+        :subject="subject"
+        :target="target"
+        :icon="icon"
+        :space="space"
+        @click="onClick"></btn-sm-blue>
+    </template>

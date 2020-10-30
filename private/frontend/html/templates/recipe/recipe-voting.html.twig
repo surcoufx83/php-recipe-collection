@@ -1,0 +1,18 @@
+
+          <div
+            class="mt-3"
+            v-if="recipe.ownerId !== user.id">
+            <h5>{{Controller.l('recipe_rate_header')}}</h5>
+            <div v-if="page.self.hasVoted === false">
+              <p class="text-small text-muted">{{ Controller.l('recipe_rate_subject') }}</p>
+              <b-button size="sm" variant="blue"
+                @click="onRatingStartButtonPress">
+                <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space"
+                  class="fa-fw mr-2"></fa-icon>
+                {{ Controller.l('recipe_rate_button') }}
+              </b-button>
+            </div>
+            <div v-else>
+              <p class="text-small text-muted">{{ Controller.l('recipe_rate_voted_subject') }}</p>
+            </div>
+          </div>

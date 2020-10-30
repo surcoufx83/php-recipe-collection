@@ -1,0 +1,25 @@
+        <template id="rc-breadcrumbbar-template">
+          <b-container fluid
+            class="container-max1280 d-flex breadcrumbs-container"> <!-- rc-breadcrumbbar -->
+            <b-container class="breadcrumbs-items fs-80 mx-0 px-0">
+              <ul class="breadcrumbs-list">
+                <rc-breadcrumbitem
+                  v-for="(bc, index) in items" v-bind:key="index"
+                  v-bind:target="bc.target"
+                  v-bind:title="bc.title"
+                  v-bind:params="bc.params"
+                  v-bind:sm="bc.sm"
+                ></rc-breadcrumbitem>
+              </ul>
+            </b-container>
+          </b-container> <!-- rc-breadcrumbbar -->
+        </template>
+
+        <template id="rc-breadcrumbitem-template">
+          <li class="breadcrumbs-item"
+            v-bind:class="{ 'd-none d-lg-flex': sm }">
+            <router-link
+              :to="{ name: target, params: params }">${ title }
+            </router-link>
+          </li>
+        </template>

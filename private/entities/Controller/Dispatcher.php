@@ -47,7 +47,7 @@ final class Dispatcher {
 
     if (array_key_exists('output', $params))
       $this->outputMode = $params['output'];
-    else if (strpos($_SERVER['REQUEST_URI'], '/ajax/') === 0)
+    else if (strpos($_SERVER['REQUEST_URI'], '/ajax/') === 0 || strpos($_SERVER['REQUEST_URI'], '/api/') === 0)
       $this->outputMode = EOutputMode::JSON;
     else
       $this->outputMode = EOutputMode::Default;
@@ -86,6 +86,9 @@ final class Dispatcher {
 
     if (!$this->matched)
       $this->exitError(70, null, null, null, $Controller->getLink('private:home'));
+
+    if ($this->outputMode == EOutputMode::Default)
+      require_once DIR_BACKEND  .'/web.php';
 
     $response = [];
     $result = $this->matchedHandler::createOutput($response);
@@ -333,6 +336,16 @@ final class Dispatcher {
 
   public function getPattern() : string {
     return $this->matchedPattern;
+  }
+
+  public function moved(string $url) : void {
+    header('Location: '.$url, true, 301);
+    exit();
+  }
+
+  public function notFound() : void {
+    header('HTTP/1.0 404 Not Found', true, 404);
+    exit;
   }
 
   public function queryOAuthUserData() : bool {
