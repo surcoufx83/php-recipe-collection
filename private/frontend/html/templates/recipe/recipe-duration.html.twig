@@ -4,15 +4,15 @@
             <p v-html="$t('pages.recipe.preparation.timeconsumption.overall', { duration: duration(recipe.preparation.timeConsumed.total) })"></p>
             <div class="progress bg-transparent rounded-0 mb-2"
               style="height:1.6rem;">
-              <div class="progress-bar bg-contrast-lighter rounded mx-1" role="progressbar"
+              <div class="progress-bar progress-element-1 rounded mx-1" role="progressbar"
                 :style="pbPrepWidth" :aria-valuenow="pbPrepWidth"
                 :title="pbPrepLabelFull"
                 aria-valuemin="0" aria-valuemax="100" v-html="pbPrepLabel"></div>
-              <div class="progress-bar bg-contrast rounded mx-1" role="progressbar"
+              <div class="progress-bar progress-element-2 rounded mx-1" role="progressbar"
                 :style="pbRestWidth" :aria-valuenow="pbRestWidth"
                 :title="pbRestLabelFull"
                 aria-valuemin="0" aria-valuemax="100" v-html="pbRestLabel"></div>
-              <div class="progress-bar bg-contrast-darker rounded mx-1" role="progressbar"
+              <div class="progress-bar progress-element-3 rounded mx-1" role="progressbar"
                 :style="pbCookWidth" :aria-valuenow="pbCookWidth"
                 :title="pbCookLabelFull"
                 aria-valuemin="0" aria-valuemax="100" v-html="pbCookLabel"></div>

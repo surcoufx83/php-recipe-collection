@@ -1,15 +1,36 @@
 
-$bg-contrast:         #1C77C3;
-$bg-contrast-brighter: #3B97E3;
-$bg-contrast-darker:  #14588F;
+$beige:           #F5EAE1;
+$white:           #FFFFFF;
+// $blue:
+// $blue-light:
+$blue-dark:       #39608F;
+//
+$green:           #589014;
+$green-light:     #79C518;
+$green-dark:      #375A0C;
+$green-dark-dark: #162405;
+//
+$brown:           #665343;
+$brown-light:     #947861;
+$brown-light-light: #AE9784;
+$brown-dark:      #4A3C30;
+//
+$orange:          #D94F1B;
+// $orange-light:
+// $orange-dark:
+
+
+$bg-contrast:         $brown; //hover text
+$bg-contrast-brighter: #FF1593; // NOT IN USE (pink)
+$bg-contrast-darker:  #002448; //top-bar
 $bg-contrast-10:      rgba(28, 119, 195, .1);
-$bg-contrast-light:   #EDF6FC;
-$bg-contrast-dark:    #0D3759;
+$bg-contrast-light:   $blue-dark; //sidebar-background
+$bg-contrast-dark:    $white; //sidebar-text
 $bg-contrast-dark-10: rgba(13, 55, 89, .1);
-$bg-dark:             #313531;
-$bg-gray:             #BFC4BF;
-$bg-light:            #E6E8E6;
-$bg-muted:            #D5D8D5;
+$bg-dark:             #FF1593; // NOT IN USE (pink)
+$bg-gray:             #BFC4BF; //sidebar-buttom-text, lines
+$bg-light:            $beige; //main-background color
+$bg-muted:            #FF1593; // NOT IN USE (pink)
 
 $shadow-contrast:     $bg-contrast;
 $shadow-dark:         $bg-dark;
@@ -24,8 +45,8 @@ $text-contrast-hover: $bg-contrast-dark;
 $text-danger:         #ef6461;
 $text-hover:          $bg-contrast-dark;
 $text-light:          $bg-light;
-$text-link:           $bg-contrast-dark;
-$text-link-hover:     $bg-contrast;
+$text-link:           $green-dark; //standard-link
+$text-link-hover:     $green-light;
 $text-muted:          $bg-dark;
 $text-primary:        #141514;
 $text-success:        #69995d;
@@ -86,13 +107,13 @@ h1, h2, h3 {
 
 .btn-blue, .btn-outline-blue.active {
   color: $bg-light!important;
-  background-color: $bg-contrast-dark;
-  border-color: $bg-contrast-dark;
+  background-color: $green;
+  border-color: $green;
 
   &:hover {
     color: $bg-light!important;
-    background-color: $bg-contrast;
-    border-color: $bg-contrast;
+    background-color: $green-dark;
+    border-color: $green-dark;
   }
 }
 
@@ -277,14 +298,14 @@ ul.list-group-sm li.list-group-item {
 
 .alert-blue {
   color: $bg-light!important;
-  background-color: $bg-contrast-dark;
-  border-color: $bg-contrast-dark;
+  background-color: $brown-light-light;
+  border-color: $brown-light-light;
 
-  &:hover {
-    color: $bg-light!important;
-    background-color: $bg-contrast;
-    border-color: $bg-contrast;
-  }
+  // &:hover {
+  //   color: $bg-light!important;
+  //   background-color: $bg-contrast;
+  //   border-color: $bg-contrast;
+  // }
 }
 
 .alert-outline-blue {
@@ -303,6 +324,17 @@ ul.list-group-sm li.list-group-item {
   color: $text-contrast;
   background-color: #fff;
   border-color: $border-contrast;
+}
+
+.progress-element-1 {
+  background-color: $green-light;
+}
+
+.progress-element-2 {
+  background-color: $green;
+}
+.progress-element-3 {
+  background-color: $green-dark;
 }
 
 div.page {
@@ -344,10 +376,11 @@ div.page {
         }
 
         a {
-          transition: padding 0.3s;
-          display: flex;
-          width: 100%;
           align-items: center;
+          color: $white;
+          display: flex;
+          transition: padding 0.3s;
+          width: 100%;
           i {
             margin-right: .5rem;
           }
@@ -404,6 +437,7 @@ div.page {
 
             &::after {
               content: '›';
+              color: $text-link;
               position: absolute;
               right: 4px;
               top: 50%;
