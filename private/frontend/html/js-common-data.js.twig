@@ -95,7 +95,8 @@
           tags: '',
           title: '',
           user: '',
-          voting: 0
+          voting: 0,
+          hasFocus: false
         },
         records: {
           total: 0,
@@ -146,73 +147,81 @@
     },
     success: true,
     user: {% if Controller.isAuthenticated() == false %}{
-      avatar: { url: '' },
-      loggedIn: false,
-      id: 0,
-      isAdmin: false,
-      meta: { fn: '', ln: '', un: '', initials: '' },
-      customSettings: {
-        formats: {
-          date: {
-            long: '{{ Config.Defaults("Formats", "UiLongDate") }}',
-            short: '{{ Config.Defaults("Formats", "UiShortDate") }}'
-          },
-          datetime: {
-            long: '{{ Config.Defaults("Formats", "UiLongDatetime") }}',
-            short: '{{ Config.Defaults("Formats", "UiShortDatetime") }}'
-          },
-          decimals: {{ Config.Defaults("Formats", "Decimals") }},
-          decimalSeparator: '{{ Config.Defaults("Formats", "DecimalsSeparator") }}',
-          thousandsSeparator: '{{ Config.Defaults("Formats", "ThousandsSeparator") }}',
-          time: '{{ Config.Defaults("Formats", "UiTime") }}'
+    avatar: {
+      url: ''
+    },
+    loggedIn: false,
+    id: 0,
+    isAdmin: false,
+    meta: {
+      fn: '',
+      ln: '',
+      un: '',
+      initials: ''
+    },
+    customSettings: {
+      formats: {
+        date: {
+          long: '{{ Config.Defaults("Formats", "UiLongDate") }}',
+          short: '{{ Config.Defaults("Formats", "UiShortDate") }}'
         },
-        lists: {
-          entries: {{ Config.Defaults("Lists", "Entries") }}
+        datetime: {
+          long: '{{ Config.Defaults("Formats", "UiLongDatetime") }}',
+          short: '{{ Config.Defaults("Formats", "UiShortDatetime") }}'
         },
-        recipes: {
-          ltwarning: {
-            enabled: {% if Config.Defaults("Recipes", "LtWarning") %}true{% else %}false{% endif %},
-            minutes: {{ Config.Defaults("Recipes", "LtMinutes") }}
-          }
-        }
-      }{% else %}{
-      avatar: {
-        url: '{{ Controller.User().getAvatarUrl() }}'
+        decimals: {{ Config.Defaults("Formats", "Decimals") }},
+        decimalSeparator: '{{ Config.Defaults("Formats", "DecimalsSeparator") }}',
+        thousandsSeparator: '{{ Config.Defaults("Formats", "ThousandsSeparator") }}',
+        time: '{{ Config.Defaults("Formats", "UiTime") }}'
       },
-      loggedIn: true,
-      id: {{ Controller.User().getId() }},
-      isAdmin: {% if Controller.User().isAdmin() %}true{% else %}false{% endif %},
-      meta: {
-        fn: '{{ Controller.User().getFirstname() }}',
-        ln: '{{ Controller.User().getLastname() }}',
-        un: '{{ Controller.User().getUsername() }}',
-        initials: '{{ Controller.User().getInitials() }}'
+      lists: {
+        entries: {{ Config.Defaults("Lists", "Entries") }}
       },
-      customSettings: {
-        formats: {
-          date: {
-            long: '{{ Config.Defaults("Formats", "UiLongDate") }}',
-            short: '{{ Config.Defaults("Formats", "UiShortDate") }}'
-          },
-          datetime: {
-            long: '{{ Config.Defaults("Formats", "UiLongDatetime") }}',
-            short: '{{ Config.Defaults("Formats", "UiShortDatetime") }}'
-          },
-          decimals: {{ Config.Defaults("Formats", "Decimals") }},
-          decimalSeparator: '{{ Config.Defaults("Formats", "DecimalsSeparator") }}',
-          thousandsSeparator: '{{ Config.Defaults("Formats", "ThousandsSeparator") }}',
-          time: '{{ Config.Defaults("Formats", "UiTime") }}'
-        },
-        lists: {
-          entries: {{ Config.Defaults("Lists", "Entries") }}
-        },
-        recipes: {
-          ltwarning: {
-            enabled: {% if Config.Defaults("Recipes", "LtWarning") %}true{% else %}false{% endif %},
-            minutes: {{ Config.Defaults("Recipes", "LtMinutes") }}
-          }
+      recipes: {
+        ltwarning: {
+          enabled: {% if Config.Defaults("Recipes", "LtWarning") %}true{% else %}false{% endif %},
+          minutes: {{ Config.Defaults("Recipes", "LtMinutes") }}
         }
       }
-    }{% endif %} 
-  }
+    }
+  }{% else %}{
+    avatar: {
+      url: '{{ Controller.User().getAvatarUrl() }}'
+    },
+    loggedIn: true,
+    id: {{ Controller.User().getId() }},
+    isAdmin: {% if Controller.User().isAdmin() %}true{% else %}false{% endif %},
+    meta: {
+      fn: '{{ Controller.User().getFirstname() }}',
+      ln: '{{ Controller.User().getLastname() }}',
+      un: '{{ Controller.User().getUsername() }}',
+      initials: '{{ Controller.User().getInitials() }}'
+    },
+    customSettings: {
+      formats: {
+        date: {
+          long: '{{ Config.Defaults("Formats", "UiLongDate") }}',
+          short: '{{ Config.Defaults("Formats", "UiShortDate") }}'
+        },
+        datetime: {
+          long: '{{ Config.Defaults("Formats", "UiLongDatetime") }}',
+          short: '{{ Config.Defaults("Formats", "UiShortDatetime") }}'
+        },
+        decimals: {{ Config.Defaults("Formats", "Decimals") }},
+        decimalSeparator: '{{ Config.Defaults("Formats", "DecimalsSeparator") }}',
+        thousandsSeparator: '{{ Config.Defaults("Formats", "ThousandsSeparator") }}',
+        time: '{{ Config.Defaults("Formats", "UiTime") }}'
+      },
+      lists: {
+        entries: {{ Config.Defaults("Lists", "Entries") }}
+      },
+      recipes: {
+        ltwarning: {
+          enabled: {% if Config.Defaults("Recipes", "LtWarning") %}true{% else %}false{% endif %},
+          minutes: {{ Config.Defaults("Recipes", "LtMinutes") }}
+        }
+      }
+    }
+  }{% endif %}
+}
 </script>

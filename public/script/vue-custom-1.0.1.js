@@ -384,79 +384,6 @@ const RecipesList = {
   props: ['page', 'user'],
   template: '#recipes-listing-template'
 }
-Vue.component('rc-breadcrumbitem', {
-  delimiters: ['${', '}'],
-  props: {
-    target: { type: String, required: true },
-    title: { type: String, required: true },
-    params: { type: Object, required: false },
-    sm: { type: Boolean, required: false, default: false }
-  },
-  template: '#rc-breadcrumbitem-template'
-})
-
-const bciHome = { target: 'home', title: i18n.t("breadcrumb.home"), sm: true }
-const bciRecipes = { target: 'recipes', title: i18n.t("breadcrumb.recipes.common") }
-const bciRecipesMy = { target: 'myRecipes', title: i18n.t("breadcrumb.recipes.my") }
-const bciSearch = { target: 'search', title: i18n.t("breadcrumb.search.common") }
-const bciWriteRecipe = { target: 'writeRecipe', title: i18n.t("breadcrumb.write") }
-
-
-Vue.component('rc-breadcrumbbar', {
-  delimiters: ['${', '}'],
-  props: ['page', 'recipe'],
-  template: '#rc-breadcrumbbar-template',
-  computed: {
-    items: function() {
-
-      items = [ bciHome ]
-
-      switch (this.$route.name) {
-
-        case 'home': return items
-
-        case 'recipe':
-        case 'gallery':
-        case 'editRecipe':
-          if (this.recipe && this.recipe.id) {
-            if (this.recipe.ownerId > 0)
-              items.push({ target: 'userRecipes', title: this.$t("breadcrumb.recipes.users", { user: this.recipe.ownerName }), params: { id: this.recipe.ownerId, name: this.recipe.ownerName } })
-            items.push({ target: 'recipe', title: this.recipe.name, params: { id: this.recipe.id, name: this.recipe.name } })
-            if (this.$route.name == 'gallery')
-              items.push({ target: 'gallery', title: this.$t("breadcrumb.recipe.gallery"), params: { id: this.recipe.id, name: this.recipe.name } })
-            if (this.$route.name == 'editRecipe')
-              items.push({ target: 'editRecipe', title: this.$t("breadcrumb.recipe.edit"), params: { id: this.recipe.id, name: this.recipe.name } })
-          }
-          return items
-
-        case 'recipes':
-          items.push(bciRecipes)
-          return items
-
-        case 'myRecipes':
-          items.push(bciRecipesMy)
-          return items
-
-        case 'search':
-          items.push(bciSearch)
-          return items
-
-        case 'userRecipes':
-          items.push({ target: 'userRecipes', title: this.$t("breadcrumb.recipes.users", { user: this.$route.params.name }), params: { id: this.$route.params.id, name: this.$route.params.name } })
-          return items
-
-        case 'writeRecipe':
-          items.push(bciWriteRecipe)
-          return items
-
-      }
-
-      // fallback: return no breadcrumb
-      return [ ]
-
-    }
-  }
-})
 Vue.component('rc-navbar', {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
@@ -466,8 +393,13 @@ Vue.component('rc-navbar', {
   },
   methods: {
     onSearchInput: function() {
-      if (app.$route.name != 'search')
-        app.$router.push({name: 'search'})
+      app.debouncedSearch()
+    },
+    onSearchInputFocused: function() {
+      this.page.search.filter.hasFocus = true;
+    },
+    onSearchInputBlurred: function() {
+      this.page.search.filter.hasFocus = false;
     }
   }
 })
@@ -805,6 +737,8 @@ var app = new Vue({
       this.$emit('click', this.subject ? this.subject : this.title)
     },
     getSearchResults: function() {
+      if (this.$route.name != 'search')
+        this.$router.push({ name: 'search' });
       resetSearchData(this)
       postPageData(this.$route.path, {
         search: {
@@ -819,7 +753,12 @@ var app = new Vue({
     'page.search.filter.global': function() {
       if (this.page.search.filter.global.length >= 3)
         this.debouncedSearch()
-
+    },
+    'user.isAdmin': function() {
+      location.reload()
+    },
+    'user.loggedIn': function() {
+      location.reload()
     }
   }
 })
