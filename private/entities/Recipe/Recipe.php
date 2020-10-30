@@ -215,18 +215,7 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
   }
 
   public function getRatingStr() : string {
-    global $Controller;
-    if ($this->countrated == 0)
-      return '';
-    $val = round($this->getRating(), 0);
-    switch($val) {
-      case 1:
-        return $Controller->l('common_rating_easy');
-      case 2:
-        return $Controller->l('common_rating_medium');
-      case 3:
-        return $Controller->l('common_rating_hard');
-    }
+    // todo: remove
     return '';
   }
 
@@ -239,7 +228,8 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
   }
 
   public function getRestTimeStr() : ?string {
-    return $this->timerest > 0 ? Formatter::min_format($this->timerest) : null;
+    // todo: remove
+    return '';
   }
 
   public function getSourceDescription() : string {

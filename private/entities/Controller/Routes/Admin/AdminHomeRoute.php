@@ -16,7 +16,6 @@ class AdminHomeRoute extends Route implements RouteInterface {
     global $Controller;
     parent::setPage('admin:main');
     parent::setSubPage('admin:main');
-    parent::setTitle($Controller->l('page_admin_dashboard_title'));
     return parent::render(self::$template, $response);
   }
 

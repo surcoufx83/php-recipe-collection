@@ -11,7 +11,6 @@ spl_autoload_register(function($className)
 });
 
 require_once DIR_BACKEND    .'/core.php';
-require_once DIR_BACKEND    .'/I18N.php';
 
 $Controller = new Controller();
 $Controller->init();

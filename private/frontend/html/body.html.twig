@@ -22,6 +22,7 @@
     <script src="/script/bootstrap-vue-icons-2.18.0.min.js"></script>
     <script src="/script/moment-2.29.1.min.js"></script>
     <script src="/script/lodash-4.17.20.min.js"></script>
+    <script src="/script/i18n/rc-de-1.0.0.js"></script>
     {{ Header.JS|raw }}
     <title>{{ Config.Page('Title') }}</title>
   </head>
@@ -77,8 +78,6 @@
     {% include 'templates/search/search.html.twig' %}
     {% include 'templates/user/login.html.twig' %}
     {% include 'templates/user/logout.html.twig' %}
-
-    {% include 'i18n.html.twig' %}
     {% include 'js-common-data.js.twig' %}
 
     <script src="/script/jquery-3.5.1.min.js"></script>

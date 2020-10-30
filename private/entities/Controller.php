@@ -42,7 +42,7 @@ if (!defined('CORE2'))
 final class Controller implements ControllerInterface, DatabaseManagerInterface {
 
   private $database, $currentUser;
-  private $dispatcher, $langcode, $linkProvider;
+  private $dispatcher, $linkProvider;
   private $ObjectManager;
 
   private $pictures = array();
@@ -65,10 +65,6 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
 
   public function Dispatcher() : Dispatcher {
     return $this->dispatcher;
-  }
-
-  public function Language() : string {
-    return $this->langcode;
   }
 
   public function ObjectManager() : ObjectManager {
@@ -174,8 +170,6 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   public function init() : void {
-    global $i18n;
-    $this->langcode = $i18n->getAppliedLang();
     $this->linkProvider = new Controller\LinkProvider();
     if (!$this->init_Database())
       exit('Error loading database');
@@ -238,11 +232,6 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
 
   public function isAuthenticated() : bool {
     return !is_null($this->currentUser);
-  }
-
-  public function l(string $key, ...$params) : string {
-    $outval = lang($key, $params);
-    return ($outval == '' ? 'MISSING translation: '.$key : $outval);
   }
 
   private function login() : bool {

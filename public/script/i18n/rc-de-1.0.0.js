@@ -1,0 +1,267 @@
+
+const rc_i18n_de = {
+  greetings: {
+    hello: 'Hallo {user}'
+  },
+  pages: {
+    common: {
+      navtitle: 'Kochbuch'
+    },
+    editRecipe: {
+      subtitle: '',
+      title: 'Rezept überarbeiten'
+    },
+    home: {
+      introtext1: 'Schön das du in das Kochbuch schaust. Wir arbeiten permanent dran, es besser zu machen. Wenn dir Fehler auffallen, melde diese gerne an Stefan oder Elias.',
+      introtext2: 'Auch wenn einige Funktionen noch nicht so ganz hinhauen, Rezepte eintragen, bearbeiten, anschauen und nachkochen klappt schon ganz gut.',
+      mobile1: 'Du kannst die Seitenleiste anzeigen, indem du auf das',
+      mobile2: 'Menü-Symbol oben rechts klicks.',
+      subtitle: '',
+      title: '',
+      workingon: 'An dieser Stelle werden demnächst neue Rezepte vorgestellt. Bis dahin nutze eine der Funktonen aus der Seitenleiste.'
+    },
+    logout: {
+      subtitle: '',
+      title: '',
+      header: 'Abmeldung erfolgt ...'
+    },
+    myRecipes: {
+      subtitle: '',
+      title: 'Meine Rezepte'
+    },
+    random: {
+      subtitle: 'Kurzen Moment, ich suche gerade nach einem Rezept...',
+      title: 'Zufälliges Rezept'
+    },
+    recipe: {
+      subtitle: '',
+      title: '{recipe}',
+      titleWithUser: '{recipe} von {user}',
+      actionbtn: {
+        edit: 'Bearbeiten'
+      },
+      header: {
+        unpublishedAlert: {
+          description: 'Das Rezept wurde bisher nicht veröffentlicht und ist damit für andere Benutzer nicht zu finden.',
+          link: 'Im Bearbeiten-Modus kannst du das Rezept freigeben.'
+        },
+        about: {
+          title: 'Über dieses Rezept',
+          publication: {
+            nouser: 'Das Rezept wurde am {date} veröffentlicht.',
+            fromuser: 'Dieses Rezept wurde am {date} von {user} veröffentlicht.'
+          },
+          socialstats: {
+            nothingyet: 'Es wurde bisher noch nicht nachgekocht und auch nicht bewertet.',
+            cookedonly: 'Es wurde {count} mal nachgekocht, allerdings noch nicht bewertet.',
+            votedonce: 'Es wurde bisher mit einem Herzen bewertet.|Es wurde bisher mit {value} Herzen bewertet.',
+            votedmulti: 'Es wurde im Schnitt mit einem Herzen bewertet.|Es wurde im Schnitt mit {value} Herzen bewertet.',
+            cookedAndVoted: 'Es wurde {count} mal nachgekocht und im Schnitt mit {value} Herzen bewertet.'
+          },
+          source: 'Herkunft:'
+        }
+      },
+      preparation: {
+        timeconsumption: {
+          title: 'Zubereitungsdauer',
+          overall: 'Für dieses Rezept ist eine Zubereitungsdauer von insgesamt <strong>{duration}</strong> angegeben.',
+          ltwarn: 'Hinweis: Die Zubereitung des Gerichts nimmt viel Zeit in Anspruch.',
+          preparing: 'Vorbereitungszeit:',
+          preparingShort: 'Vorbereiten',
+          resting: 'Ruhezeit:',
+          restingShort: 'Ruhen',
+          cooking: 'Koch-/Backzeit:',
+          cookingShort: 'Kochen',
+          notset: 'keine Angabe'
+        }
+      }
+    },
+    recipes: {
+      subtitle: '',
+      title: 'Rezeptsammlung'
+    },
+    search: {
+      subtitle: '',
+      title: '',
+      searchingFor: 'Suchen nach',
+      inputPlaceholder: 'z. B. Pizza Olive',
+      inputButtonText: 'Finden',
+      results: {
+        gotoRecipe: 'Zum Rezept',
+        header: 'Wir haben {num} Rezepte gefunden!'
+      }
+    },
+    userRecipes: {
+      subtitle: '',
+      title: 'Rezepte von {name}'
+    },
+    writeRecipe: {
+      subtitle: '',
+      title: 'Neues Rezept erfassen',
+      intro: {
+        header: 'Rezepteingabe',
+        requiredFields: 'Alle mit <b><span class="text-contrast">*</span></b> markierten Felder müssen befüllt werden. Der Großteil der Angaben ist optional, aber wir freuen uns, wenn du diese trotzdem befüllst.',
+        subject: 'Vielen Dank, dass du ein neues Rezept zu unserer Sammlung beitragen möchtest!<br />Das von dir bereitgestellte Rezept ist anfangs als <i>Privat</i> markiert. Du bekommst nach dem Speichern die Möglichkeit, dass Rezept zu prüfen und zu veröffentlichen.',
+        editHeader: 'Rezept bearbeiten'
+      },
+      chapter1: {
+        header: 'Allgemeine Angaben',
+        recipeName: {
+          title: 'Name für dieses Gericht',
+          description: 'z.B. Vogtländischer Sauerbraten mit Rotkohl und Klößen; Pflichtfeld',
+          invalidFeedback: 'Bitte das Feld befüllen. Die Angabe eines Names ist zwingend erforderlich.',
+          placeholder: 'Name für dieses Gericht',
+        },
+        recipeDescription: {
+          title: 'Zusatzinformationen und Detailbeschreibung',
+          description: 'Weitergehende Informationen, Detailbeschreibung, Originalname; Optional',
+          placeholder: 'Beschreibung',
+        },
+        recipeEater: {
+          title: 'Für wie viele Personen?',
+          description: 'Gib eine Zahl an, für wie viele die Personen die Menge an Zutaten ausreicht.; Pflichtfeld',
+          invalidFeedback: 'Die Anzahl der Personen ist zwingend erforderlich (Min = 1, Max = 100).',
+          placeholder: '',
+        }
+      },
+      chapter2: {
+        addButton: {
+          title: 'Anklicken um weitere Zutaten hinzuzufügen.'
+        },
+        delButton: {
+          title: 'Anklicken um diese Zeile zu entfernen.'
+        },
+        quantity: {
+          header: 'Menge',
+          placeholder: 'z.B. 6'
+        },
+        unit: {
+          header: 'Einheit',
+          noUnit: 'Keine Einheit',
+          placeholder: 'z.B. EL'
+        },
+        ingredient: {
+          header: 'Zutat',
+          placeholder: 'z.B. Olivenöl'
+        },
+        header: 'Zutatenliste',
+        description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Die Mengenangabe kannst du auch weglassen (z.B. für etwas Salz zum Würzen).'
+      },
+      chapter3: {
+        header: 'Bildergallerie',
+        pictures: {
+          title: 'Bilder hochladen',
+          description: 'Lade ein oder mehrere Bilder von deinem Computer bzw. Handy hoch um diese neben dem Rezept anzuzeigen. Das erste Bild wird immer das Vorschaubild sein.',
+          remove: 'Bild löschen',
+          upload: 'Hinzufügen',
+        },
+        header2: 'Zur Bildergallerie',
+        togalleryLink: 'Die Bilder deiner Rezepte kannst du in der Galerie verwalten.'
+      },
+      chapter4: {
+        addButton: {
+          title: 'Anklicken um einen weiteren Arbeitsschritt einzufügen.'
+        },
+        description: 'Nutze diesen Abschnitt um die Schritte der Zubereitung zu beschreiben. Du kannst alles in einen Block packen oder mehrere Schritte über das Plus-Zeichen anlegen. Optional kannst du für jeden Schritt auch noch angeben, wie lange Vorbereitung, Ruhezeit, und das Kochen dauern.',
+        header: 'Schritt-für-Schritt Anleitung',
+        step: {
+          stepname: 'Schritt',
+          duration: {
+            cooking: 'Kochdauer',
+            description: 'Zeitaufwand (Minuten)',
+            preparation: 'Vorbereitung',
+            rest: 'Ruhezeit'
+          },
+          preparation: {
+            description: 'Anweisungen',
+            invalidFeedback: 'Bitte gib einige Informationen über die Zubereitung an.',
+            placeholder: 'Bitte fülle hier eine detaillierte Beschreibung der Vorbereitung aus.',
+          },
+          title: {
+            description: 'Überschrift für diesen Abschnitt',
+            placeholder: 'Trage hier eine kurze Überschrift ein.'
+          }
+        }
+      },
+      chapter5: {
+        header: 'Weitere Optionen',
+        sourceText: {
+          title: 'Quelle',
+          description: 'Gib gerne an, woher dieses Rezept stammt (z.B. Oma Christines Kochbuch); Optional',
+          placeholder: 'Quellenbeschreibung',
+        },
+        sourceUrl: {
+          title: 'Quelle: Internet',
+          description: 'Du hast das Rezept aus dem Internet übernommen? Bitte gib hier die Originaladresse an.; Optional',
+          placeholder: 'www.rezepte.de/rezept-1',
+        },
+        tags: {
+          title: 'Tags angeben',
+          description: 'Tags markieren ein Rezept mit kurzen Schlagwörtern. Jedem Rezept können beliebig viele dieser Tags zugeordnet werden (z.B. \'Dinner\' und \'Für Zwei\').; Optional',
+          placeholder: 'Kein Tag gewählt.'
+        }
+      },
+      actions: {
+        submitButton: {
+          title: 'Rezept speichern',
+          editTitle: 'Änderungen speichern',
+          submitted: 'Rezept wurde gespeichert'
+        }
+      },
+      modal: {
+        backButton: 'Zurück',
+        preparing: 'Deine Eingaben werden geprüft.',
+        description: 'Die Rezeptdaten werden gerade ins Kochbuch geschrieben. Bitte habe kurz Geduld, es geht gleich weiter...',
+        error: 'Das hätte nicht passieren sollen, aber beim Speichern ist ein Fehler aufgetreten. Die Fehlerinformationen wurden an Stefan gesendet.',
+        forwardButton: 'Zum Rezept',
+        newButton: 'Noch ein Rezept eintragen',
+        success: 'Das Rezept ist gespeichert. Wähle einen der Buttons um fortzufahren.',
+        title: 'Rezept wird gespeichert...'
+      },
+      validation: {
+        missingInfo: 'Es gibt noch fehlerhafte Felder. Bitte prüfe deine Angaben.',
+        missingIngredient: 'Mindestens eine Zutat angeben.',
+        missingStep: 'Mindestens einen Zubereitungsschritt angeben.'
+      }
+    }
+  },
+  responseMessages: {
+    badArgumentsException: 'Ungültige Argumente angegeben.',
+    badRequestException: 'Ungültige Anfrage.',
+    dbInsertException: 'Fehler beim Einfügen von Daten in die Datenbank.',
+    dbSelectException: 'Beim Abrufen von Datensätzen aus der Datenbank ist ein Fehler aufgetreten.',
+    dbStmtException: 'Fehler bei der Vorbereitung der Datenbank-Anweisung.',
+    dbUpdateException: 'Fehler beim Speichern der Änderungen in der Datenbank.',
+    functionNotFoundException: 'Die angeforderte Funktion ist leider noch nicht programmiert. Stefan hauen, oder etwas Geduld zeigen ;)',
+    insufficientPermissionException: 'Unzureichende Berechtigung für diese Aktion.',
+    loginFailed: 'Anmeldung fehlgeschlagen.',
+    loginSuccessfull: 'Anmeldung erfolgreich.',
+    maintenanceException: 'Wartungsmodus ist aktiviert.',
+    noApiKeyException: 'Der Zugriff erfordert ein Anmelde-Token. Bitte melden Sie sich zuerst über die Website an, bevor Sie den API-Zugang versuchen.',
+    noChanges: 'Es wurden keine Änderungen erkannt.',
+    noResults: 'Die Suche hat keine Ergebnisse zurückgeliefert.',
+    notAllowedException: 'Keine Berechtigung für diese Aktion.',
+    notAuthenticatedException: 'Benutzer nicht eingeloggt.',
+    pageMovedException: 'Die angeforderte Seite wurde verschoben und kann nicht mehr per Webanforderung oder CLI abgerufen werden.',
+    parameterException: 'Für die angegebenen Parameter ist keine Verarbeitung konfiguriert.',
+    sendMailFailed: 'Die Mail konnte nicht gesendet werden: ',
+    undefinedException: 'Im Backend ist ein nicht spezifizierter Fehler aufgetreten. Ihre Änderungen wurden nicht akzeptiert.',
+    validationSucceeded: 'Die Überprüfung war erfolgreich. Es wurden keine Fehler festgestellt.',
+    validationFailed: 'Es sind folgende Fehler aufgetreten: '
+  },
+  sidebar: {
+    admin: {
+      configuration: 'Konfiguration',
+      cronjobs: 'Cronjobs',
+      logs: 'Server-Log',
+      title: 'Administration',
+      translations: 'Übersetzung',
+      users: 'Benutzer'
+    },
+    home: 'Startseite',
+    myRecipes: 'Meine Rezepte',
+    random: 'Zufallsrezept',
+    search: 'Suche',
+    writeRecipe: 'Neues Rezept'
+  }
+}
