@@ -637,8 +637,8 @@ const RecipeGallery = {
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploaderName', response.picture.uploaderName)
               $('#recipe-picture-' + response.picture.index).css("content", "none")
             } else {
-              app.$set(app.page.modals.failedModal, 'message', app.$t(data.i18nmessage))
-              app.$set(app.page.modals.failedModal, 'code', data.code)
+              app.$set(app.page.modals.failedModal, 'message', app.$t(response.i18nmessage))
+              app.$set(app.page.modals.failedModal, 'code', response.code)
               $('#action-failed-modal').modal('show')
             }
           })

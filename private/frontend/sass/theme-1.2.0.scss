@@ -664,6 +664,7 @@ div.removable-image-area {
     &.cols-md-6 { column-count: 6; }
   }
   .card-deck .card {
+    max-width: calc(33% - 30px);
     min-width: calc(33% - 30px);
   }
 }
@@ -679,6 +680,7 @@ div.removable-image-area {
     &.cols-lg-6 { column-count: 6; }
   }
   .card-deck .card {
+    max-width: calc(25% - 30px);
     min-width: calc(25% - 30px);
   }
   div.page {
@@ -699,6 +701,7 @@ div.removable-image-area {
     &.cols-xl-6 { column-count: 6; }
   }
   .card-deck .card {
+    max-width: calc(25% - 30px);
     min-width: calc(25% - 30px);
   }
   div.page {

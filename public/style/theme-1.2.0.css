@@ -592,6 +592,7 @@ div.removable-image-area {
     column-count: 6; }
 
   .card-deck .card {
+    max-width: calc(33% - 30px);
     min-width: calc(33% - 30px); } }
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .card-columns.masonry-deck.cols-lg-1 {
@@ -608,6 +609,7 @@ div.removable-image-area {
     column-count: 6; }
 
   .card-deck .card {
+    max-width: calc(25% - 30px);
     min-width: calc(25% - 30px); }
 
   div.page.sidebar-visible {
@@ -627,9 +629,10 @@ div.removable-image-area {
     column-count: 6; }
 
   .card-deck .card {
+    max-width: calc(25% - 30px);
     min-width: calc(25% - 30px); }
 
   div.page.sidebar-visible {
     padding-left: 220px !important; } }
 
-/*# sourceMappingURL=theme-1.1.1.css.map */
+/*# sourceMappingURL=theme-1.2.0.css.map */
