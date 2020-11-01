@@ -22,18 +22,21 @@ class TestEntityRoute extends Route implements RouteInterface {
           case 'user-email':
             if ($Controller->selectCountSimple('users', 'user_email', $value) != 0) {
               $success = false;
-              $messages[$key] = $Controller->l('page_admin_newUser_chapter1_email_serverFeedback', $value);
+              // todo
+              //$messages[$key] = $Controller->l('page_admin_newUser_chapter1_email_serverFeedback', $value);
             }
             break;
           case 'user-name':
             if ($Controller->selectCountSimple('users', 'user_name', $value) != 0) {
               $success = false;
-              $messages[$key] = $Controller->l('page_admin_newUser_chapter1_name_serverFeedback', $value);
+              // todo
+              //$messages[$key] = $Controller->l('page_admin_newUser_chapter1_name_serverFeedback', $value);
             }
             break;
           default:
             $success = false;
-            $messages[$key] = $Controller->l('page_admin_newUser_chapter1_serverFeedback', $key);
+            // todo
+            //$messages[$key] = $Controller->l('page_admin_newUser_chapter1_serverFeedback', $key);
         }
       }
 

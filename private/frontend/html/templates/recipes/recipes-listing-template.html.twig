@@ -18,8 +18,8 @@
           <div class="text-muted" v-if="recipe.description !== ''">
             ${ recipe.description }
           </div>
-          <div class="text-muted mb-2" v-if="record.showAuthor === true && recipe.ownerId !== false">
-            {{ Controller.l('recipes_common_submittedBy') }} ${ recipe.ownerName }
+          <div class="text-muted mb-2" v-if="record.showAuthor === true && recipe.ownerId !== 0"
+            v-text="$t('pages.recipes.common.submittedBy', [recipe.ownerName])">
           </div>
           <span class="text-muted" v-if="record.views != 0">
             <fa-icon :icon="page.iconSet.view.icon" :space="page.iconSet.view.space" class="text-small"></fa-icon>
@@ -39,16 +39,13 @@
             <span class="mx-2" v-if="record.views != 0 || record.cooked != 0 || record.comments != 0">&bull;</span>
             <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="text-small text-contrast"></fa-icon>
             ${ record.voting }
-            <span class="text-small">(${ record.votes }
-              <span v-if="record.votes == 1">{{ Controller.l('recipes_common_voting') }})</span>
-              <span v-else>{{ Controller.l('recipes_common_votings') }})</span>
-            </span>
+            <span class="text-small">(${ $tc('pages.recipes.common.votings', record.votes) })</span>
           </span>
         </b-card-body>
         <b-card-footer>
           <router-link
             :to="{ name: 'recipe', params: { id: recipe.id, name: recipe.name } }"
-            class="stretched-link">{{ Controller.l('recipes_common_goto') }}</router-link>
+            class="stretched-link">${ $t('pages.recipes.common.goto') }</router-link>
         </b-card-footer>
       </b-card>
     </template>

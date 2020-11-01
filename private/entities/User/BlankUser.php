@@ -27,10 +27,10 @@ class BlankUser extends User {
     $mail = new Mail();
     $OUT['ActivationLink'] = $Controller->getLink('private:activation', $this->user_email_validation);
     $data = [
-      'Headline' => $Controller->l('sendmail_registration_activationMail_title'),
+      'Headline' => 'Herzlich Willkommen zu unserem Kochbuch!',
       'Content' => $twig->render('mails/activation-mail.html.twig', $OUT),
     ];
-    if ($mail->send($this->user_fullname, $this->user_email, $Controller->l('sendmail_registration_activationMail_subject'),  $data, $response)) {
+    if ($mail->send($this->user_fullname, $this->user_email, 'Kochbuch - Aktivierung deines Accounts',  $data, $response)) {
       return true;
     }
     return false;

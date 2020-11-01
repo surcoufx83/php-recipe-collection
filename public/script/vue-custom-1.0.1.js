@@ -110,86 +110,6 @@ Vue.component('recipe-ingredient', {
   template: '#recipe-ingredient-template'
 })
 
-Vue.component('page-actions-container', {
-  props: {
-    page: { type: Object, required: true },
-    user: { type: Object, required: true }
-  },
-  delimiters: ['${', '}'],
-  template: '#page-actions-container-template',
-  methods: {
-    onClick: function(e) {
-      console.log('@onClick', e)
-      this.$emit('click', e)
-    }
-  }
-})
-
-Vue.component('recipe-actions-container', {
-  props: {
-    page: { type: Object, required: true },
-    user: { type: Object, required: true }
-  },
-  delimiters: ['${', '}'],
-  template: '#recipe-actions-container-template',
-  methods: {
-    onClick: function(e) {
-      console.log('@onClick', e)
-      switch(e) {
-        case 'unpublish':
-          var recipe = this.page.currentRecipe
-          var user = this.user
-          if (recipe == null || recipe.id == null || recipe.isPublished == false
-              || user == null || recipe.ownerId == null || user.id == null
-              || user.id != recipe.ownerId)
-            return
-          postPageData(app.$route.path, {
-            unpublish: true
-          }, function(data) {
-            console.log('unpublish: ', data)
-            if (data.success == false) {
-              app.$set(app.page.modals.failedModal, 'message', data.message)
-              app.$set(app.page.modals.failedModal, 'code', data.code)
-              $('#action-failed-modal').modal()
-            }
-          }, true)
-          break
-        case 'publish':
-          console.log(e)
-          var recipe = this.page.currentRecipe
-          var user = this.user
-          if (recipe == null || recipe.id == null || recipe.isPublished == false
-              || user == null || recipe.ownerId == null || user.id == null
-              || user.id != recipe.ownerId)
-            return
-          postPageData(app.$route.path, {
-            publish: true
-          }, function(data) {
-            console.log('publish: ', data)
-            if (data.success == false) {
-              app.$set(app.page.modals.failedModal, 'message', data.message)
-              app.$set(app.page.modals.failedModal, 'code', data.code)
-              $('#action-failed-modal').modal()
-            }
-          }, true)
-          break
-        case 'edit':
-          var recipe = this.page.currentRecipe
-          router.push({ name: 'editRecipe', params: { id: recipe.id, name: recipe.name } })
-          break
-        case 'toGallery':
-          var recipe = this.page.currentRecipe
-          router.push({ name: 'gallery', params: { id: recipe.id, name: recipe.name } })
-          break
-        case 'toRecipe':
-          var recipe = this.page.currentRecipe
-          router.push({ name: 'recipe', params: { id: recipe.id, name: recipe.name } })
-          break
-      }
-    }
-  }
-})
-
 Vue.component('recipes-listing-item', {
   props: {
     page: { type: Object, required: true },
@@ -678,11 +598,11 @@ Vue.use(VueResource)
 Vue.http.options.root = '/api/'
 
 var app = new Vue({
+  i18n,
+  router,
   delimiters: ['${', '}'],
   el: '#vue-app',
   data: CommonData,
-  router,
-  i18n,
   created: function() {
     window.addEventListener("resize", this.onResize)
     this.debouncedSearch = _.debounce(this.getSearchResults, 500)
@@ -698,7 +618,7 @@ var app = new Vue({
     window.removeEventListener("resize", this.onResize)
   },
   mounted: function() {
-    if (!CommonData.user.loggedIn)
+    if (!CommonData.user.loggedIn && this.$route.name !== 'login')
       this.$router.push({name: 'login'})
     refreshPageData(this.$route.path, this)
   },

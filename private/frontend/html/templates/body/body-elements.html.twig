@@ -32,7 +32,7 @@
             <div v-b-toggle.sidebar-main class="d-flex bg-dark text-gray align-items-center px-3 py-2 fs-80">
               <span class="mr-auto">
                 <b-icon icon="chevron-double-left" class="text-100"></b-icon>
-                {{ Controller.l('navigation_sidebar_close') }}
+                ${ $t('sidebar.close') }
               </span>
             </div>
           </template>
@@ -79,42 +79,6 @@
           {'fa-pulse': pulse === true},
           icon ? 'fa-' + icon : 'fa-question'
         ]"></i>
-    </template>
-
-    <template id="page-actions-container-template">
-      <b-container fluid class="header-container header-container-border">
-        <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
-        </ul>
-        <b-container class="text-right nav-buttons px-0"
-          v-if="page.contentData.hasActions === true && page.contentData.actions.length === 0 && page.currentRecipe !== null && page.currentRecipe.id > 0"
-          >
-          <recipe-actions-container :page="page" :user="user"
-            @click="onClick"></recipe-actions-container>
-        </b-container>
-      </b-container>
-    </template>
-
-    <template id="recipe-actions-container-template">
-      <b-container class="px-0">
-        <btn-sm-blue v-if="
-          page.currentRecipe !== null && user !== null &&
-          ('ownerId' in page.currentRecipe) && ('id' in user) &&
-          page.currentRecipe.ownerId === user.id &&
-          $route.name == 'recipe'"
-          subject="edit"
-          :title="$t('pages.recipe.actionbtn.edit')"
-          :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
-          @click="onClick"></btn-sm-blue>
-        <btn-sm-blue v-if="
-          page.currentRecipe !== null && user !== null &&
-          ('ownerId' in page.currentRecipe) && ('id' in user) &&
-          page.currentRecipe.ownerId === user.id &&
-          ($route.name == 'editRecipe' || $route.name == 'gallery')"
-          subject="toRecipe"
-          title="{{ Controller.l('recipe_options_toRecipe') }}"
-          :icon="page.iconSet.back.icon" :space="page.iconSet.back.space"
-          @click="onClick"></btn-sm-blue>
-      </b-container>
     </template>
 
     <template id="btn-scrollto-template">

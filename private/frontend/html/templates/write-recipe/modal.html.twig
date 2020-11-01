@@ -5,22 +5,26 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="new-recipe-modal-title">{{ Controller.l('newRecipe_modal_title') }}</h5>
+            <h5 class="modal-title" id="new-recipe-modal-title"
+              v-text="$t('pages.writeRecipe.modal.title')"></h5>
           </div>
           <div class="modal-body"
-            v-if="progress.preparing"><p>{{ Controller.l('newRecipe_modal_preparing') }}</p>
+            v-if="progress.preparing"><p v-text="$t('pages.writeRecipe.modal.preparing')"></p>
           </div>
           <div class="modal-body"
-            v-if="progress.sending"><p>{{ Controller.l('newRecipe_modal_description') }}</p>
+            v-if="progress.sending"><p v-text="$t('pages.writeRecipe.modal.description')"></p>
           </div>
           <div class="modal-body bg-warning"
             v-if="!progress.sending && progress.gotresponse && !progress.responseSuccess">
-            <p>{{ Controller.l('newRecipe_modal_error') }}</p>
-            <p>${ progress.response.code }: ${ progress.response.message }</p>
+            <p v-text="$t('pages.writeRecipe.modal.error')"></p>
+            <p>${ progress.response.code }:
+              <span v-if="progress.response.message != ''" v-text="$t(progress.response.message)"></span>
+              <span v-if="progress.response.i18nmessage != ''" v-text="$t(progress.response.i18nmessage)"></span>
+            </p>
           </div>
           <div class="modal-body bg-success text-light"
-            v-if="!progress.sending && progress.gotresponse && progress.responseSuccess">
-            {{ Controller.l('newRecipe_modal_success') }}
+            v-if="!progress.sending && progress.gotresponse && progress.responseSuccess"
+            v-text="$t('pages.writeRecipe.modal.success')">
           </div>
           <div class="modal-footer">
             <b-button type="button" id="new-recipe-modal-spinner"
@@ -30,13 +34,16 @@
             </b-button>
             <b-button type="button"
               v-if="!progress.sending && (progress.responseSuccess || page.currentRecipe.id > 0)"
-              class="btn-outline-blue" data-dismiss="modal">{{ Controller.l('newRecipe_modal_backButton') }}</b-button>
+              class="btn-outline-blue" data-dismiss="modal"
+              v-text="$t('pages.writeRecipe.modal.backButton')"></b-button>
             <b-button type="button" id="new-recipe-modal-new"
               v-if="!progress.sending && progress.gotresponse && progress.responseSuccess && page.currentRecipe.id == 0"
-              class="btn-outline-blue" data-dismiss="modal" @click="onNewRecipeBtnClick">{{ Controller.l('newRecipe_modal_newButton') }}</b-button>
+              class="btn-outline-blue" data-dismiss="modal" @click="onNewRecipeBtnClick"
+              v-text="$t('pages.writeRecipe.modal.newButton')"></b-button>
             <b-button type="button" id="new-recipe-modal-new"
               v-if="!progress.sending && ((progress.gotresponse && progress.responseSuccess) || page.currentRecipe.id > 0)"
-              class="btn-blue" data-dismiss="modal" @click="onGotoRecipeBtnClick">{{ Controller.l('newRecipe_modal_forwardButton') }}</b-button>
+              class="btn-blue" data-dismiss="modal" @click="onGotoRecipeBtnClick"
+              v-text="$t('pages.writeRecipe.modal.forwardButton')"></b-button>
           </div>
         </div>
       </div>

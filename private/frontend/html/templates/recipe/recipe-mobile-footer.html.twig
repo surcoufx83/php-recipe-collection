@@ -4,7 +4,7 @@
           v-if="recipe !== null && recipe.pictures !== null && recipe.pictures.length !== 0">
           <btn-scrollto
             subject="scrollto"
-            title="{{ Controller.l('recipe_footer_gallery') }}"
+            :title="$t('pages.recipe.footer.gallery')"
             target="gallery-anchor"
             :icon="page.iconSet.gallery.icon"
             :space="page.iconSet.gallery.space"></btn-scrollto>
@@ -12,7 +12,7 @@
         <div class="w-50 text-center">
           <btn-scrollto
             subject="scrollto"
-            title="{{ Controller.l('recipe_footer_ingredients') }}"
+            :title="$t('pages.recipe.footer.ingredients')"
             target="ingredients-anchor"
             :icon="page.iconSet.ingredient.icon"
             :space="page.iconSet.ingredient.space"></btn-scrollto>
@@ -20,7 +20,7 @@
         <div class="w-50 text-center">
           <btn-scrollto
             subject="scrollto"
-            title="{{ Controller.l('recipe_footer_steps') }}"
+            :title="$t('pages.recipe.footer.steps')"
             target="steps-anchor"
             :icon="page.iconSet.play.icon"
             :space="page.iconSet.play.space"></btn-scrollto>

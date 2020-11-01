@@ -33,13 +33,11 @@ class PageData extends Route implements RouteInterface {
 
   public static function createOutput__search(array &$response) : bool {
     global $Controller;
-    parent::setTitle($response, $Controller->l('search_title'));
     return true;
   }
 
   public static function createOutput__write(array &$response) : bool {
     global $Controller;
-    parent::setTitle($response, $Controller->l('newRecipe_header'));
     return true;
   }
 
