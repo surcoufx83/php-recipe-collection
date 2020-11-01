@@ -20,7 +20,7 @@
         </b-button>
         <!-- add picture button -->
         <br clear="all" />
-        <b-container class="mt-2">
+        <b-container class="mt-2 pr-5 pr-lg-0">
           <p class="text-muted text-small" v-text="$t('pages.gallery.usageOwner')" v-if="recipe.ownerId == user.id"></p>
           <p class="text-muted text-small" v-text="$t('pages.gallery.usage')" v-else></p>
           <draggable v-model="recipe.pictures" class="card-deck"
