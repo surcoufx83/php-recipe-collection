@@ -625,7 +625,22 @@ const RecipeGallery = {
           var data = new FormData()
           data.append('pictureUpload', this.page.currentRecipe.pictures[i].uploadFile)
           postFormData(app.$route.path, data, function(response) {
-            console.log(response)
+            if (response.success) {
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'description', response.picture.description)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'id', response.picture.id)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'index', response.picture.index)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'link', response.picture.link)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'link350', response.picture.link350)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'name', response.picture.name)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploadFile', null)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploaderId', response.picture.uploaderId)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploaderName', response.picture.uploaderName)
+              $('#recipe-picture-' + response.picture.index).css("content", "none")
+            } else {
+              app.$set(app.page.modals.failedModal, 'message', app.$t(data.i18nmessage))
+              app.$set(app.page.modals.failedModal, 'code', data.code)
+              $('#action-failed-modal').modal('show')
+            }
           })
         }
       }

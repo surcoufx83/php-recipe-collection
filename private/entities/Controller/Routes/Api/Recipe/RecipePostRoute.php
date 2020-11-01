@@ -188,7 +188,10 @@ class RecipePostRoute extends Route implements RouteInterface {
       return false;
     }
 
+    $picture = $Controller->OM()->Picture(intval($res));
+
     $response = $Controller->Config()->getResponseArray(1);
+    $response['picture'] = $picture;
     return true;
   }
 
