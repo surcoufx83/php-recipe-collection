@@ -1,11 +1,12 @@
         <template id="rc-navbar-template">
           <b-navbar type="light" variant="contrast-darker" sticky
-            class="py-0" tag="header" id="header-navbar"
+            class="py-0 overflow-hidden" tag="header" id="header-navbar"
             v-if="user.loggedIn === true"> <!-- rc-navbar sticky top navigation -->
 
             <router-link
               :to="{ name: 'home' }"
-              class="navbar-brand text-light mr-0 mr-md-2 my-2">
+              class="navbar-brand text-light mr-0 mr-md-2 my-2"
+              v-if="!page.search.filter.hasFocus">
               <!-- page title -->
               ${ $t('pages.common.navtitle') }</router-link>
 
@@ -16,12 +17,12 @@
               <!-- spinning icon when page is loading --></fa-icon>
 
             <span class="small text-light ml-2 my-2 text-nowrap"
-              v-if="page.loading === false && page.updating === false && user.isAdmin">
+              v-if="page.loading === false && page.updating === false && user.isAdmin && !page.search.filter.hasFocus">
               <!-- page loading time for admins -->
               ${ page.loadingTime}</span>
 
             <span class="small text-light ml-2 my-2 text-nowrap"
-              v-if="user.isAdmin">
+              v-if="user.isAdmin && !page.search.filter.hasFocus">
               <!-- current route -->
               ${ $route.name }</span>
 
@@ -29,13 +30,16 @@
 
               <b-row cols="12" align-h="end" class="w-100">
 
-                <b-col cols="10" sm="9" md="7" lg="6" xl="5" class="pr-0">
+                <b-col cols="10" sm="9" md="7" lg="6" xl="5"
+                  class="pr-0 d-block d-lg-none">
                   <b-form-input
                     type="search" size="sm" id="global-search-input"
                     v-model="page.search.filter.global"
-                    placeholder="{{ Controller.l('navigation_topbar_search_placeholder') }}"
+                    :placeholder="$t('navbar.search.placeholder')"
                     class="input-dark mw-400px my-2"
-                    @update="onSearchInput">
+                    @update="onSearchInput"
+                    @focus="onSearchInputFocused"
+                    @blur="onSearchInputBlurred">
                   </b-form-input>
                 </b-col>
 

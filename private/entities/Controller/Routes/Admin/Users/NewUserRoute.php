@@ -19,7 +19,6 @@ class NewUserRoute extends Route implements RouteInterface {
     parent::addValidationScript();
     parent::setPage('admin:main');
     parent::setSubPage('admin:users');
-    parent::setTitle($Controller->l('page_admin_newUser_title'));
     return parent::render(self::$template, $response);
   }
 

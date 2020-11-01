@@ -110,86 +110,6 @@ Vue.component('recipe-ingredient', {
   template: '#recipe-ingredient-template'
 })
 
-Vue.component('page-actions-container', {
-  props: {
-    page: { type: Object, required: true },
-    user: { type: Object, required: true }
-  },
-  delimiters: ['${', '}'],
-  template: '#page-actions-container-template',
-  methods: {
-    onClick: function(e) {
-      console.log('@onClick', e)
-      this.$emit('click', e)
-    }
-  }
-})
-
-Vue.component('recipe-actions-container', {
-  props: {
-    page: { type: Object, required: true },
-    user: { type: Object, required: true }
-  },
-  delimiters: ['${', '}'],
-  template: '#recipe-actions-container-template',
-  methods: {
-    onClick: function(e) {
-      console.log('@onClick', e)
-      switch(e) {
-        case 'unpublish':
-          var recipe = this.page.currentRecipe
-          var user = this.user
-          if (recipe == null || recipe.id == null || recipe.isPublished == false
-              || user == null || recipe.ownerId == null || user.id == null
-              || user.id != recipe.ownerId)
-            return
-          postPageData(app.$route.path, {
-            unpublish: true
-          }, function(data) {
-            console.log('unpublish: ', data)
-            if (data.success == false) {
-              app.$set(app.page.modals.failedModal, 'message', data.message)
-              app.$set(app.page.modals.failedModal, 'code', data.code)
-              $('#action-failed-modal').modal()
-            }
-          }, true)
-          break
-        case 'publish':
-          console.log(e)
-          var recipe = this.page.currentRecipe
-          var user = this.user
-          if (recipe == null || recipe.id == null || recipe.isPublished == false
-              || user == null || recipe.ownerId == null || user.id == null
-              || user.id != recipe.ownerId)
-            return
-          postPageData(app.$route.path, {
-            publish: true
-          }, function(data) {
-            console.log('publish: ', data)
-            if (data.success == false) {
-              app.$set(app.page.modals.failedModal, 'message', data.message)
-              app.$set(app.page.modals.failedModal, 'code', data.code)
-              $('#action-failed-modal').modal()
-            }
-          }, true)
-          break
-        case 'edit':
-          var recipe = this.page.currentRecipe
-          router.push({ name: 'editRecipe', params: { id: recipe.id, name: recipe.name } })
-          break
-        case 'toGallery':
-          var recipe = this.page.currentRecipe
-          router.push({ name: 'gallery', params: { id: recipe.id, name: recipe.name } })
-          break
-        case 'toRecipe':
-          var recipe = this.page.currentRecipe
-          router.push({ name: 'recipe', params: { id: recipe.id, name: recipe.name } })
-          break
-      }
-    }
-  }
-})
-
 Vue.component('recipes-listing-item', {
   props: {
     page: { type: Object, required: true },
@@ -384,79 +304,6 @@ const RecipesList = {
   props: ['page', 'user'],
   template: '#recipes-listing-template'
 }
-Vue.component('rc-breadcrumbitem', {
-  delimiters: ['${', '}'],
-  props: {
-    target: { type: String, required: true },
-    title: { type: String, required: true },
-    params: { type: Object, required: false },
-    sm: { type: Boolean, required: false, default: false }
-  },
-  template: '#rc-breadcrumbitem-template'
-})
-
-const bciHome = { target: 'home', title: i18n.t("breadcrumb.home"), sm: true }
-const bciRecipes = { target: 'recipes', title: i18n.t("breadcrumb.recipes.common") }
-const bciRecipesMy = { target: 'myRecipes', title: i18n.t("breadcrumb.recipes.my") }
-const bciSearch = { target: 'search', title: i18n.t("breadcrumb.search.common") }
-const bciWriteRecipe = { target: 'writeRecipe', title: i18n.t("breadcrumb.write") }
-
-
-Vue.component('rc-breadcrumbbar', {
-  delimiters: ['${', '}'],
-  props: ['page', 'recipe'],
-  template: '#rc-breadcrumbbar-template',
-  computed: {
-    items: function() {
-
-      items = [ bciHome ]
-
-      switch (this.$route.name) {
-
-        case 'home': return items
-
-        case 'recipe':
-        case 'gallery':
-        case 'editRecipe':
-          if (this.recipe && this.recipe.id) {
-            if (this.recipe.ownerId > 0)
-              items.push({ target: 'userRecipes', title: this.$t("breadcrumb.recipes.users", { user: this.recipe.ownerName }), params: { id: this.recipe.ownerId, name: this.recipe.ownerName } })
-            items.push({ target: 'recipe', title: this.recipe.name, params: { id: this.recipe.id, name: this.recipe.name } })
-            if (this.$route.name == 'gallery')
-              items.push({ target: 'gallery', title: this.$t("breadcrumb.recipe.gallery"), params: { id: this.recipe.id, name: this.recipe.name } })
-            if (this.$route.name == 'editRecipe')
-              items.push({ target: 'editRecipe', title: this.$t("breadcrumb.recipe.edit"), params: { id: this.recipe.id, name: this.recipe.name } })
-          }
-          return items
-
-        case 'recipes':
-          items.push(bciRecipes)
-          return items
-
-        case 'myRecipes':
-          items.push(bciRecipesMy)
-          return items
-
-        case 'search':
-          items.push(bciSearch)
-          return items
-
-        case 'userRecipes':
-          items.push({ target: 'userRecipes', title: this.$t("breadcrumb.recipes.users", { user: this.$route.params.name }), params: { id: this.$route.params.id, name: this.$route.params.name } })
-          return items
-
-        case 'writeRecipe':
-          items.push(bciWriteRecipe)
-          return items
-
-      }
-
-      // fallback: return no breadcrumb
-      return [ ]
-
-    }
-  }
-})
 Vue.component('rc-navbar', {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
@@ -466,8 +313,13 @@ Vue.component('rc-navbar', {
   },
   methods: {
     onSearchInput: function() {
-      if (app.$route.name != 'search')
-        app.$router.push({name: 'search'})
+      app.debouncedSearch()
+    },
+    onSearchInputFocused: function() {
+      this.page.search.filter.hasFocus = true;
+    },
+    onSearchInputBlurred: function() {
+      this.page.search.filter.hasFocus = false;
     }
   }
 })
@@ -746,11 +598,11 @@ Vue.use(VueResource)
 Vue.http.options.root = '/api/'
 
 var app = new Vue({
+  i18n,
+  router,
   delimiters: ['${', '}'],
   el: '#vue-app',
   data: CommonData,
-  router,
-  i18n,
   created: function() {
     window.addEventListener("resize", this.onResize)
     this.debouncedSearch = _.debounce(this.getSearchResults, 500)
@@ -766,7 +618,7 @@ var app = new Vue({
     window.removeEventListener("resize", this.onResize)
   },
   mounted: function() {
-    if (!CommonData.user.loggedIn)
+    if (!CommonData.user.loggedIn && this.$route.name !== 'login')
       this.$router.push({name: 'login'})
     refreshPageData(this.$route.path, this)
   },
@@ -805,6 +657,8 @@ var app = new Vue({
       this.$emit('click', this.subject ? this.subject : this.title)
     },
     getSearchResults: function() {
+      if (this.$route.name != 'search')
+        this.$router.push({ name: 'search' });
       resetSearchData(this)
       postPageData(this.$route.path, {
         search: {
@@ -819,7 +673,12 @@ var app = new Vue({
     'page.search.filter.global': function() {
       if (this.page.search.filter.global.length >= 3)
         this.debouncedSearch()
-
+    },
+    'user.isAdmin': function() {
+      location.reload()
+    },
+    'user.loggedIn': function() {
+      location.reload()
     }
   }
 })

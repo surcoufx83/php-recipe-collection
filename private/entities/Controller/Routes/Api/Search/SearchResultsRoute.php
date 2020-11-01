@@ -85,6 +85,8 @@ class SearchResultsRoute extends Route implements RouteInterface {
     $records = $Controller->selectFirst($countQuery)['count'];
     $response['page'] = [
       'search' => [
+        'hasSearchCompleted' => true,
+        'isSearching' => false,
         'records' => [
           'total' => $records,
           'numpages' => ceil($records / $Controller->Config()->Defaults('Lists', 'Entries')),

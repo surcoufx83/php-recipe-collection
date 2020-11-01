@@ -34,14 +34,6 @@ class RecipePageRoute extends Route implements RouteInterface {
 
     $userVote = self::getMyVote($recipe);
 
-    if (!is_null($recipe->getUserId())) {
-      parent::setTitle($response,  $Controller->l('recipe_about_title_withUser', $recipe->getName(), $recipe->getUser()->getUsername()));
-    } else {
-      parent::setTitle($response,  $Controller->l('recipe_about_title_noUser', $recipe->getName()));
-    }
-
-    parent::setDescription($response, $recipe->getDescription());
-
     parent::addToDictionary($response, ['page' => [ 'contentData' => [ 'hasActions' => true ]]]);
     parent::addToDictionary($response, ['page' => [ 'currentRecipe' => $recipe ]]);
     parent::addToDictionary($response, ['page' => [ 'self' => [

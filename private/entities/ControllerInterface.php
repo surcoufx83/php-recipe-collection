@@ -29,7 +29,6 @@ interface ControllerInterface {
   public function getLink(string $filter, ...$args) : ?string;
   public function init() : void;
   public function isAuthenticated() : bool;
-  public function l(string $key, ...$params) : string;
   public function loginWithPassword(string $email, string $password, bool $keepSession, array &$response = null) : bool;
   public function logout() : void;
   public function on(string $method, array $params) : void;

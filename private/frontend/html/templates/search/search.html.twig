@@ -1,7 +1,7 @@
 
     <template id="rc-search-template">
       <b-container>
-        <b-row>
+        <b-row class="d-none d-lg-flex">
           <b-col cols="12" md="7">
             <b-form-group
               label-cols="3"
@@ -12,7 +12,7 @@
                   :placeholder="$t('pages.search.inputPlaceholder')"
                   v-model="page.search.filter.global"></b-input>
                 <b-input-group-append>
-                  <b-button variant="light-blue" @click="onClick">
+                  <b-button variant="blue" @click="onClick">
                     <fa-icon v-if="!page.loading && !page.updating" :icon="page.iconSet.search.icon" :space="page.iconSet.search.space" class="mr-2"></fa-icon>
                     <fa-icon v-if="page.loading || page.updating" :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space" class="fa-spin mr-2"></fa-icon>
                     <strong v-text="$t('pages.search.inputButtonText')"></strong>
@@ -23,13 +23,14 @@
           </b-col>
         </b-row>
         <b-container class="px-0"
-          v-if="page.search.results.length > 0">
+          v-if="page.search.hasSearchCompleted">
           <b-row class="my-3">
             <b-col cols="12" lg="7">
-              <h4 v-text="$t('pages.search.results.header', { num: page.search.results.length })"></h4>
+              <h4 v-text="$tc('pages.search.results.header', page.search.results.length, { num: page.search.results.length })"></h4>
             </b-col>
           </b-row>
-          <b-container class="search-result-list d-flex flex-column px-0">
+          <b-container class="search-result-list d-flex flex-column px-0"
+            v-if="page.search.results.length > 0">
             <b-card no-body class="overflow-hidden pointer my-2 shadow-sm"
               v-for="(record, index) in page.search.results" v-bind:key="record.id"
               @click="onSearchItemClicked(index, record.id, record.name)">
@@ -59,21 +60,6 @@
                 </b-col>
               </b-row>
             </b-card>
-            <!--<b-row cols="12" cols-lg="7"
-              v-for="(record, index) in page.search.results" v-bind:key="record.id"
-              class="search-result-item align-items-start d-flex flex-row p-2 mx-2 my-2 my-lg-1 rounded pointer"
-              >
-              <b-container class="image-box d-inline-block p-0 m-0 mr-2">
-                <b-img-lazy
-                  :src="'/images/0x90/' + (record.pictureId == 0 ? 'dummy' : record.id + '/' + record.pictureId)">
-                </b-img-lazy>
-              </b-container>
-              <b-col cols="9"
-                class="d-flex flex-column w-100">
-                <h5 v-text="record.name"></h5>
-                <p v-text="record.description"></p>
-              </b-col>
-            </b-row>-->
           </b-container>
         </b-container>
       </b-container>
