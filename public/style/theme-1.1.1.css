@@ -343,13 +343,13 @@ ul.list-group-sm li.list-group-item {
 
 .alert-blue {
   color: #F5EAE1 !important;
-  background-color: #AE9784;
-  border-color: #AE9784; }
+  background-color: #4A3C30;
+  border-color: #4A3C30; }
 
 .alert-outline-blue {
   color: #375A0C !important;
   background-color: #F5EAE1;
-  border-color: #FFFFFF; }
+  border-color: #4A3C30; }
   .alert-outline-blue:hover {
     color: #F5EAE1 !important;
     background-color: #665343;
