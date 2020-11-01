@@ -430,6 +430,7 @@ const rc_i18n_de = {
   },
   responseMessages: {
     badArgumentsException: 'Ungültige Argumente angegeben.',
+    badImageData: 'Das Bild konnte nicht gespeichert werden. Die enthaltenen Metadaten sind ungültig.',
     badRequestException: 'Ungültige Anfrage.',
     dbInsertException: 'Fehler beim Einfügen von Daten in die Datenbank.',
     dbSelectException: 'Beim Abrufen von Datensätzen aus der Datenbank ist ein Fehler aufgetreten.',
@@ -440,6 +441,7 @@ const rc_i18n_de = {
     loginFailed: 'Anmeldung fehlgeschlagen.',
     loginSuccessfull: 'Anmeldung erfolgreich.',
     maintenanceException: 'Wartungsmodus ist aktiviert.',
+    mimetypeNotSupported: 'Das Bildformat wird derzeit nicht unterstützt.',
     noApiKeyException: 'Der Zugriff erfordert ein Anmelde-Token. Bitte melden Sie sich zuerst über die Website an, bevor Sie den API-Zugang versuchen.',
     noChanges: 'Es wurden keine Änderungen erkannt.',
     noResults: 'Die Suche hat keine Ergebnisse zurückgeliefert.',
@@ -447,6 +449,7 @@ const rc_i18n_de = {
     notAuthenticatedException: 'Benutzer nicht eingeloggt.',
     pageMovedException: 'Die angeforderte Seite wurde verschoben und kann nicht mehr per Webanforderung oder CLI abgerufen werden.',
     parameterException: 'Für die angegebenen Parameter ist keine Verarbeitung konfiguriert.',
+    saveFileFailed: 'Das Speichern des Bildes auf dem Server ist fehlgeschlagen',
     sendMailFailed: 'Die Mail konnte nicht gesendet werden: ',
     undefinedException: 'Im Backend ist ein nicht spezifizierter Fehler aufgetreten. Ihre Änderungen wurden nicht akzeptiert.',
     validationSucceeded: 'Die Überprüfung war erfolgreich. Es wurden keine Fehler festgestellt.',

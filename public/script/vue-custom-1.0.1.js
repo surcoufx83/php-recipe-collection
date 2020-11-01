@@ -621,6 +621,11 @@ const RecipeGallery = {
           reader.onloadend = function() {
             $('#recipe-picture-' + i).css("content", "url(" + this.result + ")")
           }
+          var data = new FormData()
+          data.append('pictureUpload', this.page.currentRecipe.pictures[i].uploadFile)
+          postFormData(app.$route.path, data, function(response) {
+            console.log(response)
+          })
         }
       }
     },
