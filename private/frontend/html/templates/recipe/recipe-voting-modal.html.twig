@@ -39,47 +39,43 @@
                 <label class="btn btn-outline-blue btn-sm active">
                   <input type="radio" name="recipe-rating-cooked"
                     :checked="page.self.currentVote.cooked === -1"
-                    value="-1" v-model="page.self.currentVote.cooked"
-                    > ${ $t('pages.recipe.rate.modal.cooked.none') }</input>
+                    value="-1" v-model="page.self.currentVote.cooked">
+                    ${ $t('pages.recipe.rate.modal.cooked.none') }</input>
                 </label>
               </div>
             </div>
-            <h5>{{ Controller.l('recipe_rate_modal_rating_title') }}</h5>
-            <span class="text-muted text-small">
-              {{ Controller.l('recipe_rate_modal_rating_description') }}
-            </span>
+            <h5 v-text="$t('pages.recipe.rate.modal.rating.title')"></h5>
+            <span class="text-muted text-small" v-text="$t('pages.recipe.rate.modal.rating.description')"></span>
             <div class="pb-3 mt-1 text-center">
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-outline-blue btn-sm">
                   <input type="radio" name="recipe-rating-rated"
                     :checked="page.self.currentVote.rating === 1"
-                    value="1" v-model="page.self.currentVote.rating"
-                    > {{ Controller.l('common_rating_easy') }}
+                    value="1" v-model="page.self.currentVote.rating">
+                    ${ $t('pages.recipe.rate.modal.rating.easy') }
                 </label>
                 <label class="btn btn-outline-blue btn-sm">
                   <input type="radio" name="recipe-rating-rated"
                     :checked="page.self.currentVote.rating === 2"
-                    value="2" v-model="page.self.currentVote.rating"
-                    > {{ Controller.l('common_rating_medium') }}
+                    value="2" v-model="page.self.currentVote.rating">
+                    ${ $t('pages.recipe.rate.modal.rating.medium') }
                 </label>
                 <label class="btn btn-outline-blue btn-sm">
                   <input type="radio" name="recipe-rating-rated"
                     :checked="page.self.currentVote.rating === 3"
-                    value="3" v-model="page.self.currentVote.rating"
-                    > {{ Controller.l('common_rating_hard') }}
+                    value="3" v-model="page.self.currentVote.rating">
+                    ${ $t('pages.recipe.rate.modal.rating.hard') }
                 </label>
                 <label class="btn btn-outline-blue btn-sm active">
                   <input type="radio" name="recipe-rating-rated"
                     :checked="page.self.currentVote.rating === -1"
-                    value="-1" v-model="page.self.currentVote.rating"
-                    > {{ Controller.l('recipe_rate_modal_rating_none') }}
+                    value="-1" v-model="page.self.currentVote.rating">
+                    ${ $t('pages.recipe.rate.modal.rating.none') }
                 </label>
               </div>
             </div>
-            <h5>{{ Controller.l('recipe_rate_modal_voting_title') }}</h5>
-            <span class="text-muted text-small">
-              {{ Controller.l('recipe_rate_modal_voting_description') }}
-            </span>
+            <h5 v-text="$t('pages.recipe.rate.modal.voting.title')"></h5>
+            <span class="text-muted text-small" v-text="$t('pages.recipe.rate.modal.voting.description')"></span>
             <div class="pb-3 mt-1 text-center">
               <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <label class="btn btn-outline-blue btn-sm">
@@ -141,9 +137,9 @@
               <fa-icon :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space" spin fw></fa-icon>
             </b-button>
             <b-button type="button" id="recipe-rating-modal-save"
-              class="btn-blue" @click="onRatingSubmitPress">{{ Controller.l('recipe_rate_modal_save') }}</b-button>
+              class="btn-blue" @click="onRatingSubmitPress">${ $t('pages.recipe.rate.modal.save') }</b-button>
             <b-button type="button" id="recipe-rating-modal-close"
-              class="btn-outline-blue" data-dismiss="modal">{{ Controller.l('recipe_rate_modal_close') }}</b-button>
+              class="btn-outline-blue" data-dismiss="modal">${ $t('pages.recipe.rate.modal.close') }</b-button>
           </div>
         </div>
       </div>

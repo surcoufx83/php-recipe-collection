@@ -15,6 +15,13 @@ const rc_i18n_de = {
   greetings: {
     hello: 'Hallo {user}'
   },
+  modals: {
+    failed: {
+      head: 'Fehler',
+      subject: 'Bei der Aktion ist leider ein Fehler aufgetreten.',
+      close: 'Zurück'
+    }
+  },
   navbar: {
     search: {
       placeholder: 'Suche nach Rezepten oder Zutaten, z.B. Kartoffelauflauf'
@@ -36,6 +43,40 @@ const rc_i18n_de = {
       subtitle: '',
       title: '',
       workingon: 'An dieser Stelle werden demnächst neue Rezepte vorgestellt. Bis dahin nutze eine der Funktonen aus der Seitenleiste.'
+    },
+    login: {
+      cloud: {
+        description: 'Du hast schon mal unsere Nextcloud verwendet? Dann nutze dieses Konto um dich hier anzumelden. Einfach und sicher!',
+        failed: 'Die Anmeldung über die Nextcloud ist fehlgeschlagen.',
+        header: 'Anmeldung mit Nextcloud-Konto',
+        submit: 'Mit Nextcloud-Konto anmelden'
+      },
+      failed: {
+        loginFailed: 'Anmeldung fehlgeschlagen.'
+      },
+      keepSession: {
+        description: 'Deine Anmeldung bleibt auch nach dem Schließen des Webbrowsers gültig.',
+        title: 'Angemeldet bleiben.'
+      },
+      nameField: {
+        invalidFeedback: 'Bitte gib deine E-Mailadresse ein.',
+        placeholder: 'E-Mailadresse'
+      },
+      lostPassword: {
+        title: 'Passwort verloren?'
+      },
+      passwordField: {
+        invalidFeedback: 'Bitte gib dein Passwort ein.',
+        placeholder: 'Passwort'
+      },
+      regular: {
+        description: 'Sofern du einen dedizierten Benutzeraccount für diese Webseite hast, kannst du dich hier mit einer E-Mailadresse und deinem Passwort anmelden.',
+        header: 'Anmeldung mit E-Mailadresse'
+      },
+      submitButton: {
+        title: 'Anmelden'
+      },
+      title: 'Benutzer Anmeldung'
     },
     logout: {
       subtitle: '',
@@ -139,12 +180,16 @@ const rc_i18n_de = {
           cooking: 'Koch-/Backzeit:',
           cookingShort: 'Kochen',
           notset: 'keine Angabe'
+        },
+        steps: {
+          title: 'Zubereitungsschritte',
+          placeholder: 'Schritt'
         }
       },
       rate: {
         button: 'Bewertung abgeben',
         header: 'Rezept bewerten',
-        subject: 'Wenn du das Rezept nachgekocht hast, würden wir uns freuen, wenn du deine Meinung dazu teilst.',
+        description: 'Du hast das Rezept nachgekocht? Das Essen war super lecker oder doch nicht so gelungen? Lass es uns und wissen und bewerte das Rezept.',
         voted: {
           subject: 'Du hast bereits eine Bewertung abgegeben. Du kannst das Rezept erst in einigen Tagen erneut bewerten.'
         },
@@ -158,7 +203,10 @@ const rc_i18n_de = {
           rating: {
             title: 'Wie schwierig war es?',
             description: 'Wie schwer fandest du es, dass Rezept nachzukochen? War alles beschrieben was du benötigst oder haben sich dir viele Fragezeichen aufgetan?',
-            none: 'Keine Angabe'
+            none: 'Keine Angabe',
+            easy: 'Leicht',
+            medium: 'Geht so',
+            hard: 'Kompliziert'
           },
           voting: {
             title: 'Wieviele Herzen hat das Gericht verdient?',
@@ -183,7 +231,23 @@ const rc_i18n_de = {
     },
     recipes: {
       subtitle: '',
-      title: 'Rezeptsammlung'
+      title: 'Rezeptsammlung',
+      filtered: {
+        own: {
+          title: 'Meine Rezepte'
+        },
+        user: {
+          title: 'Rezepte von {user}'
+        }
+      },
+      unfiltered: {
+        title: 'Rezepte erkunden'
+      },
+      common: {
+        goto: 'Zum Rezept',
+        submittedBy: 'Eingetragen von {0}',
+        votings: 'Keine Bewertung|{count} Bewertung|{count} Bewertungen'
+      }
     },
     search: {
       subtitle: '',
@@ -193,7 +257,7 @@ const rc_i18n_de = {
       inputButtonText: 'Finden',
       results: {
         gotoRecipe: 'Zum Rezept',
-        header: 'Wir haben {num} Rezepte gefunden!'
+        header: 'Wir haben keine Ergebnisse gefunden.|Wir haben ein Ergebnis gefunden!|Wir haben {num} Rezepte gefunden!'
       }
     },
     userRecipes: {

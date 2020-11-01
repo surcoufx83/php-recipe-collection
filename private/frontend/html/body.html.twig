@@ -47,7 +47,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">{{Controller.l('modals_failed_head')}}</h5>
+              <h5 class="modal-title" v-text="$t('modals.failed.head')"></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -57,7 +57,7 @@
               <p class="text-small my-0">Code: ${ page.modals.failedModal.code }</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-blue" data-dismiss="modal">{{Controller.l('modals_failed_close')}}</button>
+              <button type="button" class="btn btn-blue" data-dismiss="modal">${ $t('modals.failed.close') }</button>
             </div>
           </div>
         </div>

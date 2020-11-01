@@ -618,7 +618,7 @@ var app = new Vue({
     window.removeEventListener("resize", this.onResize)
   },
   mounted: function() {
-    if (!CommonData.user.loggedIn)
+    if (!CommonData.user.loggedIn && this.$route.name !== 'login')
       this.$router.push({name: 'login'})
     refreshPageData(this.$route.path, this)
   },

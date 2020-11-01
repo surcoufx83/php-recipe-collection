@@ -1,6 +1,6 @@
           <div id="gallery-anchor"
             v-if="recipe.pictures.length !== 0">
-            <h5>{{Controller.l('recipe_gallery_header')}}</h5>
+            <h5 v-text="$t('pages.recipe.gallery.header')"></h5>
             <b-container fluid>
               <b-row>
                 <b-col class="p-1 col-6 col-lg-12" v-for="(pic, index) in recipe.pictures.slice(0, 1)" :key="index">
