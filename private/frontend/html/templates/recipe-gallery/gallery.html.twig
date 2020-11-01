@@ -3,15 +3,23 @@
       <b-container v-if="page.loading !== true && typeof recipe !== undefined && recipe.id !== 0">
         <!-- back to recipe link -->
         <router-link :to="{ name: 'recipe', params: { id: recipe.id, name: recipe.name } }"
-          class="float-right">
+          class="float-left">
           <b-button size="sm" variant="blue">
             <fa-icon :icon="page.iconSet.back.icon" :space="page.iconSet.back.space"
               class="mr-1"></fa-icon>
             ${ $t('pages.gallery.backBtn.title') }
           </b-button>
         </router-link>
-        <br clear="all" />
         <!-- back to recipe link -->
+        <!-- add picture button -->
+        <b-button size="sm" variant="blue" class="float-right"
+          @click="onAddPicture">
+          <fa-icon :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+            class="mr-1"></fa-icon>
+          ${ $t('pages.gallery.addBtn.title') }
+        </b-button>
+        <!-- add picture button -->
+        <br clear="all" />
         <b-container class="mt-2">
           <p class="text-muted text-small" v-text="$t('pages.gallery.usageOwner')" v-if="recipe.ownerId == user.id"></p>
           <p class="text-muted text-small" v-text="$t('pages.gallery.usage')" v-else></p>
@@ -21,7 +29,7 @@
               class="card m-2 p-1">
               <a :href="pic.link" data-toggle="lightbox"
                 data-gallery="example-gallery" data-type="image">
-                <b-img-lazy class="card-img-top" :src="pic.link"></b-img>
+                <b-img-lazy class="card-img-top" :src="pic.link" :id="'recipe-picture-' + index"></b-img>
               </a>
               <div class="card-body text-muted">
                 <p>
@@ -43,6 +51,14 @@
                     ${ pic.uploaderName }
                   </router-link>
                 </p>
+                <b-form-file
+                  v-model="pic.uploadFile"
+                  :id="'file-upload-' + index"
+                  :name="'file-upload-' + index"
+                  accept="image/jpeg, image/png"
+                  class="image-upload-input" style="width: 0px; height: 0px; overflow: hidden;"
+                  @input="onPictureAdded(index)">
+                </b-form-file>
               </div>
             </div>
           </draggable>

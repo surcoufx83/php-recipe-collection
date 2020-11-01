@@ -129,7 +129,7 @@ class RecipePostRoute extends Route implements RouteInterface {
     }
 
     if (!$failed)
-      $failed = $Controller->finishTransaction();
+      $failed = !$Controller->finishTransaction();
 
     if ($failed) {
       $response = $Controller->Config()->getResponseArray(203);

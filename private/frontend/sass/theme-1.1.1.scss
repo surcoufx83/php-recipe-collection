@@ -178,7 +178,7 @@ h1, h2, h3 {
   border-color: $bg-contrast;
 }
 
-.ekko-lightbox {
+.ekko-lightbox, .modal {
   // picture fullsize gallery after clicking on an image
   z-index: 1300;
 }

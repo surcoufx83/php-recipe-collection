@@ -41,6 +41,9 @@ const rc_i18n_de = {
       titleWithUser: '{recipe} von {user}',
       usage: 'Bilder anklicken um sie zu vergrößern.',
       usageOwner: 'Bilder anklicken um sie zu vergrößern, linke Maustaste gedrückt halten zum Verschieben ("drag&drop") und damit die Reihenfolge zu verändern. Das erste Bild ist immer das Vorschaubild, die ersten fünf Bilder werden auf der Rezeptseite prominent platziert.',
+      addBtn: {
+        title: 'Bild hinzufügen'
+      },
       backBtn: {
         title: 'Zurück zum Rezept'
       },

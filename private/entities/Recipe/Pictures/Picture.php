@@ -134,13 +134,14 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
   public function jsonSerialize() {
     global $Controller;
     return [
+      'description' => $this->picture_description,
       'id' => $this->picture_id,
       'index' => $this->picture_sortindex,
+      'link' => $this->getPublicPath(),
+      'name' => $this->picture_name,
+      'uploadFile' => null,
       'uploaderId' => (!is_null($this->user_id) ? $this->user_id : 0),
       'uploaderName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : ''),
-      'name' => $this->picture_name,
-      'description' => $this->picture_description,
-      'link' => $this->getPublicPath(),
     ];
   }
 

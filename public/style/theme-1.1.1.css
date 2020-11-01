@@ -71,7 +71,7 @@ h1, h2, h3 {
   background-color: #FFFFFF;
   border-color: #665343; }
 
-.ekko-lightbox {
+.ekko-lightbox, .modal {
   z-index: 1300; }
 
 .form-control-sm {
