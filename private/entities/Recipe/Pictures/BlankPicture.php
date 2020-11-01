@@ -41,7 +41,7 @@ class BlankPicture extends Picture implements HashableInterface {
     $this->picture_filename = $this->picture_hash.$this->recipe_id.'.'.$this->getExtension();
     $folder = FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages', $this->getFolderName());
     if (!is_dir($folder))
-      mkdir($folder, 0644, true);
+      mkdir($folder, 0711, true);
     $this->picture_full_path = FilesystemHelper::paths_combine($folder, $this->picture_filename);
     return move_uploaded_file($this->path, $this->picture_full_path);
   }
