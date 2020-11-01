@@ -375,7 +375,8 @@ div.page {
   div.page .b-sidebar-outer {
     z-index: 600; }
   div.page .b-sidebar {
-    padding-top: 58px; }
+    padding-top: 58px;
+    width: 220px; }
     div.page .b-sidebar ul {
       padding-left: 0;
       list-style: none; }
@@ -595,7 +596,7 @@ div.removable-image-area {
     column-count: 6; }
 
   div.page.sidebar-visible {
-    padding-left: 320px !important; } }
+    padding-left: 220px !important; } }
 @media (min-width: 1200px) {
   .card-columns.masonry-deck.cols-xl-1 {
     column-count: 1; }
@@ -611,6 +612,6 @@ div.removable-image-area {
     column-count: 6; }
 
   div.page.sidebar-visible {
-    padding-left: 320px !important; } }
+    padding-left: 220px !important; } }
 
 /*# sourceMappingURL=theme-1.1.1.css.map */

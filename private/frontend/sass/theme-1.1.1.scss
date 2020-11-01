@@ -366,6 +366,7 @@ div.page {
 
   .b-sidebar {
     padding-top: 58px;
+    width: 220px;
 
     ul {
       padding-left: 0;
@@ -665,7 +666,7 @@ div.removable-image-area {
   }
   div.page {
     &.sidebar-visible {
-      padding-left: 320px!important;
+      padding-left: 220px!important;
     }
   }
 }
@@ -682,7 +683,7 @@ div.removable-image-area {
   }
   div.page {
     &.sidebar-visible {
-      padding-left: 320px!important;
+      padding-left: 220px!important;
     }
   }
 }
