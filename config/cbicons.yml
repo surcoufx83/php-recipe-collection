@@ -74,6 +74,9 @@ settings:
 spinner:
   icon: circle-notch
   space: fas
+star:
+  icon: star
+  space: fas
 unlock:
   icon: unlock
   space: fas

@@ -1,0 +1,51 @@
+
+    <template id="recipe-gallery-template">
+      <b-container v-if="page.loading !== true && typeof recipe !== undefined && recipe.id !== 0">
+        <!-- back to recipe link -->
+        <router-link :to="{ name: 'recipe', params: { id: recipe.id, name: recipe.name } }"
+          class="float-right">
+          <b-button size="sm" variant="blue">
+            <fa-icon :icon="page.iconSet.back.icon" :space="page.iconSet.back.space"
+              class="mr-1"></fa-icon>
+            ${ $t('pages.gallery.backBtn.title') }
+          </b-button>
+        </router-link>
+        <br clear="all" />
+        <!-- back to recipe link -->
+        <b-container class="mt-2">
+          <p class="text-muted text-small" v-text="$t('pages.gallery.usageOwner')" v-if="recipe.ownerId == user.id"></p>
+          <p class="text-muted text-small" v-text="$t('pages.gallery.usage')" v-else></p>
+          <draggable v-model="recipe.pictures" class="card-deck"
+            @end="onPictureMoved">
+            <div v-for="(pic, index) in recipe.pictures" :key="index"
+              class="card m-2 p-1">
+              <a :href="pic.link" data-toggle="lightbox"
+                data-gallery="example-gallery" data-type="image">
+                <b-img-lazy class="card-img-top" :src="pic.link"></b-img>
+              </a>
+              <div class="card-body text-muted">
+                <p>
+                  <fa-icon v-if="index == 0"
+                    class="text-warning text-golden mr-1"
+                    :icon="page.iconSet.star.icon" :space="page.iconSet.star.space"
+                    v-b-tooltip.hover :title="$t('pages.gallery.previewImage.tooltip')"></fa-icon>
+                  <fa-icon v-if="index > 0 && index < 5"
+                    class="text-secondary text-gray mr-1"
+                    :icon="page.iconSet.star.icon" :space="page.iconSet.star.space"
+                    v-b-tooltip.hover :title="$t('pages.gallery.recipeImage.tooltip')"></fa-icon>
+                  Bild ${ index + 1 }: ${ pic.name }
+                </p>
+                <p v-if="pic.description !== ''" v-text="pic.description"></p>
+                <p v-if="pic.uploaderId !== 0" class="text-small">
+                  <router-link :to="{ name: 'userRecipes', params: { id: pic.uploaderId, name: pic.uploaderName }}">
+                    <fa-icon class="mr-1"
+                      :icon="page.iconSet.user.icon" :space="page.iconSet.user.space"></fa-icon>
+                    ${ pic.uploaderName }
+                  </router-link>
+                </p>
+              </div>
+            </div>
+          </draggable>
+        </b-container>
+      </b-container>
+    </template>

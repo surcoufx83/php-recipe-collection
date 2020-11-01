@@ -581,6 +581,27 @@ const RecipeEditor = {
     }
   }
 }
+const RecipeGallery = {
+  delimiters: ['${', '}'],
+  props: ['recipe', 'page', 'user'],
+  template: '#recipe-gallery-template',
+  computed: { },
+  methods: {
+    onPictureMoved: function(evt) {
+      console.log('Picture.onPictureMoved', evt)
+      console.log('Picture ' + this.recipe.pictures[evt.newIndex].name)
+      postPageData(app.$route.path, {
+        moved: {
+          from: evt.oldIndex,
+          to: evt.newIndex
+        }
+      },
+      function(data) {
+        console.log(data)
+      })
+    }
+  }
+}
 const router = new VueRouter({
   mode: 'history',
   routes: [
@@ -599,14 +620,12 @@ const router = new VueRouter({
     { name: 'login', path: '/login', component: Login },
     { name: 'random', path: '/random/:id?' },
     { name: 'recipe', path: '/recipe/:id(.+)-:name([^/]*)', component: Recipe },
-    { name: 'gallery', path: '/recipe/:id(.+)-:name([^/]*)/gallery', component: Recipe },
+    { name: 'gallery', path: '/recipe/:id(.+)-:name([^/]*)/gallery', component: RecipeGallery },
     { name: 'editRecipe', path: '/recipe/:id(.+)-:name([^/]*)/edit', component: RecipeEditor },
     { name: 'recipes', path: '/recipes', component: RecipesList, children: [
-      { name: 'recipePage', path: ':page' },
       { name: 'myRecipes', path: 'my' },
       { name: 'userRecipes', path: 'user/:id(.+)-:name([^/]*)' }
-      ]
-    },
+    ]},
     { name: 'search', path: '/search', component: SearchRecipe },
     { name: 'user', path: '/user/:id(.+)-:name([^/]*)', children: [
 
@@ -647,6 +666,7 @@ var app = new Vue({
   computed: {
     title: function() {
       switch(this.$route.name) {
+        case 'gallery':
         case 'recipe':
           if (this.page.currentRecipe.ownerId > 0)
             return this.$t('pages.recipe.titleWithUser', { recipe: this.page.currentRecipe.name, user: this.page.currentRecipe.ownerName })
@@ -708,7 +728,7 @@ var app = new Vue({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('beforeEach', to, from)
+  // console.log('beforeEach', to, from)
   if (app) {
     if (to.name == 'login' && app.user.loggedIn)
       next(false)
@@ -728,7 +748,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log('afterEach', to, from)
+  // console.log('afterEach', to, from)
   if (to.name == 'logout') {
     Vue.http.post('logout')
       .then(response => response.json())

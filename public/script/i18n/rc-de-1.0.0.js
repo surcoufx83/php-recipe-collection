@@ -35,6 +35,22 @@ const rc_i18n_de = {
       subtitle: '',
       title: 'Rezept überarbeiten'
     },
+    gallery: {
+      subtitle: 'Bildergalerie',
+      title: '{recipe}',
+      titleWithUser: '{recipe} von {user}',
+      usage: 'Bilder anklicken um sie zu vergrößern.',
+      usageOwner: 'Bilder anklicken um sie zu vergrößern, linke Maustaste gedrückt halten zum Verschieben ("drag&drop") und damit die Reihenfolge zu verändern. Das erste Bild ist immer das Vorschaubild, die ersten fünf Bilder werden auf der Rezeptseite prominent platziert.',
+      backBtn: {
+        title: 'Zurück zum Rezept'
+      },
+      previewImage: {
+        tooltip: 'Das ist das erste Bild und es wird überall als Vorschaubild verwendet.'
+      },
+      recipeImage: {
+        tooltip: 'Dieses Bild ist eines der ersten fünf Bilder, dass auf der Rezeptseite angezeigt wird.'
+      }
+    },
     home: {
       introtext1: 'Schön das du in das Kochbuch schaust. Wir arbeiten permanent dran, es besser zu machen. Wenn dir Fehler auffallen, melde diese gerne an Stefan oder Elias.',
       introtext2: 'Auch wenn einige Funktionen noch nicht so ganz hinhauen, Rezepte eintragen, bearbeiten, anschauen und nachkochen klappt schon ganz gut.',

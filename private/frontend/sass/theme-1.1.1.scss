@@ -178,6 +178,11 @@ h1, h2, h3 {
   border-color: $bg-contrast;
 }
 
+.ekko-lightbox {
+  // picture fullsize gallery after clicking on an image
+  z-index: 1300;
+}
+
 .form-control-sm {
   font-size: 1.05rem;
 }
@@ -622,6 +627,9 @@ div.removable-image-area {
     &.cols-5 { column-count: 5; }
     &.cols-6 { column-count: 6; }
   }
+  .card-deck .card {
+    min-width: 100%;
+  }
 }
 
 // Small devices (landscape phones, 576px and up)
@@ -640,6 +648,9 @@ div.removable-image-area {
     &.cols-sm-5 { column-count: 5; }
     &.cols-sm-6 { column-count: 6; }
   }
+  .card-deck .card {
+    min-width: 100%;
+  }
 }
 
 // Medium devices (tablets, 768px and up)
@@ -652,6 +663,9 @@ div.removable-image-area {
     &.cols-md-5 { column-count: 5; }
     &.cols-md-6 { column-count: 6; }
   }
+  .card-deck .card {
+    min-width: calc(33% - 30px);
+  }
 }
 
 // Large devices (desktops, 992px and up)
@@ -663,6 +677,9 @@ div.removable-image-area {
     &.cols-lg-4 { column-count: 4; }
     &.cols-lg-5 { column-count: 5; }
     &.cols-lg-6 { column-count: 6; }
+  }
+  .card-deck .card {
+    min-width: calc(25% - 30px);
   }
   div.page {
     &.sidebar-visible {
@@ -680,6 +697,9 @@ div.removable-image-area {
     &.cols-xl-4 { column-count: 4; }
     &.cols-xl-5 { column-count: 5; }
     &.cols-xl-6 { column-count: 6; }
+  }
+  .card-deck .card {
+    min-width: calc(25% - 30px);
   }
   div.page {
     &.sidebar-visible {

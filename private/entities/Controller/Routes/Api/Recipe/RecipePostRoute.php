@@ -35,9 +35,13 @@ class RecipePostRoute extends Route implements RouteInterface {
       return self::vote($response, $recipe, $user, $payload['vote']);
     if ($action == 'edit')
       return self::edit($response, $recipe, $user, $payload);
+    if ($action == 'gallery') {
+      if (array_key_exists('moved', $payload))
+        return self::pictureMoved($response, $recipe, $user, $payload['moved']);
+    }
 
     $response = $Controller->Config()->getResponseArray(71);
-    parent::addToDictionary($response, ['action' => $action]);
+    parent::addToDictionary($response, ['response' => ['actionParam' => $action]]);
 
     return true;
 
@@ -51,6 +55,88 @@ class RecipePostRoute extends Route implements RouteInterface {
     }
     $recipe->loadComplete();
     return $recipe->update($response, $payload);
+  }
+
+  static function pictureMoved(array &$response, RecipeInterface $recipe, ?UserInterface $user, array $params) : bool {
+    global $Controller;
+    if (!$user || $recipe->getUserId() != $user->getId()) {
+      $response = $Controller->Config()->getResponseArray(92);
+      return false;
+    }
+    if (!array_key_exists('from', $params) || !array_key_exists('to', $params)) {
+      $response = $Controller->Config()->getResponseArray(80);
+      return false;
+    }
+    $from = intval($params['from']);
+    $to = intval($params['to']);
+    if ($from == $to) {
+      $response = $Controller->Config()->getResponseArray(2);
+      return true;
+    }
+
+    $counts = $Controller->selectCountSimple('recipe_pictures', 'recipe_id', $recipe->getId());
+    if ($from >= $counts || $to >= $counts || $from < 0 || $to < 0) {
+      $response = $Controller->Config()->getResponseArray(80);
+      return false;
+    }
+
+    $failed = false;
+    if (!$Controller->startTransaction())
+      $failed = true;
+
+    if (!$failed) {
+      $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_pictures');
+      $query->update(['picture_sortindex' => $counts])
+            ->where('recipe_pictures', 'recipe_id', '=', $recipe->getId())
+            ->andWhere('recipe_pictures', 'picture_sortindex', '=', $from)
+            ->limit(1);
+      if (!$Controller->update($query))
+        $failed = true;
+    }
+
+    if (!$failed) {
+      if ($from < $to) {
+        for ($i = $from; $i < $to; $i++) {
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_pictures');
+          $query->update(['picture_sortindex' => $i])
+                ->where('recipe_pictures', 'recipe_id', '=', $recipe->getId())
+                ->andWhere('recipe_pictures', 'picture_sortindex', '=', ($i + 1))
+                ->limit(1);
+          if (!$Controller->update($query))
+            $failed = true;
+        }
+      } else {
+        for ($i = $from; $i > $to; $i--) {
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_pictures');
+          $query->update(['picture_sortindex' => $i])
+                ->where('recipe_pictures', 'recipe_id', '=', $recipe->getId())
+                ->andWhere('recipe_pictures', 'picture_sortindex', '=', ($i - 1))
+                ->limit(1);
+          if (!$Controller->update($query))
+            $failed = true;
+        }
+      }
+    }
+
+    if (!$failed) {
+      $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_pictures');
+      $query->update(['picture_sortindex' => $to])
+            ->where('recipe_pictures', 'recipe_id', '=', $recipe->getId())
+            ->andWhere('recipe_pictures', 'picture_sortindex', '=', $counts)
+            ->limit(1);
+      if (!$Controller->update($query))
+        $failed = true;
+    }
+
+    if (!$failed)
+      $failed = $Controller->finishTransaction();
+
+    if ($failed) {
+      $response = $Controller->Config()->getResponseArray(203);
+      return false;
+    }
+    $response = $Controller->Config()->getResponseArray(1);
+    return true;
   }
 
   static function publish(array &$response, RecipeInterface $recipe, ?UserInterface $user) : bool {
