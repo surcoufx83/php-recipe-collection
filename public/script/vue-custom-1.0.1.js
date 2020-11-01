@@ -264,6 +264,28 @@ const Recipe = {
           this.recipe.eaterCountCalc)
       }
     },
+    onPublishButtonClicked: function() {
+      $('#recipe-publishbtn').prop('disabled', true)
+      $('#recipe-publishbtn-icon').addClass('d-none')
+      $('#recipe-publishbtn-spinner').removeClass('d-none')
+      postPageData(app.$route.path, { publish: true },
+        function(data) {
+          $('#recipe-publishbtn-spinner').addClass('d-none')
+          $('#recipe-publishbtn-icon').removeClass('d-none')
+          $('#recipe-publishbtn').prop('disabled', false)
+        }, true)
+    },
+    onRejectButtonClicked: function() {
+      $('#recipe-rejectbtn').prop('disabled', true)
+      $('#recipe-rejectbtn-icon').addClass('d-none')
+      $('#recipe-rejectbtn-spinner').removeClass('d-none')
+      postPageData(app.$route.path, { unpublish: true },
+        function(data) {
+          $('#recipe-rejectbtn-spinner').addClass('d-none')
+          $('#recipe-rejectbtn-icon').removeClass('d-none')
+          $('#recipe-rejectbtn').prop('disabled', false)
+        }, true)
+    },
     onRatingStartButtonPress: function() {
       $('#recipe-rating-modal').modal()
     },
@@ -660,6 +682,8 @@ var app = new Vue({
       if (this.$route.name != 'search')
         this.$router.push({ name: 'search' });
       resetSearchData(this)
+      this.$set(this.page.search, 'hasSearchCompleted', false)
+      this.$set(this.page.search, 'isSearching', true)
       postPageData(this.$route.path, {
         search: {
           phrase: this.page.search.filter.global

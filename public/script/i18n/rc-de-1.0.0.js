@@ -98,6 +98,21 @@ const rc_i18n_de = {
       actionbtn: {
         edit: 'Bearbeiten'
       },
+      actions: {
+        title: 'Rezept verwalten',
+        edit: {
+          title: 'Bearbeiten',
+          tooltip: 'Im Bearbeiten-Modus kannst du alle Angaben überarbeiten.'
+        },
+        publish: {
+          title: 'Veröffentlichen',
+          tooltip: 'Durch das Veröffentlichen dieses Rezeptes wird es für andere NutzerInnen auffindbar.'
+        },
+        reject: {
+          title: 'Zurückziehen',
+          tooltip: 'Die Veröffentlichung wird zurückgezogen. Damit kann das Rezept nicht mehr gefunden werden.'
+        }
+      },
       administration: {
         title: 'Administration',
         author: 'Verfasst von {0}',
@@ -122,7 +137,7 @@ const rc_i18n_de = {
         notSet: 'keine Angabe'
       },
       footer: {
-        gallery: 'Galerie',
+        gallery: 'Bilder',
         ingredients: 'Zutaten',
         steps: 'Zubereitung'
       },

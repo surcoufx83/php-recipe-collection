@@ -59,6 +59,10 @@ class RecipePostRoute extends Route implements RouteInterface {
       $response = $Controller->Config()->getResponseArray(92);
       return false;
     }
+    if ($recipe->isPublished()) {
+      $response = $Controller->Config()->getResponseArray(2);
+      return true;
+    }
     $recipe->setPublic(true);
     $response = $Controller->Config()->getResponseArray(1);
     parent::addToDictionary($response, ['page' => [ 'currentRecipe' => [ 'published' => $recipe->getPublishedDate()->format(DateTime::ISO8601) ]]]);
@@ -70,6 +74,10 @@ class RecipePostRoute extends Route implements RouteInterface {
     if (!$user || $recipe->getUserId() != $user->getId()) {
       $response = $Controller->Config()->getResponseArray(92);
       return false;
+    }
+    if (!$recipe->isPublished()) {
+      $response = $Controller->Config()->getResponseArray(2);
+      return true;
     }
     $recipe->setPublic(false);
     $response = $Controller->Config()->getResponseArray(1);
