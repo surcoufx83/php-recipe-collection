@@ -595,6 +595,7 @@ const RecipeGallery = {
         id: 0,
         index: i,
         link: '/pictures/_dummy.jpg',
+        link350: '/pictures/_dummy.jpg',
         name: '',
         uploadFile: null,
         uploaderId: this.user.id,

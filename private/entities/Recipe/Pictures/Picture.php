@@ -106,7 +106,7 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
   }
 
   public function getPublicPath(?int $width=0, ?int $height=0) : string {
-    return FilesystemHelper::paths_combine('/pictures/cbimages', $this->getFolderName(), $this->getFilename($width, $height));
+    return '/pictures/cbimages/'.$this->getFolderName().'/'.$this->getFilename($width, $height);
   }
 
   public function getRecipe() : RecipeInterface {
@@ -137,7 +137,8 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
       'description' => $this->picture_description,
       'id' => $this->picture_id,
       'index' => $this->picture_sortindex,
-      'link' => $this->getPublicPath(),
+      'link' => '/images/'.$this->recipe_id.'/'.$this->picture_id,
+      'link350' => '/images/350x0/'.$this->recipe_id.'/'.$this->picture_id,
       'name' => $this->picture_name,
       'uploadFile' => null,
       'uploaderId' => (!is_null($this->user_id) ? $this->user_id : 0),
