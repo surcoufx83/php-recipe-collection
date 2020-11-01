@@ -264,6 +264,28 @@ const Recipe = {
           this.recipe.eaterCountCalc)
       }
     },
+    onPublishButtonClicked: function() {
+      $('#recipe-publishbtn').prop('disabled', true)
+      $('#recipe-publishbtn-icon').addClass('d-none')
+      $('#recipe-publishbtn-spinner').removeClass('d-none')
+      postPageData(app.$route.path, { publish: true },
+        function(data) {
+          $('#recipe-publishbtn-spinner').addClass('d-none')
+          $('#recipe-publishbtn-icon').removeClass('d-none')
+          $('#recipe-publishbtn').prop('disabled', false)
+        }, true)
+    },
+    onRejectButtonClicked: function() {
+      $('#recipe-rejectbtn').prop('disabled', true)
+      $('#recipe-rejectbtn-icon').addClass('d-none')
+      $('#recipe-rejectbtn-spinner').removeClass('d-none')
+      postPageData(app.$route.path, { unpublish: true },
+        function(data) {
+          $('#recipe-rejectbtn-spinner').addClass('d-none')
+          $('#recipe-rejectbtn-icon').removeClass('d-none')
+          $('#recipe-rejectbtn').prop('disabled', false)
+        }, true)
+    },
     onRatingStartButtonPress: function() {
       $('#recipe-rating-modal').modal()
     },
@@ -559,6 +581,73 @@ const RecipeEditor = {
     }
   }
 }
+const RecipeGallery = {
+  delimiters: ['${', '}'],
+  props: ['recipe', 'page', 'user'],
+  template: '#recipe-gallery-template',
+  computed: { },
+  methods: {
+    onAddPicture: function() {
+      console.log('Picture.onAddPicture')
+      var i = this.page.currentRecipe.pictures.length
+      this.page.currentRecipe.pictures.push({
+        description: '',
+        id: 0,
+        index: i,
+        link: '/pictures/_dummy.jpg',
+        link350: '/pictures/_dummy.jpg',
+        name: '',
+        uploadFile: null,
+        uploaderId: this.user.id,
+        uploaderName: this.user.meta.un
+      })
+      const parent = this
+      setTimeout(function() {
+        // wait for upload button to be created
+        var i = parent.page.currentRecipe.pictures.length - 1
+        $('#file-upload-' + i).click()
+      }, 100)
+    },
+    onPictureAdded: function(i) {
+      console.log('Picture.onPictureAdded', i)
+      if (!window.FileReader)
+        return
+      if (!this.page.currentRecipe.pictures[i].uploadFile) {
+        $('#recipe-picture-' + i).css("content", "none")
+        return
+      } else {
+        if (/^image/.test(this.page.currentRecipe.pictures[i].uploadFile.type)) {
+          var reader = new FileReader()
+          reader.readAsDataURL(this.page.currentRecipe.pictures[i].uploadFile)
+          reader.onloadend = function() {
+            $('#recipe-picture-' + i).css("content", "url(" + this.result + ")")
+          }
+          var data = new FormData()
+          data.append('pictureUpload', this.page.currentRecipe.pictures[i].uploadFile)
+          postFormData(app.$route.path, data, function(response) {
+            console.log(response)
+          })
+        }
+      }
+    },
+    onPictureMoved: function(evt) {
+      console.log('Picture.onPictureMoved', evt)
+      postPageData(app.$route.path, {
+        moved: {
+          from: evt.oldIndex,
+          to: evt.newIndex
+        }
+      },
+      function(data) {
+        if (!data.success) {
+          app.$set(app.page.modals.failedModal, 'message', app.$t(data.i18nmessage))
+          app.$set(app.page.modals.failedModal, 'code', data.code)
+          $('#action-failed-modal').modal('show')
+        }
+      })
+    }
+  }
+}
 const router = new VueRouter({
   mode: 'history',
   routes: [
@@ -577,14 +666,12 @@ const router = new VueRouter({
     { name: 'login', path: '/login', component: Login },
     { name: 'random', path: '/random/:id?' },
     { name: 'recipe', path: '/recipe/:id(.+)-:name([^/]*)', component: Recipe },
-    { name: 'gallery', path: '/recipe/:id(.+)-:name([^/]*)/gallery', component: Recipe },
+    { name: 'gallery', path: '/recipe/:id(.+)-:name([^/]*)/gallery', component: RecipeGallery },
     { name: 'editRecipe', path: '/recipe/:id(.+)-:name([^/]*)/edit', component: RecipeEditor },
     { name: 'recipes', path: '/recipes', component: RecipesList, children: [
-      { name: 'recipePage', path: ':page' },
       { name: 'myRecipes', path: 'my' },
       { name: 'userRecipes', path: 'user/:id(.+)-:name([^/]*)' }
-      ]
-    },
+    ]},
     { name: 'search', path: '/search', component: SearchRecipe },
     { name: 'user', path: '/user/:id(.+)-:name([^/]*)', children: [
 
@@ -625,6 +712,7 @@ var app = new Vue({
   computed: {
     title: function() {
       switch(this.$route.name) {
+        case 'gallery':
         case 'recipe':
           if (this.page.currentRecipe.ownerId > 0)
             return this.$t('pages.recipe.titleWithUser', { recipe: this.page.currentRecipe.name, user: this.page.currentRecipe.ownerName })
@@ -660,6 +748,8 @@ var app = new Vue({
       if (this.$route.name != 'search')
         this.$router.push({ name: 'search' });
       resetSearchData(this)
+      this.$set(this.page.search, 'hasSearchCompleted', false)
+      this.$set(this.page.search, 'isSearching', true)
       postPageData(this.$route.path, {
         search: {
           phrase: this.page.search.filter.global
@@ -684,7 +774,7 @@ var app = new Vue({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('beforeEach', to, from)
+  // console.log('beforeEach', to, from)
   if (app) {
     if (to.name == 'login' && app.user.loggedIn)
       next(false)
@@ -704,7 +794,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log('afterEach', to, from)
+  // console.log('afterEach', to, from)
   if (to.name == 'logout') {
     Vue.http.post('logout')
       .then(response => response.json())

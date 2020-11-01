@@ -11,6 +11,7 @@ use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\EActivityType;
 use Surcouf\Cookbook\Recipe\RecipeInterface;
 use Surcouf\Cookbook\Recipe\Recipe;
+use Surcouf\Cookbook\Recipe\Pictures\BlankPicture;
 use Surcouf\Cookbook\Recipe\Social\Ratings\RatingInterface;
 use Surcouf\Cookbook\Helper\Formatter;
 use Surcouf\Cookbook\User\UserInterface;
@@ -35,9 +36,17 @@ class RecipePostRoute extends Route implements RouteInterface {
       return self::vote($response, $recipe, $user, $payload['vote']);
     if ($action == 'edit')
       return self::edit($response, $recipe, $user, $payload);
+    if ($action == 'gallery') {
+      if (array_key_exists('moved', $payload))
+        return self::pictureMoved($response, $recipe, $user, $payload['moved']);
+      if (array_key_exists('pictureUpload', $_FILES))
+        return self::pictureUploaded($response, $recipe, $user);
+    }
 
     $response = $Controller->Config()->getResponseArray(71);
-    parent::addToDictionary($response, ['action' => $action]);
+    parent::addToDictionary($response, ['response' => ['actionParam' => $action]]);
+
+    var_dump($_FILES);
 
     return true;
 
@@ -53,11 +62,145 @@ class RecipePostRoute extends Route implements RouteInterface {
     return $recipe->update($response, $payload);
   }
 
+  static function pictureMoved(array &$response, RecipeInterface $recipe, ?UserInterface $user, array $params) : bool {
+    global $Controller;
+    if (!$user || $recipe->getUserId() != $user->getId()) {
+      $response = $Controller->Config()->getResponseArray(92);
+      return false;
+    }
+    if (!array_key_exists('from', $params) || !array_key_exists('to', $params)) {
+      $response = $Controller->Config()->getResponseArray(80);
+      return false;
+    }
+    $from = intval($params['from']);
+    $to = intval($params['to']);
+    if ($from == $to) {
+      $response = $Controller->Config()->getResponseArray(2);
+      return true;
+    }
+
+    $counts = $Controller->selectCountSimple('recipe_pictures', 'recipe_id', $recipe->getId());
+    if ($from >= $counts || $to >= $counts || $from < 0 || $to < 0) {
+      $response = $Controller->Config()->getResponseArray(80);
+      return false;
+    }
+
+    $failed = false;
+    if (!$Controller->startTransaction())
+      $failed = true;
+
+    if (!$failed) {
+      $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_pictures');
+      $query->update(['picture_sortindex' => $counts])
+            ->where('recipe_pictures', 'recipe_id', '=', $recipe->getId())
+            ->andWhere('recipe_pictures', 'picture_sortindex', '=', $from)
+            ->limit(1);
+      if (!$Controller->update($query))
+        $failed = true;
+    }
+
+    if (!$failed) {
+      if ($from < $to) {
+        for ($i = $from; $i < $to; $i++) {
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_pictures');
+          $query->update(['picture_sortindex' => $i])
+                ->where('recipe_pictures', 'recipe_id', '=', $recipe->getId())
+                ->andWhere('recipe_pictures', 'picture_sortindex', '=', ($i + 1))
+                ->limit(1);
+          if (!$Controller->update($query))
+            $failed = true;
+        }
+      } else {
+        for ($i = $from; $i > $to; $i--) {
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_pictures');
+          $query->update(['picture_sortindex' => $i])
+                ->where('recipe_pictures', 'recipe_id', '=', $recipe->getId())
+                ->andWhere('recipe_pictures', 'picture_sortindex', '=', ($i - 1))
+                ->limit(1);
+          if (!$Controller->update($query))
+            $failed = true;
+        }
+      }
+    }
+
+    if (!$failed) {
+      $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_pictures');
+      $query->update(['picture_sortindex' => $to])
+            ->where('recipe_pictures', 'recipe_id', '=', $recipe->getId())
+            ->andWhere('recipe_pictures', 'picture_sortindex', '=', $counts)
+            ->limit(1);
+      if (!$Controller->update($query))
+        $failed = true;
+    }
+
+    if (!$failed)
+      $failed = !$Controller->finishTransaction();
+
+    if ($failed) {
+      $response = $Controller->Config()->getResponseArray(203);
+      return false;
+    }
+    $response = $Controller->Config()->getResponseArray(1);
+    return true;
+  }
+
+  static function pictureUploaded(array &$response, RecipeInterface $recipe, ?UserInterface $user) : bool {
+    global $Controller;
+    if (!$user) {
+      $response = $Controller->Config()->getResponseArray(92);
+      return false;
+    }
+
+    $filedata = $_FILES['pictureUpload'];
+    $recipe->loadRecipePictures($Controller);
+    $newindex = $recipe->getPictureCount();
+
+    if ($filedata['error'] != 0 || $filedata['size'] == 0) {
+      $response = $Controller->Config()->getResponseArray(301);
+      return false;
+    }
+
+    if ($filedata['type'] != 'image/jpeg' &&
+        $filedata['type'] != 'image/jpg' &&
+        $filedata['type'] != 'image/png') {
+      $response = $Controller->Config()->getResponseArray(302);
+      return false;
+    }
+
+    $picture = new BlankPicture(
+      $newindex,
+      $filedata['name'],
+      $filedata['tmp_name']
+    );
+    if (!$picture->moveTo($recipe->getId())) {
+      $response = $Controller->Config()->getResponseArray(303);
+      return false;
+    }
+    $res = $Controller->insertSimple(
+      'recipe_pictures',
+      ['recipe_id', 'user_id', 'picture_sortindex', 'picture_name',
+       'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path'],
+      [$recipe->getId(), $user->getId(), $newindex, $picture->getName(),
+       '', $picture->getHash(), $picture->getFilename(), $picture->getFullpath()]
+    );
+    if ($res == -1) {
+      $response = $Controller->Config()->getResponseArray(202);
+      return false;
+    }
+
+    $response = $Controller->Config()->getResponseArray(1);
+    return true;
+  }
+
   static function publish(array &$response, RecipeInterface $recipe, ?UserInterface $user) : bool {
     global $Controller;
     if (!$user || $recipe->getUserId() != $user->getId()) {
       $response = $Controller->Config()->getResponseArray(92);
       return false;
+    }
+    if ($recipe->isPublished()) {
+      $response = $Controller->Config()->getResponseArray(2);
+      return true;
     }
     $recipe->setPublic(true);
     $response = $Controller->Config()->getResponseArray(1);
@@ -70,6 +213,10 @@ class RecipePostRoute extends Route implements RouteInterface {
     if (!$user || $recipe->getUserId() != $user->getId()) {
       $response = $Controller->Config()->getResponseArray(92);
       return false;
+    }
+    if (!$recipe->isPublished()) {
+      $response = $Controller->Config()->getResponseArray(2);
+      return true;
     }
     $recipe->setPublic(false);
     $response = $Controller->Config()->getResponseArray(1);

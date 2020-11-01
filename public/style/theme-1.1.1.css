@@ -71,6 +71,9 @@ h1, h2, h3 {
   background-color: #FFFFFF;
   border-color: #665343; }
 
+.ekko-lightbox, .modal {
+  z-index: 1300; }
+
 .form-control-sm {
   font-size: 1.05rem; }
 
@@ -375,7 +378,8 @@ div.page {
   div.page .b-sidebar-outer {
     z-index: 600; }
   div.page .b-sidebar {
-    padding-top: 58px; }
+    padding-top: 58px;
+    width: 220px; }
     div.page .b-sidebar ul {
       padding-left: 0;
       list-style: none; }
@@ -547,7 +551,10 @@ div.removable-image-area {
   .card-columns.masonry-deck.cols-5 {
     column-count: 5; }
   .card-columns.masonry-deck.cols-6 {
-    column-count: 6; } }
+    column-count: 6; }
+
+  .card-deck .card {
+    min-width: 100%; } }
 @media (min-width: 576px) and (max-width: 767.98px) {
   body {
     font-size: 1.2rem; }
@@ -566,7 +573,10 @@ div.removable-image-area {
   .card-columns.masonry-deck.cols-sm-5 {
     column-count: 5; }
   .card-columns.masonry-deck.cols-sm-6 {
-    column-count: 6; } }
+    column-count: 6; }
+
+  .card-deck .card {
+    min-width: 100%; } }
 @media (min-width: 768px) and (max-width: 991.98px) {
   .card-columns.masonry-deck.cols-md-1 {
     column-count: 1; }
@@ -579,7 +589,10 @@ div.removable-image-area {
   .card-columns.masonry-deck.cols-md-5 {
     column-count: 5; }
   .card-columns.masonry-deck.cols-md-6 {
-    column-count: 6; } }
+    column-count: 6; }
+
+  .card-deck .card {
+    min-width: calc(33% - 30px); } }
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .card-columns.masonry-deck.cols-lg-1 {
     column-count: 1; }
@@ -594,8 +607,11 @@ div.removable-image-area {
   .card-columns.masonry-deck.cols-lg-6 {
     column-count: 6; }
 
+  .card-deck .card {
+    min-width: calc(25% - 30px); }
+
   div.page.sidebar-visible {
-    padding-left: 320px !important; } }
+    padding-left: 220px !important; } }
 @media (min-width: 1200px) {
   .card-columns.masonry-deck.cols-xl-1 {
     column-count: 1; }
@@ -610,7 +626,10 @@ div.removable-image-area {
   .card-columns.masonry-deck.cols-xl-6 {
     column-count: 6; }
 
+  .card-deck .card {
+    min-width: calc(25% - 30px); }
+
   div.page.sidebar-visible {
-    padding-left: 320px !important; } }
+    padding-left: 220px !important; } }
 
 /*# sourceMappingURL=theme-1.1.1.css.map */

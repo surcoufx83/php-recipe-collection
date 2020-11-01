@@ -35,6 +35,25 @@ const rc_i18n_de = {
       subtitle: '',
       title: 'Rezept überarbeiten'
     },
+    gallery: {
+      subtitle: 'Bildergalerie',
+      title: '{recipe}',
+      titleWithUser: '{recipe} von {user}',
+      usage: 'Bilder anklicken um sie zu vergrößern.',
+      usageOwner: 'Bilder anklicken um sie zu vergrößern, linke Maustaste gedrückt halten zum Verschieben ("drag&drop") und damit die Reihenfolge zu verändern. Das erste Bild ist immer das Vorschaubild, die ersten fünf Bilder werden auf der Rezeptseite prominent platziert.',
+      addBtn: {
+        title: 'Bild hinzufügen'
+      },
+      backBtn: {
+        title: 'Zurück zum Rezept'
+      },
+      previewImage: {
+        tooltip: 'Das ist das erste Bild und es wird überall als Vorschaubild verwendet.'
+      },
+      recipeImage: {
+        tooltip: 'Dieses Bild ist eines der ersten fünf Bilder, dass auf der Rezeptseite angezeigt wird.'
+      }
+    },
     home: {
       introtext1: 'Schön das du in das Kochbuch schaust. Wir arbeiten permanent dran, es besser zu machen. Wenn dir Fehler auffallen, melde diese gerne an Stefan oder Elias.',
       introtext2: 'Auch wenn einige Funktionen noch nicht so ganz hinhauen, Rezepte eintragen, bearbeiten, anschauen und nachkochen klappt schon ganz gut.',
@@ -98,6 +117,21 @@ const rc_i18n_de = {
       actionbtn: {
         edit: 'Bearbeiten'
       },
+      actions: {
+        title: 'Rezept verwalten',
+        edit: {
+          title: 'Bearbeiten',
+          tooltip: 'Im Bearbeiten-Modus kannst du alle Angaben überarbeiten.'
+        },
+        publish: {
+          title: 'Veröffentlichen',
+          tooltip: 'Durch das Veröffentlichen dieses Rezeptes wird es für andere NutzerInnen auffindbar.'
+        },
+        reject: {
+          title: 'Zurückziehen',
+          tooltip: 'Die Veröffentlichung wird zurückgezogen. Damit kann das Rezept nicht mehr gefunden werden.'
+        }
+      },
       administration: {
         title: 'Administration',
         author: 'Verfasst von {0}',
@@ -122,7 +156,7 @@ const rc_i18n_de = {
         notSet: 'keine Angabe'
       },
       footer: {
-        gallery: 'Galerie',
+        gallery: 'Bilder',
         ingredients: 'Zutaten',
         steps: 'Zubereitung'
       },
@@ -396,6 +430,7 @@ const rc_i18n_de = {
   },
   responseMessages: {
     badArgumentsException: 'Ungültige Argumente angegeben.',
+    badImageData: 'Das Bild konnte nicht gespeichert werden. Die enthaltenen Metadaten sind ungültig.',
     badRequestException: 'Ungültige Anfrage.',
     dbInsertException: 'Fehler beim Einfügen von Daten in die Datenbank.',
     dbSelectException: 'Beim Abrufen von Datensätzen aus der Datenbank ist ein Fehler aufgetreten.',
@@ -406,6 +441,7 @@ const rc_i18n_de = {
     loginFailed: 'Anmeldung fehlgeschlagen.',
     loginSuccessfull: 'Anmeldung erfolgreich.',
     maintenanceException: 'Wartungsmodus ist aktiviert.',
+    mimetypeNotSupported: 'Das Bildformat wird derzeit nicht unterstützt.',
     noApiKeyException: 'Der Zugriff erfordert ein Anmelde-Token. Bitte melden Sie sich zuerst über die Website an, bevor Sie den API-Zugang versuchen.',
     noChanges: 'Es wurden keine Änderungen erkannt.',
     noResults: 'Die Suche hat keine Ergebnisse zurückgeliefert.',
@@ -413,6 +449,7 @@ const rc_i18n_de = {
     notAuthenticatedException: 'Benutzer nicht eingeloggt.',
     pageMovedException: 'Die angeforderte Seite wurde verschoben und kann nicht mehr per Webanforderung oder CLI abgerufen werden.',
     parameterException: 'Für die angegebenen Parameter ist keine Verarbeitung konfiguriert.',
+    saveFileFailed: 'Das Speichern des Bildes auf dem Server ist fehlgeschlagen',
     sendMailFailed: 'Die Mail konnte nicht gesendet werden: ',
     undefinedException: 'Im Backend ist ein nicht spezifizierter Fehler aufgetreten. Ihre Änderungen wurden nicht akzeptiert.',
     validationSucceeded: 'Die Überprüfung war erfolgreich. Es wurden keine Fehler festgestellt.',

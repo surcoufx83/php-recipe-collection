@@ -13,11 +13,14 @@
     <link type="text/css" rel="stylesheet" href="/style/bootstrap-vue-2.18.0.min.css" />
     <link type="text/css" rel="stylesheet" href="/style/bootstrap-vue-icons-2.18.0.min.css" />
     <link rel="stylesheet" href="/style/fontawesome-5.15.1.min.css">
+    <link rel="stylesheet" href="/style/ekko-lightbox-5.3.0.css">
     <link rel="stylesheet" href="/style/theme-1.1.1.css">
     <script src="/script/vue-2.6.12.js"></script>
     <script src="/script/vue-loaders-4.1.1.umd.js"></script>
     <script src="/script/vue-router-3.4.7.min.js"></script>
     <script src="/script/vue-resource-1.5.1.min.js"></script>
+    <script src="/script/sortable-1.1.0.min.js"></script>
+    <script src="/script/vuedraggable-2.24.3.umd.min.js"></script>
     <script src="/script/bootstrap-vue-2.18.0.min.js"></script>
     <script src="/script/bootstrap-vue-icons-2.18.0.min.js"></script>
     <script src="/script/moment-2.29.1.min.js"></script>
@@ -70,6 +73,7 @@
     {% include 'templates/body/rc-navbar.html.twig' %}
     {% include 'templates/body/body-elements.html.twig' %}
     {% include 'templates/recipe/recipe.html.twig' %}
+    {% include 'templates/recipe-gallery/gallery.html.twig' %}
     {% include 'templates/write-recipe/form.html.twig' %}
     {% include 'templates/recipes/recipes-listing-template.html.twig' %}
     {% include 'templates/search/search.html.twig' %}
@@ -79,6 +83,7 @@
 
     <script src="/script/jquery-3.5.1.min.js"></script>
     <script src="/script/bootstrap-4.5.3.bundle.min.js"></script>
+    <script src="/script/ekko-lightbox-5.3.0.min.js"></script>
     <script src="/script/plotly-1.54.1.min.js"></script>{% if Page.Scripts.StarRating == true %}
     <script src="/script/rater.min.js"></script>{% endif %}
 
@@ -155,6 +160,14 @@
 
       $(document).ready(function() {
 {% if Page.Scripts.FormValidator %}{% include 'scripts/html-forms-validate.js.twig' %}{% endif %}
+
+        $(document).on('click', '[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', function(event) {
+          event.preventDefault();
+          return $(this).ekkoLightbox({
+            alwaysShowClose: true
+          });
+        });
+
       });
 
     </script>
