@@ -1,5 +1,6 @@
 
 $beige:           #F5EAE1;
+$beige-dark:      #E6C9B3;
 $white:           #FFFFFF;
 // $blue:
 // $blue-light:
@@ -104,6 +105,24 @@ a {
 h1, h2, h3 {
   font-family: Cinzel;
 }
+
+// textarea:hover,
+// input:hover,
+// textarea:active,
+// input:active,
+// textarea:focus,
+// input:focus,
+// button:focus,
+// button:active,
+// button:hover,
+// label:focus,
+// .btn:active,
+// .btn.active
+// {
+//     outline:0px !important;
+//     -webkit-appearance:none;
+//     box-shadow: none !important;
+// }
 
 .btn-blue, .btn-outline-blue.active {
   color: $bg-light!important;
@@ -298,8 +317,8 @@ ul.list-group-sm li.list-group-item {
 
 .alert-blue {
   color: $bg-light!important;
-  background-color: $brown-light-light;
-  border-color: $brown-light-light;
+  background-color: $brown-dark;
+  border-color: $brown-dark;
 
   // &:hover {
   //   color: $bg-light!important;
@@ -310,8 +329,8 @@ ul.list-group-sm li.list-group-item {
 
 .alert-outline-blue {
   color: $text-link!important;
-  background-color: $bg-light;
-  border-color: $bg-contrast-dark;
+  background-color: $beige;
+  border-color: $brown-dark;
 
   &:hover {
     color: $bg-light!important;
