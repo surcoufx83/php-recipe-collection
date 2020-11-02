@@ -57,11 +57,12 @@ const rc_i18n_de = {
     home: {
       introtext1: 'Schön das du in das Kochbuch schaust. Wir arbeiten permanent dran, es besser zu machen. Wenn dir Fehler auffallen, melde diese gerne an Stefan oder Elias.',
       introtext2: 'Auch wenn einige Funktionen noch nicht so ganz hinhauen, Rezepte eintragen, bearbeiten, anschauen und nachkochen klappt schon ganz gut.',
-      mobile1: 'Du kannst die Seitenleiste anzeigen, indem du auf das',
-      mobile2: 'Menü-Symbol oben rechts klicks.',
+      mobile: 'Als Einstiegspunkt kannst du die Seitenleiste verwenden, die du über das {icon} Menü-Symbol oben rechts aufrufst. Über die Suchleiste neben dem Menü-Symbol, kannst du schnell alle Rezepte durchsuchen.',
       subtitle: '',
       title: '',
-      workingon: 'An dieser Stelle werden demnächst neue Rezepte vorgestellt. Bis dahin nutze eine der Funktonen aus der Seitenleiste.'
+      recipes: {
+        title: 'Unser neuestes Rezept|Unsere neuesten Rezepte'
+      }
     },
     login: {
       cloud: {

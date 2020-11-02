@@ -41,10 +41,6 @@ final class RoutingManager {
       'method' => ERequestMethod::HTTP_GET,
       'requiresAdmin' => true,
     ],
-    '/api/page-data\?/(home)?' => [ // home page
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\HomePageRoute::class,
-      'method' => ERequestMethod::HTTP_GET,
-    ],
     '/api/page-data\?/random(/-(?<id>\d+))?' => [ // random recipe page
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RandomRecipePageRoute::class,
       'method' => ERequestMethod::HTTP_GET,
@@ -71,7 +67,7 @@ final class RoutingManager {
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\Search\SearchResultsRoute::class,
       'method' => ERequestMethod::HTTP_POST,
     ],
-    '/api/page-data\?/recipes(/(?<filter>[^/]+)(/(?<id>\d+)-(?<name>.+))?)?' => [ // recipe listing page with filter
+    '/api/page-data\?(/recipes(/(?<filter>[^/]+)(/(?<id>\d+)-(?<name>.+))?)?|/(?<home>home)?)' => [ // recipe listing page with filter
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipeListRoute::class,
       'method' => ERequestMethod::HTTP_GET,
     ],

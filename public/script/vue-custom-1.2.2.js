@@ -117,7 +117,13 @@ Vue.component('recipes-listing-item', {
     record: { type: Object, required: true }
   },
   delimiters: ['${', '}'],
-  template: '#recipes-listing-item-template'
+  template: '#recipes-listing-item-template',
+  computed: {
+    pubdate: function() {
+      console.log(this.recipe.published)
+      return moment(this.recipe.published, moment.ISO_8601).format(app.user.customSettings.formats.date.short)
+    }
+  }
 })
 
 Vue.component('sidebar', {
@@ -793,7 +799,7 @@ router.beforeEach((to, from, next) => {
       next(false)
     if (to.name != 'login' && !app.user.loggedIn)
       next({ name: 'login' })
-    if (to.name == 'home' || to.name == 'writeRecipe' || to.name == 'search') {
+    if (to.name == 'writeRecipe' || to.name == 'search') {
       resetCustomPageData(app, to.name)
     } else if (
       !((to.name == 'recipe' || to.name == 'editRecipe' || to.name == 'gallery') &&
