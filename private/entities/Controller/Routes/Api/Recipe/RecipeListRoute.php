@@ -108,7 +108,11 @@ class RecipeListRoute extends Route implements RouteInterface {
 
   static function filterHomeList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
     global $Controller;
-    $basequery->orderBy2('recipes', 'recipe_published', 'DESC');
+    $basequery
+      ->where('recipes', 'recipe_public', '=', 1)
+      ->orderBy2('recipes', 'recipe_published', 'DESC');
+    $countquery
+      ->where('recipes', 'recipe_public', '=', 1);
   }
 
   static function filterOwnList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
