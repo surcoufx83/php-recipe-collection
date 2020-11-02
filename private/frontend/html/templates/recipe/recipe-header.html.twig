@@ -6,7 +6,7 @@
                   <template #date><span>${ published }</span></template>
                   <template #user>
                     <router-link :to="{ name: 'userRecipes', params: { id: recipe.ownerId, name: recipe.ownerName } }">
-                      <fa-icon :icon="page.iconSet.user.icon" :space="page.iconSet.user.space" class="text-small mr-1"></fa-icon>
+                      <fa-icon :icon="page.iconSet.user.icon" :space="page.iconSet.user.space" class="text-small"></fa-icon>
                       ${ recipe.ownerName }
                     </router-link>
                   </template>

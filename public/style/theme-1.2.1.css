@@ -592,8 +592,8 @@ div.removable-image-area {
     column-count: 6; }
 
   .card-deck .card {
-    max-width: calc(33% - 30px);
-    min-width: calc(33% - 30px); } }
+    max-width: calc(50% - 30px);
+    min-width: calc(50% - 30px); } }
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .card-columns.masonry-deck.cols-lg-1 {
     column-count: 1; }
@@ -609,8 +609,8 @@ div.removable-image-area {
     column-count: 6; }
 
   .card-deck .card {
-    max-width: calc(25% - 30px);
-    min-width: calc(25% - 30px); }
+    max-width: calc(33.3% - 30px);
+    min-width: calc(33.3% - 30px); }
 
   div.page.sidebar-visible {
     padding-left: 220px !important; } }
@@ -629,10 +629,10 @@ div.removable-image-area {
     column-count: 6; }
 
   .card-deck .card {
-    max-width: calc(25% - 30px);
-    min-width: calc(25% - 30px); }
+    max-width: calc(33.3% - 30px);
+    min-width: calc(33.3% - 30px); }
 
   div.page.sidebar-visible {
     padding-left: 220px !important; } }
 
-/*# sourceMappingURL=theme-1.2.0.css.map */
+/*# sourceMappingURL=theme-1.2.1.css.map */
