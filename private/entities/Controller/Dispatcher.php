@@ -243,7 +243,7 @@ final class Dispatcher {
     exit;
   }
 
-  public function finishOAuthLogin() : bool {
+  public function finishOAuthLogin(array &$response) : bool {
     global $Controller;
     $provider = $Controller->getOAuthProvider();
     session_start();
@@ -259,8 +259,6 @@ final class Dispatcher {
       ]);
       $isUserCreated = false;
       if ($Controller->loginWithOAuth($accessToken, $isUserCreated)) {
-        if ($isUserCreated)
-          $this->forwardTo($Controller->getLink('private:self-register'));
         $this->forwardTo($Controller->getLink('private:home'));
       }
       return false;

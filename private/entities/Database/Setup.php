@@ -9,9 +9,9 @@ final class Setup {
 
   static $LatestVersion = 3;
 
-  static function checkAndPatch(\Mysqli &$Database) {
+  static function checkAndPatch(\Mysqli &$Database, string $dbname, string $dbuser) {
     if (!self::simpleTest())
-      self::fullTestAndUpdate($Database);
+      self::fullTestAndUpdate($Database, $dbname, $dbuser);
   }
 
   static private function finishUpdate() : void {
@@ -21,10 +21,10 @@ final class Setup {
     touch(__DIR__.DS.'db'.self::$LatestVersion);
   }
 
-  static private function fullTestAndUpdate(\Mysqli &$Database) : void {
+  static private function fullTestAndUpdate(\Mysqli &$Database, string $dbname, string $dbuser) : void {
     $query = 'SELECT *
               FROM `information_schema`.`tables`
-              WHERE `table_schema`=\''.DbConf::DB_DATABASE.'\' AND `table_name`=\'db_version\'';
+              WHERE `table_schema`=\''.$dbname.'\' AND `table_name`=\'db_version\'';
     $result = $Database->query($query);
     if ($result->num_rows == 0)
       $version = 0;
@@ -42,7 +42,7 @@ final class Setup {
       $class = 'Surcouf\Cookbook\Database\Setup\DbSetup'.($i + 1);
       $Database->autocommit(false);
       $Database->begin_transaction();
-      if (!$class::install($Database)) {
+      if (!$class::install($Database, $dbname, $dbuser)) {
         var_dump($Database);
         throw new \Exception('Error updating database to version '.($i + 1).'.', 1);
       }
