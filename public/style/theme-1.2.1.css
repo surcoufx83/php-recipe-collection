@@ -554,7 +554,9 @@ div.removable-image-area {
     column-count: 6; }
 
   .card-deck .card {
-    min-width: 100%; } }
+    min-width: 100%;
+    margin-bottom: 15px;
+    margin-top: 15px; } }
 @media (min-width: 576px) and (max-width: 767.98px) {
   body {
     font-size: 1.2rem; }
@@ -576,7 +578,9 @@ div.removable-image-area {
     column-count: 6; }
 
   .card-deck .card {
-    min-width: 100%; } }
+    min-width: 100%;
+    margin-bottom: 15px;
+    margin-top: 15px; } }
 @media (min-width: 768px) and (max-width: 991.98px) {
   .card-columns.masonry-deck.cols-md-1 {
     column-count: 1; }
@@ -593,7 +597,9 @@ div.removable-image-area {
 
   .card-deck .card {
     max-width: calc(50% - 30px);
-    min-width: calc(50% - 30px); } }
+    min-width: calc(50% - 30px);
+    margin-bottom: 15px;
+    margin-top: 15px; } }
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .card-columns.masonry-deck.cols-lg-1 {
     column-count: 1; }
@@ -610,7 +616,9 @@ div.removable-image-area {
 
   .card-deck .card {
     max-width: calc(33.3% - 30px);
-    min-width: calc(33.3% - 30px); }
+    min-width: calc(33.3% - 30px);
+    margin-bottom: 15px;
+    margin-top: 15px; }
 
   div.page.sidebar-visible {
     padding-left: 220px !important; } }
@@ -630,7 +638,9 @@ div.removable-image-area {
 
   .card-deck .card {
     max-width: calc(33.3% - 30px);
-    min-width: calc(33.3% - 30px); }
+    min-width: calc(33.3% - 30px);
+    margin-bottom: 15px;
+    margin-top: 15px; }
 
   div.page.sidebar-visible {
     padding-left: 220px !important; } }
