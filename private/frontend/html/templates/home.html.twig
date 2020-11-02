@@ -2,23 +2,31 @@
       <b-container>
         <b-row>
           <b-col cols="12" lg="7">
-            <h2 v-text="$t('greetings.hello', { user: user.meta.fn !== '' ? user.meta.fn : user.meta.un })"></h2>
-            <p>${ $t('pages.home.introtext1') }<br />${ $t('pages.home.introtext2') }</p>
-          </b-col>
-        </b-row>
-        <b-row class="mt-2">
-          <b-col cols="12" lg="7">
+            <h3 class="font-weight-bold" v-text="$t('greetings.hello', { user: user.meta.fn !== '' ? user.meta.fn : user.meta.un })"></h3>
             <p>
-              ${ $t('pages.home.workingon') }
-              <span class="d-inline-block d-md-none">
-                ${ $t('pages.home.mobile1') }
-                <fa-icon
-                  :icon="page.iconSet.menu.icon" :space="page.iconSet.menu.space"
-                  class="mx-1"></fa-icon>
-                ${ $t('pages.home.mobile2') }
-              </span>
+              <span v-text="$t('pages.home.introtext1')"></span>
+              <span v-text="$t('pages.home.introtext2')"></span>
+              <br />
+              <i18n path="pages.home.mobile" tag="span" class="d-inline d-md-none">
+                <template #icon><fa-icon :icon="page.iconSet.menu.icon" :space="page.iconSet.menu.space" class="mx-1"></fa-icon></template>
+              </i18n>
             </p>
           </b-col>
         </b-row>
+        <div class="mt-4" v-if="page.customContent.count > 0">
+          <b-row>
+            <b-col cols="12">
+              <h4 v-text="$tc('pages.home.recipes.title', page.customContent.count)"></h4>
+            </b-col>
+          </b-row>
+          <b-row class="mt-2">
+            <b-col cols="12">
+              <b-card-group deck>
+                <recipes-listing-item v-for="(record, index) in page.customContent.records" :key="index" :recipe="record.recipe" :record="record" :page="page">
+                </recipes-listing-item>
+              </b-card-group>
+            </b-col>
+          </b-row>
+        </div>
       </b-container>
     </template>

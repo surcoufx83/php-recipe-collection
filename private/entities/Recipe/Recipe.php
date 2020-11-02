@@ -20,6 +20,7 @@ use Surcouf\Cookbook\Recipe\Ingredients\Ingredient;
 use Surcouf\Cookbook\Recipe\Ingredients\IngredientInterface;
 use Surcouf\Cookbook\Recipe\Ingredients\Units\BlankUnit;
 use Surcouf\Cookbook\Recipe\Pictures\BlankPicture;
+use Surcouf\Cookbook\Recipe\Pictures\DummyPicture;
 use Surcouf\Cookbook\Recipe\Pictures\Picture;
 use Surcouf\Cookbook\Recipe\Pictures\PictureInterface;
 use Surcouf\Cookbook\Recipe\Social\Ratings\Rating;

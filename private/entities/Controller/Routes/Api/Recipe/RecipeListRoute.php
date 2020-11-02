@@ -9,6 +9,7 @@ use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\Helper\Formatter;
 use Surcouf\Cookbook\Recipe\Recipe;
+use Surcouf\Cookbook\Recipe\Pictures\DummyPicture;
 use Surcouf\Cookbook\Recipe\Pictures\Picture;
 use Surcouf\Cookbook\User\UserInterface;
 
@@ -22,6 +23,10 @@ class RecipeListRoute extends Route implements RouteInterface {
 
     $filter = $Controller->Dispatcher()->getFromMatches('filter');
     $response = $Controller->Config()->getResponseArray(1);
+
+    $home = $Controller->Dispatcher()->getFromMatches('home');
+    if ($home == 'home')
+      $filter = 'home';
 
     $countQuery = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
     $countQuery
@@ -43,11 +48,12 @@ class RecipeListRoute extends Route implements RouteInterface {
       ->joinLeft('recipe_ratings', ['recipe_ratings', 'recipe_id', '=', 'recipes', 'recipe_id'])
       ->groupBy('recipes', ['recipe_id', 'user_id', 'recipe_public', 'recipe_name', 'recipe_description', 'recipe_eater', 'recipe_source_desc', 'recipe_source_url', 'recipe_created', 'recipe_published'])
       ->groupBy('recipe_pictures', ['picture_id', 'picture_sortindex', 'picture_name', 'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path'])
-      ->orderBy2('recipes', 'recipe_name', 'ASC')
       ->limit($Controller->Config()->Defaults('Lists', 'Entries'));
 
     if (is_null($filter) || $filter == '')
       self::unfilteredList($response, $baseQuery, $countQuery);
+    else if ($filter == 'home')
+      self::filterHomeList($response, $baseQuery, $countQuery);
     else if ($filter == 'my')
       self::filterOwnList($response, $baseQuery, $countQuery);
     else if ($filter == 'user') {
@@ -57,6 +63,10 @@ class RecipeListRoute extends Route implements RouteInterface {
         return false;
       }
       self::filterUserList($response, $baseQuery, $countQuery, $user);
+    }
+
+    if ($filter !== 'home') {
+      $baseQuery->orderBy2('recipes', 'recipe_name', 'ASC');
     }
 
     $count = $Controller->select($countQuery)->fetch_assoc()['count'];
@@ -76,10 +86,11 @@ class RecipeListRoute extends Route implements RouteInterface {
 
     while ($record = $result->fetch_array()) {
       $recipe = new Recipe($record);
-      if (!is_null($record['picture_id'])) {
+      if (!is_null($record['picture_id']))
         $picture = new Picture($record);
-        $recipe->addPicture($picture);
-      }
+      else
+        $picture = new DummyPicture(0);
+      $recipe->addPicture($picture);
       $data['records'][] = [
         'recipe' => $recipe,
         'views' => intval($record['views']),
@@ -93,6 +104,11 @@ class RecipeListRoute extends Route implements RouteInterface {
 
     parent::addToDictionary($response, ['page' => [ 'customContent' => $data ]]);
     return true;
+  }
+
+  static function filterHomeList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {
+    global $Controller;
+    $basequery->orderBy2('recipes', 'recipe_published', 'DESC');
   }
 
   static function filterOwnList(array &$response, QueryBuilder &$basequery, QueryBuilder &$countquery) : void {

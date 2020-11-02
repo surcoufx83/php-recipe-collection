@@ -10,7 +10,7 @@
 
     <template id="recipes-listing-item-template">
       <b-card no-body align="center"
-        :img-src="recipe.pictures.length != 0 ? recipe.pictures[0].link : ''"
+        :img-src="recipe.pictures.length != 0 ? recipe.pictures[0].link350 : ''"
         :img-top="recipe.pictures.length != 0 ? true : false"
         class="shadow-sm">
         <b-card-body>
@@ -40,6 +40,11 @@
             <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space" class="text-small text-contrast"></fa-icon>
             ${ record.voting }
             <span class="text-small">(${ $tc('pages.recipes.common.votings', record.votes) })</span>
+          </span>
+          <span class="text-muted" v-if="record.votes != 0">
+            <span class="mx-2" v-if="record.views != 0 || record.cooked != 0 || record.comments != 0 || record.votes != 0">&bull;</span>
+            <fa-icon :icon="page.iconSet.calendar.icon" :space="page.iconSet.calendar.space" class="text-small text-contrast"></fa-icon>
+            <span v-text="pubdate"></span>
           </span>
         </b-card-body>
         <b-card-footer>
