@@ -2,20 +2,18 @@
 
 namespace Surcouf\Cookbook\Database\Setup;
 
-use Surcouf\Cookbook\Database\DbConf;
-
 if (!defined('CORE2'))
   exit;
 
 final class DbSetup1 {
 
-  static function install(\Mysqli &$Database) : bool {
+  static function install(\Mysqli &$Database, string $dbname, string $dbuser) : bool {
     if (
       self::execute($Database, self::getQuery_createTable_db_logs()) &&
       self::execute($Database, self::getQuery_createTable_db_versions()) &&
       self::finish($Database)
       )
-    return true;
+      return true;
     return false;
   }
 

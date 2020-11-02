@@ -13,7 +13,6 @@ use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\DbObjectInterface;
 use Surcouf\Cookbook\Helper\DatabaseHelper;
-use Surcouf\Cookbook\OAuth2Conf;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStep;
 use Surcouf\Cookbook\Recipe\Cooking\CookingStepInterface;
 use Surcouf\Cookbook\Recipe\Ingredients\Ingredient;
@@ -199,7 +198,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
       exit('Error connecting to the database.');
     }
     try {
-      Database\Setup::checkAndPatch($this->database);
+      Database\Setup::checkAndPatch($this->database, $this->dbname, $this->dbuser);
     }
     catch (\Exception $e) {
       exit($e->getMessage());
