@@ -27,9 +27,6 @@ class OAuthUser extends User {
       $this->user_id = $result;
       return true;
     }
-    var_dump($this);
-    var_dump($Controller);
-    exit;
     $response = $Controller->Config()->getResponseArray(202);
     $response['message'] = $Controller->dberror();
     return false;
