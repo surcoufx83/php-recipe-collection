@@ -113,7 +113,6 @@ const rc_i18n_de = {
     recipe: {
       subtitle: '',
       title: '{recipe}',
-      titleWithUser: '{recipe} von {user}',
       actionbtn: {
         edit: 'Bearbeiten'
       },

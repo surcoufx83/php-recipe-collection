@@ -729,8 +729,6 @@ var app = new Vue({
       switch(this.$route.name) {
         case 'gallery':
         case 'recipe':
-          if (this.page.currentRecipe.ownerId > 0)
-            return this.$t('pages.recipe.titleWithUser', { recipe: this.page.currentRecipe.name, user: this.page.currentRecipe.ownerName })
           return this.$t('pages.recipe.title', { recipe: this.page.currentRecipe.name })
         case 'userRecipes':
           return this.$t('pages.userRecipes.title', { name: this.$route.params.name })
