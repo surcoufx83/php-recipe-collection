@@ -15,7 +15,7 @@ class OAuth2CallbackRoute extends Route implements RouteInterface {
     if ($Controller->isAuthenticated()) // if already logged in -> show homepage
       $Controller->Dispatcher()->forwardTo($Controller->getLink('private:home'));
     $response = $Controller->Config()->getResponseArray(32);
-    return $Controller->Dispatcher()->finishOAuthLogin(); // in case of success -> dispatcher will forward the user
+    return $Controller->Dispatcher()->finishOAuthLogin($response); // in case of success -> dispatcher will forward the user
   }
 
 }
