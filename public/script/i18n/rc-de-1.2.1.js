@@ -118,6 +118,7 @@ const rc_i18n_de = {
       },
       actions: {
         title: 'Rezept verwalten',
+        titleOthers: 'Mehr von {user}',
         edit: {
           title: 'Bearbeiten',
           tooltip: 'Im Bearbeiten-Modus kannst du alle Angaben überarbeiten.'
@@ -129,6 +130,10 @@ const rc_i18n_de = {
         reject: {
           title: 'Zurückziehen',
           tooltip: 'Die Veröffentlichung wird zurückgezogen. Damit kann das Rezept nicht mehr gefunden werden.'
+        },
+        userRecipes: {
+          description: '{user} hat noch ein weiteres Rezept veröffentlicht.|{user} hat noch {count} weitere Rezepte veröffentlicht.',
+          btnTitle: 'Alle Rezepte von {user}'
         }
       },
       administration: {

@@ -40,3 +40,18 @@
 
             </b-container>
           </div>
+          <div class="mt-3" v-if="recipe.ownerId !== user.id && recipe.ownerId !== 0 && recipe.ownerProperties.recipeCount > 1"> <!-- public actions -->
+            <h5 v-text="$t('pages.recipe.actions.titleOthers', { user: recipe.ownerName })"></h5>
+            <div>
+              <p class="text-small text-muted" v-text="$tc('pages.recipe.actions.userRecipes.description', recipe.ownerProperties.recipeCount - 1, { user: recipe.ownerName })"></p>
+              <!-- user recipes link -->
+              <router-link :to="{ name: 'userRecipes', params: { id: recipe.ownerId, name: recipe.ownerName } }">
+                <b-button size="sm" variant="blue">
+                  <fa-icon :icon="page.iconSet.recipes.icon" :space="page.iconSet.recipes.space"
+                    class="mr-1"></fa-icon>
+                  <span v-text="$t('pages.recipe.actions.userRecipes.btnTitle', { user: recipe.ownerName })"></span>
+                </b-button>
+              </router-link>
+              <!-- user recipes link -->
+            </div>
+          </div>
