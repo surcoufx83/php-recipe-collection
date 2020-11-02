@@ -8,6 +8,7 @@ use Surcouf\Cookbook\Mail;
 use Surcouf\Cookbook\Helper\AvatarsHelper;
 use Surcouf\Cookbook\Helper\ConverterHelper;
 use Surcouf\Cookbook\Helper\HashHelper;
+use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\User\Session\Session;
@@ -38,6 +39,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
             $user_avatar,
             $user_registration_completed,
             $user_adconsent = false;
+  protected $recipe_count = -1;
 
   private $changes = array();
 
@@ -179,6 +181,18 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
 
   public function getName() : string {
     return $this->user_fullname;
+  }
+
+  public function getRecipeCount() : int {
+    if ($this->recipe_count == -1) {
+      global $Controller;
+      $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
+      $query->select([['*', EAggregationType::atCOUNT, 'count']])
+            ->where('recipes', 'recipe_public', '=', 1)
+            ->andWhere('recipes', 'user_id', '=', $this->user_id);
+      $this->recipe_count = $Controller->select($query)->fetch_assoc()['count'];
+    }
+    return $this->recipe_count;
   }
 
   public function getSession() : ?SessionInterface {
