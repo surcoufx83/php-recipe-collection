@@ -21,6 +21,7 @@ interface UserInterface {
   public function getLastActivityTime() : ?DateTime;
   public function getMail() : string;
   public function getName() : string;
+  public function getRecipeCount() : int;
   public function getSession() : ?SessionInterface;
   public function getUsername() : string;
   public function getValidationCode() : string;
