@@ -33,10 +33,7 @@
                 :space="page.iconSet.info.space"
                 class="mr-2 fa-2x float-left"></fa-icon>
               <span v-text="$t('pages.recipe.header.unpublishedAlert.description')"></span>
-              <router-link
-                :to="{ name: 'editRecipe', params: { id: recipe.id, name: recipe.name} }"
-                v-text="$t('pages.recipe.header.unpublishedAlert.link')"
-                class="stretched-link"
-                ></router-link>
+              <span class="d-none d-lg-inline" v-text="$t('pages.recipe.header.unpublishedAlert.hint')"></span>
+              <span class="d-inline d-lg-none" v-text="$t('pages.recipe.header.unpublishedAlert.mobileHint')"></span> 
             </b-alert>
           </b-container>

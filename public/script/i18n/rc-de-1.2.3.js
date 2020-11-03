@@ -171,7 +171,8 @@ const rc_i18n_de = {
       header: {
         unpublishedAlert: {
           description: 'Das Rezept wurde bisher nicht veröffentlicht und ist damit für andere Benutzer nicht zu finden.',
-          link: 'Im Bearbeiten-Modus kannst du das Rezept freigeben.'
+          hint: 'Du kannst das Rezept freigeben, indem du den Veröffentlichen-Button rechts unterhalb der Bildergalerie und Statistiken anklickst.',
+          mobileHint: 'Du kannst das Rezept freigeben, indem du den Veröffentlichen-Button über diesem Hinweis-Text anklickst.'
         },
         about: {
           title: 'Über dieses Rezept',
