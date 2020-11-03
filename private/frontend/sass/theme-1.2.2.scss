@@ -172,11 +172,15 @@ h1, h2, h3 {
   }
 }
 
+/*
+Removed in 1.2.2 (stefan)
+Looks very bad in current theme
 .custom-control-input:checked~.custom-control-label::before {
   color: $bg-light!important;
   background-color: $bg-contrast-dark;
   border-color: $bg-contrast;
 }
+*/
 
 .ekko-lightbox, .modal {
   // picture fullsize gallery after clicking on an image

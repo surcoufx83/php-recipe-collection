@@ -70,6 +70,7 @@
         pages: 0,
         records: []
       },
+      draggingActive: false,
       iconSet: {
       {% for key in Config.getIconKeys() %}
         {{ key }}: { icon: '{{ Config.getIcon(key).icon }}', space: '{{ Config.getIcon(key).space }}' }{% if loop.last == false %},{% endif %}

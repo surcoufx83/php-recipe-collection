@@ -66,11 +66,15 @@ h1, h2, h3 {
     background-color: #FFFFFF;
     border-color: #FFFFFF; }
 
-.custom-control-input:checked ~ .custom-control-label::before {
-  color: #F5EAE1 !important;
-  background-color: #FFFFFF;
-  border-color: #665343; }
-
+/*
+Removed in 1.2.2 (stefan)
+Looks very bad in current theme
+.custom-control-input:checked~.custom-control-label::before {
+  color: $bg-light!important;
+  background-color: $bg-contrast-dark;
+  border-color: $bg-contrast;
+}
+*/
 .ekko-lightbox, .modal {
   z-index: 1300; }
 
@@ -645,4 +649,4 @@ div.removable-image-area {
   div.page.sidebar-visible {
     padding-left: 220px !important; } }
 
-/*# sourceMappingURL=theme-1.2.1.css.map */
+/*# sourceMappingURL=theme-1.2.2.css.map */
