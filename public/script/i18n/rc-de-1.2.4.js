@@ -39,8 +39,8 @@ const rc_i18n_de = {
       subtitle: 'Bildergalerie',
       title: '{recipe}',
       titleWithUser: '{recipe} von {user}',
-      usage: 'Bilder anklicken um sie zu vergrößern.',
-      usageOwner: 'Bilder anklicken um sie zu vergrößern, linke Maustaste gedrückt halten zum Verschieben ("drag&drop") und damit die Reihenfolge zu verändern. Das erste Bild ist immer das Vorschaubild, die ersten fünf Bilder werden auf der Rezeptseite prominent platziert.',
+      usage: 'Du kannst die Bilder anklicken um sie zu vergrößern.',
+      usageOwner: 'Du kannst die Bilder anklicken um sie zu vergrößern. Wenn du den Schalter zum Sortieren aktivierst, kannst du die Reihenfolge der Bilder verändern, indem du die Bilder antipst (oder anklickst) und dann an die neue Position verschiebst.',
       addBtn: {
         title: 'Bild hinzufügen'
       },
@@ -52,6 +52,10 @@ const rc_i18n_de = {
       },
       recipeImage: {
         tooltip: 'Dieses Bild ist eines der ersten fünf Bilder, dass auf der Rezeptseite angezeigt wird.'
+      },
+      sortSwitch: {
+        title: 'Bilder sortieren',
+        tooltip: 'Ist der Schalter aktiviert kannst du die Reihenfolge der Bilder verändern.'
       }
     },
     home: {
@@ -171,7 +175,8 @@ const rc_i18n_de = {
       header: {
         unpublishedAlert: {
           description: 'Das Rezept wurde bisher nicht veröffentlicht und ist damit für andere Benutzer nicht zu finden.',
-          link: 'Im Bearbeiten-Modus kannst du das Rezept freigeben.'
+          hint: 'Du kannst das Rezept freigeben, indem du den Veröffentlichen-Button rechts unterhalb der Bildergalerie und Statistiken anklickst.',
+          mobileHint: 'Du kannst das Rezept freigeben, indem du den Veröffentlichen-Button über diesem Hinweis-Text anklickst.'
         },
         about: {
           title: 'Über dieses Rezept',

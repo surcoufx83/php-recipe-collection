@@ -21,14 +21,28 @@
         <!-- add picture button -->
         <br clear="all" />
         <b-container class="mt-2 pr-5 pr-lg-0">
-          <p class="text-muted text-small" v-text="$t('pages.gallery.usageOwner')" v-if="recipe.ownerId == user.id"></p>
-          <p class="text-muted text-small" v-text="$t('pages.gallery.usage')" v-else></p>
-          <draggable v-model="recipe.pictures" class="card-deck"
+          <b-container fluid class="text-center pt-3 pb-1">
+            <b-row>
+              <b-col cols="12" lg="6" offset-lg="3">
+                <p class="text-muted text-small pb-2"
+                  v-if="recipe.ownerId == user.id">
+                  <span v-text="$t('pages.gallery.usageOwner')"></span><br />
+                  <b-form-checkbox v-model="page.draggingActive"
+                    name="drag-on" switch size="lg"
+                    v-b-tooltip.hover :title="$t('pages.gallery.sortSwitch.tooltip')">
+                    ${ $t('pages.gallery.sortSwitch.title') }
+                  </b-form-checkbox>
+                </p>
+                <p class="text-muted text-small" v-text="$t('pages.gallery.usage')" v-else></p>
+              </b-col>
+            </b-row>
+          </b-container>
+          <draggable v-model="recipe.pictures" class="card-deck" draggable=".draggable"
             @end="onPictureMoved">
             <div v-for="(pic, index) in recipe.pictures" :key="index"
-              class="card m-2 p-1">
+              :class="['card m-2 p-1', recipe.ownerId === user.id && page.draggingActive ? 'draggable' : '']">
               <a :href="pic.link" data-toggle="lightbox"
-                data-gallery="example-gallery" data-type="image">
+                data-gallery="recipe-gallery" data-type="image">
                 <b-img-lazy class="card-img-top" :src="pic.link350" :id="'recipe-picture-' + index"></b-img>
               </a>
               <div class="card-body text-muted">
