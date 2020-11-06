@@ -93,6 +93,11 @@ body {
   font-size: 1.05rem;
 }
 
+* {
+  /* Remove blue glow around toggled button or link from apple browsers */
+  -webkit-tap-highlight-color: transparent;
+}
+
 a {
   color: $text-link;
 
@@ -124,22 +129,32 @@ h1, h2, h3 {
 //     box-shadow: none !important;
 // }
 
-.btn-blue, .btn-outline-blue.active {
+.btn-elemental, .btn-outline-elemental.active {
   color: $bg-light!important;
   background-color: $green;
   border-color: $green;
 
-  &:hover {
+  &:focus {
+    outline: 0;
+    box-shadow: none!important;
+  }
+
+  &:hover, &:active {
     color: $bg-light!important;
     background-color: $green-dark;
     border-color: $green-dark;
   }
 }
 
-.btn-outline-blue:not(.active) {
+.btn-outline-elemental:not(.active) {
   color: $text-link!important;
   background-color: $bg-light;
   border-color: $bg-contrast-dark;
+
+  &:focus {
+    outline: 0;
+    box-shadow: none!important;
+  }
 
   &:hover {
     color: $bg-light!important;
@@ -148,29 +163,6 @@ h1, h2, h3 {
   }
 }
 
-.btn-light-blue, .btn-outline-light-blue.active {
-  color: $bg-light!important;
-  background-color: $bg-contrast;
-  border-color: $bg-contrast;
-
-  &:hover {
-    color: $bg-light!important;
-    background-color: $bg-contrast-dark;
-    border-color: $bg-contrast-dark;
-  }
-}
-
-.btn-outline-light-blue:not(.active) {
-  color: $text-link!important;
-  background-color: $bg-light;
-  border-color: $bg-contrast;
-
-  &:hover {
-    color: $bg-light!important;
-    background-color: $bg-contrast-dark;
-    border-color: $bg-contrast-dark;
-  }
-}
 
 /*
 Removed in 1.2.2 (stefan)

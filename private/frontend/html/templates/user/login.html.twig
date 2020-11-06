@@ -14,11 +14,10 @@
             <p class="text-muted text-small" v-text="$t('pages.login.cloud.description')"></p>
             <p class="text-danger d-none" v-text="$t('pages.login.cloud.failed')"></p>
             <form id="oauth2-form" method="get" action="{{ Controller.getLink('private:login-oauth2') }}">
-              <button type="submit" id="oauth2-submit-button" class="btn btn-blue font-weight-bold">
-                <fa-icon :icon="page.iconSet.cloud.icon" :space="page.iconSet.cloud.space"
-                  class="fa-fa mr-2"></fa-icon>
-                ${ $t('pages.login.cloud.submit') }
-              </button>
+              <rc-button id="oauth2-submit-button" type="submit"
+                :icon="page.iconSet.cloud.icon" :space="page.iconSet.cloud.space"
+                :title="$t('pages.login.cloud.submit')"
+              ></rc-button>
             </form>
           </div>
         </div>

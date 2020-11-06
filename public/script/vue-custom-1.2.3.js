@@ -31,36 +31,7 @@ function evaluateFactor(value) {
     return 25
   return 50
 }
-Vue.component('btn-sm-blue', {
-  props: {
-    badge: { type: String, required: false },
-    badgeicon: { type: Object, required: false },
-    outline: { type: Boolean, default: false, required: false },
-    title: { type: String, required: false, default: '' },
-    subject: { type: String, required: false },
-    icon: { type: String, required: false },
-    space: { type: String, required: false },
-    iconClass: { type: String, required: false, default: '' }
-  },
-  template:
-    `<b-button size="sm"
-      v-bind:class="[{ 'btn-blue': !outline }, { 'btn-outline-blue': outline } ]"
-      @click="onClick">
-      <fa-icon v-if="icon" :icon="icon" :space="space"
-      :class="['fs-80 ', title === '' ? 'mx-1' : 'mr-1']"></fa-icon>
-      {{ title }}
-      <b-badge class="ml-1 text-blue" v-if="badge" variant="light">
-        {{ badge }} <b-icon class="text-blue"
-          :icon="badgeicon.icon" v-if="badgeicon"></b-icon>
-      </b-badge>
-    </b-button>`,
-    methods: {
-      onClick: function() {
-        console.log('@onClick')
-        this.$emit('click', this.subject ? this.subject : this.title)
-      }
-    }
-})
+
 
 Vue.component('btn-scrollto', {
   props: {
@@ -332,6 +303,75 @@ const RecipesList = {
   props: ['page', 'user'],
   template: '#recipes-listing-template'
 }
+Vue.component('rc-button', {
+  props: {
+    badge: {
+      /* Content for a badge inside the button */
+      type: String,
+      required: false
+    },
+    badgeicon: {
+      /* Icon for a badge inside the button, must contain icon and space prop */
+      type: Object,
+      required: false
+    },
+    icon: {
+      /* fa icon name, if set icon will be displayed in front of button text */
+      type: String,
+      required: false
+    },
+    iconClass: {
+      /* custom css classes for the icon */
+      type: String,
+      required: false,
+      default: ''
+    },
+    outline: {
+      /* if set, outline variant will be used */
+      type: Boolean,
+      default: false,
+      required: false
+    },
+    sm: {
+      /* default: true, if set, smaller variant with less borders will be used */
+      type: Boolean,
+      default: true,
+      required: false
+    },
+    space: {
+      /* fa icon namespace (fas, far, etc) */
+      type: String,
+      required: false
+    },
+    subject: {
+      /* event name that is emitted for the click event, if not set, title will be used */
+      type: String,
+      required: false
+    },
+    title: {
+      /* text to show in the button, empty for icon only button */
+      type: String,
+      required: false,
+      default: ''
+    }
+  },
+  template:
+    `<b-button :size="sm ? 'sm' : 'md'"
+      :variant="outline ? 'outline-elemental' : 'elemental'"
+      @click="onClick">
+      <fa-icon v-if="icon" :icon="icon" :space="space" :class="['fs-80 ', title === '' ? 'mx-1' : 'mr-1']"></fa-icon>
+      {{ title }}
+      <b-badge class="ml-1 text-blue" v-if="badge" variant="light">
+        {{ badge }} <fa-icon :icon="badgeicon.icon" :space="badgeicon.space" v-if="badgeicon"></fa-icon>
+      </b-badge>
+    </b-button>`,
+    methods: {
+      onClick: function() {
+        console.log('@onClick')
+        this.$emit('click', this.subject ? this.subject : this.title)
+      }
+    }
+})
 Vue.component('rc-navbar', {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
@@ -351,27 +391,6 @@ Vue.component('rc-navbar', {
     }
   }
 })
-const SearchRecipe = {
-  delimiters: ['${', '}'],
-  props: ['page', 'user'],
-  template: '#rc-search-template',
-  computed: {
-  },
-  methods: {
-    onClick: function() {
-      if (this.page.search.filter.global.length >= 3)
-        app.debouncedSearch()
-      else
-        app.$router.push({ name: 'recipes' })
-    },
-    onSearchItemClicked: function(index, id, name) {
-      app.$router.push({ name: 'recipe', params: { id: id, name: name } })
-    },
-    published: function(recipe) {
-      return moment(recipe.published, moment.ISO_8601).format(this.user.customSettings.formats.date.long)
-    }
-  }
-}
 const RecipesCreator = {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
@@ -666,6 +685,27 @@ const RecipeGallery = {
           $('#action-failed-modal').modal('show')
         }
       })
+    }
+  }
+}
+const SearchRecipe = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user'],
+  template: '#rc-search-template',
+  computed: {
+  },
+  methods: {
+    onClick: function() {
+      if (this.page.search.filter.global.length >= 3)
+        app.debouncedSearch()
+      else
+        app.$router.push({ name: 'recipes' })
+    },
+    onSearchItemClicked: function(index, id, name) {
+      app.$router.push({ name: 'recipe', params: { id: id, name: name } })
+    },
+    published: function(recipe) {
+      return moment(recipe.published, moment.ISO_8601).format(this.user.customSettings.formats.date.long)
     }
   }
 }

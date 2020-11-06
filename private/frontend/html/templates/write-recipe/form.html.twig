@@ -128,11 +128,11 @@
                         <b-img src="/pictures/_dummy.jpg"
                           :id="'picture-image-' + index"
                           thumbnail fluid class="rounded of-cover"></b-img>
-                        <btn-sm-blue
+                        <rc-button
                           title="" class="remove-image fs-80 p-0" style="display: inline;"
                           :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
                           @click="onPictureDelBtnClick(index)">
-                        </btn-sm-blue>
+                        </rc-button>
                         <b-form-file
                           v-model="picture.file"
                           :id="'file-' + index"
@@ -147,11 +147,11 @@
                   <b-form-row
                     class="mb-2"> <!-- add ingredient button -->
                     <b-col cols="5" md="2" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
-                      <btn-sm-blue
+                      <rc-button
                         title="" class="w-75px"
                         :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
                         @click="onPictureAddBtnClick()">
-                      </btn-sm-blue>
+                      </rc-button>
                     </b-col>
                   </b-form-row> <!-- add ingredient button -->
 
@@ -253,21 +253,21 @@
                   </b-form-input>
                 </b-col>
                 <b-col cols="2" md="1" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
-                  <btn-sm-blue
+                  <rc-button
                     title="" class="w-75px"
                     :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
-                    @click="onIngredientDelBtnClick(index)"></btn-sm-blue>
+                    @click="onIngredientDelBtnClick(index)"></rc-button>
                 </b-col>
               </b-form-row><!-- ingredient -->
 
               <b-row
                 class="mb-2"  align-h="center"> <!-- add ingredient button -->
                 <b-col cols="12" md="6" class="px-1 px-md-2 mb-2 mb-md-0 text-center" align-self="center">
-                  <btn-sm-blue
+                  <rc-button
                     title="" class="w-75px"
                     :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
                     @click="onIngredientAddBtnClick()">
-                  </btn-sm-blue>
+                  </rc-button>
                   <b-alert variant="danger"
                     :show="form.validationFailed && page.currentRecipe.preparation.ingredients.length == 0"
                     class="p-1 mt-2">
@@ -368,10 +368,10 @@
                 </b-col>
                 <b-col cols="1" lg="2">&nbsp;</b-col>
                 <b-col cols="2" md="1" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
-                  <btn-sm-blue
+                  <rc-button
                     title="" class="w-75px"
                     :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
-                    @click="onStepDelBtnClick(index)"></btn-sm-blue>
+                    @click="onStepDelBtnClick(index)"></rc-button>
                 </b-col> <!-- prep step time consumed -->
 
               </b-form-row> <!-- preparation step -->
@@ -379,10 +379,10 @@
               <b-row
                 class="mb-2" align-h="center"> <!-- add prep step button -->
                 <b-col cols="12" md="6" class="px-1 px-md-2 mb-2 mb-md-0 text-center" align-self="center">
-                  <btn-sm-blue
+                  <rc-button
                     title="" class="w-75px"
                     :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
-                    @click="onStepAddBtnClick()"></btn-sm-blue>
+                    @click="onStepAddBtnClick()"></rc-button>
                   <b-alert variant="danger"
                     :show="form.validationFailed && page.currentRecipe.preparation.steps.length == 0"
                     class="p-1 mt-2">
