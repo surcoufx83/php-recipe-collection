@@ -49,6 +49,12 @@ Vue.component('rc-button', {
       type: String,
       required: false,
       default: ''
+    },
+    variant: {
+      /* css class of the button (default = common) */
+      type: String,
+      required: false,
+      default: 'common'
     }
   },
   template: '#rc-button-template',

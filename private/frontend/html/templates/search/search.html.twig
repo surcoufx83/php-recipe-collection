@@ -12,11 +12,11 @@
                   :placeholder="$t('pages.search.inputPlaceholder')"
                   v-model="page.search.filter.global"></b-input>
                 <b-input-group-append>
-                  <b-button variant="blue" @click="onClick">
+                  <rc-button @click="onClick">
                     <fa-icon v-if="!page.loading && !page.updating" :icon="page.iconSet.search.icon" :space="page.iconSet.search.space" class="mr-2"></fa-icon>
                     <fa-icon v-if="page.loading || page.updating" :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space" class="fa-spin mr-2"></fa-icon>
                     <strong v-text="$t('pages.search.inputButtonText')"></strong>
-                  </b-button>
+                  </rc-button>
                 </b-input-group-append>
               </b-input-group>
             </b-form-group>

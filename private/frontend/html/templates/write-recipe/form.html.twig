@@ -459,26 +459,25 @@
             <b-col cols="12" md="6" class="text-center" align-self="center">
               <b-container
                 v-if="page.currentRecipe.id == 0">
-                <b-button type="submit"
+
+                <rc-button type="submit" :sm="false"
                   v-if="!progress.sending && !form.completed"
-                  class="btn-blue">
-                  <fa-icon :icon="page.iconSet.play.icon" :space="page.iconSet.play.space"></fa-icon>
-                  ${ $t('pages.writeRecipe.actions.submitButton.title') }
-                </b-button>
-                <b-button type="submit"
+                  :icon="page.iconSet.play.icon" :space="page.iconSet.play.space"
+                  :title="$t('pages.writeRecipe.actions.submitButton.title')"></rc-button>
+
+                <rc-button type="submit" variant="success" :sm="false"
                   v-if="!progress.sending && form.completed"
-                  class="btn-success">
-                  <fa-icon :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"></fa-icon>
-                  ${ $t('pages.writeRecipe.actions.submitButton.submitted') }
-                </b-button>
+                  :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"
+                  :title="$t('pages.writeRecipe.actions.submitButton.submitted')"></rc-button>
+
               </b-container>
               <b-container v-else>
-                <b-button type="submit"
+
+                <rc-button type="submit" :sm="false"
                   v-if="!progress.sending && this.$route.name == 'editRecipe'"
-                  class="btn-blue">
-                  <fa-icon :icon="page.iconSet.play.icon" :space="page.iconSet.play.space"></fa-icon>
-                  ${ $t('pages.writeRecipe.actions.submitButton.editTitle') }
-                </b-button>
+                  :icon="page.iconSet.play.icon" :space="page.iconSet.play.space"
+                  :title="$t('pages.writeRecipe.actions.submitButton.editTitle')"></rc-button>
+
               </b-container>
               <b-alert variant="danger"
                 :show="form.validationFailed"

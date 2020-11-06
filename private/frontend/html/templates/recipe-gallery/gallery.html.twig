@@ -4,20 +4,16 @@
         <!-- back to recipe link -->
         <router-link :to="{ name: 'recipe', params: { id: recipe.id, name: recipe.name } }"
           class="float-left">
-          <b-button size="sm" variant="blue">
-            <fa-icon :icon="page.iconSet.back.icon" :space="page.iconSet.back.space"
-              class="mr-1"></fa-icon>
-            ${ $t('pages.gallery.backBtn.title') }
-          </b-button>
+          <rc-button
+            :icon="page.iconSet.back.icon" :space="page.iconSet.back.space"
+            :title="$t('pages.gallery.backBtn.title')"></rc-button>
         </router-link>
         <!-- back to recipe link -->
         <!-- add picture button -->
-        <b-button size="sm" variant="blue" class="float-right"
-          @click="onAddPicture">
-          <fa-icon :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
-            class="mr-1"></fa-icon>
-          ${ $t('pages.gallery.addBtn.title') }
-        </b-button>
+        <rc-button class="float-right"
+          :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+          :title="$t('pages.gallery.addBtn.title')"
+          @click="onAddPicture"></rc-button>
         <!-- add picture button -->
         <br clear="all" />
         <b-container class="mt-2 pr-5 pr-lg-0">

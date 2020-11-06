@@ -34,26 +34,26 @@ a {
 h1, h2, h3 {
   font-family: Cinzel; }
 
-.btn-elemental, .btn-outline-elemental.active {
+.btn-common, .btn-outline-common.active {
   color: #F5EAE1 !important;
   background-color: #589014;
   border-color: #589014; }
-  .btn-elemental:focus, .btn-outline-elemental.active:focus {
+  .btn-common:focus, .btn-outline-common.active:focus {
     outline: 0;
     box-shadow: none !important; }
-  .btn-elemental:hover, .btn-elemental:active, .btn-outline-elemental.active:hover, .btn-outline-elemental.active:active {
+  .btn-common:hover, .btn-common:active, .btn-outline-common.active:hover, .btn-outline-common.active:active {
     color: #F5EAE1 !important;
     background-color: #375A0C;
     border-color: #375A0C; }
 
-.btn-outline-elemental:not(.active) {
+.btn-outline-common:not(.active) {
   color: #375A0C !important;
   background-color: #F5EAE1;
   border-color: #FFFFFF; }
-  .btn-outline-elemental:not(.active):focus {
+  .btn-outline-common:not(.active):focus {
     outline: 0;
     box-shadow: none !important; }
-  .btn-outline-elemental:not(.active):hover {
+  .btn-outline-common:not(.active):hover {
     color: #F5EAE1 !important;
     background-color: #665343;
     border-color: #665343; }
