@@ -45,22 +45,22 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
 
   public function __construct(?array $record=null) {
     if (!is_null($record)) {
-      $this->user_id = intval($dr['user_id']);
-      $this->user_name = $dr['user_name'];
-      $this->oauth_user_name = $dr['oauth_user_name'];
-      $this->user_firstname = $dr['user_firstname'];
-      $this->user_lastname = $dr['user_lastname'];
-      $this->user_fullname = $dr['user_fullname'];
-      $this->user_hash = $dr['user_hash'];
-      $this->user_isadmin = (ConverterHelper::to_bool($dr['user_isadmin']) && !is_null($dr['user_email_validated']));
-      $this->user_password = $dr['user_password'];
-      $this->user_email = $dr['user_email'];
-      $this->user_email_validation = (!is_null($dr['user_email_validation']) ? $dr['user_email_validation'] : '');
-      $this->user_email_validated = (!is_null($dr['user_email_validated']) ? new DateTime($dr['user_email_validated']) : '');
-      $this->user_last_activity = (!is_null($dr['user_last_activity']) ? new DateTime($dr['user_last_activity']) : '');
-      $this->user_avatar = $dr['user_avatar'];
-      $this->user_registration_completed = (!is_null($dr['user_registration_completed']) ? new DateTime($dr['user_registration_completed']) : null);
-      $this->user_adconsent = (!is_null($dr['user_adconsent']) ? new DateTime($dr['user_adconsent']) : false);
+      $this->user_id = intval($record['user_id']);
+      $this->user_name = $record['user_name'];
+      $this->oauth_user_name = $record['oauth_user_name'];
+      $this->user_firstname = $record['user_firstname'];
+      $this->user_lastname = $record['user_lastname'];
+      $this->user_fullname = $record['user_fullname'];
+      $this->user_hash = $record['user_hash'];
+      $this->user_isadmin = (ConverterHelper::to_bool($record['user_isadmin']) && !is_null($record['user_email_validated']));
+      $this->user_password = $record['user_password'];
+      $this->user_email = $record['user_email'];
+      $this->user_email_validation = (!is_null($record['user_email_validation']) ? $record['user_email_validation'] : '');
+      $this->user_email_validated = (!is_null($record['user_email_validated']) ? new DateTime($record['user_email_validated']) : '');
+      $this->user_last_activity = (!is_null($record['user_last_activity']) ? new DateTime($record['user_last_activity']) : '');
+      $this->user_avatar = $record['user_avatar'];
+      $this->user_registration_completed = (!is_null($record['user_registration_completed']) ? new DateTime($record['user_registration_completed']) : null);
+      $this->user_adconsent = (!is_null($record['user_adconsent']) ? new DateTime($record['user_adconsent']) : false);
     } else {
       $this->user_id = intval($this->user_id);
       $this->user_isadmin = (ConverterHelper::to_bool($this->user_isadmin) && !is_null($this->user_email_validated));
