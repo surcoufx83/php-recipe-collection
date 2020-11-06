@@ -298,6 +298,7 @@ const RecipesList = {
   template: '#recipes-listing-template'
 }
 Vue.component('rc-button', {
+  delimiters: ['${', '}'],
   props: {
     badge: {
       /* Content for a badge inside the button */
@@ -349,16 +350,7 @@ Vue.component('rc-button', {
       default: ''
     }
   },
-  template:
-    `<b-button :size="sm === true ? 'sm' : 'md'"
-      :variant="outline ? 'outline-elemental' : 'elemental'"
-      @click="onClick">
-      <fa-icon v-if="icon" :icon="icon" :space="space" :class="['fs-80 ', title === '' ? 'mx-1' : 'mr-1']"></fa-icon>
-      {{ title }}
-      <b-badge class="ml-1 text-blue" v-if="badge" variant="light">
-        {{ badge }} <fa-icon :icon="badgeicon.icon" :space="badgeicon.space" v-if="badgeicon"></fa-icon>
-      </b-badge>
-    </b-button>`,
+  template: '#rc-button-template',
     methods: {
       onClick: function() {
         console.log('@onClick')
