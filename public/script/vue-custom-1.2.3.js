@@ -728,6 +728,8 @@ var app = new Vue({
   mounted: function() {
     if (!CommonData.user.loggedIn && this.$route.name !== 'login')
       this.$router.push({name: 'login'})
+    else if (CommonData.user.loggedIn && this.$route.name === 'login')
+      this.$router.push({name: 'home'})
     refreshPageData(this.$route.path, this)
   },
   computed: {
@@ -820,6 +822,9 @@ router.afterEach((to, from) => {
       .then(() => {
         window.location = '/';
       })
+  } else if (to.name == 'login') {
+    if (app.user.loggedIn)
+      window.location = '/';
   }
 })
 
