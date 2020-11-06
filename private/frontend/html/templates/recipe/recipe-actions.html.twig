@@ -4,7 +4,7 @@
             <b-container fluid>
 
               <!-- publish / unpublish actions -->
-              <b-button size="sm" variant="outline-blue"
+              <rc-button outline
                 id="recipe-publishbtn" v-if="recipe.published === false"
                 v-b-tooltip.hover :title="$t('pages.recipe.actions.publish.tooltip')"
                 @click="onPublishButtonClicked">
@@ -13,8 +13,8 @@
                 <fa-icon :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"
                   class="mr-1 d-none fa-spin" id="recipe-publishbtn-spinner"></fa-icon>
                 ${ $t('pages.recipe.actions.publish.title') }
-              </b-button>
-              <b-button size="sm" variant="outline-blue"
+              </rc-button>
+              <rc-button outline
                 id="recipe-rejectbtn" v-else
                 v-b-tooltip.hover :title="$t('pages.recipe.actions.reject.tooltip')"
                 @click="onRejectButtonClicked">
@@ -23,18 +23,16 @@
                 <fa-icon :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"
                   class="mr-1 d-none fa-spin" id="recipe-rejectbtn-spinner"></fa-icon>
                 ${ $t('pages.recipe.actions.reject.title') }
-              </b-button>
+              </rc-button>
               <!-- publish / unpublish actions -->
 
               <!-- recipe edit link -->
               <router-link :to="{ name: 'editRecipe', params: { id: recipe.id, name: recipe.name } }"
                 class="float-right">
-                <b-button size="sm" variant="blue"
-                  v-b-tooltip.hover :title="$t('pages.recipe.actions.edit.tooltip')">
-                  <fa-icon :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
-                    class="mr-1"></fa-icon>
-                  ${ $t('pages.recipe.actions.edit.title') }
-                </b-button>
+                <rc-button
+                  :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
+                  :title="$t('pages.recipe.actions.edit.title')"
+                  v-b-tooltip.hover :title="$t('pages.recipe.actions.edit.tooltip')"></rc-button>
               </router-link>
               <!-- recipe edit link -->
 
@@ -46,11 +44,9 @@
               <p class="text-small text-muted" v-text="$tc('pages.recipe.actions.userRecipes.description', recipe.ownerProperties.recipeCount - 1, { user: recipe.ownerName })"></p>
               <!-- user recipes link -->
               <router-link :to="{ name: 'userRecipes', params: { id: recipe.ownerId, name: recipe.ownerName } }">
-                <b-button size="sm" variant="blue">
-                  <fa-icon :icon="page.iconSet.recipes.icon" :space="page.iconSet.recipes.space"
-                    class="mr-1"></fa-icon>
-                  <span v-text="$t('pages.recipe.actions.userRecipes.btnTitle', { user: recipe.ownerName })"></span>
-                </b-button>
+                <rc-button
+                  :icon="page.iconSet.recipes.icon" :space="page.iconSet.recipes.space"
+                  :title="$t('pages.recipe.actions.userRecipes.btnTitle', { user: recipe.ownerName })"></rc-button>
               </router-link>
               <!-- user recipes link -->
             </div>

@@ -70,7 +70,7 @@ const rc_i18n_de = {
     },
     login: {
       cloud: {
-        description: 'Du hast schon mal unsere Nextcloud verwendet? Dann nutze dieses Konto um dich hier anzumelden. Einfach und sicher!',
+        description: 'Du hast schon mal unsere Nextcloud verwendet?{br}Dann nutze die Cloud um dich hier anzumelden.',
         failed: 'Die Anmeldung über die Nextcloud ist fehlgeschlagen.',
         header: 'Anmeldung mit Nextcloud-Konto',
         submit: 'Mit Nextcloud-Konto anmelden'
@@ -79,28 +79,31 @@ const rc_i18n_de = {
         loginFailed: 'Anmeldung fehlgeschlagen.'
       },
       keepSession: {
-        description: 'Deine Anmeldung bleibt auch nach dem Schließen des Webbrowsers gültig.',
-        title: 'Angemeldet bleiben.'
+        title: 'Angemeldet bleiben.',
+        tooltip: 'Deine Anmeldung bleibt auch nach dem Schließen des Webbrowsers bestehen.'
       },
       nameField: {
-        invalidFeedback: 'Bitte gib deine E-Mailadresse ein.',
-        placeholder: 'E-Mailadresse'
+        invalidFeedback: 'Erforderlich: Gib deinen Benutzernamen oder deine E-Mailadresse an.',
+        label: 'Benutzername oder Mailadresse',
+        placeholder: 'Benutzername'
       },
       lostPassword: {
-        title: 'Passwort verloren?'
+        title: 'Passwort vergessen?'
       },
+      or: '— ODER —',
       passwordField: {
-        invalidFeedback: 'Bitte gib dein Passwort ein.',
+        invalidFeedback: 'Pflichtfeld: Trage dein Passwort für das Kochbuch ein.',
+        label: 'Dein Passwort',
         placeholder: 'Passwort'
       },
       regular: {
-        description: 'Sofern du einen dedizierten Benutzeraccount für diese Webseite hast, kannst du dich hier mit einer E-Mailadresse und deinem Passwort anmelden.',
-        header: 'Anmeldung mit E-Mailadresse'
+        description: 'Für die Nutzung dieses Kochbuchs sind Zugangsdaten erforderlich. Bitte gib deine Zugangsdaten ein um dich anzumelden.'
       },
       submitButton: {
         title: 'Anmelden'
       },
-      title: 'Benutzer Anmeldung'
+      title: 'Benutzer Anmeldung',
+      welcome: 'Willkommen beim Kochbuch'
     },
     logout: {
       subtitle: '',
@@ -448,10 +451,11 @@ const rc_i18n_de = {
     dbUpdateException: 'Fehler beim Speichern der Änderungen in der Datenbank.',
     functionNotFoundException: 'Die angeforderte Funktion ist leider noch nicht programmiert. Stefan hauen, oder etwas Geduld zeigen ;)',
     insufficientPermissionException: 'Unzureichende Berechtigung für diese Aktion.',
-    loginFailed: 'Anmeldung fehlgeschlagen.',
+    loginFailed: 'Anmeldung fehlgeschlagen. Bitte überprüfe die eingegebenen Daten.',
     loginSuccessfull: 'Anmeldung erfolgreich.',
     maintenanceException: 'Wartungsmodus ist aktiviert.',
     mimetypeNotSupported: 'Das Bildformat wird derzeit nicht unterstützt.',
+    missingArgumentsException: 'Die eingegebenen Informationen sind unvollständig. Die Anfrage kann nicht verarbeitet werden.',
     noApiKeyException: 'Der Zugriff erfordert ein Anmelde-Token. Bitte melden Sie sich zuerst über die Website an, bevor Sie den API-Zugang versuchen.',
     noChanges: 'Es wurden keine Änderungen erkannt.',
     noResults: 'Die Suche hat keine Ergebnisse zurückgeliefert.',

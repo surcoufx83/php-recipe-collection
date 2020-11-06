@@ -21,6 +21,10 @@ body {
   height: 100%;
   font-size: 1.05rem; }
 
+* {
+  /* Remove blue glow around toggled button or link from apple browsers */
+  -webkit-tap-highlight-color: transparent; }
+
 a {
   color: #375A0C; }
   a:hover {
@@ -30,41 +34,29 @@ a {
 h1, h2, h3 {
   font-family: Cinzel; }
 
-.btn-blue, .btn-outline-blue.active {
+.btn-common, .btn-outline-common.active {
   color: #F5EAE1 !important;
   background-color: #589014;
   border-color: #589014; }
-  .btn-blue:hover, .btn-outline-blue.active:hover {
+  .btn-common:focus, .btn-outline-common.active:focus {
+    outline: 0;
+    box-shadow: none !important; }
+  .btn-common:hover, .btn-common:active, .btn-outline-common.active:hover, .btn-outline-common.active:active {
     color: #F5EAE1 !important;
     background-color: #375A0C;
     border-color: #375A0C; }
 
-.btn-outline-blue:not(.active) {
+.btn-outline-common:not(.active) {
   color: #375A0C !important;
   background-color: #F5EAE1;
   border-color: #FFFFFF; }
-  .btn-outline-blue:not(.active):hover {
+  .btn-outline-common:not(.active):focus {
+    outline: 0;
+    box-shadow: none !important; }
+  .btn-outline-common:not(.active):hover {
     color: #F5EAE1 !important;
     background-color: #665343;
     border-color: #665343; }
-
-.btn-light-blue, .btn-outline-light-blue.active {
-  color: #F5EAE1 !important;
-  background-color: #665343;
-  border-color: #665343; }
-  .btn-light-blue:hover, .btn-outline-light-blue.active:hover {
-    color: #F5EAE1 !important;
-    background-color: #FFFFFF;
-    border-color: #FFFFFF; }
-
-.btn-outline-light-blue:not(.active) {
-  color: #375A0C !important;
-  background-color: #F5EAE1;
-  border-color: #665343; }
-  .btn-outline-light-blue:not(.active):hover {
-    color: #F5EAE1 !important;
-    background-color: #FFFFFF;
-    border-color: #FFFFFF; }
 
 /*
 Removed in 1.2.2 (stefan)

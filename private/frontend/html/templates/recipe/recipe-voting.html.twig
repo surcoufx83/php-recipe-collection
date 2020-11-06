@@ -5,12 +5,10 @@
             <h5 v-text="$t('pages.recipe.rate.header')"></h5>
             <div v-if="page.self.hasVoted === false">
               <p class="text-small text-muted" v-text="$t('pages.recipe.rate.description')"></p>
-              <b-button size="sm" variant="blue"
-                @click="onRatingStartButtonPress">
-                <fa-icon :icon="page.iconSet.like.icon" :space="page.iconSet.like.space"
-                  class="fa-fw mr-2"></fa-icon>
-                ${ $t('pages.recipe.rate.button') }
-              </b-button>
+              <rc-button
+                :icon="page.iconSet.like.icon" :space="page.iconSet.like.space"
+                :title="$t('pages.recipe.rate.button')"
+                @click="onRatingStartButtonPress"></rc-button>
             </div>
             <div v-else>
               <p class="text-small text-muted" v-text="$t('pages.recipe.rate.voted.subject')"></p>

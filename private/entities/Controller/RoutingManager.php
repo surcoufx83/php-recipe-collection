@@ -11,6 +11,11 @@ if (!defined('CORE2'))
 final class RoutingManager {
 
   static $routes = [
+    '/api/login' => [ // login request
+      'class' => \Surcouf\Cookbook\Controller\Routes\Api\User\LoginRoute::class,
+      'method' => ERequestMethod::HTTP_POST,
+      'requiresUser' => false,
+    ],
     '/api/logout' => [ // logout request
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\User\LogoutRoute::class,
       'method' => ERequestMethod::HTTP_POST,

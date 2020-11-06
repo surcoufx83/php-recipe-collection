@@ -1,85 +1,147 @@
 
     <template id="login-template">
       <b-container>
-        <div class="row pb-3">
-          <div class="col-12 col-md-6">
-            <h3 class="mb-3 font-weight-bold" v-text="$t('pages.login.title')"></h3>
-          </div>
-        </div>
-        <div class="row mb-3"
-          v-if="config.login.oauth2Enabled">
-          <div class="col-12 col-md-6 pb-4 "
-            v-bind:class="{'border-bottom': config.login.defaultEnabled}">
-            <h5 class="mb-3 font-weight-bold" v-text="$t('pages.login.cloud.header')"></h5>
-            <p class="text-muted text-small" v-text="$t('pages.login.cloud.description')"></p>
-            <p class="text-danger d-none" v-text="$t('pages.login.cloud.failed')"></p>
-            <form id="oauth2-form" method="get" action="{{ Controller.getLink('private:login-oauth2') }}">
-              <button type="submit" id="oauth2-submit-button" class="btn btn-blue font-weight-bold">
-                <fa-icon :icon="page.iconSet.cloud.icon" :space="page.iconSet.cloud.space"
-                  class="fa-fa mr-2"></fa-icon>
-                ${ $t('pages.login.cloud.submit') }
-              </button>
-            </form>
-          </div>
-        </div>
-        <div class="row mb-3 d-none"
-          v-if="config.login.defaultEnabled">
-          <div class="col-12 col-md-6">
-            <h5 class="mb-3 font-weight-bold">{{ Controller.l('page_login_regular_header') }}</h5>
-            <p class="text-muted text-small">{{ Controller.l('page_login_regular_description') }}</p>
-            <form id="login-form" action="#">
-              <div class="form-group mb-3">
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">{{ Config.Icons().Authentication('fa-fw')|raw }}</div>
-                  </div>
-                  <input type="text" class="form-control" id="login-user"
-                    name="login-user" placeholder="{{ Controller.l('page_login_nameField_placeholder') }}"
-                    value="" autofocus autocomplete="username" maxlength="32" />
-                  <div class="invalid-feedback" style="padding-left:48px;"
-                    id="login-user-feedback">
-                    {{ Controller.l('page_login_nameField_invalidFeedback') }}
-                  </div>
-                </div>
-              </div>
-              <div class="form-group mb-3">
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">{{ Config.Icons.Password('fa-fw')|raw }}</div>
-                  </div>
-                  <input type="password" class="form-control" id="login-password"
-                    name="login-password" placeholder="{{ Controller.l('page_login_passwordField_placeholder') }}" value=""
-                    autocomplete="current-password" />
-                  <div class="invalid-feedback" style="padding-left:48px;"
-                    id="login-password-feedback">
-                    {{ Controller.l('page_login_passwordField_invalidFeedback') }}
-                  </div>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-6">
-                  <input class="ml-0 form-check-input" type="checkbox" value="1"
-                    id="login-keepsession" name="login-keepsession" />
-                  <span class="ml-4 form-check-label" data-toggle="tooltip"
-                    data-placement="right" title="{{ Controller.l('page_login_keepSession_description') }}" for="login-keepsession">
-                    {{ Controller.l('page_login_keepSession_title') }}
-                    <sup class="text-blue">{{ Config.Icons.QuestionMark('fa-fw fa-sm')|raw }}</sup>
-                  </span>
-                </div>
-                <div class="col-6 text-right">
-                  <a class="small" href="/password-lost">{{ Controller.l('page_login_lostPassword_title') }}</a>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col">
-                  <button type="submit" id="login-submit-button" class="btn btn-blue font-weight-bold">
-                    {{ Config.Icons.Spinner('fa-fw fa-spin d-none', '', 'login-submit-spinner')|raw }}
-                    {{ Controller.l('page_login_submitButton_title') }}
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+        <b-row class="mt-3">
+          <b-col cols="12" md="8" lg="6" offset-md="2" offset-lg="3">
+            <b-row>
+              <b-col class="text-center mb-5">
+                <b-img src="/apple-touch-icon.png" width="64" height="64"></b-img>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col class="text-center">
+                <h3 class="font-weight-bold" v-text="$t('pages.login.welcome')"></h3>
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row>
+
+        <b-row class="mt-3 mb-3" v-if="config.login.oauth2Enabled">  <!-- login block for oauth login -->
+          <b-col cols="12" md="8" lg="6" offset-md="2" offset-lg="3">
+            <b-row>
+              <b-col class="text-center">
+                <i18n path="pages.login.cloud.description" tag="p" class="">
+                  <template v-slot:br><br /></template>
+                </i18n>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col class="text-center">
+                <form id="oauth2-form" method="get" action="{{ Controller.getLink('private:login-oauth2') }}">
+                  <rc-button id="oauth2-submit-button" type="submit"
+                    :sm="false"
+                    :icon="page.iconSet.cloud.icon" :space="page.iconSet.cloud.space"
+                    :title="$t('pages.login.cloud.submit')"
+                  ></rc-button>
+                </form>
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row> <!-- login block for oauth login -->
+
+        <b-row class="my-5" v-if="config.login.oauth2Enabled && config.login.defaultEnabled">
+          <b-col cols="12" md="8" lg="6" offset-md="2" offset-lg="3">
+            <b-row>
+              <b-col class="text-center">
+                <h4 class="font-weight-bold text-muted" v-text="$t('pages.login.or')"></h4>
+              </b-col>
+            </b-row>
+          </b-col>
+        </b-row>
+        <b-row class="mt-5" v-if="config.login.defaultEnabled"> <!-- login block for username/password login -->
+          <b-col cols="12" md="8" lg="6" offset-md="2" offset-lg="3">
+            <b-row>
+              <b-col class="text-center">
+                <i18n path="pages.login.regular.description" tag="p" class="">
+                  <template v-slot:br><br /></template>
+                </i18n>
+              </b-col>
+            </b-row>
+            <b-form id="login-form" action="#" novalidate class="needs-validation"
+              @submit="onLoginSubmit">
+
+              <b-row> <!-- username login field -->
+                <b-col cols="10" lg="8" offset="1" offset-lg="2">
+                  <b-form-group id="login-username-group"
+                    :label="$t('pages.login.nameField.label')"
+                    label-for="login-username"
+                    :state="usernamestate"
+                    :invalid-feedback="$t('pages.login.nameField.invalidFeedback')">
+                    <b-input-group>
+                      <template #prepend>
+                        <b-input-group-text>
+                          <fa-icon :icon="page.iconSet.authUser.icon" :space="page.iconSet.authUser.space"></fa-icon>
+                        </b-input-group-text>
+                      </template>
+                      <b-form-input id="login-username" name="login-username"
+                        v-model="username"
+                        type="text" autocomplete="username" maxlength="32"
+                        :placeholder="$t('pages.login.nameField.placeholder')" required
+                      ></b-form-input>
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+              </b-row> <!-- username login field -->
+
+              <b-row> <!-- password login field -->
+                <b-col cols="10" lg="8" offset="1" offset-lg="2">
+                  <b-form-group id="login-password-group"
+                    :label="$t('pages.login.passwordField.label')"
+                    label-for="login-password"
+                    :state="passwordstate"
+                    :invalid-feedback="$t('pages.login.passwordField.invalidFeedback')">
+                    <b-input-group>
+                      <template #prepend>
+                        <b-input-group-text>
+                          <fa-icon :icon="page.iconSet.credentials.icon" :space="page.iconSet.credentials.space"></fa-icon>
+                        </b-input-group-text>
+                      </template>
+                      <b-form-input id="login-password" name="login-password"
+                        v-model="password"
+                        type="password" autocomplete="current-password"
+                        :placeholder="$t('pages.login.passwordField.placeholder')" required
+                      ></b-form-input>
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+              </b-row> <!-- password login field -->
+
+              <b-row> <!-- stay loggedin checkbox -->
+                <b-col cols="10" lg="8" offset="1" offset-lg="2">
+                  <b-form-group id="login-keepsession-group"
+                    label-for="login-keepsession">
+                    <b-form-checkbox id="login-keepsession" name="login-keepsession"
+                      v-model="keepSession"
+                      :value="true"
+                      :unchecked-value="false">
+                      ${ $t('pages.login.keepSession.title') }
+                      <sup v-b-tooltip.hover :title="$t('pages.login.keepSession.tooltip')">
+                        <fa-icon class="fa-fw fa-sm" :icon="page.iconSet.question.icon" :space="page.iconSet.question.space"></fa-icon>
+                      </sup>
+                    </b-form-checkbox>
+                  </b-form-group>
+                </b-col>
+              </b-row> <!-- stay loggedin checkbox -->
+
+              <b-row> <!-- login submit button -->
+                <b-col class="text-center">
+                  <rc-button id="login-submit-button" type="submit" :sm="false"
+                    :icon="page.iconSet.unlock.icon" :space="page.iconSet.unlock.space"
+                    :title="$t('pages.login.submitButton.title')"
+                    :disabled="page.updating || user.loggedIn"
+                  ></rc-button>
+                </b-col>
+              </b-row> <!-- login submit button -->
+
+              <b-row> <!-- password lost link -->
+                <b-col class="text-center">
+                  <router-link :to="{ name: 'lostPwd' }" v-text="$t('pages.login.lostPassword.title')"></router-link>
+                </b-col>
+              </b-row> <!-- password lost link -->
+
+            </b-form>
+          </b-col>
+        </b-row> <!-- login block for username/password login -->
+
       </b-container>
     </template>

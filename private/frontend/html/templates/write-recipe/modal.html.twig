@@ -27,23 +27,30 @@
             v-text="$t('pages.writeRecipe.modal.success')">
           </div>
           <div class="modal-footer">
-            <b-button type="button" id="new-recipe-modal-spinner"
+
+            <rc-button id="new-recipe-modal-spinner" :sm="false" disabled
               v-if="progress.sending"
-              class="btn-blue" disabled>
-              <fa-icon :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space" spin fw></fa-icon>
-            </b-button>
-            <b-button type="button"
+              :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"
+              icon-class="fa-spin fa-fw"
+              title=""></rc-button>
+
+            <rc-button :sm="false" outline
               v-if="!progress.sending && (progress.responseSuccess || page.currentRecipe.id > 0)"
-              class="btn-outline-blue" data-dismiss="modal"
-              v-text="$t('pages.writeRecipe.modal.backButton')"></b-button>
-            <b-button type="button" id="new-recipe-modal-new"
+              data-dismiss="modal"
+              :title="$t('pages.writeRecipe.modal.backButton')"></rc-button>
+
+            <rc-button :sm="false" outline id="new-recipe-modal-new"
               v-if="!progress.sending && progress.gotresponse && progress.responseSuccess && page.currentRecipe.id == 0"
-              class="btn-outline-blue" data-dismiss="modal" @click="onNewRecipeBtnClick"
-              v-text="$t('pages.writeRecipe.modal.newButton')"></b-button>
-            <b-button type="button" id="new-recipe-modal-new"
+              data-dismiss="modal"
+              @click="onNewRecipeBtnClick"
+              :title="$t('pages.writeRecipe.modal.newButton')"></rc-button>
+
+            <rc-button :sm="false" id="new-recipe-modal-goto"
               v-if="!progress.sending && ((progress.gotresponse && progress.responseSuccess) || page.currentRecipe.id > 0)"
-              class="btn-blue" data-dismiss="modal" @click="onGotoRecipeBtnClick"
-              v-text="$t('pages.writeRecipe.modal.forwardButton')"></b-button>
+              data-dismiss="modal"
+              @click="onGotoRecipeBtnClick"
+              :title="$t('pages.writeRecipe.modal.forwardButton')"></rc-button>
+
           </div>
         </div>
       </div>

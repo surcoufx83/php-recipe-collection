@@ -31,36 +31,7 @@ function evaluateFactor(value) {
     return 25
   return 50
 }
-Vue.component('btn-sm-blue', {
-  props: {
-    badge: { type: String, required: false },
-    badgeicon: { type: Object, required: false },
-    outline: { type: Boolean, default: false, required: false },
-    title: { type: String, required: false, default: '' },
-    subject: { type: String, required: false },
-    icon: { type: String, required: false },
-    space: { type: String, required: false },
-    iconClass: { type: String, required: false, default: '' }
-  },
-  template:
-    `<b-button size="sm"
-      v-bind:class="[{ 'btn-blue': !outline }, { 'btn-outline-blue': outline } ]"
-      @click="onClick">
-      <fa-icon v-if="icon" :icon="icon" :space="space"
-      :class="['fs-80 ', title === '' ? 'mx-1' : 'mr-1']"></fa-icon>
-      {{ title }}
-      <b-badge class="ml-1 text-blue" v-if="badge" variant="light">
-        {{ badge }} <b-icon class="text-blue"
-          :icon="badgeicon.icon" v-if="badgeicon"></b-icon>
-      </b-badge>
-    </b-button>`,
-    methods: {
-      onClick: function() {
-        console.log('@onClick')
-        this.$emit('click', this.subject ? this.subject : this.title)
-      }
-    }
-})
+
 
 Vue.component('btn-scrollto', {
   props: {
@@ -175,12 +146,6 @@ const Home = {
       return i18n.$t('pages.home.title')
     }
   }
-}
-
-const Login = {
-  delimiters: ['${', '}'],
-  props: ['page', 'user', 'config'],
-  template: '#login-template'
 }
 
 const Logout = {
@@ -332,6 +297,73 @@ const RecipesList = {
   props: ['page', 'user'],
   template: '#recipes-listing-template'
 }
+Vue.component('rc-button', {
+  delimiters: ['${', '}'],
+  props: {
+    badge: {
+      /* Content for a badge inside the button */
+      type: String,
+      required: false
+    },
+    badgeicon: {
+      /* Icon for a badge inside the button, must contain icon and space prop */
+      type: Object,
+      required: false
+    },
+    icon: {
+      /* fa icon name, if set icon will be displayed in front of button text */
+      type: String,
+      required: false
+    },
+    iconClass: {
+      /* custom css classes for the icon */
+      type: String,
+      required: false,
+      default: ''
+    },
+    outline: {
+      /* if set, outline variant will be used */
+      type: Boolean,
+      default: false,
+      required: false
+    },
+    sm: {
+      /* default: true, if set, smaller variant with less borders will be used */
+      type: Boolean,
+      default: true,
+      required: false
+    },
+    space: {
+      /* fa icon namespace (fas, far, etc) */
+      type: String,
+      required: false
+    },
+    subject: {
+      /* event name that is emitted for the click event, if not set, title will be used */
+      type: String,
+      required: false
+    },
+    title: {
+      /* text to show in the button, empty for icon only button */
+      type: String,
+      required: false,
+      default: ''
+    },
+    variant: {
+      /* css class of the button (default = common) */
+      type: String,
+      required: false,
+      default: 'common'
+    }
+  },
+  template: '#rc-button-template',
+    methods: {
+      onClick: function() {
+        console.log('@onClick')
+        this.$emit('click', this.subject ? this.subject : this.title)
+      }
+    }
+})
 Vue.component('rc-navbar', {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
@@ -351,27 +383,6 @@ Vue.component('rc-navbar', {
     }
   }
 })
-const SearchRecipe = {
-  delimiters: ['${', '}'],
-  props: ['page', 'user'],
-  template: '#rc-search-template',
-  computed: {
-  },
-  methods: {
-    onClick: function() {
-      if (this.page.search.filter.global.length >= 3)
-        app.debouncedSearch()
-      else
-        app.$router.push({ name: 'recipes' })
-    },
-    onSearchItemClicked: function(index, id, name) {
-      app.$router.push({ name: 'recipe', params: { id: id, name: name } })
-    },
-    published: function(recipe) {
-      return moment(recipe.published, moment.ISO_8601).format(this.user.customSettings.formats.date.long)
-    }
-  }
-}
 const RecipesCreator = {
   delimiters: ['${', '}'],
   props: ['page', 'user'],
@@ -669,13 +680,98 @@ const RecipeGallery = {
     }
   }
 }
+const SearchRecipe = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user'],
+  template: '#rc-search-template',
+  computed: {
+  },
+  methods: {
+    onClick: function() {
+      if (this.page.search.filter.global.length >= 3)
+        app.debouncedSearch()
+      else
+        app.$router.push({ name: 'recipes' })
+    },
+    onSearchItemClicked: function(index, id, name) {
+      app.$router.push({ name: 'recipe', params: { id: id, name: name } })
+    },
+    published: function(recipe) {
+      return moment(recipe.published, moment.ISO_8601).format(this.user.customSettings.formats.date.long)
+    }
+  }
+}
+const UserLogin = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user', 'config'],
+  template: '#login-template',
+  data: function() {
+    return {
+      username: '',
+      password: '',
+      keepSession: false,
+      submitted: false,
+      submitting: false
+    }
+  },
+  computed: {
+    usernamestate: function() {
+      return (!this.submitted || (this.username !== '' && this.username.length > 3)) && this.username.length <= 32
+    },
+    passwordstate: function() {
+      return !this.submitted || (this.password !== '' && this.password.length > 4)
+    }
+  },
+  methods: {
+    onLoginSubmit: function(e) {
+      this.submitted = true
+      e.preventDefault()
+      if (this.username === '' || this.username.length < 3 || this.username.length > 32)
+        return false
+      if (this.password === '' || this.password.length < 5)
+        return false
+
+      app.$set(app.page, 'updating', true)
+      var m0 = performance.now()
+      $.ajax({
+        url: '/api/login',
+        method: 'POST',
+        data: {
+          userid: this.username,
+          userpwd: this.password,
+          keepsession: this.keepSession
+        }
+      })
+      .done(function(data) {
+        console.log(data)
+        if (data.success == true) {
+          updateProps(data, app)
+        } else {
+          app.$set(app.page.modals.failedModal, 'message', app.$t(data.i18nmessage))
+          app.$set(app.page.modals.failedModal, 'code', data.code)
+          $('#action-failed-modal').modal('show')
+        }
+        app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+        app.$set(app.page, 'updating', false)
+      })
+      .fail(function(jqXHR, textStatus) {
+        console.log(jqXHR, textStatus)
+        app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+        app.$set(app.page, 'updating', false)
+        app.$set(app.page.modals.failedModal, 'message', jqXHR + textStatus)
+        app.$set(app.page.modals.failedModal, 'code', -1)
+        $('#action-failed-modal').modal('show')
+      })
+
+    }
+  }
+}
 const router = new VueRouter({
   mode: 'history',
   routes: [
     { name: 'account', path: '/profile', children: [
       { name: 'settings', path: 'settings' }
     ]},
-    { name: 'logout', path: '/logout', component: Logout },
     { name: 'admin', path: '/admin', children: [
       { name: 'configuration', path: 'configuration' },
       { name: 'cronjobs', path: 'cronjobs' },
@@ -683,20 +779,20 @@ const router = new VueRouter({
       { name: 'logs', path: 'logs' },
       { name: 'users', path: 'users' }
     ]},
+    { name: 'editRecipe', path: '/recipe/:id(.+)-:name([^/]*)/edit', component: RecipeEditor },
+    { name: 'gallery', path: '/recipe/:id(.+)-:name([^/]*)/gallery', component: RecipeGallery },
     { name: 'home', path: '/home', alias: '/', component: Home },
-    { name: 'login', path: '/login', component: Login },
+    { name: 'login', path: '/login', component: UserLogin },
+    { name: 'logout', path: '/logout', component: Logout },
+    { name: 'lostPwd', path: '/pwlost' },
     { name: 'random', path: '/random/:id?' },
     { name: 'recipe', path: '/recipe/:id(.+)-:name([^/]*)', component: Recipe },
-    { name: 'gallery', path: '/recipe/:id(.+)-:name([^/]*)/gallery', component: RecipeGallery },
-    { name: 'editRecipe', path: '/recipe/:id(.+)-:name([^/]*)/edit', component: RecipeEditor },
     { name: 'recipes', path: '/recipes', component: RecipesList, children: [
       { name: 'myRecipes', path: 'my' },
       { name: 'userRecipes', path: 'user/:id(.+)-:name([^/]*)' }
     ]},
     { name: 'search', path: '/search', component: SearchRecipe },
-    { name: 'user', path: '/user/:id(.+)-:name([^/]*)', children: [
-
-    ]},
+    { name: 'user', path: '/user/:id(.+)-:name([^/]*)'},
     { name: 'writeRecipe', path: '/write', component: RecipesCreator },
   ]
 })
@@ -715,8 +811,8 @@ var app = new Vue({
     window.addEventListener("resize", this.onResize)
     this.debouncedSearch = _.debounce(this.getSearchResults, 500)
     var lgspy = $('#reactive-size-spy-lg');
-    CommonData.page.sidebar.visible = (lgspy.css("display") == "block")
-    CommonData.page.sidebar.initialVisible = (lgspy.css("display") == "block")
+    CommonData.page.sidebar.visible = (lgspy.css("display") == "block" && CommonData.user.loggedIn)
+    CommonData.page.sidebar.initialVisible = (lgspy.css("display") == "block" && CommonData.user.loggedIn)
     if (CommonData.page.sidebar.visible == false) {
       $('#sidebar-main').css("display", "none")
       $('#sidebar-main').prop("aria-hidden", "true")
@@ -728,6 +824,8 @@ var app = new Vue({
   mounted: function() {
     if (!CommonData.user.loggedIn && this.$route.name !== 'login')
       this.$router.push({name: 'login'})
+    else if (CommonData.user.loggedIn && this.$route.name === 'login')
+      this.$router.push({name: 'home'})
     refreshPageData(this.$route.path, this)
   },
   computed: {
@@ -747,10 +845,9 @@ var app = new Vue({
   },
   methods: {
     onResize: function() {
-      var smspy = $('#reactive-size-spy-sm');
       var lgspy = $('#reactive-size-spy-lg');
       if (this.page.sidebar.visible != (lgspy.css("display") == "block")) {
-        this.$set(this.page.sidebar, 'visible', (lgspy.css("display") == "block"))
+        this.$set(this.page.sidebar, 'visible', (lgspy.css("display") == "block" && CommonData.user.loggedIn))
         if (this.page.sidebar.visible == false) {
           $('#sidebar-main').css("display", "none")
           $('#sidebar-main').prop("aria-hidden", "true")
@@ -820,6 +917,9 @@ router.afterEach((to, from) => {
       .then(() => {
         window.location = '/';
       })
+  } else if (to.name == 'login') {
+    if (app.user.loggedIn)
+      window.location = '/';
   }
 })
 
