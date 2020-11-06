@@ -241,8 +241,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
   }
 
   private function loginCli() : bool {
-    $this->currentUser = $this->loadUser(1);
-    return !is_null($this->currentUser);
+    return true;
   }
 
   private function loginWithCookies() : bool {
