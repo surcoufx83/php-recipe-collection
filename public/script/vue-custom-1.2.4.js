@@ -148,12 +148,6 @@ const Home = {
   }
 }
 
-const Login = {
-  delimiters: ['${', '}'],
-  props: ['page', 'user', 'config'],
-  template: '#login-template'
-}
-
 const Logout = {
   delimiters: ['${', '}'],
   props: ['page', 'user', 'config'],
@@ -356,7 +350,7 @@ Vue.component('rc-button', {
     }
   },
   template:
-    `<b-button :size="sm ? 'sm' : 'md'"
+    `<b-button :size="sm === true ? 'sm' : 'md'"
       :variant="outline ? 'outline-elemental' : 'elemental'"
       @click="onClick">
       <fa-icon v-if="icon" :icon="icon" :space="space" :class="['fs-80 ', title === '' ? 'mx-1' : 'mr-1']"></fa-icon>
@@ -709,13 +703,77 @@ const SearchRecipe = {
     }
   }
 }
+const UserLogin = {
+  delimiters: ['${', '}'],
+  props: ['page', 'user', 'config'],
+  template: '#login-template',
+  data: function() {
+    return {
+      username: '',
+      password: '',
+      keepSession: false,
+      submitted: false,
+      submitting: false
+    }
+  },
+  computed: {
+    usernamestate: function() {
+      return (!this.submitted || (this.username !== '' && this.username.length > 3)) && this.username.length <= 32
+    },
+    passwordstate: function() {
+      return !this.submitted || (this.password !== '' && this.password.length > 4)
+    }
+  },
+  methods: {
+    onLoginSubmit: function(e) {
+      this.submitted = true
+      e.preventDefault()
+      if (this.username === '' || this.username.length < 3 || this.username.length > 32)
+        return false
+      if (this.password === '' || this.password.length < 5)
+        return false
+
+      app.$set(app.page, 'updating', true)
+      var m0 = performance.now()
+      $.ajax({
+        url: '/api/login',
+        method: 'POST',
+        data: {
+          userid: this.username,
+          userpwd: this.password,
+          keepsession: this.keepSession
+        }
+      })
+      .done(function(data) {
+        console.log(data)
+        if (data.success == true) {
+          updateProps(data, app)
+        } else {
+          app.$set(app.page.modals.failedModal, 'message', app.$t(data.i18nmessage))
+          app.$set(app.page.modals.failedModal, 'code', data.code)
+          $('#action-failed-modal').modal('show')
+        }
+        app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+        app.$set(app.page, 'updating', false)
+      })
+      .fail(function(jqXHR, textStatus) {
+        console.log(jqXHR, textStatus)
+        app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
+        app.$set(app.page, 'updating', false)
+        app.$set(app.page.modals.failedModal, 'message', jqXHR + textStatus)
+        app.$set(app.page.modals.failedModal, 'code', -1)
+        $('#action-failed-modal').modal('show')
+      })
+
+    }
+  }
+}
 const router = new VueRouter({
   mode: 'history',
   routes: [
     { name: 'account', path: '/profile', children: [
       { name: 'settings', path: 'settings' }
     ]},
-    { name: 'logout', path: '/logout', component: Logout },
     { name: 'admin', path: '/admin', children: [
       { name: 'configuration', path: 'configuration' },
       { name: 'cronjobs', path: 'cronjobs' },
@@ -723,20 +781,20 @@ const router = new VueRouter({
       { name: 'logs', path: 'logs' },
       { name: 'users', path: 'users' }
     ]},
+    { name: 'editRecipe', path: '/recipe/:id(.+)-:name([^/]*)/edit', component: RecipeEditor },
+    { name: 'gallery', path: '/recipe/:id(.+)-:name([^/]*)/gallery', component: RecipeGallery },
     { name: 'home', path: '/home', alias: '/', component: Home },
-    { name: 'login', path: '/login', component: Login },
+    { name: 'login', path: '/login', component: UserLogin },
+    { name: 'logout', path: '/logout', component: Logout },
+    { name: 'lostPwd', path: '/pwlost' },
     { name: 'random', path: '/random/:id?' },
     { name: 'recipe', path: '/recipe/:id(.+)-:name([^/]*)', component: Recipe },
-    { name: 'gallery', path: '/recipe/:id(.+)-:name([^/]*)/gallery', component: RecipeGallery },
-    { name: 'editRecipe', path: '/recipe/:id(.+)-:name([^/]*)/edit', component: RecipeEditor },
     { name: 'recipes', path: '/recipes', component: RecipesList, children: [
       { name: 'myRecipes', path: 'my' },
       { name: 'userRecipes', path: 'user/:id(.+)-:name([^/]*)' }
     ]},
     { name: 'search', path: '/search', component: SearchRecipe },
-    { name: 'user', path: '/user/:id(.+)-:name([^/]*)', children: [
-
-    ]},
+    { name: 'user', path: '/user/:id(.+)-:name([^/]*)'},
     { name: 'writeRecipe', path: '/write', component: RecipesCreator },
   ]
 })
@@ -755,8 +813,8 @@ var app = new Vue({
     window.addEventListener("resize", this.onResize)
     this.debouncedSearch = _.debounce(this.getSearchResults, 500)
     var lgspy = $('#reactive-size-spy-lg');
-    CommonData.page.sidebar.visible = (lgspy.css("display") == "block")
-    CommonData.page.sidebar.initialVisible = (lgspy.css("display") == "block")
+    CommonData.page.sidebar.visible = (lgspy.css("display") == "block" && CommonData.user.loggedIn)
+    CommonData.page.sidebar.initialVisible = (lgspy.css("display") == "block" && CommonData.user.loggedIn)
     if (CommonData.page.sidebar.visible == false) {
       $('#sidebar-main').css("display", "none")
       $('#sidebar-main').prop("aria-hidden", "true")
@@ -789,10 +847,9 @@ var app = new Vue({
   },
   methods: {
     onResize: function() {
-      var smspy = $('#reactive-size-spy-sm');
       var lgspy = $('#reactive-size-spy-lg');
       if (this.page.sidebar.visible != (lgspy.css("display") == "block")) {
-        this.$set(this.page.sidebar, 'visible', (lgspy.css("display") == "block"))
+        this.$set(this.page.sidebar, 'visible', (lgspy.css("display") == "block" && CommonData.user.loggedIn))
         if (this.page.sidebar.visible == false) {
           $('#sidebar-main').css("display", "none")
           $('#sidebar-main').prop("aria-hidden", "true")

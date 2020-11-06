@@ -46,6 +46,7 @@ final class Config implements ConfigInterface {
        70 => ['code' =>  70, 'message' => '', 'i18nmessage' => 'responseMessages.parameterException', 'success' => false],
        71 => ['code' =>  71, 'message' => '', 'i18nmessage' => 'responseMessages.functionNotFoundException', 'success' => false],
        80 => ['code' =>  80, 'message' => '', 'i18nmessage' => 'responseMessages.badArgumentsException', 'success' => false],
+       81 => ['code' =>  81, 'message' => '', 'i18nmessage' => 'responseMessages.missingArgumentsException', 'success' => false],
        90 => ['code' =>  90, 'message' => '', 'i18nmessage' => 'responseMessages.validationSucceeded', 'success' => true],
        91 => ['code' =>  91, 'message' => '', 'i18nmessage' => 'responseMessages.validationFailed', 'success' => false],
        92 => ['code' =>  92, 'message' => '', 'i18nmessage' => 'responseMessages.notAllowedException', 'success' => false],

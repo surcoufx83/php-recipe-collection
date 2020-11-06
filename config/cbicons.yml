@@ -5,6 +5,9 @@
 add:
   icon: plus-circle
   space: fas
+authUser:
+  icon: id-card
+  space: far
 back:
   icon: arrow-left
   space: fas
@@ -13,6 +16,9 @@ calendar:
   space: far
 cloud:
   icon: cloud
+  space: fas
+credentials:
+  icon: key
   space: fas
 delete:
   icon: trash-alt
@@ -52,6 +58,9 @@ nouser:
   space: fas
 play:
   icon: play
+  space: fas
+question:
+  icon: question-circle
   space: fas
 random:
   icon: dice
