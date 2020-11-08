@@ -47,6 +47,21 @@ const RecipeEditor = {
              parent.form.completed = true
              parent.progress.responseSuccess = true
              parent.progress.responseId = data.recipeId
+             var cooking = 0
+             var preparing = 0
+             var rest = 0
+             for (i=0; i<parent.page.currentRecipe.preparation.steps.length; i++) {
+               if (parent.page.currentRecipe.preparation.steps[i].timeConsumed.cooking !== "")
+                 cooking += parseInt(parent.page.currentRecipe.preparation.steps[i].timeConsumed.cooking)
+               if (parent.page.currentRecipe.preparation.steps[i].timeConsumed.preparing !== "")
+                 preparing += parseInt(parent.page.currentRecipe.preparation.steps[i].timeConsumed.preparing)
+               if (parent.page.currentRecipe.preparation.steps[i].timeConsumed.rest !== "")
+                 rest += parseInt(parent.page.currentRecipe.preparation.steps[i].timeConsumed.rest)
+             }
+             parent.page.currentRecipe.preparation.timeConsumed.cooking = cooking
+             parent.page.currentRecipe.preparation.timeConsumed.preparing = preparing
+             parent.page.currentRecipe.preparation.timeConsumed.rest = rest
+             parent.page.currentRecipe.preparation.timeConsumed.total = cooking + preparing + rest
            } else {
              parent.progress.responseSuccess = false
            }
