@@ -25,7 +25,7 @@ class RecipeListRoute extends Route implements RouteInterface {
     $response = $Controller->Config()->getResponseArray(1);
 
     $home = $Controller->Dispatcher()->getFromMatches('home');
-    if ($home == 'home')
+    if ($home == '/home' || $home == '/')
       $filter = 'home';
 
     $countQuery = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
