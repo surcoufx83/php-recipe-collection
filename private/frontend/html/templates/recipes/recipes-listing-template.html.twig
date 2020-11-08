@@ -41,7 +41,7 @@
             ${ record.voting }
             <span class="text-small">(${ $tc('pages.recipes.common.votings', record.votes) })</span>
           </span>
-          <span class="text-muted" v-if="record.votes != 0">
+          <span class="text-muted" v-if="this.recipe.published != false">
             <span class="mx-2" v-if="record.views != 0 || record.cooked != 0 || record.comments != 0 || record.votes != 0">&bull;</span>
             <fa-icon :icon="page.iconSet.calendar.icon" :space="page.iconSet.calendar.space" class="text-small text-contrast"></fa-icon>
             <span v-text="pubdate"></span>
