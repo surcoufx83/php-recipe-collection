@@ -18,5 +18,4 @@ define('DIR_PUBLIC', realpath(__DIR__.DS.'public'));
 define('DIR_PUBLIC_IMAGES', realpath(__DIR__.DS.'public'.DS.'pictures'));
 
 require_once realpath(__DIR__.DS.'vendor'.DS.'autoload.php');
-require_once __DIR__.DS.'vendor'.DS.'surcoufx83'.DS.'php-i18n'.DS.'i18n.class.php';
 require_once realpath(__DIR__.DS.'private'.DS.'autoload.php');
