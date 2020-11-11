@@ -7,7 +7,7 @@ use Surcouf\Cookbook\DbObjectInterface;
 if (!defined('CORE2'))
   exit;
 
-class Unit implements UnitInterface, DbObjectInterface {
+class Unit implements UnitInterface, DbObjectInterface, \JsonSerializable {
 
   protected $unit_id,
             $unit_name;
@@ -36,6 +36,13 @@ class Unit implements UnitInterface, DbObjectInterface {
 
   public function hasId() : bool {
     return !is_null($this->unit_id);
+  }
+
+  public function jsonSerialize() {
+    return [
+      'id' => $this->unit_id,
+      'name' => $this->unit_name,
+    ];
   }
 
 }

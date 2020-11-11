@@ -70,7 +70,10 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
       $this->user_registration_completed = (!is_null($this->user_registration_completed) ? new DateTime($this->user_registration_completed) : null);
       $this->user_adconsent = (!is_null($this->user_adconsent) ? new DateTime($this->user_adconsent) : false);
     }
-    $this->initials = strtoupper(substr($this->user_firstname, 0, 1).substr($this->user_lastname, 0, 1));
+    if ($this->user_firstname != '' || $this->user_lastname != '')
+      $this->initials = strtoupper(substr($this->user_firstname, 0, 1).substr($this->user_lastname, 0, 1));
+    else
+      $this->initials = strtoupper(substr($this->getUsername(), 0, 1));
     if (is_null($this->user_hash))
       $this->calculateHash();
     if (is_null($this->user_avatar))
@@ -103,8 +106,8 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
     $session_password4hash = HashHelper::hash(substr($session_token, 0, 16));
     $session_password4hash .= $session_password;
     $session_password4hash .= HashHelper::hash(substr($session_token, 16));
-    $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => 12]);
-    $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => 12]);
+    $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
+    $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
 
     if ($Controller->setSessionCookies($this->user_email, $session_token, $session_password, $keepSession)) {
       $tokenstr = (!is_null($token) ? json_encode($token->jsonSerialize()) : NULL);
@@ -197,7 +200,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   }
 
   public function getUsername() : string {
-    return (!is_null($this->user_name) ? $this->user_name : $this->oauth_user_name);
+    return (!is_null($this->oauth_user_name) ? $this->oauth_user_name : $this->user_name);
   }
 
   public function getValidationCode() : string {
@@ -294,7 +297,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   public function setPassword(string $newPassword, string $oldPassword) : bool {
     global $Controller;
     if ($this->user_password == '********' || password_verify($oldPassword, $this->user_password)) {
-      $this->user_password = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => 12]);
+      $this->user_password = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
       $this->changes['user_password'] = $this->user_password;
       $Controller->updateDbObject($this);
       return true;
@@ -325,8 +328,8 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   public function verify(string $password) : bool {
     global $Controller;
     if (password_verify($password, $this->user_password)) {
-      if (password_needs_rehash($this->user_password, PASSWORD_ARGON2I, ['threads' => 12])) {
-        $this->user_password = password_hash($password, PASSWORD_ARGON2I, ['threads' => 12]);
+      if (password_needs_rehash($this->user_password, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')])) {
+        $this->user_password = password_hash($password, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
         $this->changes['user_password'] = $this->user_password;
         $Controller->updateDbObject($this);
       }
