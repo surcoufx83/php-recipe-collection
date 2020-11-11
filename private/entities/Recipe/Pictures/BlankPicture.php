@@ -32,35 +32,18 @@ class BlankPicture extends Picture implements HashableInterface {
     return $this->picture_hash;
   }
 
-  private function cropImage(string $path, ?int $width=null, ?int $height=null) : string {
-    $sizestr = sprintf('%dx%d', $width ?? 0, $height ?? 0);
-    $filename =  $this->picture_hash.$this->recipe_id.$sizestr.'.'.$this->getExtension();
-    $path = FilesystemHelper::paths_combine($path, $filename);
-    if (FilesystemHelper::file_exists($path))
-      return $filename;
-    $copyfile = copy($this->path, $path);
-    $img = new Image($path);
-    $img->disableRename();
-    if (!is_null($width) && !is_null($height))
-      $img->resizeCrop($width, $height);
-    else if (!is_null($width))
-      $img->resizeCrop($width);
-    else
-      $img->resizeCrop($height);
-    $img->output(FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages'));
-    return $filename;
+  public function getFolderName() : string {
+    return substr($this->picture_filename, 0, 2);
   }
 
-  public function moveTo(string $path, int $recipeId) : bool {
+  public function moveTo(int $recipeId) : bool {
     $this->recipe_id = $recipeId;
-    try {
-      $this->picture_filename = $this->cropImage($path, 1920, 1080);
-      $this->picture_full_path = FilesystemHelper::paths_combine($path, $this->picture_filename);
-      $this->cropImage($path, 60);
-    } catch(Exception $e) {
-      return false;
-    }
-    return true;
+    $this->picture_filename = $this->picture_hash.$this->recipe_id.'.'.$this->getExtension();
+    $folder = FilesystemHelper::paths_combine(DIR_PUBLIC_IMAGES, 'cbimages', $this->getFolderName());
+    if (!is_dir($folder))
+      mkdir($folder, 0711, true);
+    $this->picture_full_path = FilesystemHelper::paths_combine($folder, $this->picture_filename);
+    return move_uploaded_file($this->path, $this->picture_full_path);
   }
 
   public function setId(int $newId) : PictureInterface {

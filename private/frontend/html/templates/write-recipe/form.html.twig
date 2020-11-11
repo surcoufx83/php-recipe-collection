@@ -1,0 +1,496 @@
+    <template id="recipe-write-template">
+      <b-container>
+
+        <b-form
+          @submit="onSubmit"
+          class="needs-validation"
+          autocomplete="off" novalidate
+          enctype="multipart/form-data"
+          id="new-recipe-form"
+          v-if="page != null && !page.loading && page.currentRecipe != null">
+
+          <b-row><!-- header title + description -->
+            <b-col cols="12" v-if="page.currentRecipe.id == 0">
+              <h4 v-text="$t('pages.writeRecipe.intro.header')"></h4>
+              <p v-html="$t('pages.writeRecipe.intro.subject')"></p>
+              <p v-html="$t('pages.writeRecipe.intro.requiredFields')"></p>
+            </b-col>
+            <b-col cols="12" v-else>
+              <h4 v-text="$t('pages.writeRecipe.intro.editHeader')"></h4>
+            </b-col>
+          </b-row><!-- header title + description -->
+
+          <b-row class="mt-3" align-h="between"><!-- heading common data + pictures -->
+            <b-col cols="12" lg="5">
+              <h5 v-text="$t('pages.writeRecipe.chapter1.header')"></h5>
+            </b-col>
+            <b-col cols="12" lg="6" class="d-none d-lg-block" v-if="page.currentRecipe.id == 0">
+              <h5 v-text="$t('pages.writeRecipe.chapter3.header')"></h5>
+            </b-col>
+            <b-col cols="12" lg="6" class="d-none d-lg-block" v-else>
+              <h5 v-text="$t('pages.writeRecipe.chapter3.header2')"></h5>
+            </b-col>
+          </b-row><!-- heading common data + pictures -->
+
+          <b-row align-h="between" class="mt-2"><!-- form common data + pictures -->
+
+            <b-col cols="12" lg="5"><!-- form common data -->
+
+              <b-form-row><!-- form recipe name -->
+                <b-form-group
+                  id="recipe-name-group"
+                  label-for="recipe-name-input"
+                  :description="$t('pages.writeRecipe.chapter1.recipeName.description')"
+                  :invalid-feedback="$t('pages.writeRecipe.chapter1.recipeName.invalidFeedback')"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b>${ $t('pages.writeRecipe.chapter1.recipeName.title') } <span class='text-contrast'>*</span></b>
+                  </template>
+                  <b-form-input
+                    id="recipe-name-input"
+                    name="recipe-name"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.name"
+                    :placeholder="$t('pages.writeRecipe.chapter1.recipeName.placeholder')"
+                    required trim>
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row><!-- form recipe name -->
+
+              <b-form-row><!-- form recipe description -->
+                <b-form-group
+                  id="recipe-description-group"
+                  label-for="recipe-description-input"
+                  :description="$t('pages.writeRecipe.chapter1.recipeDescription.description')"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b v-text="$t('pages.writeRecipe.chapter1.recipeDescription.title')"></b>
+                  </template>
+                  <b-form-textarea
+                    id="recipe-description-input"
+                    name="recipe-description"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.description"
+                    rows="3" max-rows="10"
+                    :placeholder="$t('pages.writeRecipe.chapter1.recipeDescription.placeholder')"
+                    trim>
+                  </b-form-textarea>
+                </b-form-group>
+              </b-form-row><!-- form recipe description -->
+
+              <b-form-row><!-- form recipe eater -->
+                <b-form-group
+                  id="recipe-eater-group"
+                  label-for="recipe-eater-input"
+                  :description="$t('pages.writeRecipe.chapter1.recipeEater.description')"
+                  :invalid-feedback="$t('pages.writeRecipe.chapter1.recipeEater.invalidFeedback')"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b>${ $t('pages.writeRecipe.chapter1.recipeEater.title') } <span class='text-contrast'>*</span></b>
+                  </template>
+                  <b-form-input
+                    id="recipe-eater-input"
+                    name="recipe-eater"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.eaterCount"
+                    type="number" min="1" max="100"
+                    :class="'w-75px'"
+                    :placeholder="$t('pages.writeRecipe.chapter1.recipeEater.placeholder')"
+                    required>
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row><!-- form recipe eater -->
+
+            </b-col><!-- form common data -->
+
+            <b-col cols="12" lg="6" v-if="page.currentRecipe.id == 0"><!-- form pictures -->
+
+              <b-row class="d-block d-lg-none row mt-3"><!-- form pictures sm title -->
+                <b-col cols="12">
+                  <h5 v-text="$t('pages.writeRecipe.chapter3.header')"></h5>
+                </b-col>
+              </b-row><!-- form pictures sm title -->
+
+              <b-form-row>
+                <b-form-group
+                  id="recipe-pictures-group"
+                  :description="$t('pages.writeRecipe.chapter3.pictures.description')"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b v-text="$t('pages.writeRecipe.chapter3.pictures.title')"></b>
+                  </template>
+                  <b-row>
+                    <b-col
+                      v-for="(picture, index) in page.currentRecipe.pictures"
+                      :key="index"
+                      class="p-1 col-6">
+                      <div class="removable-image-area">
+                        <b-img src="/pictures/_dummy.jpg"
+                          :id="'picture-image-' + index"
+                          thumbnail fluid class="rounded of-cover"></b-img>
+                        <rc-button
+                          title="" class="remove-image fs-80 p-0" style="display: inline;"
+                          :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                          @click="onPictureDelBtnClick(index)">
+                        </rc-button>
+                        <b-form-file
+                          v-model="picture.file"
+                          :id="'file-' + index"
+                          :name="'recipe-picture-' + index"
+                          accept="image/jpeg, image/png"
+                          class="image-upload-input" style="width: 0px; height: 0px; overflow: hidden;"
+                          @input="onPictureInput(index)"></b-form-file>
+                      </div>
+                    </b-col>
+                  </b-row>
+
+                  <b-form-row
+                    class="mb-2"> <!-- add ingredient button -->
+                    <b-col cols="5" md="2" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
+                      <rc-button
+                        title="" class="w-75px"
+                        :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+                        @click="onPictureAddBtnClick()">
+                      </rc-button>
+                    </b-col>
+                  </b-form-row> <!-- add ingredient button -->
+
+                </b-form-group>
+              </b-form-row>
+
+            </b-col><!-- form pictures -->
+            <b-col cols="12" lg="6" v-else><!-- form pictures link -->
+
+              <b-row class="d-block d-lg-none row mt-3"><!-- form pictures sm title -->
+                <b-col cols="12">
+                  <h5 v-text="$t('pages.writeRecipe.chapter3.header2')"></h5>
+                  <p><router-link
+                    :to="{ name: 'gallery', params: { id: ''+page.currentRecipe.id, name: ''+page.currentRecipe.name } }">
+                    <fa-icon :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space" class="mr-2"></fa-icon>
+                    ${ $t('pages.writeRecipe.chapter3.togalleryLink') }</router-link>
+                  </p>
+                </b-col>
+              </b-row><!-- form pictures sm title -->
+
+              <b-row class="d-none d-lg-block row"><!-- form pictures lg title -->
+                <b-col cols="12">
+                  <p><router-link
+                    :to="{ name: 'gallery', params: { id: ''+page.currentRecipe.id, name: ''+page.currentRecipe.name } }">
+                    <fa-icon :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space" class="mr-2"></fa-icon>
+                    ${ $t('pages.writeRecipe.chapter3.togalleryLink') }</router-link>
+                  </p>
+                </b-col>
+              </b-row><!-- form pictures lg title -->
+
+            </b-col><!-- form pictures link -->
+
+          </b-row><!-- form common data + pictures -->
+
+          <b-row class="mt-3"><!-- heading ingredients -->
+            <b-col cols="12" lg="6">
+              <h5>${ $t('pages.writeRecipe.chapter2.header') } <span class="text-contrast">*</span></h5>
+              <p v-text="$t('pages.writeRecipe.chapter2.description')"></p>
+            </b-col>
+          </b-row><!-- heading ingredients -->
+
+          <b-row class="mt-3"><!-- ingredients -->
+            <b-col cols="12" class="px-3 px-lg-5"
+              v-if="page.currentRecipe != undefined && page.currentRecipe.preparation != undefined">
+
+              <b-form-row><!-- ingredients header -->
+                <b-col cols="3" md="2" class="px-1 px-md-2 mb-2">
+                  <b class="ml-1" v-text="$t('pages.writeRecipe.chapter2.quantity.header')"></b><br />
+                  <span class="ml-2 text-muted text-small text-nowrap"
+                    v-text="$t('pages.writeRecipe.chapter2.quantity.placeholder')"></span>
+                </b-col>
+                <b-col cols="3" class="px-1 px-md-2 mb-2">
+                  <b class="ml-1" v-text="$t('pages.writeRecipe.chapter2.unit.header')"></b><br />
+                  <span class="ml-2 text-muted text-small text-nowrap"
+                    v-text="$t('pages.writeRecipe.chapter2.unit.placeholder')"></span>
+                </b-col>
+                <b-col cols="6" class="px-1 px-md-2 mb-2">
+                  <b class="ml-1" v-text="$t('pages.writeRecipe.chapter2.ingredient.header')"> <span class="text-contrast">*</span></b><br />
+                  <span class="ml-2 text-muted text-small text-nowrap"
+                    v-text="$t('pages.writeRecipe.chapter2.ingredient.placeholder')"></span>
+                </b-col>
+              </b-form-row><!-- ingredients header -->
+
+              <b-form-row
+                class="mb-2 draggable-item"
+                v-for="(ingredient, index) in page.currentRecipe.preparation.ingredients"
+                :key="index"> <!-- ingredient -->
+                <b-col cols="5" md="2" class="px-1 px-md-2 mb-2 mb-md-0">
+                  <b-form-input
+                    :id="'ingredient-quantity-' + index"
+                    name="recipe-ingredient-quantity[]"
+                    size="sm"
+                    v-model="ingredient.quantity"
+                    type="number"
+                    :placeholder="$t('pages.writeRecipe.chapter2.quantity.header')"
+                    >
+                  </b-form-input>
+                </b-col>
+                <b-col cols="5" md="3" class="px-1 px-md-2 mb-2 mb-md-0">
+                  <b-form-input
+                    :id="'ingredient-unit-' + index"
+                    name="recipe-ingredient-unit[]"
+                    size="sm"
+                    v-model="ingredient.unit.name"
+                    type="text"
+                    :placeholder="$t('pages.writeRecipe.chapter2.unit.noUnit')"
+                    >
+                  </b-form-input>
+                </b-col>
+                <b-col cols="10" md="6" class="px-1 px-md-2 mb-2 mb-md-0">
+                  <b-form-input
+                    :id="'ingredient-description-' + index"
+                    name="recipe-ingredient-description[]"
+                    size="sm"
+                    v-model="ingredient.description"
+                    type="text"
+                    :placeholder="$t('pages.writeRecipe.chapter2.ingredient.header')"
+                    :required="index == 0">
+                  </b-form-input>
+                </b-col>
+                <b-col cols="2" md="1" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
+                  <rc-button
+                    title="" class="w-75px"
+                    :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                    @click="onIngredientDelBtnClick(index)"></rc-button>
+                </b-col>
+              </b-form-row><!-- ingredient -->
+
+              <b-row
+                class="mb-2"  align-h="center"> <!-- add ingredient button -->
+                <b-col cols="12" md="6" class="px-1 px-md-2 mb-2 mb-md-0 text-center" align-self="center">
+                  <rc-button
+                    title="" class="w-75px"
+                    :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+                    @click="onIngredientAddBtnClick()">
+                  </rc-button>
+                  <b-alert variant="danger"
+                    :show="form.validationFailed && page.currentRecipe.preparation.ingredients.length == 0"
+                    class="p-1 mt-2">
+                    <fa-icon
+                      :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"
+                      ></fa-icon>
+                    ${ $t('pages.writeRecipe.validation.missingIngredient') }
+                  </b-alert>
+                </b-col>
+              </b-row> <!-- add ingredient button -->
+
+            </b-col>
+          </b-row><!-- ingredients -->
+
+          <b-row class="mt-3"><!-- heading preparation -->
+            <b-col cols="12" lg="6">
+              <h5>${ $t('pages.writeRecipe.chapter4.header') } <span class="text-contrast">*</span></h5>
+              <p v-text="$t('pages.writeRecipe.chapter4.description')"></p>
+            </b-col>
+          </b-row><!-- heading preparation -->
+
+          <b-row class="mt-3"><!-- preparation -->
+            <b-col cols="12" class="px-3 px-lg-5"
+              v-if="page.currentRecipe != undefined && page.currentRecipe.preparation != undefined">
+
+              <b-form-row
+                class="mb-3 draggable-item"
+                v-for="(step, index) in page.currentRecipe.preparation.steps"
+                :key="index"> <!-- preparation step -->
+
+                <b-col cols="12" class="px-1 px-md-2 mb-2"> <!-- prep step header -->
+                  <h6><strong>${ index+1 }. ${ $t('pages.writeRecipe.chapter4.step.stepname') }${ step.name != '' ? ': ' : '' }${ step.name }</strong></h6>
+                </b-col> <!-- prep step header -->
+
+                <b-col cols="12" md="4" lg="3" class="px-1 px-md-2 mb-2"> <!-- prep step title -->
+                  <strong class="fs-80" v-text="$t('pages.writeRecipe.chapter4.step.title.description')"></strong>
+                </b-col>
+                <b-col cols="12" md="8" lg="9" class="px-1 px-md-2 mb-2">
+                  <b-form-input
+                    :id="'step-title-' + index"
+                    name="recipe-step-title[]"
+                    size="sm"
+                    v-model="step.name"
+                    type="text"
+                    :placeholder="$t('pages.writeRecipe.chapter4.step.title.placeholder')">
+                  </b-form-input>
+                </b-col> <!-- prep step title -->
+
+                <b-col cols="12" md="4" lg="3" class="px-1 px-md-2 mb-2"> <!-- prep step description -->
+                  <strong class="fs-80">
+                    ${ $t('pages.writeRecipe.chapter4.step.preparation.description') }
+                    <span class="text-contrast" v-if="index == 0"> *</span>
+                  </strong>
+                </b-col>
+                <b-col cols="12" md="8" lg="9" class="px-1 px-md-2 mb-2">
+                  <b-form-textarea
+                    :id="'step-description-' + index"
+                    name="recipe-step-description[]"
+                    size="sm" rows="4"
+                    v-model="step.userContent"
+                    :placeholder="$t('pages.writeRecipe.chapter4.step.preparation.placeholder')"
+                    :required="index == 0">
+                  </b-form-textarea>
+                </b-col> <!-- prep step description -->
+
+                <b-col cols="12" md="4" lg="3" class="px-1 px-md-2 mb-2"> <!-- prep step time consumed -->
+                  <strong class="fs-80" v-text="$t('pages.writeRecipe.chapter4.step.duration.description')"></strong>
+                </b-col>
+                <b-col cols="3" md="2" lg="2" class="px-1 px-md-2 mb-2">
+                  <b-form-input
+                    :id="'step-time-prep-' + index"
+                    name="recipe-step-time-prep[]"
+                    size="sm"
+                    v-model="step.timeConsumed.preparing"
+                    type="number" min="0" max="43200"
+                    :placeholder="$t('pages.writeRecipe.chapter4.step.duration.preparation')">
+                  </b-form-input>
+                </b-col>
+                <b-col cols="3" md="2" lg="2" class="px-1 px-md-2 mb-2">
+                  <b-form-input
+                    :id="'step-time-rest-' + index"
+                    name="recipe-step-time-rest[]"
+                    size="sm"
+                    v-model="step.timeConsumed.rest"
+                    type="number" min="0" max="43200"
+                    :placeholder="$t('pages.writeRecipe.chapter4.step.duration.rest')">
+                  </b-form-input>
+                </b-col>
+                <b-col cols="3" md="2" lg="2" class="px-1 px-md-2 mb-2">
+                  <b-form-input
+                    :id="'step-time-cook-' + index"
+                    name="recipe-step-time-cook[]"
+                    size="sm"
+                    v-model="step.timeConsumed.cooking"
+                    type="number" min="0" max="43200"
+                    :placeholder="$t('pages.writeRecipe.chapter4.step.duration.cooking')">
+                  </b-form-input>
+                </b-col>
+                <b-col cols="1" lg="2">&nbsp;</b-col>
+                <b-col cols="2" md="1" class="px-1 px-md-2 mb-2 mb-md-0 text-center">
+                  <rc-button
+                    title="" class="w-75px"
+                    :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                    @click="onStepDelBtnClick(index)"></rc-button>
+                </b-col> <!-- prep step time consumed -->
+
+              </b-form-row> <!-- preparation step -->
+
+              <b-row
+                class="mb-2" align-h="center"> <!-- add prep step button -->
+                <b-col cols="12" md="6" class="px-1 px-md-2 mb-2 mb-md-0 text-center" align-self="center">
+                  <rc-button
+                    title="" class="w-75px"
+                    :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+                    @click="onStepAddBtnClick()"></rc-button>
+                  <b-alert variant="danger"
+                    :show="form.validationFailed && page.currentRecipe.preparation.steps.length == 0"
+                    class="p-1 mt-2">
+                    <fa-icon
+                      :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"
+                      ></fa-icon>
+                    ${ $t('pages.writeRecipe.validation.missingStep') }
+                  </b-alert>
+                </b-col>
+              </b-row> <!-- add prep step button -->
+
+            </b-col>
+          </b-row><!-- preparation -->
+
+          <b-row class="mt-3"><!-- heading others -->
+            <b-col cols="12" lg="6">
+              <h5 v-text="$t('pages.writeRecipe.chapter5.header')"></h5>
+            </b-col>
+          </b-row><!-- heading others -->
+
+          <b-row class="mt-3"
+            v-if="page.currentRecipe != undefined && page.currentRecipe.source != undefined"><!-- others -->
+            <b-col cols="12" md="6"> <!-- source description -->
+
+              <b-form-row>
+                <b-form-group
+                  id="recipe-source"
+                  label-for="recipe-source-input"
+                  :description="$t('pages.writeRecipe.chapter5.sourceText.description')"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b v-text="$t('pages.writeRecipe.chapter5.sourceText.title')"></b>
+                  </template>
+                  <b-form-input
+                    id="recipe-source-input"
+                    name="recipe-source"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.source.description"
+                    :placeholder="$t('pages.writeRecipe.chapter5.sourceText.placeholder')"
+                    trim>
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row>
+
+            </b-col> <!-- source description -->
+
+            <b-col cols="12" md="6"> <!-- source url -->
+
+              <b-form-row>
+                <b-form-group
+                  id="recipe-sourceourl"
+                  label-for="recipe-sourceurl-input"
+                  :description="$t('pages.writeRecipe.chapter5.sourceUrl.description')"
+                  class="px-1 w-100">
+                  <template v-slot:label>
+                    <b v-text="$t('pages.writeRecipe.chapter5.sourceUrl.title')"></b>
+                  </template>
+                  <b-form-input
+                    id="recipe-sourceurl-input"
+                    name="recipe-sourceurl"
+                    size="sm" class="mt-2"
+                    v-model="page.currentRecipe.source.url"
+                    :placeholder="$t('pages.writeRecipe.chapter5.sourceUrl.placeholder')"
+                    trim>
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row>
+
+            </b-col> <!-- source url -->
+
+          </b-row><!-- others -->
+
+          <b-row class="mt-3" align-h="center"><!-- submit -->
+            <b-col cols="12" md="6" class="text-center" align-self="center">
+              <b-container
+                v-if="page.currentRecipe.id == 0">
+
+                <rc-button type="submit" :sm="false"
+                  v-if="!progress.sending && !form.completed"
+                  :icon="page.iconSet.play.icon" :space="page.iconSet.play.space"
+                  :title="$t('pages.writeRecipe.actions.submitButton.title')"></rc-button>
+
+                <rc-button type="submit" variant="success" :sm="false"
+                  v-if="!progress.sending && form.completed"
+                  :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"
+                  :title="$t('pages.writeRecipe.actions.submitButton.submitted')"></rc-button>
+
+              </b-container>
+              <b-container v-else>
+
+                <rc-button type="submit" :sm="false"
+                  v-if="!progress.sending && this.$route.name == 'editRecipe'"
+                  :icon="page.iconSet.play.icon" :space="page.iconSet.play.space"
+                  :title="$t('pages.writeRecipe.actions.submitButton.editTitle')"></rc-button>
+
+              </b-container>
+              <b-alert variant="danger"
+                :show="form.validationFailed"
+                class="p-1 mt-2">
+                <fa-icon
+                  :icon="page.iconSet.info.icon" :space="page.iconSet.info.space"
+                  ></fa-icon>
+                ${ $t('pages.writeRecipe.validation.missingInfo') }
+              </b-alert>
+            </b-col>
+          </b-row><!-- submit -->
+
+        </b-form>
+        {% include 'templates/write-recipe/modal.html.twig' %}
+      </b-container>
+    </template>

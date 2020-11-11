@@ -10,18 +10,12 @@ if (!defined('CORE2'))
 
 class OAuth2CallbackRoute extends Route implements RouteInterface {
 
-  private static $template = 'user/login';
-
   static function createOutput(array &$response) : bool {
     global $Controller;
-    if ($Controller->isAuthenticated())
+    if ($Controller->isAuthenticated()) // if already logged in -> show homepage
       $Controller->Dispatcher()->forwardTo($Controller->getLink('private:home'));
-    // if login successfull, dispatcher will forward the user
-    $Controller->Dispatcher()->finishOAuthLogin();
-
-    parent::addScript('auth-login');
-    parent::addToDictionary('LoginFailed', true);
-    return parent::render(self::$template, $response);
+    $response = $Controller->Config()->getResponseArray(32);
+    return $Controller->Dispatcher()->finishOAuthLogin($response); // in case of success -> dispatcher will forward the user
   }
 
 }

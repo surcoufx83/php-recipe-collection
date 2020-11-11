@@ -2,29 +2,28 @@
 
 namespace Surcouf\Cookbook\Database\Setup;
 
-use Surcouf\Cookbook\Database\DbConf;
-
 if (!defined('CORE2'))
   exit;
 
 final class DbSetup2 {
 
-  static function install(\Mysqli &$Database) : bool {
+  static function install(\Mysqli &$Database, string $dbname, string $dbuser) : bool {
     if (
       self::execute($Database, self::getQuery_createTable_cronjobs()) &&
-      self::execute($Database, self::getQuery_createTable_cronjobs_log()) &&
+      self::execute($Database, self::getQuery_createTable_cronjobs_log($dbname)) &&
       self::execute($Database, self::getQuery_createTable_tags()) &&
       self::execute($Database, self::getQuery_createTable_units()) &&
       self::execute($Database, self::getQuery_createTable_users()) &&
-      self::execute($Database, self::getQuery_createTable_user_logins()) &&
-      self::execute($Database, self::getQuery_createTable_recipes()) &&
-      self::execute($Database, self::getQuery_createTable_recipe_ingredients()) &&
-      self::execute($Database, self::getQuery_createTable_recipe_pictures()) &&
-      self::execute($Database, self::getQuery_createTable_recipe_ratings()) &&
-      self::execute($Database, self::getQuery_createTable_recipe_tags()) &&
+      self::execute($Database, self::getQuery_createTable_user_logins($dbname)) &&
+      self::execute($Database, self::getQuery_createTable_recipes($dbname)) &&
+      self::execute($Database, self::getQuery_createTable_recipe_ingredients($dbname)) &&
+      self::execute($Database, self::getQuery_createTable_recipe_pictures($dbname)) &&
+      self::execute($Database, self::getQuery_createTable_recipe_ratings($dbname)) &&
+      self::execute($Database, self::getQuery_createTable_recipe_steps($dbname)) &&
+      self::execute($Database, self::getQuery_createTable_recipe_tags($dbname)) &&
       self::finish($Database)
       )
-    return true;
+      return true;
     return false;
   }
 
@@ -79,7 +78,7 @@ final class DbSetup2 {
     ENGINE=InnoDB';
   }
 
-  static private function getQuery_createTable_cronjobs_log() : string {
+  static private function getQuery_createTable_cronjobs_log(string $dbname) : string {
     return 'CREATE TABLE `cronjob_log` (
     	`entry_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     	`job_id` SMALLINT(5) UNSIGNED NOT NULL,
@@ -88,13 +87,13 @@ final class DbSetup2 {
     	`entry_payload` VARCHAR(1024) NOT NULL DEFAULT \'{ }\' COLLATE \'utf8mb4_general_ci\',
     	PRIMARY KEY (`entry_id`) USING BTREE,
     	INDEX `FK_cronjob_log_cronjobs` (`job_id`) USING BTREE,
-    	CONSTRAINT `FK_cronjob_log_cronjobs` FOREIGN KEY (`job_id`) REFERENCES `'.DbConf::DB_DATABASE.'`.`cronjobs` (`job_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    	CONSTRAINT `FK_cronjob_log_cronjobs` FOREIGN KEY (`job_id`) REFERENCES `'.$dbname.'`.`cronjobs` (`job_id`) ON UPDATE CASCADE ON DELETE CASCADE
     )
     COLLATE=\'utf8mb4_general_ci\'
     ENGINE=InnoDB';
   }
 
-  static private function getQuery_createTable_recipes() : string {
+  static private function getQuery_createTable_recipes(string $dbname) : string {
     return 'CREATE TABLE `recipes` (
     	`recipe_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     	`user_id` MEDIUMINT(8) UNSIGNED NULL DEFAULT NULL,
@@ -108,13 +107,13 @@ final class DbSetup2 {
     	`recipe_published` TIMESTAMP NULL DEFAULT NULL,
     	PRIMARY KEY (`recipe_id`) USING BTREE,
     	INDEX `FK_recipes_users` (`user_id`) USING BTREE,
-    	CONSTRAINT `FK_recipes_users` FOREIGN KEY (`user_id`) REFERENCES `'.DbConf::DB_DATABASE.'`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE SET NULL
+    	CONSTRAINT `FK_recipes_users` FOREIGN KEY (`user_id`) REFERENCES `'.$dbname.'`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE SET NULL
     )
     COLLATE=\'utf8mb4_general_ci\'
     ENGINE=InnoDB';
   }
 
-  static private function getQuery_createTable_recipe_ingredients() : string {
+  static private function getQuery_createTable_recipe_ingredients(string $dbname) : string {
     return 'CREATE TABLE `recipe_ingredients` (
     	`ingredient_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     	`recipe_id` INT(10) UNSIGNED NOT NULL,
@@ -124,14 +123,14 @@ final class DbSetup2 {
     	PRIMARY KEY (`ingredient_id`) USING BTREE,
     	INDEX `FK_recipe_ingredients_recipes` (`recipe_id`) USING BTREE,
     	INDEX `FK_recipe_ingredients_units` (`unit_id`) USING BTREE,
-    	CONSTRAINT `FK_recipe_ingredients_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `cookbook`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE CASCADE,
-    	CONSTRAINT `FK_recipe_ingredients_units` FOREIGN KEY (`unit_id`) REFERENCES `cookbook`.`units` (`unit_id`) ON UPDATE CASCADE ON DELETE SET NULL
+    	CONSTRAINT `FK_recipe_ingredients_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `'.$dbname.'`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    	CONSTRAINT `FK_recipe_ingredients_units` FOREIGN KEY (`unit_id`) REFERENCES `'.$dbname.'`.`units` (`unit_id`) ON UPDATE CASCADE ON DELETE SET NULL
     )
     COLLATE=\'utf8mb4_general_ci\'
     ENGINE=InnoDB';
   }
 
-  static private function getQuery_createTable_recipe_pictures() : string {
+  static private function getQuery_createTable_recipe_pictures(string $dbname) : string {
     return 'CREATE TABLE `recipe_pictures` (
     	`picture_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     	`recipe_id` INT(10) UNSIGNED NOT NULL,
@@ -145,14 +144,14 @@ final class DbSetup2 {
     	PRIMARY KEY (`picture_id`) USING BTREE,
     	UNIQUE INDEX `recipe_id_picture_sortindex` (`recipe_id`, `picture_sortindex`) USING BTREE,
     	INDEX `FK_recipe_pictures_users` (`user_id`) USING BTREE,
-    	CONSTRAINT `FK_recipe_pictures_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `cookbook`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE CASCADE,
-    	CONSTRAINT `FK_recipe_pictures_users` FOREIGN KEY (`user_id`) REFERENCES `cookbook`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE SET NULL
+    	CONSTRAINT `FK_recipe_pictures_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `'.$dbname.'`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    	CONSTRAINT `FK_recipe_pictures_users` FOREIGN KEY (`user_id`) REFERENCES `'.$dbname.'`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE SET NULL
     )
     COLLATE=\'utf8mb4_general_ci\'
     ENGINE=InnoDB';
   }
 
-  static private function getQuery_createTable_recipe_ratings() : string {
+  static private function getQuery_createTable_recipe_ratings(string $dbname) : string {
     return 'CREATE TABLE `recipe_ratings` (
     	`entry_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     	`user_id` MEDIUMINT(8) UNSIGNED NOT NULL,
@@ -166,14 +165,32 @@ final class DbSetup2 {
     	PRIMARY KEY (`entry_id`) USING BTREE,
     	INDEX `FK_recipe_log_users` (`user_id`) USING BTREE,
     	INDEX `FK_recipe_log_recipes` (`recipe_id`) USING BTREE,
-    	CONSTRAINT `FK_recipe_log_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `cookbook`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE CASCADE,
-    	CONSTRAINT `FK_recipe_log_users` FOREIGN KEY (`user_id`) REFERENCES `cookbook`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    	CONSTRAINT `FK_recipe_log_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `'.$dbname.'`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    	CONSTRAINT `FK_recipe_log_users` FOREIGN KEY (`user_id`) REFERENCES `'.$dbname.'`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
     )
     COLLATE=\'utf8mb4_general_ci\'
     ENGINE=InnoDB';
   }
 
-  static private function getQuery_createTable_recipe_tags() : string {
+  static private function getQuery_createTable_recipe_steps(string $dbname) : string {
+    return 'CREATE TABLE `recipe_steps` (
+    	`step_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    	`recipe_id` INT(10) UNSIGNED NOT NULL,
+    	`step_no` TINYINT(3) UNSIGNED NOT NULL,
+    	`step_title` VARCHAR(128) NOT NULL COLLATE \'utf8mb4_general_ci\',
+    	`step_data` TEXT NOT NULL COLLATE \'utf8mb4_general_ci\',
+    	`step_time_preparation` INT(11) NULL DEFAULT NULL,
+    	`step_time_cooking` INT(11) NULL DEFAULT NULL,
+    	`step_time_chill` INT(11) NULL DEFAULT NULL,
+    	PRIMARY KEY (`step_id`) USING BTREE,
+    	UNIQUE INDEX `recipe_id_step_no` (`recipe_id`, `step_no`) USING BTREE,
+    	CONSTRAINT `FK_recipe_steps_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `'.$dbname.'`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    )
+    COLLATE=\'utf8mb4_general_ci\'
+    ENGINE=InnoDB';
+  }
+
+  static private function getQuery_createTable_recipe_tags(string $dbname) : string {
     return 'CREATE TABLE `recipe_tags` (
     	`entry_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     	`recipe_id` INT(10) UNSIGNED NOT NULL,
@@ -183,9 +200,9 @@ final class DbSetup2 {
     	UNIQUE INDEX `recipe_id_tag_id_user_id` (`recipe_id`, `tag_id`, `user_id`) USING BTREE,
     	INDEX `FK_recipe_tags_tags` (`tag_id`) USING BTREE,
     	INDEX `FK_recipe_tags_users` (`user_id`) USING BTREE,
-    	CONSTRAINT `FK_recipe_tags_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `cookbook`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE CASCADE,
-    	CONSTRAINT `FK_recipe_tags_tags` FOREIGN KEY (`tag_id`) REFERENCES `cookbook`.`tags` (`tag_id`) ON UPDATE CASCADE ON DELETE CASCADE,
-    	CONSTRAINT `FK_recipe_tags_users` FOREIGN KEY (`user_id`) REFERENCES `cookbook`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    	CONSTRAINT `FK_recipe_tags_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `'.$dbname.'`.`recipes` (`recipe_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    	CONSTRAINT `FK_recipe_tags_tags` FOREIGN KEY (`tag_id`) REFERENCES `'.$dbname.'`.`tags` (`tag_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    	CONSTRAINT `FK_recipe_tags_users` FOREIGN KEY (`user_id`) REFERENCES `'.$dbname.'`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
     )
     COLLATE=\'utf8mb4_general_ci\'
     ENGINE=InnoDB';
@@ -239,7 +256,7 @@ final class DbSetup2 {
     ENGINE=InnoDB';
   }
 
-  static private function getQuery_createTable_user_logins() : string {
+  static private function getQuery_createTable_user_logins(string $dbname) : string {
     return 'CREATE TABLE `user_logins` (
     	`login_id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
     	`user_id` MEDIUMINT(8) UNSIGNED NOT NULL,
@@ -252,7 +269,7 @@ final class DbSetup2 {
     	INDEX `user_id` (`user_id`) USING BTREE,
     	INDEX `login_time` (`login_time`) USING BTREE,
     	INDEX `login_keep` (`login_keep`) USING BTREE,
-    	CONSTRAINT `FK_user_logins_users` FOREIGN KEY (`user_id`) REFERENCES `'.DbConf::DB_DATABASE.'`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    	CONSTRAINT `FK_user_logins_users` FOREIGN KEY (`user_id`) REFERENCES `'.$dbname.'`.`users` (`user_id`) ON UPDATE CASCADE ON DELETE CASCADE
     )
     COLLATE=\'utf8mb4_general_ci\'
     ENGINE=InnoDB';

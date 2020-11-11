@@ -18,7 +18,6 @@ class RecipesRoute extends Route implements RouteInterface {
   static function createOutput(array &$response) : bool {
     global $Controller, $OUT;
 
-    parent::addBreadcrumb($Controller->getLink('private:recipes'), $Controller->l('page_myrecipes_title'));
     $recipes = [];
     $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes', DB_ANY);
     $query
@@ -35,7 +34,6 @@ class RecipesRoute extends Route implements RouteInterface {
 
     parent::addToDictionary('Recipes', $recipes);
     parent::setPage('private:recipes');
-    parent::setTitle($Controller->l('page_myrecipes_title'));
     return parent::render(self::$template, $response);
   }
 

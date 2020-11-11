@@ -1,0 +1,53 @@
+
+          <div class="mt-3" v-if="recipe.ownerId === user.id">
+            <h5 v-text="$t('pages.recipe.actions.title')"></h5>
+            <b-container fluid>
+
+              <!-- publish / unpublish actions -->
+              <rc-button outline
+                id="recipe-publishbtn" v-if="recipe.published === false"
+                v-b-tooltip.hover :title="$t('pages.recipe.actions.publish.tooltip')"
+                @click="onPublishButtonClicked">
+                <fa-icon :icon="page.iconSet.unlock.icon" :space="page.iconSet.unlock.space"
+                  class="mr-1" id="recipe-publishbtn-icon"></fa-icon>
+                <fa-icon :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"
+                  class="mr-1 d-none fa-spin" id="recipe-publishbtn-spinner"></fa-icon>
+                ${ $t('pages.recipe.actions.publish.title') }
+              </rc-button>
+              <rc-button outline
+                id="recipe-rejectbtn" v-else
+                v-b-tooltip.hover :title="$t('pages.recipe.actions.reject.tooltip')"
+                @click="onRejectButtonClicked">
+                <fa-icon :icon="page.iconSet.unlock.icon" :space="page.iconSet.unlock.space"
+                  class="mr-1" id="recipe-rejectbtn-icon"></fa-icon>
+                <fa-icon :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"
+                  class="mr-1 d-none fa-spin" id="recipe-rejectbtn-spinner"></fa-icon>
+                ${ $t('pages.recipe.actions.reject.title') }
+              </rc-button>
+              <!-- publish / unpublish actions -->
+
+              <!-- recipe edit link -->
+              <router-link :to="{ name: 'editRecipe', params: { id: recipe.id, name: recipe.name } }"
+                class="float-right">
+                <rc-button
+                  :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
+                  :title="$t('pages.recipe.actions.edit.title')"
+                  v-b-tooltip.hover :title="$t('pages.recipe.actions.edit.tooltip')"></rc-button>
+              </router-link>
+              <!-- recipe edit link -->
+
+            </b-container>
+          </div>
+          <div class="mt-3" v-if="recipe.ownerId !== user.id && recipe.ownerId !== 0 && recipe.ownerProperties.recipeCount > 1"> <!-- public actions -->
+            <h5 v-text="$t('pages.recipe.actions.titleOthers', { user: recipe.ownerName })"></h5>
+            <div>
+              <p class="text-small text-muted" v-text="$tc('pages.recipe.actions.userRecipes.description', recipe.ownerProperties.recipeCount - 1, { user: recipe.ownerName })"></p>
+              <!-- user recipes link -->
+              <router-link :to="{ name: 'userRecipes', params: { id: recipe.ownerId, name: recipe.ownerName } }">
+                <rc-button
+                  :icon="page.iconSet.recipes.icon" :space="page.iconSet.recipes.space"
+                  :title="$t('pages.recipe.actions.userRecipes.btnTitle', { user: recipe.ownerName })"></rc-button>
+              </router-link>
+              <!-- user recipes link -->
+            </div>
+          </div>

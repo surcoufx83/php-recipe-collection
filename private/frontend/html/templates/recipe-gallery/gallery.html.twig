@@ -1,0 +1,77 @@
+
+    <template id="recipe-gallery-template">
+      <b-container v-if="page.loading !== true && typeof recipe !== undefined && recipe.id !== 0">
+        <!-- back to recipe link -->
+        <router-link :to="{ name: 'recipe', params: { id: recipe.id, name: recipe.name } }"
+          class="float-left">
+          <rc-button
+            :icon="page.iconSet.back.icon" :space="page.iconSet.back.space"
+            :title="$t('pages.gallery.backBtn.title')"></rc-button>
+        </router-link>
+        <!-- back to recipe link -->
+        <!-- add picture button -->
+        <rc-button class="float-right"
+          :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+          :title="$t('pages.gallery.addBtn.title')"
+          @click="onAddPicture"></rc-button>
+        <!-- add picture button -->
+        <br clear="all" />
+        <b-container class="mt-2 pr-5 pr-lg-0">
+          <b-container fluid class="text-center pt-3 pb-1">
+            <b-row>
+              <b-col cols="12" lg="6" offset-lg="3">
+                <p class="text-muted text-small pb-2"
+                  v-if="recipe.ownerId == user.id">
+                  <span v-text="$t('pages.gallery.usageOwner')"></span><br />
+                  <b-form-checkbox v-model="page.draggingActive"
+                    name="drag-on" switch size="lg"
+                    v-b-tooltip.hover :title="$t('pages.gallery.sortSwitch.tooltip')">
+                    ${ $t('pages.gallery.sortSwitch.title') }
+                  </b-form-checkbox>
+                </p>
+                <p class="text-muted text-small" v-text="$t('pages.gallery.usage')" v-else></p>
+              </b-col>
+            </b-row>
+          </b-container>
+          <draggable v-model="recipe.pictures" class="card-deck" draggable=".draggable"
+            @end="onPictureMoved">
+            <div v-for="(pic, index) in recipe.pictures" :key="index"
+              :class="['card m-2 p-1', recipe.ownerId === user.id && page.draggingActive ? 'draggable' : '']">
+              <a :href="pic.link" data-toggle="lightbox"
+                data-gallery="recipe-gallery" data-type="image">
+                <b-img-lazy class="card-img-top" :src="pic.link350" :id="'recipe-picture-' + index"></b-img>
+              </a>
+              <div class="card-body text-muted">
+                <p>
+                  <fa-icon v-if="index == 0"
+                    class="text-warning text-golden mr-1"
+                    :icon="page.iconSet.star.icon" :space="page.iconSet.star.space"
+                    v-b-tooltip.hover :title="$t('pages.gallery.previewImage.tooltip')"></fa-icon>
+                  <fa-icon v-if="index > 0 && index < 5"
+                    class="text-secondary text-gray mr-1"
+                    :icon="page.iconSet.star.icon" :space="page.iconSet.star.space"
+                    v-b-tooltip.hover :title="$t('pages.gallery.recipeImage.tooltip')"></fa-icon>
+                  Bild ${ index + 1 }: ${ pic.name }
+                </p>
+                <p v-if="pic.description !== ''" v-text="pic.description"></p>
+                <p v-if="pic.uploaderId !== 0" class="text-small">
+                  <router-link :to="{ name: 'userRecipes', params: { id: pic.uploaderId, name: pic.uploaderName }}">
+                    <fa-icon class="mr-1"
+                      :icon="page.iconSet.user.icon" :space="page.iconSet.user.space"></fa-icon>
+                    ${ pic.uploaderName }
+                  </router-link>
+                </p>
+                <b-form-file
+                  v-model="pic.uploadFile"
+                  :id="'file-upload-' + index"
+                  :name="'file-upload-' + index"
+                  accept="image/jpeg, image/png"
+                  class="image-upload-input" style="width: 0px; height: 0px; overflow: hidden;"
+                  @input="onPictureAdded(index)">
+                </b-form-file>
+              </div>
+            </div>
+          </draggable>
+        </b-container>
+      </b-container>
+    </template>

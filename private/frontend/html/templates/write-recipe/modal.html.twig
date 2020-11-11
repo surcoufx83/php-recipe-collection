@@ -1,0 +1,57 @@
+
+    <div class="modal fade" id="new-recipe-modal"
+      data-backdrop="static" data-keyboard="false" tabindex="-1"
+      aria-labelledby="new-recipe-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="new-recipe-modal-title"
+              v-text="$t('pages.writeRecipe.modal.title')"></h5>
+          </div>
+          <div class="modal-body"
+            v-if="progress.preparing"><p v-text="$t('pages.writeRecipe.modal.preparing')"></p>
+          </div>
+          <div class="modal-body"
+            v-if="progress.sending"><p v-text="$t('pages.writeRecipe.modal.description')"></p>
+          </div>
+          <div class="modal-body bg-warning"
+            v-if="!progress.sending && progress.gotresponse && !progress.responseSuccess">
+            <p v-text="$t('pages.writeRecipe.modal.error')"></p>
+            <p>${ progress.response.code }:
+              <span v-if="progress.response.message != ''" v-text="$t(progress.response.message)"></span>
+              <span v-if="progress.response.i18nmessage != ''" v-text="$t(progress.response.i18nmessage)"></span>
+            </p>
+          </div>
+          <div class="modal-body bg-success text-light"
+            v-if="!progress.sending && progress.gotresponse && progress.responseSuccess"
+            v-text="$t('pages.writeRecipe.modal.success')">
+          </div>
+          <div class="modal-footer">
+
+            <rc-button id="new-recipe-modal-spinner" :sm="false" disabled
+              v-if="progress.sending"
+              :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"
+              icon-class="fa-spin fa-fw"
+              title=""></rc-button>
+
+            <rc-button :sm="false" outline
+              v-if="!progress.sending && (progress.responseSuccess || page.currentRecipe.id > 0)"
+              data-dismiss="modal"
+              :title="$t('pages.writeRecipe.modal.backButton')"></rc-button>
+
+            <rc-button :sm="false" outline id="new-recipe-modal-new"
+              v-if="!progress.sending && progress.gotresponse && progress.responseSuccess && page.currentRecipe.id == 0"
+              data-dismiss="modal"
+              @click="onNewRecipeBtnClick"
+              :title="$t('pages.writeRecipe.modal.newButton')"></rc-button>
+
+            <rc-button :sm="false" id="new-recipe-modal-goto"
+              v-if="!progress.sending && ((progress.gotresponse && progress.responseSuccess) || page.currentRecipe.id > 0)"
+              data-dismiss="modal"
+              @click="onGotoRecipeBtnClick"
+              :title="$t('pages.writeRecipe.modal.forwardButton')"></rc-button>
+
+          </div>
+        </div>
+      </div>
+    </div>

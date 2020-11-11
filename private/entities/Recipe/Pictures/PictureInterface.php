@@ -2,6 +2,9 @@
 
 namespace Surcouf\Cookbook\Recipe\Pictures;
 
+use Surcouf\Cookbook\Recipe\RecipeInterface;
+use Surcouf\Cookbook\User\UserInterface;
+
 if (!defined('CORE2'))
   exit;
 

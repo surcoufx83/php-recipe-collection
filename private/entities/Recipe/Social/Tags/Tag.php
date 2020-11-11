@@ -7,7 +7,7 @@ use Surcouf\Cookbook\DbObjectInterface;
 if (!defined('CORE2'))
   exit;
 
-class Tag implements TagInterface, DbObjectInterface {
+class Tag implements TagInterface, DbObjectInterface, \JsonSerializable {
 
   protected $tag_id,
             $tag_name;
@@ -32,6 +32,13 @@ class Tag implements TagInterface, DbObjectInterface {
 
   public function getName() : string {
     return $this->tag_name;
+  }
+
+  public function jsonSerialize() {
+    return [
+      'id' => $this->tag_id,
+      'name' => $this->tag_name,
+    ];
   }
 
 }

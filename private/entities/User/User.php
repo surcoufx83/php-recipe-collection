@@ -8,6 +8,7 @@ use Surcouf\Cookbook\Mail;
 use Surcouf\Cookbook\Helper\AvatarsHelper;
 use Surcouf\Cookbook\Helper\ConverterHelper;
 use Surcouf\Cookbook\Helper\HashHelper;
+use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\User\Session\Session;
@@ -38,27 +39,28 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
             $user_avatar,
             $user_registration_completed,
             $user_adconsent = false;
+  protected $recipe_count = -1;
 
   private $changes = array();
 
   public function __construct(?array $record=null) {
     if (!is_null($record)) {
-      $this->user_id = intval($dr['user_id']);
-      $this->user_name = $dr['user_name'];
-      $this->oauth_user_name = $dr['oauth_user_name'];
-      $this->user_firstname = $dr['user_firstname'];
-      $this->user_lastname = $dr['user_lastname'];
-      $this->user_fullname = $dr['user_fullname'];
-      $this->user_hash = $dr['user_hash'];
-      $this->user_isadmin = (ConverterHelper::to_bool($dr['user_isadmin']) && !is_null($dr['user_email_validated']));
-      $this->user_password = $dr['user_password'];
-      $this->user_email = $dr['user_email'];
-      $this->user_email_validation = (!is_null($dr['user_email_validation']) ? $dr['user_email_validation'] : '');
-      $this->user_email_validated = (!is_null($dr['user_email_validated']) ? new DateTime($dr['user_email_validated']) : '');
-      $this->user_last_activity = (!is_null($dr['user_last_activity']) ? new DateTime($dr['user_last_activity']) : '');
-      $this->user_avatar = $dr['user_avatar'];
-      $this->user_registration_completed = (!is_null($dr['user_registration_completed']) ? new DateTime($dr['user_registration_completed']) : null);
-      $this->user_adconsent = (!is_null($dr['user_adconsent']) ? new DateTime($dr['user_adconsent']) : false);
+      $this->user_id = intval($record['user_id']);
+      $this->user_name = $record['user_name'];
+      $this->oauth_user_name = $record['oauth_user_name'];
+      $this->user_firstname = $record['user_firstname'];
+      $this->user_lastname = $record['user_lastname'];
+      $this->user_fullname = $record['user_fullname'];
+      $this->user_hash = $record['user_hash'];
+      $this->user_isadmin = (ConverterHelper::to_bool($record['user_isadmin']) && !is_null($record['user_email_validated']));
+      $this->user_password = $record['user_password'];
+      $this->user_email = $record['user_email'];
+      $this->user_email_validation = (!is_null($record['user_email_validation']) ? $record['user_email_validation'] : '');
+      $this->user_email_validated = (!is_null($record['user_email_validated']) ? new DateTime($record['user_email_validated']) : '');
+      $this->user_last_activity = (!is_null($record['user_last_activity']) ? new DateTime($record['user_last_activity']) : '');
+      $this->user_avatar = $record['user_avatar'];
+      $this->user_registration_completed = (!is_null($record['user_registration_completed']) ? new DateTime($record['user_registration_completed']) : null);
+      $this->user_adconsent = (!is_null($record['user_adconsent']) ? new DateTime($record['user_adconsent']) : false);
     } else {
       $this->user_id = intval($this->user_id);
       $this->user_isadmin = (ConverterHelper::to_bool($this->user_isadmin) && !is_null($this->user_email_validated));
@@ -68,7 +70,10 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
       $this->user_registration_completed = (!is_null($this->user_registration_completed) ? new DateTime($this->user_registration_completed) : null);
       $this->user_adconsent = (!is_null($this->user_adconsent) ? new DateTime($this->user_adconsent) : false);
     }
-    $this->initials = strtoupper(substr($this->user_firstname, 0, 1).substr($this->user_lastname, 0, 1));
+    if ($this->user_firstname != '' || $this->user_lastname != '')
+      $this->initials = strtoupper(substr($this->user_firstname, 0, 1).substr($this->user_lastname, 0, 1));
+    else
+      $this->initials = strtoupper(substr($this->getUsername(), 0, 1));
     if (is_null($this->user_hash))
       $this->calculateHash();
     if (is_null($this->user_avatar))
@@ -101,8 +106,8 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
     $session_password4hash = HashHelper::hash(substr($session_token, 0, 16));
     $session_password4hash .= $session_password;
     $session_password4hash .= HashHelper::hash(substr($session_token, 16));
-    $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => 12]);
-    $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => 12]);
+    $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
+    $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
 
     if ($Controller->setSessionCookies($this->user_email, $session_token, $session_password, $keepSession)) {
       $tokenstr = (!is_null($token) ? json_encode($token->jsonSerialize()) : NULL);
@@ -178,12 +183,24 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
     return $this->user_fullname;
   }
 
+  public function getRecipeCount() : int {
+    if ($this->recipe_count == -1) {
+      global $Controller;
+      $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
+      $query->select([['*', EAggregationType::atCOUNT, 'count']])
+            ->where('recipes', 'recipe_public', '=', 1)
+            ->andWhere('recipes', 'user_id', '=', $this->user_id);
+      $this->recipe_count = $Controller->select($query)->fetch_assoc()['count'];
+    }
+    return $this->recipe_count;
+  }
+
   public function getSession() : ?SessionInterface {
     return $this->session;
   }
 
   public function getUsername() : string {
-    return (!is_null($this->user_name) ? $this->user_name : $this->oauth_user_name);
+    return (!is_null($this->oauth_user_name) ? $this->oauth_user_name : $this->user_name);
   }
 
   public function getValidationCode() : string {
@@ -280,7 +297,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   public function setPassword(string $newPassword, string $oldPassword) : bool {
     global $Controller;
     if ($this->user_password == '********' || password_verify($oldPassword, $this->user_password)) {
-      $this->user_password = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => 12]);
+      $this->user_password = password_hash($newPassword, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
       $this->changes['user_password'] = $this->user_password;
       $Controller->updateDbObject($this);
       return true;
@@ -311,8 +328,8 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   public function verify(string $password) : bool {
     global $Controller;
     if (password_verify($password, $this->user_password)) {
-      if (password_needs_rehash($this->user_password, PASSWORD_ARGON2I, ['threads' => 12])) {
-        $this->user_password = password_hash($password, PASSWORD_ARGON2I, ['threads' => 12]);
+      if (password_needs_rehash($this->user_password, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')])) {
+        $this->user_password = password_hash($password, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
         $this->changes['user_password'] = $this->user_password;
         $Controller->updateDbObject($this);
       }

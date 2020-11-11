@@ -75,37 +75,6 @@ class FormatterTest extends TestCase
     $this->assertEquals($expected, Formatter::int_format($value));
   }
 
-  /**
-   * @covers Formatter::min_format
-   * @dataProvider min_formatDataProvider
-   */
-  public function testMin_format($value, $langstr, $expected) {
-    global $Controller;
-    $Controller = $this->createStub(ControllerInterface::class);
-    $stubConfig = $this->createStub(ConfigInterface::class);
-    $Controller->expects($this->once())
-               ->method('l')
-               ->with(
-                 $langstr,
-                 $expected
-               )
-               ->willReturn($expected);
-    $this->assertEquals($expected, Formatter::min_format($value));
-  }
-
-  /**
-   * @covers Formatter::t
-   * @dataProvider tDataProvider
-   */
-  public function testT($value, $singular, $plural, $flags, $separator, $expected) {
-    global $Controller;
-    $Controller = $this->createStub(ControllerInterface::class);
-    $stubConfig = $this->createStub(ConfigInterface::class);
-    $Controller->method('Config')->willReturn($stubConfig);
-    $stubConfig->method('__call')->willReturn('');
-    $this->assertEquals($expected, Formatter::t($value, $singular, $plural, $flags, $separator));
-  }
-
   public function byte_formatDataProvider() {
     return [
       [               0, -1,      '0 B'],
@@ -158,37 +127,6 @@ class FormatterTest extends TestCase
       [-1, '-1'],
       [1000, '1000'],
       [-1000, '-1000'],
-    ];
-  }
-
-  public function min_formatDataProvider() {
-    return [
-      [1, 'common_duration_minutes', '1'],
-      [59, 'common_duration_minutes', '59'],
-      [60, 'common_duration_hours', '1'],
-      [90, 'common_duration_hours', '1.5'],
-      [1439, 'common_duration_hours', '23.5'],
-      [1440, 'common_duration_days', '1'],
-      [2880, 'common_duration_days', '2'],
-      [3600, 'common_duration_days', '2.5'],
-      [43200, 'common_duration_days', '30'],
-    ];
-  }
-
-  public function tDataProvider() {
-    return [
-      [0, 'foo', 'foos', 0, ' ', 'foos'],
-      [1, 'foo', 'foos', 0, ' ', 'foo'],
-      [2, 'foo', 'foos', 0, ' ', 'foos'],
-      [0, 'bar', 'bars', 1, ' ', '0 bars'],
-      [1, 'bar', 'bars', 1, ' ', '1 bar'],
-      [2, 'bar', 'bars', 1, ' ', '2 bars'],
-      [0, 'foo', 'foos', 2, ' ', 'foos 0'],
-      [1, 'foo', 'foos', 2, ' ', 'foo 1'],
-      [2, 'foo', 'foos', 2, ' ', 'foos 2'],
-      [0, 'bar', 'bars', 3, '@', '0@bars@0'],
-      [1, 'bar', 'bars', 3, '@', '1@bar@1'],
-      [2, 'bar', 'bars', 3, '@', '2@bars@2'],
     ];
   }
 

@@ -9,146 +9,106 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="/style/bootstrap-4.5.2.min.css">
+    <link rel="stylesheet" href="/style/bootstrap-4.5.3.min.css">
+    <link type="text/css" rel="stylesheet" href="/style/bootstrap-vue-2.18.0.min.css" />
+    <link type="text/css" rel="stylesheet" href="/style/bootstrap-vue-icons-2.18.0.min.css" />
+    <link rel="stylesheet" href="/style/fontawesome-5.15.1.min.css">
     <link rel="stylesheet" href="/style/ekko-lightbox-5.3.0.css">
-    <link rel="stylesheet" href="/style/select2-4.0.0.min.css">
-    <link rel="stylesheet" href="/style/fontawesome-all-5.14.0.min.css">
-    <link rel="stylesheet" href="/style/icofont.min.css">
-    <link rel="stylesheet" href="/style/theme-1.0.1.css">
+    <link rel="stylesheet" href="/style/theme-1.2.2.css">
+    <script src="/script/vue-2.6.12.js"></script>
+    <script src="/script/vue-loaders-4.1.1.umd.js"></script>
+    <script src="/script/vue-router-3.4.7.min.js"></script>
+    <script src="/script/vue-resource-1.5.1.min.js"></script>
+    <script src="/script/sortable-1.1.0.min.js"></script>
+    <script src="/script/vuedraggable-2.24.3.umd.min.js"></script>
+    <script src="/script/bootstrap-vue-2.18.0.min.js"></script>
+    <script src="/script/bootstrap-vue-icons-2.18.0.min.js"></script>
+    <script src="/script/moment-2.29.1.min.js"></script>
+    <script src="/script/lodash-4.17.20.min.js"></script>
+    <script src="/script/i18n/rc-de-1.2.5.js"></script>
     {{ Header.JS|raw }}
-    <title>{{ Config.PageTitle }}</title>
+    <title>{{ Config.Page('Title') }}</title>
   </head>
 
   <body>
-    {% include 'body-navbar.html.twig' %}
 
-    <main>
-      <div class="page" {% if Controller.isAuthenticated() == false or Controller.User().hasRegistrationCompleted() == false %}style="padding-left:0!important;"{% endif %}>
-      {% if Controller.isAuthenticated() and Controller.User().hasRegistrationCompleted() %}
-        {% include 'body-sidebar.html.twig' %}
-      {% endif %}
-        <div class="page-wrapper">
-          {% if Controller.isAuthenticated() and Controller.User().hasRegistrationCompleted() %}
-          <div class="page-overlay"></div>
-          <div class="page-header">
-            {% include 'body-header.html.twig' %}
-          </div>
-          <div class="page-topbar">
-            {% include 'body-headingbar.html.twig' %}
-          </div>
-          <div class="page-topbar">
-            {% include 'body-topbar.html.twig' %}
-          </div>
-          {% endif %}
-          <div class="page-content pt-3">
-            {% include 'body-content.html.twig' %}
+    <div id="vue-app">
+      <rc-navbar :page="page" :user="user"></rc-navbar>
+      <main>
+        <b-container class="page" fluid
+          v-bind:class="{'p-0': true, 'pl-0': user.loggedIn === false, 'sidebar-visible': page.sidebar.visible}"> <!-- page -->
+          <sidebar :page="page" v-if="user.loggedIn"></sidebar>
+          <b-container class="page-wrapper p-0" fluid> <!-- page-wrapper -->
+            <b-container class="page-header-wrapper p-0"
+              v-if="user.loggedIn"> <!-- page-header-wrapper -->
+            </b-container> <!-- page-header-wrapper -->
+            {% include 'common/content-container.html.twig' %}
+          </b-container> <!-- page-wrapper -->
+        </b-container> <!-- page -->
+      </main>
+      <div class="modal modal-danger" tabindex="-1" role="dialog" id="action-failed-modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" v-text="$t('modals.failed.head')"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p class="my-0">${ page.modals.failedModal.message }</p>
+              <p class="text-small my-0">Code: ${ page.modals.failedModal.code }</p>
+            </div>
+            <div class="modal-footer">
+              <rc-button :title="$t('modals.failed.close')" data-dismiss="modal"></rc-button>
+            </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
+
+    <div id="reactive-size-spy-lg" class="d-none d-lg-block"></div>
+
+    {% include 'templates/home.html.twig' %}
+    {% include 'templates/body/rc-button.html.twig' %}
+    {% include 'templates/body/rc-navbar.html.twig' %}
+    {% include 'templates/body/body-elements.html.twig' %}
+    {% include 'templates/recipe/recipe.html.twig' %}
+    {% include 'templates/recipe-gallery/gallery.html.twig' %}
+    {% include 'templates/write-recipe/form.html.twig' %}
+    {% include 'templates/recipes/recipes-listing-template.html.twig' %}
+    {% include 'templates/search/search.html.twig' %}
+    {% include 'templates/user/login.html.twig' %}
+    {% include 'templates/user/logout.html.twig' %}
+    {% include 'js-common-data.js.twig' %}
 
     <script src="/script/jquery-3.5.1.min.js"></script>
-    <script src="/script/bootstrap-4.5.2.bundle.min.js"></script>
+    <script src="/script/bootstrap-4.5.3.bundle.min.js"></script>
     <script src="/script/ekko-lightbox-5.3.0.min.js"></script>
-    <script src="/script/select2-4.0.0.min.js"></script>
-    <script src="/script/plotly-1.54.1.min.js"></script>{% if Page.Scripts.StarRating == true %}
-    <script src="/script/rater.min.js"></script>{% endif %}
+    <script src="/script/plotly-1.54.1.min.js"></script>
+    <script src="/script/vue-i18n-8.22.1.min.js"></script>
+    <script src="/script/vue-i18n-locales-1.2.0.js"></script>
+
+    <script src="/script/vue-custom-1.2.5.js"></script>
 
     <script>
 
-      function delay(callback, ms) {
-        var timer = 0;
-        return function() {
-          var context = this, args = arguments;
-          clearTimeout(timer);
-          timer = setTimeout(function () {
-            callback.apply(context, args);
-          }, ms || 0);
-        };
-      }
-
-      function easytooltip(obj, title, type="success", direction="bottom", duration=5000) {
-        obj.tooltip({
-          placement: direction,
-          title: title,
-          trigger: 'manual'
-        });
-        obj.tooltip('show');
-        if (type == "success") {
-          $('.tooltip-inner').addClass('bg-light text-success border border-success');
-        } else if (type == "info") {
-          $('.tooltip-inner').addClass('bg-light text-dark border border-dark');
-        } else if (type == "error") {
-          $('.tooltip-inner').addClass('bg-light text-danger border border-danger');
-        }
-        setTimeout(function(){
-          obj.tooltip('dispose');
-        }, duration);
-      }
-
-      var sidebarOpened = false;
-
-      $('div.page-overlay').click(function() {
-        sidebarOpened = false;
-        $(this).removeClass('sidebar-opened');
-        $('div.nav-sidebar').removeClass('sidebar-opened');
-        $('a.sidebar-toggle-nav').removeClass('sidebar-opened');
-      });
-
-      $('a.sidebar-toggle-nav').click(function() {
-        if (sidebarOpened) {
-          sidebarOpened = false;
-          $('div.page-overlay').removeClass('sidebar-opened');
-          $('div.nav-sidebar').removeClass('sidebar-opened');
-          $('a.sidebar-toggle-nav').removeClass('sidebar-opened');
-        } else {
-          sidebarOpened = true;
-          $('div.page-overlay').addClass('sidebar-opened');
-          $('div.nav-sidebar').addClass('sidebar-opened');
-          $('a.sidebar-toggle-nav').addClass('sidebar-opened');
-        }
-      });
-
-      $('button.header-toggle-nav').click(function() {
-        sidebarOpened = true;
-        $('div.page-overlay').addClass('sidebar-opened');
-        $('div.nav-sidebar').addClass('sidebar-opened');
-        $('a.sidebar-toggle-nav').addClass('sidebar-opened');
-      });
-
-      $('.scroll-to').click(function() {
-        var target = $('#' + $(this).data('target'));
-        if (target) {
-          var pos = target.offset().top - 60;
-          $(window).scrollTop(pos);
-        }
-      });
-
       $(function () {
         $('[data-toggle="tooltip"]').tooltip();
-        $('select.form-select2-multi').select2({
-          closeOnSelect: false,
-          tags: true
-        });
-        $('select.form-select2-single').select2({
-          tags: true
-        });
-        $('[data-toggle="lightbox"]').click(function(event) {
-          event.preventDefault();
-          $(this).ekkoLightbox({
-            alwaysShowClose: true
-          });
-        });
       });
 
       $(document).ready(function() {
-{% if Page.Scripts.FormValidator %}{% include 'scripts/html-forms-validate.js.twig' %}{% endif %}
+
+        $(document).on('click', '[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', function(event) {
+          event.preventDefault();
+          return $(this).ekkoLightbox({
+            alwaysShowClose: true
+          });
+        });
+
       });
 
     </script>
-    <script>{% for script in Page.Scripts.Custom %}
-{% include 'scripts/' ~ script ~ '.js.twig' %}{% endfor %}</script>
-
   </body>
 
 </html>

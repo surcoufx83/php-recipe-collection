@@ -35,7 +35,7 @@ final class HashHelper implements HashHelperInterface {
    */
   public static function getChecksumAlgo() : string {
     global $Controller;
-    return $Controller->Config()->ChecksumProvider;
+    return $Controller->Config()->System('Checksums', 'CsProvider');
   }
 
   /**
@@ -45,7 +45,7 @@ final class HashHelper implements HashHelperInterface {
    */
   public static function getHashAlgo() : string {
     global $Controller;
-    return $Controller->Config()->HashProvider;
+    return $Controller->Config()->System('Checksums', 'HashProvider');
   }
 
   /**

@@ -1,0 +1,36 @@
+
+    <template id="recipe-template">
+      <b-container v-if="page.loading !== true && typeof recipe !== undefined && recipe.id !== 0">
+        <b-row>
+          <b-col class="col-12 col-md-5 order-0 order-md-1">
+            {% include 'templates/recipe/recipe-gallery.html.twig' %}
+            {% include 'templates/recipe/recipe-voting.html.twig' %}
+            {% include 'templates/recipe/recipe-statistics.html.twig' %}
+            {% include 'templates/recipe/recipe-actions.html.twig' %}
+            {% include 'templates/recipe/recipe-admin.html.twig' %}
+          </b-col>
+          <b-col class="col-12 col-md-7 order-1 order-md-0">
+            {% include 'templates/recipe/recipe-header.html.twig' %}
+            {% include 'templates/recipe/recipe-ingredients.html.twig' %}
+            {% include 'templates/recipe/recipe-duration.html.twig' %}
+            {% include 'templates/recipe/recipe-steps.html.twig' %}
+          </b-col>
+        </b-row>
+        {% include 'templates/recipe/recipe-voting-modal.html.twig' %}
+        {% include 'templates/recipe/recipe-mobile-footer.html.twig' %}
+      </b-container>
+    </template>
+
+    <template id="recipe-ingredient-template">
+      <tr
+        v-if="description !== null && description !== ''">
+        <td class="ml-0 text-right pr-1 pr-lg-2">
+          <span v-if="quantity !== null && quantity > 0.0 && quantity < 1.0">&lt; 1</span>
+          <span v-if="quantity !== null && quantity > 0.0 && quantity >= 1.0">${ quantity }</span>
+          <span class="ml-1" v-if="unit !== null && ('name' in unit) && unit.name !== null">${ unit.name }</span>
+        </td>
+        <td class="w-100">
+          <span>${ description }</span>
+        </td>
+      </tr>
+    </template>
