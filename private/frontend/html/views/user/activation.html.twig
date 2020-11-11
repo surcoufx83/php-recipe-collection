@@ -1,0 +1,68 @@
+
+    <div class="container">
+      <div class="row pb-3">
+        <div class="col-12 col-md-6">
+          <h3 class="mb-3 font-weight-bold">{{ Controller.l('page_activation_title') }}</h3>
+          <p>
+            {{ Config.Icons().Books('fa-fw mr-2')|raw }} {{ Controller.l('page_activation_description', User.getFirstname())|raw }}
+          </p>
+          <form id="activation-form" action="{{ Controller.getlink('private:activatePassword', User.getValidationCode()) }}"
+            class="needs-validation" method="post" autocomplete="off" novalidate>
+            <div class="form-group mb-3">
+              <label for="password" class="col-form-label-sm">
+                <b>{{ Controller.l('page_activation_password_label1') }}</b>
+              </label>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">{{ Config.Icons().Password('fa-fw')|raw }}</div>
+                </div>
+                <input type="password" class="form-control" id="password"
+                  name="password" placeholder="{{ Controller.l('page_activation_password_placeholder1') }}"
+                  value="" required aria-describedby="password-feedback" />
+                <div class="invalid-feedback" style="padding-left:48px;"
+                  id="password-feedback">
+                  {{ Controller.l('page_activation_password_feedback1') }}
+                </div>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="password" class="col-form-label-sm sr-only">
+                <b>{{ Controller.l('page_activation_password_label2') }}</b>
+              </label>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">{{ Config.Icons.Password('fa-fw')|raw }}</div>
+                </div>
+                <input type="password" class="form-control" id="password2"
+                  name="password2" placeholder="{{ Controller.l('page_activation_password_placeholder2') }}"
+                  value="" required aria-describedby="password2-feedback" />
+                <div class="invalid-feedback" style="padding-left:48px;"
+                  id="password2-feedback">
+                  {{ Controller.l('page_activation_password_feedback2') }}
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-6">
+                <input class="ml-0 form-check-input" type="checkbox" value="1"
+                  id="activation-keepsession" name="keepsession" />
+                <span class="ml-4 form-check-label" data-toggle="tooltip"
+                  data-placement="right" title="{{ Controller.l('page_login_keepSession_description') }}" for="login-keepsession">
+                  {{ Controller.l('page_login_keepSession_title') }}
+                  <sup class="text-blue">{{ Config.Icons.QuestionMark('fa-fw fa-sm')|raw }}</sup>
+                </span>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <input type="hidden" name="user" id="activation-user" value="{{ User.getId() }}" />
+                <button type="submit" id="activation-submit" class="btn btn-blue">
+                  {{ Config.Icons.Spinner('fa-fw fa-spin d-none', '', 'activation-spinner')|raw }}
+                  {{ Controller.l('page_activation_submit') }}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>

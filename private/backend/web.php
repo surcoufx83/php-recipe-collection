@@ -20,4 +20,15 @@ if (DEBUG === true)
 $OUT['Controller'] =& $Controller;
 $OUT['Dispatcher'] = $Controller->Dispatcher();
 $OUT['Config'] = $Controller->Config();
-$OUT['Page'] = [];
+$OUT['Page'] = array(
+  'Badges' => array(
+    'InboxCount' => 0,
+  ),
+  'Breadcrumbs' => array(),
+  'Heading1' => '',
+  'Scripts' => array(
+    'Custom' => array(),
+    'FormValidator' => false,
+  ),
+);
+$OUT['Platform'] = array();

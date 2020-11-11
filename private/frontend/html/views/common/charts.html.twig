@@ -1,0 +1,22 @@
+
+{% for line in Page.Charts.Lines %}
+  {% set items = line|length %}
+  {% set css = 12 / items %}
+  <div class="row {% if loop.last %}mb-2{% endif %}">
+    {% for chart in line %}
+
+      <div class="col-md-{{ css }}">
+        <div class="card no-verflow mb-3">
+          <div class="card-body">
+            {% if chart.type == 'bar' %}{% include 'views/common/bar-chart.html.twig' %}{% endif %}
+            {% if chart.type == 'line' %}{% include 'views/common/line-chart.html.twig' %}{% endif %}
+            {% if chart.type == 'metrics' %}{% include 'views/common/metrics-chart.html.twig' %}{% endif %}
+            {% if chart.type == 'pie' %}{% include 'views/common/pie-chart.html.twig' %}{% endif %}
+          </div>
+        </div>
+      </div>
+
+    {% endfor %}
+    </div>
+
+{% endfor %}

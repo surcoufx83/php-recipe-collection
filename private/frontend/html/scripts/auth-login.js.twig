@@ -1,0 +1,118 @@
+
+      var running = false;
+      var spinner = null;
+      var button = null;
+
+      $('#login-form').submit(function(event) {
+
+        event.preventDefault();
+
+        if (running)
+          return;
+
+        var userok = checkUsernameField();
+        var passok = checkPasswordField();
+        if (!userok || !passok)
+          return;
+
+        running = true;
+        initlogin();
+
+        var username = $('#login-user').val();
+        var password = $('#login-password').val();
+        var keep = ($('#login-keepsession').prop('checked'));
+
+        $.ajax({
+          method: 'POST',
+          url: '/login',
+          data: {
+            'keepSession': keep,
+            'loginPassword': password,
+            'loginUsername': username
+          }
+        }).done(function(data) {
+          if (data.isLoggedIn) {
+            successlogin();
+            location.replace('/');
+          } else {
+            easytooltip($('#login-submit-button'), '{{ Controller.l("page_login_failed_loginFailed") }}', 'error');
+          }
+          finishlogin();
+        }).fail(function(obj, error, errno) {
+          easytooltip($('#login-submit-button'), '{{ Controller.l("page_login_failed_loginFailed") }}', 'error');
+          finishlogin();
+        });
+
+      });
+
+      function initlogin() {
+        button = $('#login-submit-button');
+        spinner = $('#login-submit-spinner');
+        button.removeClass('btn-primary');
+        button.addClass('btn-secondary');
+        spinner.removeClass('d-none');
+      }
+
+      function finishlogin() {
+        button.removeClass('btn-secondary');
+        button.addClass('btn-primary');
+        spinner.addClass('d-none');
+        running = false;
+      }
+
+      function successlogin() {
+        button.removeClass('btn-secondary');
+        button.addClass('btn-success');
+        spinner.addClass('d-none');
+      }
+
+      function checkPasswordField() {
+        var obj = $('#login-password');
+        if (obj.val() == '') {
+          $('#login-password-feedback').addClass('d-block');
+          obj.removeClass('border border-success');
+          obj.addClass('border border-danger');
+          obj.focus();
+          return false;
+        }
+        $('#login-password-feedback').removeClass('d-block');
+        obj.removeClass('border border-danger');
+        obj.addClass('border border-success');
+        return true;
+      }
+
+      function checkUsernameField() {
+        var obj = $('#login-user');
+        if (obj.val() == '') {
+          $('#login-user-feedback').addClass('d-block');
+          obj.removeClass('border border-success');
+          obj.addClass('border border-danger');
+          obj.focus();
+          return false;
+        }
+        $('#login-user-feedback').removeClass('d-block');
+        obj.removeClass('border border-danger');
+        obj.addClass('border border-success');
+        return true;
+      }
+
+      $('#login-keepsession-checked').click(function() {
+        check_session();
+      });
+
+      $('#login-keepsession-unchecked').click(function() {
+        check_session();
+      });
+
+      function check_session() {
+        var container = $('#login-keepSession');
+        if (container.data('value') == 1) {
+          container.data('value', 0);
+          $('#login-keepsession-unchecked').removeClass('d-none');
+          $('#login-keepsession-checked').addClass('d-none');
+        } else {
+          container.data('value', 1);
+          $('#login-keepsession-checked').removeClass('d-none');
+          $('#login-keepsession-unchecked').addClass('d-none');
+        }
+      }
