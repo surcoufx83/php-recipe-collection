@@ -11,4 +11,4 @@ cat \
   ./component-SearchRecipe.js \
   ./component-UserLogin.js \
   ./vue-router.js \
-  ./vue.js > ../../../public/script/vue-custom-1.2.5.js
+  ./vue.js > ../../../public/script/vue-custom-1.2.6.js
