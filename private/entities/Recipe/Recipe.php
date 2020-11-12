@@ -116,6 +116,14 @@ class Recipe implements RecipeInterface, DbObjectInterface, \JsonSerializable {
     $this->tagvotes[$tag->getId()] = $votes;
   }
 
+  public function delete() : bool {
+    global $Controller;
+    $query = new QueryBuilder(EQueryType::qtDELETE, 'recipes');
+    $query->where('recipes', 'recipe_id', '=', intval($this->recipe_id))
+          ->limit(1);
+    return $Controller->delete($query);
+  }
+
   public function getCookedCount() : int {
     return $this->countcooked;
   }

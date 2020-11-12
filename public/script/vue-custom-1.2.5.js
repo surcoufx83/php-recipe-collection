@@ -227,6 +227,31 @@ const Recipe = {
     onActionClicked: function(e) {
       console.log('@onActionClicked', e)
     },
+    onDeleteButtonClicked: function() {
+      $('#recipe-delete-modal-fail').addClass('d-none')
+      $('#recipe-delete-modal').modal()
+    },
+    onModalDeleteButtonClicked: function() {
+      console.log('Recipe.onModalDeleteButtonClicked')
+      $('#recipe-delete-modal-submit').prop('disabled', true)
+      $('#recipe-delete-modal-close').prop('disabled', true)
+      $('#recipe-delete-modal-spinner').removeClass('d-none')
+      postPageData(app.$route.path, {
+        delete: true
+      }, function(data) {
+        $('#recipe-delete-modal-spinner').addClass('d-none')
+        if (data.success) {
+          $('#recipe-delete-modal').modal('hide')
+          app.$router.push({name: 'myRecipes'})
+        } else {
+          $('#recipe-delete-modal-fail-code').text(data.code)
+          $('#recipe-delete-modal-fail-msg').text(app.$t(data.i18nmessage))
+          $('#recipe-delete-modal-fail').removeClass('d-none')
+          $('#recipe-delete-modal-submit').prop('disabled', false)
+          $('#recipe-delete-modal-close').prop('disabled', false)
+        }
+      }, true)
+    },
     onEaterCountChanged: function() {
       for (key in this.recipe.preparation.ingredients) {
         this.recipe.preparation.ingredients[key].quantityCalc =
@@ -359,9 +384,8 @@ Vue.component('rc-button', {
   template: '#rc-button-template',
     methods: {
       onClick: function() {
-        console.log('@onClick')
         this.$emit('click', this.subject ? this.subject : this.title)
-      }
+      },
     }
 })
 Vue.component('rc-navbar', {

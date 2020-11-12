@@ -22,3 +22,19 @@
               </ul>
             </div>
           </div>
+
+          <div class="mb-3" v-if="recipe.ownerId === user.id">
+            <h5 v-text="$t('pages.recipe.actions.titleDangerous')"></h5>
+            <div>
+
+              <!-- delete recipe button -->
+              <rc-button class="float-right" variant="danger" outline
+                id="recipe-deletebtn"
+                :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                :title="$t('pages.recipe.actions.delete.title')"
+                @click="onDeleteButtonClicked"></rc-button>
+              <p class="text-small text-muted" v-text="$t('pages.recipe.actions.delete.description')"></p>
+              <!-- delete recipe button -->
+
+            </div>
+          </div>

@@ -183,6 +183,16 @@ Looks very bad in current theme
   font-size: 1.05rem;
 }
 
+.modal-danger {
+  border: 3px solid #dc3545!important;
+
+  .modal-header {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+}
+
 .page-link {
   color: $text-link!important;
   &:hover {

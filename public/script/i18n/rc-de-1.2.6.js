@@ -126,7 +126,19 @@ const rc_i18n_de = {
       },
       actions: {
         title: 'Rezept verwalten',
+        titleDangerous: 'Gefährlicher Bereich',
         titleOthers: 'Mehr von {user}',
+        delete: {
+          title: 'Rezept löschen',
+          description: 'Du möchtest das Rezept loswerden? Mit dem Löschbutton kannst du das Rezept löschen. Diese Aktion kann nicht rückgängig gemacht werden. Alle Informationen, Bilder, Kommentare werden auch entfernt.',
+          modal: {
+            title: 'Bestätigung erforderlich',
+            description: 'Achtung, du bist dabei, das Rezept {name} zu löschen.{br}Es ist nicht möglich, ein Rezept wiederherzustellen. Alle Daten die zu diesem Rezept eingegeben wurden, werden gelöscht. Auch Bilder, Bewertungen, Kommentare. Alles ist danach weg. Niemand kann es zurückholen.{br}Zum Löschen halte drei Sekunden den Löschbutton gedrückt.',
+            failed: 'Beim Löschen ist ein Fehler aufgetreten. Das Rezept konnte nicht gelöscht werden.{br}Code {code}: {msg}',
+            cancelBtn: 'Zurück',
+            deleteBtn: 'Rezept löschen'
+          }
+        },
         edit: {
           title: 'Bearbeiten',
           tooltip: 'Im Bearbeiten-Modus kannst du alle Angaben überarbeiten.'
