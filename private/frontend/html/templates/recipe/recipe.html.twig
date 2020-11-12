@@ -4,16 +4,22 @@
         <b-row>
           <b-col class="col-12 col-md-5 order-0 order-md-1">
             {% include 'templates/recipe/recipe-gallery.html.twig' %}
-            {% include 'templates/recipe/recipe-voting.html.twig' %}
-            {% include 'templates/recipe/recipe-statistics.html.twig' %}
-            {% include 'templates/recipe/recipe-actions.html.twig' %}
-            {% include 'templates/recipe/recipe-admin.html.twig' %}
           </b-col>
           <b-col class="col-12 col-md-7 order-1 order-md-0">
             {% include 'templates/recipe/recipe-header.html.twig' %}
+            {% include 'templates/recipe/recipe-actions.html.twig' %}
+            {% include 'templates/recipe/recipe-voting.html.twig' %}
             {% include 'templates/recipe/recipe-ingredients.html.twig' %}
             {% include 'templates/recipe/recipe-duration.html.twig' %}
             {% include 'templates/recipe/recipe-steps.html.twig' %}
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col class="col-12 col-md-7">
+            {% include 'templates/recipe/recipe-statistics.html.twig' %}
+              {% include 'templates/recipe/recipe-admin.html.twig' %}
+          </b-col>
+          <b-col class="col-12 col-md-5">
           </b-col>
         </b-row>
         {% include 'templates/recipe/recipe-voting-modal.html.twig' %}

@@ -1,5 +1,12 @@
-          <div id="gallery-anchor"
+          <div class="mb-3" id="gallery-anchor"
             v-if="recipe.pictures.length !== 0">
+            <router-link
+              :to="{ name: 'gallery', params: { id: recipe.id, name: recipe.name } }"
+              class="float-right">
+              <rc-button
+                :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space"
+                :title="$t('pages.recipe.gallery.goto')"></rc-button>
+            </router-link>
             <h5 v-text="$t('pages.recipe.gallery.header')"></h5>
             <b-container fluid>
               <b-row>
@@ -19,4 +26,18 @@
                 </b-col>
               </b-row>
             </b-container>
+          </div>
+          <div class="mb-3" id="gallery-anchor" v-else>
+            <h5 v-text="$t('pages.recipe.gallery.header')"></h5>
+            <router-link
+              :to="{ name: 'gallery', params: { id: recipe.id, name: recipe.name } }"
+              class="float-right">
+              <rc-button
+                :icon="page.iconSet.gallery.icon" :space="page.iconSet.gallery.space"
+                :title="$t('pages.recipe.options.toGallery')"></rc-button>
+            </router-link>
+            <router-link
+              :to="{ name: 'gallery', params: { id: recipe.id, name: recipe.name } }">
+              <p class="text-small text-muted" v-text="$t('pages.recipe.gallery.nopics')"></p>
+            </router-link>
           </div>

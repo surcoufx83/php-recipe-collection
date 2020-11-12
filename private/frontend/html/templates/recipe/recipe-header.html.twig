@@ -1,4 +1,14 @@
-          <b-container class="mt-5 mt-lg-0 pb-3">
+          <div class="mt-5 mt-lg-0 pb-3">
+            <!-- recipe edit link -->
+            <router-link :to="{ name: 'editRecipe', params: { id: recipe.id, name: recipe.name } }"
+              class="float-right">
+              <rc-button
+                :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
+                :title="$t('pages.recipe.actions.edit.title')"
+                v-b-tooltip.hover :title="$t('pages.recipe.actions.edit.tooltip')"></rc-button>
+            </router-link>
+            <!-- recipe edit link -->
+            
             <h4 v-text="$t('pages.recipe.header.about.title')"></h4>
             <span class="mb-1" v-if="recipe.published !== false">
               <p>
@@ -34,6 +44,6 @@
                 class="mr-2 fa-2x float-left"></fa-icon>
               <span v-text="$t('pages.recipe.header.unpublishedAlert.description')"></span>
               <span class="d-none d-lg-inline" v-text="$t('pages.recipe.header.unpublishedAlert.hint')"></span>
-              <span class="d-inline d-lg-none" v-text="$t('pages.recipe.header.unpublishedAlert.mobileHint')"></span> 
+              <span class="d-inline d-lg-none" v-text="$t('pages.recipe.header.unpublishedAlert.mobileHint')"></span>
             </b-alert>
-          </b-container>
+          </div>
