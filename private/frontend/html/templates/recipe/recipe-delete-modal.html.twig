@@ -1,0 +1,40 @@
+
+    <div class="modal fade" id="recipe-delete-modal"
+      aria-labelledby="recipe-delete-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content modal-danger bg-danger">
+          <div class="modal-header text-white">
+            <h5 class="modal-title" id="recipe-delete-modal-title"
+              v-text="$t('pages.recipe.actions.delete.modal.title')">
+            </h5>
+          </div>
+          <i18n path="pages.recipe.actions.delete.modal.description"
+            tag="div" class="modal-body bg-white">
+            <template #name><b v-text="recipe.name"></b></template>
+            <template #br><br /></template>
+          </i18n>
+          <i18n path="pages.recipe.actions.delete.modal.failed"
+            tag="div" class="modal-body bg-warning d-none" id="recipe-delete-modal-fail">
+            <template #code><span id="recipe-delete-modal-fail-code"></span></template>
+            <template #msg><span id="recipe-delete-modal-fail-msg"></span></template>
+            <template #br><br /></template>
+          </i18n>
+          <div class="modal-footer bg-white">
+
+            <rc-button id="recipe-delete-modal-spinner" disabled class="d-none"
+              variant="danger"
+              :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"
+              icon-class="fa-fw fa-spin" title=""></rc-button>
+
+            <rc-button outline variant="danger"
+               id="recipe-delete-modal-submit"
+              :title="$t('pages.recipe.actions.delete.modal.deleteBtn')"
+              @click="onModalDeleteButtonClicked"></rc-button>
+
+            <rc-button id="recipe-delete-modal-close"
+              :title="$t('pages.recipe.actions.delete.modal.cancelBtn')" data-dismiss="modal"></rc-button>
+
+          </div>
+        </div>
+      </div>
+    </div>

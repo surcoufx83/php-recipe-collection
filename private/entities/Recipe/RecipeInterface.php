@@ -20,6 +20,7 @@ interface RecipeInterface {
   public function addPicture(PictureInterface &$picture) : void;
   public function addRating(RatingInterface &$rating) : void;
   public function addTag(TagInterface &$tag, int $votes) : void;
+  public function delete() : bool;
   public function getCookedCount() : int;
   public function getCookedCountStr() : string;
   public function getCookingTime() : ?int;

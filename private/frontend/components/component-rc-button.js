@@ -60,8 +60,7 @@ Vue.component('rc-button', {
   template: '#rc-button-template',
     methods: {
       onClick: function() {
-        console.log('@onClick')
         this.$emit('click', this.subject ? this.subject : this.title)
-      }
+      },
     }
 })

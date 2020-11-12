@@ -126,16 +126,30 @@ const rc_i18n_de = {
       },
       actions: {
         title: 'Rezept verwalten',
+        titleDangerous: 'Gefährlicher Bereich',
         titleOthers: 'Mehr von {user}',
+        delete: {
+          title: 'Rezept löschen',
+          description: 'Du möchtest das Rezept loswerden? Mit dem Löschbutton kannst du das Rezept löschen. Diese Aktion kann nicht rückgängig gemacht werden. Alle Informationen, Bilder, Kommentare werden auch entfernt.',
+          modal: {
+            title: 'Bestätigung erforderlich',
+            description: 'Achtung, du bist dabei, das Rezept {name} zu löschen.{br}Es ist nicht möglich, ein Rezept wiederherzustellen. Alle Daten die zu diesem Rezept eingegeben wurden, werden gelöscht. Auch Bilder, Bewertungen, Kommentare. Alles ist danach weg. Niemand kann es zurückholen.{br}Zum Löschen halte drei Sekunden den Löschbutton gedrückt.',
+            failed: 'Beim Löschen ist ein Fehler aufgetreten. Das Rezept konnte nicht gelöscht werden.{br}Code {code}: {msg}',
+            cancelBtn: 'Zurück',
+            deleteBtn: 'Rezept löschen'
+          }
+        },
         edit: {
           title: 'Bearbeiten',
           tooltip: 'Im Bearbeiten-Modus kannst du alle Angaben überarbeiten.'
         },
         publish: {
+          description: 'Nur veröffentlichte Rezepte können von anderen gefunden werden. Mit dem Button kannst du dieses Rezept dafür freigeben.',
           title: 'Veröffentlichen',
           tooltip: 'Durch das Veröffentlichen dieses Rezeptes wird es für andere NutzerInnen auffindbar.'
         },
         reject: {
+          description: 'Du möchtest, dass das Rezept nicht mehr abrufbar ist? Klicke auf den Button und wir verstecken das Rezept. Du hast weiterhin jederzeit Zugriff und kannst das Rezept bearbeiten und erneut veröffentlichen.',
           title: 'Zurückziehen',
           tooltip: 'Die Veröffentlichung wird zurückgezogen. Damit kann das Rezept nicht mehr gefunden werden.'
         },
@@ -173,7 +187,9 @@ const rc_i18n_de = {
         steps: 'Zubereitung'
       },
       gallery: {
-        header: 'Bildergalerie'
+        header: 'Bildergalerie',
+        goto: 'Alle Bilder',
+        nopics: 'Bisher wurden keine Bilder hochgeladen. In der Gallerie kannst du ein oder mehrere Bilder hinzufügen.'
       },
       header: {
         unpublishedAlert: {
@@ -236,7 +252,7 @@ const rc_i18n_de = {
       rate: {
         button: 'Bewertung abgeben',
         header: 'Rezept bewerten',
-        description: 'Du hast das Rezept nachgekocht? Das Essen war super lecker oder doch nicht so gelungen? Lass es uns und wissen und bewerte das Rezept.',
+        description: 'Du kochst das Rezept heute nach? Vergiss nicht, danach eine Bewertung vorzunehmen. Wir freuen uns auf Deine Meinung!',
         voted: {
           subject: 'Du hast bereits eine Bewertung abgegeben. Du kannst das Rezept erst in einigen Tagen erneut bewerten.'
         },
@@ -359,6 +375,9 @@ const rc_i18n_de = {
         ingredient: {
           header: 'Zutat',
           placeholder: 'z.B. Olivenöl'
+        },
+        sortSwitch: {
+          title: 'Zutaten sortieren'
         },
         header: 'Zutatenliste',
         description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Die Mengenangabe kannst du auch weglassen (z.B. für etwas Salz zum Würzen).'

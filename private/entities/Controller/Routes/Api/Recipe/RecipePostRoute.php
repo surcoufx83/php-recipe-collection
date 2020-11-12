@@ -9,6 +9,7 @@ use Surcouf\Cookbook\Database\EAggregationType;
 use Surcouf\Cookbook\Database\EQueryType;
 use Surcouf\Cookbook\Database\QueryBuilder;
 use Surcouf\Cookbook\EActivityType;
+use Surcouf\Cookbook\Recipe\BlankRecipe;
 use Surcouf\Cookbook\Recipe\RecipeInterface;
 use Surcouf\Cookbook\Recipe\Recipe;
 use Surcouf\Cookbook\Recipe\Pictures\BlankPicture;
@@ -28,6 +29,8 @@ class RecipePostRoute extends Route implements RouteInterface {
     $payload = $Controller->Dispatcher()->getPayload();
     $action = $Controller->Dispatcher()->getFromMatches('action');
     $user = $Controller->User();
+    if (array_key_exists('delete', $payload))
+      return self::delete($response, $recipe, $user);
     if (array_key_exists('publish', $payload))
       return self::publish($response, $recipe, $user);
     if (array_key_exists('unpublish', $payload))
@@ -46,10 +49,23 @@ class RecipePostRoute extends Route implements RouteInterface {
     $response = $Controller->Config()->getResponseArray(71);
     parent::addToDictionary($response, ['response' => ['actionParam' => $action]]);
 
-    var_dump($_FILES);
-
     return true;
 
+  }
+
+  static function delete(array &$response, RecipeInterface $recipe, ?UserInterface $user) : bool {
+    global $Controller;
+    if (!$user || $recipe->getUserId() != $user->getId()) {
+      $response = $Controller->Config()->getResponseArray(92);
+      return false;
+    }
+    if ($recipe->delete()) {
+      $response = $Controller->Config()->getResponseArray(1);
+      $recipe = new BlankRecipe();
+      return true;
+    }
+    $response = $Controller->Config()->getResponseArray(201);
+    return false;
   }
 
   static function edit(array &$response, RecipeInterface $recipe, ?UserInterface $user, array $payload) : bool {
@@ -248,7 +264,6 @@ class RecipePostRoute extends Route implements RouteInterface {
     $query->where('recipe_ratings', 'entry_datetime', '>=', Formatter::date_format($maxage, DTF_SQL))
           ->andWhere('recipe_ratings', 'recipe_id', '=', $recipe->getId())
           ->andWhere('recipe_ratings', 'user_id', '=', $Controller->User()->getId())
-          ->andWhere('recipe_ratings', 'entry_comment', 'IS NULL')
           ->andWhere('recipe_ratings', 'entry_viewed', 'IS NULL');
     $result = $Controller->select($query);
     if ($result && $result->num_rows > 0) {

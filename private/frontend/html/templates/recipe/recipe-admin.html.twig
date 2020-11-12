@@ -1,24 +1,40 @@
 
-          <div class="mt-3" v-if="
+          <div class="mb-3" v-if="
             recipe !== null && user !== null &&
             ('ownerId' in recipe) && ('id' in user) &&
             user.isAdmin === true">
             <h5 v-text="$t('pages.recipe.administration.title')"></h5>
-            <b-container fluid>
-              <b-row>
-                <b-col cols="12"
+            <div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-transparent border-0"
                   v-if="recipe.ownerId === false">
                   <fa-icon :icon="page.iconSet.nouser.icon"
                     :space="page.iconSet.nouser.space" fw class="mr-2"></fa-icon>
-                  ${ $t('pages.recipe.administration.deletedAuthorAccount') }
-                </b-col>
-                <b-col cols="12" v-else>
+                  <span v-text="$t('pages.recipe.administration.deletedAuthorAccount')"></span>
+                </li>
+                <li class="list-group-item bg-transparent">
                   <router-link :to="{ name: 'user', params: { id: recipe.ownerId, name: recipe.ownerName } }">
                     <fa-icon :icon="page.iconSet.user.icon"
                       :space="page.iconSet.user.space" fw class="mr-2"></fa-icon>
-                    ${ $t('pages.recipe.administration.author', [ recipe.ownerName ]) }
+                    <span v-text="$t('pages.recipe.administration.author', [ recipe.ownerName ])"></span>
                   </router-link>
-                </b-col>
-              </b-row>
-            </b-container>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-3" v-if="recipe.ownerId === user.id">
+            <h5 v-text="$t('pages.recipe.actions.titleDangerous')"></h5>
+            <div>
+
+              <!-- delete recipe button -->
+              <rc-button class="float-right" variant="danger" outline
+                id="recipe-deletebtn"
+                :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                :title="$t('pages.recipe.actions.delete.title')"
+                @click="onDeleteButtonClicked"></rc-button>
+              <p class="text-small text-muted" v-text="$t('pages.recipe.actions.delete.description')"></p>
+              <!-- delete recipe button -->
+
+            </div>
           </div>
