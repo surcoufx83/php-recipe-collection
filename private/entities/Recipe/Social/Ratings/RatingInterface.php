@@ -11,7 +11,6 @@ if (!defined('CORE2'))
 
 interface RatingInterface {
 
-  public function getComment() : string;
   public function getDate() : DateTime;
   public function getId() : int;
   public function getRating() : ?int;

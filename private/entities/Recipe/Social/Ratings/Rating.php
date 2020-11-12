@@ -17,7 +17,6 @@ class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
             $user_id,
             $recipe_id,
             $entry_datetime,
-            $entry_comment,
             $entry_viewed,
             $entry_cooked,
             $entry_vote,
@@ -30,7 +29,6 @@ class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
       $this->user_id = intval($record['user_id']);
       $this->recipe_id = intval($record['recipe_id']);
       $this->entry_datetime = new DateTime($record['entry_datetime']);
-      $this->entry_comment = $record['entry_comment'];
       $this->entry_viewed = (!is_null($record['entry_viewed']) ? ConverterHelper::to_bool($record['entry_viewed']) : null);
       $this->entry_cooked = (!is_null($record['entry_cooked']) ? ConverterHelper::to_bool($record['entry_cooked']) : null);
       $this->entry_vote = (!is_null($record['entry_vote']) ? intval($record['entry_vote']) : null);
@@ -45,10 +43,6 @@ class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
       $this->entry_vote = (!is_null($this->entry_vote) ? intval($this->entry_vote) : null);
       $this->entry_rate = (!is_null($this->entry_rate) ? intval($this->entry_rate) : null);
     }
-  }
-
-  public function getComment() : string {
-    return $this->entry_comment;
   }
 
   public function getDate() : DateTime {
@@ -112,7 +106,6 @@ class Rating implements RatingInterface, DbObjectInterface, \JsonSerializable {
       'userId' => $this->user_id,
       'user' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : null),
       'time' => $this->entry_datetime->format(DateTime::ISO8601),
-      'comment' => $this->entry_comment,
       'cooked' => $this->entry_cooked,
       'voting' => $this->entry_vote,
       'rating' => $this->entry_rate,

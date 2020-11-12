@@ -80,7 +80,6 @@ class RecipePageRoute extends Route implements RouteInterface {
     $query->where('recipe_ratings', 'entry_datetime', '>=', Formatter::date_format($maxage, DTF_SQL))
           ->andWhere('recipe_ratings', 'recipe_id', '=', $recipe->getId())
           ->andWhere('recipe_ratings', 'user_id', '=', $Controller->User()->getId())
-          ->andWhere('recipe_ratings', 'entry_comment', 'IS NULL')
           ->andWhere('recipe_ratings', 'entry_viewed', 'IS NULL')
           ->orderBy2('recipe_ratings', 'entry_datetime', 'DESC')
           ->limit(1);

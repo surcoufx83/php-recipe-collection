@@ -129,7 +129,6 @@ class SearchResultsRoute extends Route implements RouteInterface {
       ->select2('recipe_ratings', 'entry_cooked', ['alias' => 'cooked', 'aggregation' => EAggregationType::atSUM])
       ->select2('recipe_ratings', 'entry_vote', ['alias' => 'votesum', 'aggregation' => EAggregationType::atSUM])
       ->select2('recipe_ratings', 'entry_vote', ['alias' => 'votes', 'aggregation' => EAggregationType::atCOUNT])
-      ->select2('recipe_ratings', 'entry_comment', ['alias' => 'comments', 'aggregation' => EAggregationType::atCOUNT])
       ->joinLeft('recipe_pictures',
           ['recipe_pictures', 'recipe_id', '=', 'recipes', 'recipe_id'],
           ['AND', 'recipe_pictures', 'picture_sortindex', '=', 0]
@@ -181,7 +180,6 @@ class SearchResultsRoute extends Route implements RouteInterface {
         'cooked' => intval($record['cooked']),
         'votes' => intval($record['votes']),
         'voting' => (intval($record['votes']) > 0 ? Formatter::float_format(doubleval($record['votesum']) / doubleval($record['votes']), 1) : 0),
-        'comments' => intval($record['comments']),
         'showAuthor' => ($filter != 'my'),
       ];
     }
