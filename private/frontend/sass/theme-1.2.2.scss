@@ -289,20 +289,6 @@ Looks very bad in current theme
 .of-none { object-fit: none; }
 .of-scale-down { object-fit: scale-down; }
 
-.modal-danger {
-  .modal-content {
-    border-color: #DC3545;
-    .modal-header {
-      background-color: rgba(220, 53, 69, .1);
-      border-bottom-color: rgba(220, 53, 69, .3);
-    }
-    .modal-footer {
-      background-color: rgba(220, 53, 69, .1);
-      border-top-color: rgba(220, 53, 69, .3);
-    }
-  }
-}
-
 .input-dark {
   background-color: $bg-contrast-darker;
   color: $text-light;
