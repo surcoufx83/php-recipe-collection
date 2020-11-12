@@ -80,6 +80,9 @@ setting:
 settings:
   icon: cogs
   space: fas
+sort:
+  icon: sort
+  space: fas
 spinner:
   icon: circle-notch
   space: fas

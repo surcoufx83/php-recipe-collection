@@ -24,7 +24,14 @@ const RecipeEditor = {
   methods: {
     onSubmit: function(e) {
       e.preventDefault()
+      if (this.form.completed) {
+        $('#new-recipe-modal').modal('show')
+        return
+      }
       var missinginfo = false
+      if ( this.page.currentRecipe.preparation.ingredients.length == 0
+        || this.page.currentRecipe.preparation.steps.length == 0)
+        missinginfo = true
       $('.needs-validation').find('input,select,textarea').each(function () {
         // check element validity and change class
         $(this).removeClass('is-valid is-invalid')
@@ -73,26 +80,15 @@ const RecipeEditor = {
     },
     onIngredientDelBtnClick: function(i) {
       this.page.currentRecipe.preparation.ingredients.splice(i, 1)
-      if (this.page.currentRecipe.preparation.ingredients.length == 0) {
-        for (i=0; i<3; i++)
-          this.page.currentRecipe.preparation.ingredients.push({ amount: '', unit: '', description: '' })
-      }
     },
     onIngredientAddBtnClick: function() {
-      for (i=0; i<3; i++)
-        this.page.currentRecipe.preparation.ingredients.push({ amount: '', unit: '', description: '' })
+      this.page.currentRecipe.preparation.ingredients.push({ amount: '', unit: '', description: '' })
     },
     onStepDelBtnClick: function(i) {
       this.page.currentRecipe.preparation.steps.splice(i, 1)
-      if (this.page.currentRecipe.preparation.steps.length == 0) {
-        this.page.currentRecipe.preparation.steps.push({ index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } })
-      }
     },
     onStepAddBtnClick: function() {
       this.page.currentRecipe.preparation.steps.push({ index: 0, name: '', userContent: '', timeConsumed: { cooking: '', preparing: '', rest: '', unit: 'minutes' } })
-    },
-    onNewRecipeBtnClick: function(i) {
-      return
     },
     onGotoRecipeBtnClick: function(i) {
       console.log('@onGotoRecipeBtnClick')

@@ -376,6 +376,9 @@ const rc_i18n_de = {
           header: 'Zutat',
           placeholder: 'z.B. Olivenöl'
         },
+        sortSwitch: {
+          title: 'Zutaten sortieren'
+        },
         header: 'Zutatenliste',
         description: 'Gib nachfolgend alle Zutaten an, welche für das Rezept benötigt werden. Die Mengenangabe kannst du auch weglassen (z.B. für etwas Salz zum Würzen).'
       },

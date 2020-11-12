@@ -3,12 +3,13 @@
             <router-link :to="{ name: 'editRecipe', params: { id: recipe.id, name: recipe.name } }"
               class="float-right">
               <rc-button
+                v-if="recipe.ownerId === user.id"
                 :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
                 :title="$t('pages.recipe.actions.edit.title')"
                 v-b-tooltip.hover :title="$t('pages.recipe.actions.edit.tooltip')"></rc-button>
             </router-link>
             <!-- recipe edit link -->
-            
+
             <h4 v-text="$t('pages.recipe.header.about.title')"></h4>
             <span class="mb-1" v-if="recipe.published !== false">
               <p>
