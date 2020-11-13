@@ -1,7 +1,6 @@
           <div class="pt-5 pb-3 border-top border-light-dark" id="duration-anchor"
             v-if="recipe.preparation.timeConsumed.total > 0">
             <h4 v-text="$t('pages.recipe.preparation.timeconsumption.title')"></h4>
-            <p v-html="$t('pages.recipe.preparation.timeconsumption.overall', { duration: duration(recipe.preparation.timeConsumed.total) })"></p>
             <div class="progress bg-transparent rounded-0 mb-2"
               style="height:1.6rem;">
               <div class="progress-bar progress-element-1 rounded mx-1" role="progressbar"
@@ -45,6 +44,13 @@
                 <td class="w-100">
                   <span v-if="recipe.preparation.timeConsumed.cooking == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
                   <span v-else v-text="duration(recipe.preparation.timeConsumed.cooking)"></span>
+                </td>
+              </tr>
+              <tr>
+                <th class="pl-0" v-text="$t('pages.recipe.preparation.timeconsumption.total')"></th>
+                <td class="w-100">
+                  <span v-if="recipe.preparation.timeConsumed.total == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
+                  <span class="font-weight-bold" v-else v-text="duration(recipe.preparation.timeConsumed.total)"></span>
                 </td>
               </tr>
             </table>

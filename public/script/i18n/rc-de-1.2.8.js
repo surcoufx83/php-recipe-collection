@@ -234,7 +234,6 @@ const rc_i18n_de = {
       preparation: {
         timeconsumption: {
           title: 'Zubereitungsdauer',
-          overall: 'Für dieses Rezept ist eine Zubereitungsdauer von insgesamt <strong>{duration}</strong> angegeben.',
           ltwarn: 'Hinweis: Die Zubereitung des Gerichts nimmt viel Zeit in Anspruch.',
           preparing: 'Vorbereitungszeit:',
           preparingShort: 'Vorbereiten',
@@ -242,7 +241,8 @@ const rc_i18n_de = {
           restingShort: 'Ruhen',
           cooking: 'Koch-/Backzeit:',
           cookingShort: 'Kochen',
-          notset: 'keine Angabe'
+          notset: 'keine Angabe',
+          total: 'Gesamtzeit:'
         },
         steps: {
           title: 'Zubereitungsschritte',
