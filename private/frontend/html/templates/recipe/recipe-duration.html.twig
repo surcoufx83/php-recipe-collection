@@ -28,29 +28,31 @@
               <tr>
                 <th class="pl-0" v-text="$t('pages.recipe.preparation.timeconsumption.preparing')"></th>
                 <td class="w-100">
-                  <span v-if="recipe.preparation.timeConsumed.preparing == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
-                  <span v-else v-text="duration(recipe.preparation.timeConsumed.preparing)"></span>
+                  <span class="px-2" v-if="recipe.preparation.timeConsumed.preparing == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
+                  <span class="px-2" v-else v-text="duration(recipe.preparation.timeConsumed.preparing)"></span>
                 </td>
               </tr>
               <tr>
                 <th class="pl-0" v-text="$t('pages.recipe.preparation.timeconsumption.resting')"></th>
                 <td class="w-100">
-                  <span v-if="recipe.preparation.timeConsumed.rest == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
-                  <span v-else v-text="duration(recipe.preparation.timeConsumed.rest)"></span>
+                  <span class="px-2" v-if="recipe.preparation.timeConsumed.rest == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
+                  <span class="px-2" v-else v-text="duration(recipe.preparation.timeConsumed.rest)"></span>
                 </td>
               </tr>
               <tr>
                 <th class="pl-0" v-text="$t('pages.recipe.preparation.timeconsumption.cooking')"></th>
                 <td class="w-100">
-                  <span v-if="recipe.preparation.timeConsumed.cooking == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
-                  <span v-else v-text="duration(recipe.preparation.timeConsumed.cooking)"></span>
+                  <span class="px-2" v-if="recipe.preparation.timeConsumed.cooking == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
+                  <span class="px-2" v-else v-text="duration(recipe.preparation.timeConsumed.cooking)"></span>
                 </td>
               </tr>
               <tr>
                 <th class="pl-0" v-text="$t('pages.recipe.preparation.timeconsumption.total')"></th>
                 <td class="w-100">
-                  <span v-if="recipe.preparation.timeConsumed.total == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
-                  <span class="font-weight-bold" v-else v-text="duration(recipe.preparation.timeConsumed.total)"></span>
+                  <span class="border-top border-2 border-dark pt-1 pr-2">
+                    <span class="px-2" v-if="recipe.preparation.timeConsumed.total == 0" v-text="$t('pages.recipe.preparation.timeconsumption.notset')"></span>
+                    <span class="px-2 font-weight-bold" v-else v-text="duration(recipe.preparation.timeConsumed.total)"></span>
+                  </span>
                 </td>
               </tr>
             </table>
