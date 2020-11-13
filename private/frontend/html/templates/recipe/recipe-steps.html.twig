@@ -12,6 +12,12 @@
                   ${ step.name }
                 </span>
               </h5>
+              <p class="text-small"
+                v-if="step.timeConsumed.total !== ''">
+                <fa-icon class="fa-fw mr-1"
+                  :icon="page.iconSet.clock.icon" :space="page.iconSet.clock.space"></fa-icon>
+                <span v-text="duration(step.timeConsumed.total)"></span>
+              </p>
               <p style="white-space:pre-wrap">${ step.userContent }</p>
             </div>
           </div>
