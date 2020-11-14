@@ -47,6 +47,9 @@ const rc_i18n_de = {
       backBtn: {
         title: 'Zurück zum Rezept'
       },
+      delBtn: {
+        title: 'Bild löschen'
+      },
       previewImage: {
         tooltip: 'Das ist das erste Bild und es wird überall als Vorschaubild verwendet.'
       },

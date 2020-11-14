@@ -652,7 +652,7 @@ const RecipeGallery = {
   computed: { },
   methods: {
     onAddPicture: function() {
-      console.log('Picture.onAddPicture')
+      // console.log('Picture.onAddPicture')
       var i = this.page.currentRecipe.pictures.length
       this.page.currentRecipe.pictures.push({
         description: '',
@@ -674,7 +674,7 @@ const RecipeGallery = {
       }, 100)
     },
     onPictureAdded: function(i) {
-      console.log('Picture.onPictureAdded', i)
+      // console.log('Picture.onPictureAdded', i)
       if (!window.FileReader)
         return
       if (!this.page.currentRecipe.pictures[i].uploadFile) {
@@ -711,8 +711,30 @@ const RecipeGallery = {
         }
       }
     },
+    onPictureDelBtnClick: function(i, id) {
+      if (!this.page.currentRecipe.pictures[i])
+        return
+      $('#picture-delete-' + i).prop('disabled', true)
+      const comp = this;
+      postPageData(app.$route.path, {
+        deleted: {
+          index: i,
+          id: id
+        }
+      },
+      function(data) {
+        if (!data.success) {
+          app.$set(app.page.modals.failedModal, 'message', app.$t(data.i18nmessage))
+          app.$set(app.page.modals.failedModal, 'code', data.code)
+          $('#action-failed-modal').modal('show')
+        } else {
+          comp.page.currentRecipe.pictures.splice(i, 1)
+        }
+        $('#picture-delete-' + i).prop('disabled', false)
+      })
+    },
     onPictureMoved: function(evt) {
-      console.log('Picture.onPictureMoved', evt)
+      // console.log('Picture.onPictureMoved', evt)
       postPageData(app.$route.path, {
         moved: {
           from: evt.oldIndex,

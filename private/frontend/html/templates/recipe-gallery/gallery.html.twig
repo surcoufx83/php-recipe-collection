@@ -76,6 +76,13 @@
                   @input="onPictureAdded(index)">
                 </b-form-file>
               </div>
+              <div class="card-footer" v-if="recipe.ownerId === user.id">
+                <rc-button :id="'picture-delete-' + index"
+                  :title="$t('pages.gallery.delBtn.title')" class="fs-80"
+                  :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                  @click="onPictureDelBtnClick(index, pic.id)">
+                </rc-button>
+              </div>
             </div>
           </draggable>
         </b-container>
