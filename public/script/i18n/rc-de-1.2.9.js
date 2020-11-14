@@ -215,10 +215,9 @@ const rc_i18n_de = {
       },
       ingredients: {
         header: 'Zutatenliste',
-        description: 'Das Rezept ist ausgelegt für <strong>{0}</strong> Personen.',
+        description: 'Das Rezept ist ausgelegt für {count} Portionen.',
         ingredient: 'Zutatenbeschreibung',
-        inputPrefix: 'Mengenangaben umrechnen für: ',
-        inputPersons: ' Personen',
+        inputDescription: ' Portionen',
         quantity: 'Mengenangabe'
       },
       options: {

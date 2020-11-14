@@ -5,8 +5,8 @@ function eatercalc(value, eater, neweater) {
     return 0
   var calc = value * neweater / eater
   var factor = evaluateFactor(calc)
-  console.log(value, eater, neweater)
-  console.log(calc, factor)
+  // console.log(value, eater, neweater)
+  // console.log(calc, factor)
   if (calc < 1)
     return calc
   calc = Math.round(calc / factor) * factor

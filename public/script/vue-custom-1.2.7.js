@@ -5,8 +5,8 @@ function eatercalc(value, eater, neweater) {
     return 0
   var calc = value * neweater / eater
   var factor = evaluateFactor(calc)
-  console.log(value, eater, neweater)
-  console.log(calc, factor)
+  // console.log(value, eater, neweater)
+  // console.log(calc, factor)
   if (calc < 1)
     return calc
   calc = Math.round(calc / factor) * factor
@@ -232,7 +232,7 @@ const Recipe = {
       $('#recipe-delete-modal').modal()
     },
     onModalDeleteButtonClicked: function() {
-      console.log('Recipe.onModalDeleteButtonClicked')
+      // console.log('Recipe.onModalDeleteButtonClicked')
       $('#recipe-delete-modal-submit').prop('disabled', true)
       $('#recipe-delete-modal-close').prop('disabled', true)
       $('#recipe-delete-modal-spinner').removeClass('d-none')
@@ -258,6 +258,18 @@ const Recipe = {
           eatercalc(this.recipe.preparation.ingredients[key].quantity,
           this.recipe.eaterCount,
           this.recipe.eaterCountCalc)
+      }
+    },
+    onMinusClick: function() {
+      if (this.recipe.eaterCountCalc > 1) {
+        this.recipe.eaterCountCalc -= 1
+        this.onEaterCountChanged()
+      }
+    },
+    onPlusClick: function() {
+      if (this.recipe.eaterCountCalc <99) {
+        this.recipe.eaterCountCalc += 1
+        this.onEaterCountChanged()
       }
     },
     onPublishButtonClicked: function() {
