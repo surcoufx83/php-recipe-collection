@@ -60,6 +60,12 @@
                       :icon="page.iconSet.user.icon" :space="page.iconSet.user.space"></fa-icon>
                     ${ pic.uploaderName }
                   </router-link>
+                  <span v-if="pic.uploaded !== ''">
+                    <span class="mx-2">&bull;</span>
+                    <fa-icon class="mr-1"
+                      :icon="page.iconSet.calendar.icon" :space="page.iconSet.calendar.space"></fa-icon>
+                    <span v-text="upldate(pic.uploaded)"></span>
+                  </span>
                 </p>
                 <b-form-file
                   v-model="pic.uploadFile"

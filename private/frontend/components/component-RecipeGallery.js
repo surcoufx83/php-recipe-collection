@@ -14,6 +14,7 @@ const RecipeGallery = {
         link: '/pictures/_dummy.jpg',
         link350: '/pictures/_dummy.jpg',
         name: '',
+        uploaded: '',
         uploadFile: null,
         uploaderId: this.user.id,
         uploaderName: this.user.meta.un
@@ -49,6 +50,7 @@ const RecipeGallery = {
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'link', response.picture.link)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'link350', response.picture.link350)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'name', response.picture.name)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploaded', response.picture.uploaded)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploadFile', null)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploaderId', response.picture.uploaderId)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploaderName', response.picture.uploaderName)
@@ -77,6 +79,9 @@ const RecipeGallery = {
           $('#action-failed-modal').modal('show')
         }
       })
+    },
+    upldate: function(date) {
+      return moment(date, moment.ISO_8601).format(app.user.customSettings.formats.date.short)
     }
   }
 }

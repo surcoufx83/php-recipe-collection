@@ -2,6 +2,7 @@
 
 namespace Surcouf\Cookbook\Recipe\Pictures;
 
+use DateTime;
 use Surcouf\Cookbook\HashableInterface;
 use Surcouf\Cookbook\Helper\FilesystemHelper;
 use Surcouf\Cookbook\Helper\HashHelper;
@@ -23,7 +24,8 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
             $picture_description,
             $picture_hash,
             $picture_filename,
-            $picture_full_path;
+            $picture_full_path,
+            $picture_uploaded;
   private $changes = array();
 
   public function __construct(?array $record=null) {
@@ -37,11 +39,13 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
       $this->picture_hash = $record['picture_hash'];
       $this->picture_filename = $record['picture_filename'];
       $this->picture_full_path = $record['picture_filename'];
+      $this->picture_uploaded = new DateTime($record['picture_uploaded']);
     } else {
       $this->picture_id = intval($this->picture_id);
       $this->recipe_id = intval($this->recipe_id);
       $this->user_id = !is_null($this->user_id) ? intval($this->user_id) : null;
       $this->picture_sortindex = intval($this->picture_sortindex);
+      $this->picture_uploaded = new DateTime();
     }
   }
 
@@ -118,6 +122,10 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
     return $this->recipe_id;
   }
 
+  public function getUploadDate() : DateTime {
+    return $this->picture_uploaded;
+  }
+
   public function getUser() : ?UserInterface {
     global $Controller;
     return !is_null($this->user_id) ? $Controller->OM()->User($this->user_id) : null;
@@ -141,6 +149,7 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
       'link350' => '/images/350x280/'.$this->recipe_id.'/'.$this->picture_id,
       'link700' => '/images/700x560/'.$this->recipe_id.'/'.$this->picture_id,
       'name' => $this->picture_name,
+      'uploaded' => $this->picture_uploaded->format(DateTime::ISO8601),
       'uploadFile' => null,
       'uploaderId' => (!is_null($this->user_id) ? $this->user_id : 0),
       'uploaderName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : ''),

@@ -7,7 +7,7 @@ if (!defined('CORE2'))
 
 final class Setup {
 
-  static $LatestVersion = 4;
+  static $LatestVersion = 5;
 
   static function checkAndPatch(\Mysqli &$Database, string $dbname, string $dbuser) {
     if (!self::simpleTest())
