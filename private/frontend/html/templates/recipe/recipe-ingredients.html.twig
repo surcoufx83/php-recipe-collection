@@ -1,17 +1,30 @@
           <div class="pt-5 pb-3 border-top border-light-dark" id="ingredients-anchor">
             <h4 v-text="$t('pages.recipe.ingredients.header')"></h4>
-            <p v-html="$t('pages.recipe.ingredients.description', [ recipe.eaterCount ])">
+            <i18n path="pages.recipe.ingredients.description" tag="p">
+              <template #count><strong v-text="recipe.eaterCount"></strong></template>
+            </i18n>
             </p>
             <b-alert show variant="blue"
               class="px-2 px-lg-3 p-1">
-              <b-form inline>
-                ${ $t('pages.recipe.ingredients.inputPrefix') }
-                <input type="number" min="1" max="99"
-                  class="form-control form-control-sm text-center w-75px mx-2 py-0 fs-110 text-contrast bg-light"
-                  v-model="recipe.eaterCountCalc"
-                  @change="onEaterCountChanged"
-                  ></input>
-                ${ $t('pages.recipe.ingredients.inputPersons') }
+              <b-form @submit.stop.prevent>
+                <b-row>
+                  <b-col>
+                    <rc-button class="d-inline-block d-lg-none"
+                      :icon="page.iconSet.minus.icon" :space="page.iconSet.minus.space"
+                      @click="onMinusClick"
+                      ></rc-button>
+                    <input type="number" min="1" max="99"
+                      class="form-control form-control-sm text-center w-75px mx-2 py-0 fs-110 text-contrast bg-light d-inline-block"
+                      v-model="recipe.eaterCountCalc"
+                      @change="onEaterCountChanged"
+                      ></input>
+                    <rc-button class="d-inline-block d-lg-none"
+                      :icon="page.iconSet.plus.icon" :space="page.iconSet.plus.space"
+                      @click="onPlusClick"
+                      ></rc-button>
+                    <div class="pt-1 d-inline-block pl-3 pl-lg-0" v-text="$t('pages.recipe.ingredients.inputDescription')"></div>
+                  </b-col>
+                </b-row>
               </b-form>
             </b-alert>
             <table class="table table-borderless table-sm">

@@ -14,6 +14,9 @@ back:
 calendar:
   icon: calendar-check
   space: far
+clock:
+  icon: clock
+  space: far
 cloud:
   icon: cloud
   space: fas
@@ -50,6 +53,9 @@ meal:
 menu:
   icon: bars
   space: fas
+minus:
+  icon: minus
+  space: fas
 msg:
   icon: comment-dots
   space: fas
@@ -58,6 +64,9 @@ nouser:
   space: fas
 play:
   icon: play
+  space: fas
+plus:
+  icon: plus
   space: fas
 question:
   icon: question-circle

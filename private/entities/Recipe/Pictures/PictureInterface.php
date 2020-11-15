@@ -2,6 +2,7 @@
 
 namespace Surcouf\Cookbook\Recipe\Pictures;
 
+use DateTime;
 use Surcouf\Cookbook\Recipe\RecipeInterface;
 use Surcouf\Cookbook\User\UserInterface;
 
@@ -19,6 +20,7 @@ interface PictureInterface {
   public function getName() : string;
   public function getRecipe() : RecipeInterface;
   public function getRecipeId() : int;
+  public function getUploadDate() : DateTime;
   public function getUser() : ?UserInterface;
   public function getUserId() : ?int;
 

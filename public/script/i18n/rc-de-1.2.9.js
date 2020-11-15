@@ -47,6 +47,9 @@ const rc_i18n_de = {
       backBtn: {
         title: 'Zurück zum Rezept'
       },
+      delBtn: {
+        title: 'Bild löschen'
+      },
       previewImage: {
         tooltip: 'Das ist das erste Bild und es wird überall als Vorschaubild verwendet.'
       },
@@ -215,10 +218,9 @@ const rc_i18n_de = {
       },
       ingredients: {
         header: 'Zutatenliste',
-        description: 'Das Rezept ist ausgelegt für <strong>{0}</strong> Personen.',
+        description: 'Das Rezept ist ausgelegt für {count} Portionen.',
         ingredient: 'Zutatenbeschreibung',
-        inputPrefix: 'Mengenangaben umrechnen für: ',
-        inputPersons: ' Personen',
+        inputDescription: ' Portionen',
         quantity: 'Mengenangabe'
       },
       options: {
@@ -234,7 +236,6 @@ const rc_i18n_de = {
       preparation: {
         timeconsumption: {
           title: 'Zubereitungsdauer',
-          overall: 'Für dieses Rezept ist eine Zubereitungsdauer von insgesamt <strong>{duration}</strong> angegeben.',
           ltwarn: 'Hinweis: Die Zubereitung des Gerichts nimmt viel Zeit in Anspruch.',
           preparing: 'Vorbereitungszeit:',
           preparingShort: 'Vorbereiten',
@@ -242,7 +243,8 @@ const rc_i18n_de = {
           restingShort: 'Ruhen',
           cooking: 'Koch-/Backzeit:',
           cookingShort: 'Kochen',
-          notset: 'keine Angabe'
+          notset: 'keine Angabe',
+          total: 'Gesamtzeit:'
         },
         steps: {
           title: 'Zubereitungsschritte',

@@ -84,6 +84,19 @@ class CookingStep implements CookingStepInterface, DbObjectInterface, \JsonSeria
     return $this->step_no;
   }
 
+  public function getTotalTime() : ?int {
+    if ($this->step_time_cooking == -1 && $this->step_time_preparation == -1 && $this->step_time_chill == -1)
+      return null;
+    $val = 0;
+    if ($this->step_time_cooking > -1)
+      $val += $this->step_time_cooking;
+    if ($this->step_time_preparation > -1)
+      $val += $this->step_time_preparation;
+    if ($this->step_time_chill > -1)
+      $val += $this->step_time_chill;
+    return $val;
+  }
+
   public function getTitle() : string {
     return $this->step_title;
   }
@@ -97,6 +110,7 @@ class CookingStep implements CookingStepInterface, DbObjectInterface, \JsonSeria
         'cooking' => ($this->step_time_cooking == -1 ? '' : $this->step_time_cooking),
         'preparing' => ($this->step_time_preparation == -1 ? '' : $this->step_time_preparation),
         'rest' => ($this->step_time_chill == -1 ? '' : $this->step_time_chill),
+        'total' => (is_null($this->getTotalTime()) ? '' : $this->getTotalTime()),
         'unit' => 'minutes',
       ]
     ];

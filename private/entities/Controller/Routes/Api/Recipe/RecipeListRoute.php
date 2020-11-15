@@ -35,7 +35,7 @@ class RecipeListRoute extends Route implements RouteInterface {
     $baseQuery = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
     $baseQuery
       ->select('recipes', ['recipe_id', 'user_id', 'recipe_public', 'recipe_name', 'recipe_description', 'recipe_eater', 'recipe_source_desc', 'recipe_source_url', 'recipe_created', 'recipe_published'])
-      ->select('recipe_pictures', ['picture_id', 'picture_sortindex', 'picture_name', 'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path'])
+      ->select('recipe_pictures', ['picture_id', 'picture_sortindex', 'picture_name', 'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path', 'picture_uploaded'])
       ->select2('recipe_ratings', 'entry_viewed', ['alias' => 'views', 'aggregation' => EAggregationType::atSUM])
       ->select2('recipe_ratings', 'entry_cooked', ['alias' => 'cooked', 'aggregation' => EAggregationType::atSUM])
       ->select2('recipe_ratings', 'entry_vote', ['alias' => 'votesum', 'aggregation' => EAggregationType::atSUM])
@@ -46,7 +46,7 @@ class RecipeListRoute extends Route implements RouteInterface {
         )
       ->joinLeft('recipe_ratings', ['recipe_ratings', 'recipe_id', '=', 'recipes', 'recipe_id'])
       ->groupBy('recipes', ['recipe_id', 'user_id', 'recipe_public', 'recipe_name', 'recipe_description', 'recipe_eater', 'recipe_source_desc', 'recipe_source_url', 'recipe_created', 'recipe_published'])
-      ->groupBy('recipe_pictures', ['picture_id', 'picture_sortindex', 'picture_name', 'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path'])
+      ->groupBy('recipe_pictures', ['picture_id', 'picture_sortindex', 'picture_name', 'picture_description', 'picture_hash', 'picture_filename', 'picture_full_path', 'picture_uploaded'])
       ->limit($Controller->Config()->Defaults('Lists', 'Entries'));
 
     if (is_null($filter) || $filter == '')

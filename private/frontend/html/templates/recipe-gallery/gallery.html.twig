@@ -60,6 +60,12 @@
                       :icon="page.iconSet.user.icon" :space="page.iconSet.user.space"></fa-icon>
                     ${ pic.uploaderName }
                   </router-link>
+                  <span v-if="pic.uploaded !== ''">
+                    <span class="mx-2">&bull;</span>
+                    <fa-icon class="mr-1"
+                      :icon="page.iconSet.calendar.icon" :space="page.iconSet.calendar.space"></fa-icon>
+                    <span v-text="upldate(pic.uploaded)"></span>
+                  </span>
                 </p>
                 <b-form-file
                   v-model="pic.uploadFile"
@@ -69,6 +75,13 @@
                   class="image-upload-input" style="width: 0px; height: 0px; overflow: hidden;"
                   @input="onPictureAdded(index)">
                 </b-form-file>
+              </div>
+              <div class="card-footer" v-if="recipe.ownerId === user.id">
+                <rc-button :id="'picture-delete-' + index"
+                  :title="$t('pages.gallery.delBtn.title')" class="fs-80"
+                  :icon="page.iconSet.delete.icon" :space="page.iconSet.delete.space"
+                  @click="onPictureDelBtnClick(index, pic.id)">
+                </rc-button>
               </div>
             </div>
           </draggable>
