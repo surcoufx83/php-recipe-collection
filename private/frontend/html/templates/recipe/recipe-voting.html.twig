@@ -1,6 +1,6 @@
 
           <span class="mb-3"
-            v-if="recipe.ownerId === user.id">
+            v-if="recipe.ownerId !== user.id">
             <h5 v-text="$t('pages.recipe.rate.header')"></h5>
             <div v-if="page.self.hasVoted === false">
               <rc-button class="float-right"
