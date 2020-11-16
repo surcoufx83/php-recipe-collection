@@ -21,9 +21,11 @@ $orange:          #D94F1B;
 // $orange-dark:
 
 
+$bg-navbar:           #002448;
+
 $bg-contrast:         $brown; //hover text
 $bg-contrast-brighter: #FF1593; // NOT IN USE (pink)
-$bg-contrast-darker:  #002448; //top-bar
+$bg-contrast-darker:  #002448; // input?
 $bg-contrast-10:      rgba(28, 119, 195, .1);
 $bg-contrast-light:   $blue-dark; //sidebar-background
 $bg-contrast-dark:    $white; //sidebar-text
@@ -304,8 +306,8 @@ Looks very bad in current theme
 }
 
 .navbar {
-  box-shadow: 0 2px 0 0 $bg-contrast-darker;
-  z-index: 1200;
+  background-color: $bg-navbar;
+  box-shadow: 0 2px 0 0 $bg-navbar;
 }
 
 ul.list-group-sm li.list-group-item {
@@ -362,7 +364,7 @@ div.page {
   }
 
   .b-sidebar {
-    padding-top: 58px;
+    margin-top: 57px!important;
     width: 220px;
 
     ul {
@@ -665,6 +667,12 @@ div.removable-image-area {
     margin-bottom: 15px;
     margin-top: 15px;
   }
+  .navbar {
+    position: sticky;
+    z-index: 1071;
+    top: 0;
+
+  }
 }
 
 // Large devices (desktops, 992px and up)
@@ -688,6 +696,11 @@ div.removable-image-area {
       padding-left: 220px!important;
     }
   }
+  .navbar {
+    position: sticky;
+    z-index: 1071;
+    top: 0;
+  }
 }
 
 // Extra large devices (large desktops, 1200px and up)
@@ -710,5 +723,10 @@ div.removable-image-area {
     &.sidebar-visible {
       padding-left: 220px!important;
     }
+  }
+  .navbar {
+    position: sticky;
+    z-index: 1071;
+    top: 0;
   }
 }

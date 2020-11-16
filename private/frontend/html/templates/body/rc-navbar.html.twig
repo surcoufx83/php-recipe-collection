@@ -1,60 +1,65 @@
         <template id="rc-navbar-template">
-          <b-navbar type="light" variant="contrast-darker" sticky
-            class="py-0 overflow-hidden" tag="header" id="header-navbar"
+          <header class="navbar navbar-expand navbar-dark flex-row py-0" id="header-navbar"
             v-if="user.loggedIn === true"> <!-- rc-navbar sticky top navigation -->
 
-            <router-link
-              :to="{ name: 'home' }"
-              class="navbar-brand text-light mr-0 mr-md-2 my-2"
-              v-if="!page.search.filter.hasFocus">
+            <div class="d-flex flex-grow-1">
+
               <!-- page title -->
-              ${ $t('pages.common.navtitle') }</router-link>
+              <router-link
+                :to="{ name: 'home' }">
+                <b-navbar-brand
+                  class="text-light my-2">
+                  <fa-icon class="mr-1 fa-fw"
+                    v-if="page.loading === false && page.updating === false"
+                    :icon="page.iconSet.meal.icon" :space="page.iconSet.meal.space"></fa-icon>
+                  <fa-icon class="mr-1 fa-fw" spin
+                    v-if="page.loading !== false || page.updating !== false"
+                    :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"></fa-icon>
+                  <span
+                    v-if="!page.search.filter.hasFocus"
+                    v-text="$t('pages.common.navtitle')"></span>
+                </b-navbar-brand>
+              </router-link>
+              <!-- page title -->
 
-            <fa-icon
-              :icon="page.iconSet.spinner.icon" :space="page.iconSet.spinner.space"
-              spin class="text-light ml-2 my-2"
-              v-if="page.loading !== false || page.updating !== false">
-              <!-- spinning icon when page is loading --></fa-icon>
-
-            <span class="small text-light ml-2 my-2 text-nowrap"
-              v-if="page.loading === false && page.updating === false && user.isAdmin && !page.search.filter.hasFocus">
-              <!-- page loading time for admins -->
-              ${ page.loadingTime}</span>
-
-            <span class="small text-light ml-2 my-2 text-nowrap"
-              v-if="user.isAdmin && !page.search.filter.hasFocus">
-              <!-- current route -->
-              ${ $route.name }</span>
-
-            <b-container fluid class="ml-3 mr-0 pr-0">
-
-              <b-row cols="12" align-h="end" class="w-100">
-
-                <b-col cols="10" sm="9" md="7" lg="6" xl="5"
-                  class="pr-0 d-block d-lg-none">
+              <form class="mr-2 my-auto w-100 d-inline-block d-lg-none order-1">
+                <div class="input-group">
                   <b-form-input
                     type="search" size="sm" id="global-search-input"
                     v-model="page.search.filter.global"
                     :placeholder="$t('navbar.search.placeholder')"
-                    class="input-dark mw-400px my-2"
+                    class="input-dark mw-400px my-2 input-navbar-search"
                     @update="onSearchInput"
                     @focus="onSearchInputFocused"
                     @blur="onSearchInputBlurred">
                   </b-form-input>
-                </b-col>
+                </div>
+              </form>
 
-                <b-col cols="2" class="text-right pl-0">
-                  <b-button v-b-toggle.sidebar-main
-                    class="header-toggle-nav h-100 w-75px"
-                    style="background-color: transparent; border-color: transparent;"
-                    v-if="page.sidebar.visible !== true || page.sidebar.initialVisible !== true">
-                    <span class="sr-only">Toggle sidebar</span>
-                    <fa-icon :icon="page.iconSet.menu.icon" :space="page.iconSet.menu.space"></fa-icon>
-                  </b-button>
-                </b-col>
+            </div>
 
-              </b-row>
+            <b-button v-b-toggle.sidebar-main
+              class="header-toggle-nav h-100 w-50px"
+              style="background-color: transparent; border-color: transparent;"
+              v-if="page.sidebar.visible !== true || page.sidebar.initialVisible !== true">
+              <span class="sr-only">Toggle sidebar</span>
+              <fa-icon :icon="page.iconSet.menu.icon" :space="page.iconSet.menu.space"></fa-icon>
+            </b-button>
 
-            </b-container>
-          </b-navbar> <!-- rc-navbar sticky top navigation -->
+            <ul class="navbar-nav ml-auto d-none d-lg-flex">
+              <li class="nav-item dropdown">
+                <a class="nav-item nav-link dropdown-toggle mr-md-2 text-light" href="#" id="account-dropdown-toggle"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <fa-icon class="mr-1" :icon="page.iconSet.user.icon" :space="page.iconSet.user.space"></fa-icon>
+                  <span v-text="user.meta.un"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-md-right" aria-labelledby="account-dropdown-toggle">
+                  <router-link class="dropdown-item" :to="{ name: 'settings' }" v-text="$t('navbar.dropdown.settings')"></router-link>
+                  <div class="dropdown-divider"></div>
+                  <router-link class="dropdown-item" :to="{ name: 'logout' }" v-text="$t('navbar.dropdown.logout')"></router-link>
+                </div>
+              </li>
+            </ul>
+
+          </header> <!-- rc-navbar sticky top navigation -->
         </template>

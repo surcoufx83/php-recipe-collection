@@ -137,21 +137,6 @@
       },
       sidebar: {
         initialVisible: true,
-        routes: [
-          { to: 'home', text: 'sidebar.home', icon: '{{ Config.getIcon("home").icon }}', space: '{{ Config.getIcon("home").space }}'},
-          { to: 'writeRecipe', text: 'sidebar.writeRecipe', icon: '{{ Config.getIcon("add").icon }}', space: '{{ Config.getIcon("add").space }}'},
-          { to: 'search', text: 'sidebar.search', icon: '{{ Config.getIcon("search").icon }}', space: '{{ Config.getIcon("search").space }}'},
-          { to: 'myRecipes', text: 'sidebar.myRecipes', icon: '{{ Config.getIcon("recipes").icon }}', space: '{{ Config.getIcon("recipes").space }}'},
-          { to: 'random', text: 'sidebar.random', icon: '{{ Config.getIcon("random").icon }}', space: '{{ Config.getIcon("random").space }}'}{% if Controller.isAuthenticated() and Controller.User().isAdmin() %},
-          { to: 'admin', text: 'sidebar.admin.title', icon: '{{ Config.getIcon("settings").icon }}', space: '{{ Config.getIcon("settings").space }}', children: [
-            { to: 'configuration', text: 'sidebar.admin.configuration', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'},
-            { to: 'cronjobs', text: 'sidebar.admin.cronjobs', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'},
-            { to: 'translations', text: 'sidebar.admin.translations', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'},
-            { to: 'logs', text: 'sidebar.admin.logs', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'},
-            { to: 'users', text: 'sidebar.admin.users', icon: '{{ Config.getIcon("setting").icon }}', space: '{{ Config.getIcon("setting").space }}'}
-          ]},
-          {% endif %}
-        ],
         visible: true
       }
     },

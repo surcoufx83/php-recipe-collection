@@ -11,22 +11,57 @@
           :no-close-on-route-change="page.sidebar.initialVisible"
           no-close-on-esc>
           <ul class="nav-sidebar-level1">
-            <sidebar-ul1-li
-              v-for="(route, index) in page.sidebar.routes" :key="index"
-              v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
-              :to="route.to"
-              :params="route.to != 'recipe' && route.to != 'random' ? { } :
-                (
-                  route.to == 'recipe' ? { id: page.currentRecipe.id, name: page.currentRecipe.name} :
-                  (
-                    page.currentRecipe.id != undefined ? { id: '-'+page.currentRecipe.id } : { }
-                  )
-                )"
-              :icon="route.icon"
-              :text="route.to != 'recipe' ? $t(route.text) : page.currentRecipe.name"
-              :children="route.children"
-              :exact="route.exact"
-              ></sidebar-ul1-li>
+
+            <sidebar-ul1-li to="home"
+              :icon="page.iconSet.home.icon" :space="page.iconSet.home.space"
+              :text="$t('sidebar.home')"></sidebar-ul1-li>
+
+            <sidebar-ul1-li to="writeRecipe"
+              :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
+              :text="$t('sidebar.writeRecipe')"></sidebar-ul1-li>
+
+            <sidebar-ul1-li to="search"
+              :icon="page.iconSet.search.icon" :space="page.iconSet.search.space"
+              :text="$t('sidebar.search')"></sidebar-ul1-li>
+
+            <sidebar-ul1-li to="myRecipes"
+              :icon="page.iconSet.recipes.icon" :space="page.iconSet.recipes.space"
+              :text="$t('sidebar.myRecipes')"></sidebar-ul1-li>
+
+            <sidebar-ul1-li to="random"
+              :icon="page.iconSet.random.icon" :space="page.iconSet.random.space"
+              :text="$t('sidebar.random')"></sidebar-ul1-li>
+
+            <sidebar-ul1-li to="settings" class="d-list-item d-lg-none"
+              :icon="page.iconSet.settings.icon" :space="page.iconSet.settings.space"
+              :text="$t('sidebar.settings')"></sidebar-ul1-li>
+
+            <sidebar-ul1-li to="admin"
+              v-if="user.isAdmin"
+              :icon="page.iconSet.settings.icon" :space="page.iconSet.settings.space"
+              :text="$t('sidebar.admin.title')"></sidebar-ul1-li>
+
+            <ul class="nav-sidebar-level2"
+              v-if="user.isAdmin && ($route.name === 'admin' || ($route.matched.length > 0 && $route.matched[0].name === 'admin'))">
+
+              <sidebar-ul1-li to="configuration"
+                :icon="page.iconSet.settings.icon" :space="page.iconSet.settings.space"
+                :text="$t('sidebar.admin.configuration')"></sidebar-ul1-li>
+
+              <sidebar-ul1-li to="cronjobs"
+                :icon="page.iconSet.settings.icon" :space="page.iconSet.settings.space"
+                :text="$t('sidebar.admin.cronjobs')"></sidebar-ul1-li>
+
+              <sidebar-ul1-li to="logs"
+                :icon="page.iconSet.settings.icon" :space="page.iconSet.settings.space"
+                :text="$t('sidebar.admin.logs')"></sidebar-ul1-li>
+
+              <sidebar-ul1-li to="users"
+                :icon="page.iconSet.settings.icon" :space="page.iconSet.settings.space"
+                :text="$t('sidebar.admin.users')"></sidebar-ul1-li>
+
+            </ul>
+
           </ul>
           <template slot="footer">
             <div v-b-toggle.sidebar-main class="d-flex bg-dark text-gray align-items-center px-3 py-2 fs-80">
@@ -43,21 +78,9 @@
     <template id="sidebar-ul1-li-template">
       <li>
         <router-link :to="{ name: to, params: params }">
-          <fa-icon :fas="fas" :far="far" :icon="icon"></fa-icon>
-          ${text}
+          <fa-icon :space="space" :icon="icon"></fa-icon>
+          <span v-text="text"></span>
         </router-link>
-        <ul class="nav-sidebar-level2"
-          v-if="children && children.length > 0 && ($route.name === to || ($route.matched.length > 0 && $route.matched[0].name === to))">
-          <sidebar-ul2-li
-            v-for="(route, index) in children" :key="index"
-            v-if="route.to != 'recipe' || (page.currentRecipe.id != undefined && page.currentRecipe.id > 0)"
-            :to="route.to"
-            :params="route.to != 'recipe' ? { } : { id: page.currentRecipe.id, name: page.currentRecipe.name}"
-            :icon="route.icon"
-            :text="route.to != 'recipe' ? $t(route.text) : page.currentRecipe.name"
-            :exact="route.exact"
-            ></sidebar-ul2-li>
-        </ul>
       </li>
     </template>
 

@@ -98,7 +98,7 @@ Vue.component('recipes-listing-item', {
 })
 
 Vue.component('sidebar', {
-  props: ['page'],
+  props: ['page', 'user'],
   delimiters: ['${', '}'],
   template: '#sidebar-template',
   methods: {
@@ -115,8 +115,7 @@ Vue.component('sidebar-ul1-li', {
     params: { type: Object, required: false },
     text: {type: String, required: true },
     exact: { type: Boolean, default: false, required: false },
-    far: { type: Boolean, default: false, required: false },
-    fas: { type: Boolean, default: true, required: false },
+    space: { type: String, default: "far", required: false },
     icon: { type: String, required: false },
     children: { type: Array, required: false }
   },
@@ -843,9 +842,7 @@ const UserLogin = {
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    { name: 'account', path: '/profile', children: [
-      { name: 'settings', path: 'settings' }
-    ]},
+    { name: 'account', path: '/profile' },
     { name: 'admin', path: '/admin', children: [
       { name: 'configuration', path: 'configuration' },
       { name: 'cronjobs', path: 'cronjobs' },
@@ -866,6 +863,7 @@ const router = new VueRouter({
       { name: 'userRecipes', path: 'user/:id(.+)-:name([^/]*)' }
     ]},
     { name: 'search', path: '/search', component: SearchRecipe },
+    { name: 'settings', path: '/settings' },
     { name: 'user', path: '/user/:id(.+)-:name([^/]*)'},
     { name: 'writeRecipe', path: '/write', component: RecipesCreator },
   ]

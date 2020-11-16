@@ -23,6 +23,10 @@ const rc_i18n_de = {
     }
   },
   navbar: {
+    dropdown: {
+      logout: 'Abmelden',
+      settings: 'Einstellungen'
+    },
     search: {
       placeholder: 'Suche nach Rezepten oder Zutaten, z.B. Kartoffelauflauf'
     }
@@ -504,6 +508,7 @@ const rc_i18n_de = {
     myRecipes: 'Meine Rezepte',
     random: 'Zufallsrezept',
     search: 'Suche',
+    settings: 'Einstellungen',
     writeRecipe: 'Neues Rezept'
   }
 }

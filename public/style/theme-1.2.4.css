@@ -332,8 +332,8 @@ Looks very bad in current theme
     color: #F5EAE1; }
 
 .navbar {
-  box-shadow: 0 2px 0 0 #002448;
-  z-index: 1200; }
+  background-color: #002448;
+  box-shadow: 0 2px 0 0 #002448; }
 
 ul.list-group-sm li.list-group-item {
   padding: .2rem .8rem; }
@@ -372,7 +372,7 @@ div.page {
   div.page .b-sidebar-outer {
     z-index: 600; }
   div.page .b-sidebar {
-    padding-top: 58px;
+    margin-top: 57px !important;
     width: 220px; }
     div.page .b-sidebar ul {
       padding-left: 0;
@@ -593,7 +593,12 @@ div.removable-image-area {
     max-width: calc(50% - 30px);
     min-width: calc(50% - 30px);
     margin-bottom: 15px;
-    margin-top: 15px; } }
+    margin-top: 15px; }
+
+  .navbar {
+    position: sticky;
+    z-index: 1071;
+    top: 0; } }
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .card-columns.masonry-deck.cols-lg-1 {
     column-count: 1; }
@@ -615,7 +620,12 @@ div.removable-image-area {
     margin-top: 15px; }
 
   div.page.sidebar-visible {
-    padding-left: 220px !important; } }
+    padding-left: 220px !important; }
+
+  .navbar {
+    position: sticky;
+    z-index: 1071;
+    top: 0; } }
 @media (min-width: 1200px) {
   .card-columns.masonry-deck.cols-xl-1 {
     column-count: 1; }
@@ -637,6 +647,11 @@ div.removable-image-area {
     margin-top: 15px; }
 
   div.page.sidebar-visible {
-    padding-left: 220px !important; } }
+    padding-left: 220px !important; }
 
-/*# sourceMappingURL=theme-1.2.3.css.map */
+  .navbar {
+    position: sticky;
+    z-index: 1071;
+    top: 0; } }
+
+/*# sourceMappingURL=theme-1.2.4.css.map */

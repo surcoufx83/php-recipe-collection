@@ -14,7 +14,7 @@
     <link type="text/css" rel="stylesheet" href="/style/bootstrap-vue-icons-2.18.0.min.css" />
     <link rel="stylesheet" href="/style/fontawesome-5.15.1.min.css">
     <link rel="stylesheet" href="/style/ekko-lightbox-5.3.0.css">
-    <link rel="stylesheet" href="/style/theme-1.2.3.css">
+    <link rel="stylesheet" href="/style/theme-1.2.4.css">
     <script src="/script/vue-2.6.12.js"></script>
     <script src="/script/vue-loaders-4.1.1.umd.js"></script>
     <script src="/script/vue-router-3.4.7.min.js"></script>
@@ -25,7 +25,7 @@
     <script src="/script/bootstrap-vue-icons-2.18.0.min.js"></script>
     <script src="/script/moment-2.29.1.min.js"></script>
     <script src="/script/lodash-4.17.20.min.js"></script>
-    <script src="/script/i18n/rc-de-1.2.9.js"></script>
+    <script src="/script/i18n/rc-de-1.2.10.js"></script>
     {{ Header.JS|raw }}
     <title>{{ Config.Page('Title') }}</title>
   </head>
@@ -37,7 +37,7 @@
       <main>
         <b-container class="page" fluid
           v-bind:class="{'p-0': true, 'pl-0': user.loggedIn === false, 'sidebar-visible': page.sidebar.visible}"> <!-- page -->
-          <sidebar :page="page" v-if="user.loggedIn"></sidebar>
+          <sidebar :page="page" :user="user" v-if="user.loggedIn"></sidebar>
           <b-container class="page-wrapper p-0" fluid> <!-- page-wrapper -->
             <b-container class="page-header-wrapper p-0"
               v-if="user.loggedIn"> <!-- page-header-wrapper -->
@@ -89,7 +89,7 @@
     <script src="/script/vue-i18n-8.22.1.min.js"></script>
     <script src="/script/vue-i18n-locales-1.2.0.js"></script>
 
-    <script src="/script/vue-custom-1.2.7.js"></script>
+    <script src="/script/vue-custom-1.2.8.js"></script>
 
     <script>
 
