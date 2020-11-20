@@ -10,5 +10,6 @@ cat \
   ./component-RecipeGallery.js \
   ./component-SearchRecipe.js \
   ./component-UserLogin.js \
+  ./component-UserProfile.js \
   ./vue-router.js \
   ./vue.js > ../../../public/script/vue-custom-1.2.8.js

@@ -1,7 +1,9 @@
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    { name: 'account', path: '/profile' },
+    { name: 'account', path: '/profile', component: UserProfile, children: [
+      { name: 'settings', path: 'settings' },
+    ]},
     { name: 'admin', path: '/admin', children: [
       { name: 'configuration', path: 'configuration' },
       { name: 'cronjobs', path: 'cronjobs' },
@@ -22,7 +24,6 @@ const router = new VueRouter({
       { name: 'userRecipes', path: 'user/:id(.+)-:name([^/]*)' }
     ]},
     { name: 'search', path: '/search', component: SearchRecipe },
-    { name: 'settings', path: '/settings' },
     { name: 'user', path: '/user/:id(.+)-:name([^/]*)'},
     { name: 'writeRecipe', path: '/write', component: RecipesCreator },
   ]

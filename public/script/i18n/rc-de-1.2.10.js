@@ -32,6 +32,13 @@ const rc_i18n_de = {
     }
   },
   pages: {
+    account: {
+      subtitle: '',
+      title: 'Benutzerprofil',
+      header: {
+        title: 'Dein Profil {name}'
+      }
+    },
     common: {
       navtitle: 'Kochbuch'
     },
@@ -328,6 +335,10 @@ const rc_i18n_de = {
         gotoRecipe: 'Zum Rezept',
         header: 'Wir haben keine Ergebnisse gefunden.|Wir haben ein Ergebnis gefunden!|Wir haben {num} Rezepte gefunden!'
       }
+    },
+    settings: {
+      subtitle: '',
+      title: 'Einstellungen'
     },
     userRecipes: {
       subtitle: '',

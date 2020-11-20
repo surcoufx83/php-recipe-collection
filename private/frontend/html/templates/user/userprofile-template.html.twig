@@ -1,0 +1,19 @@
+
+    <template id="userprofile-template">
+      <b-container>
+        <b-row>
+          <b-col class="col-12 col-md-7">
+
+            <div class="pb-3">
+              <h4 v-text="$t('pages.account.header.title', { name: user.meta.un })"></h4>
+            </div>
+
+          </b-col>
+        </b-row>
+        <router-view
+          :config="config"
+          :page="page"
+          :user="user">
+        </router-view>
+      </b-container>
+    </template>

@@ -308,6 +308,9 @@ Looks very bad in current theme
 .navbar {
   background-color: $bg-navbar;
   box-shadow: 0 2px 0 0 $bg-navbar;
+  position: sticky;
+  z-index: 1071;
+  top: 0;
 }
 
 ul.list-group-sm li.list-group-item {
@@ -667,12 +670,6 @@ div.removable-image-area {
     margin-bottom: 15px;
     margin-top: 15px;
   }
-  .navbar {
-    position: sticky;
-    z-index: 1071;
-    top: 0;
-
-  }
 }
 
 // Large devices (desktops, 992px and up)
@@ -696,11 +693,6 @@ div.removable-image-area {
       padding-left: 220px!important;
     }
   }
-  .navbar {
-    position: sticky;
-    z-index: 1071;
-    top: 0;
-  }
 }
 
 // Extra large devices (large desktops, 1200px and up)
@@ -723,10 +715,5 @@ div.removable-image-area {
     &.sidebar-visible {
       padding-left: 220px!important;
     }
-  }
-  .navbar {
-    position: sticky;
-    z-index: 1071;
-    top: 0;
   }
 }
