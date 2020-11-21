@@ -1,0 +1,123 @@
+
+    <template id="usercontact-template">
+      <div>
+
+        <b-row>
+          <b-col class="col-12 col-md-7">
+
+            <div class="pb-3"> <!-- contacts header -->
+              <h4 v-text="$t('pages.contact.form.title')"></h4>
+              <p class="text-muted text-small" v-text="$t('pages.contact.form.description')"></p>
+            </div> <!-- contacts header -->
+
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col class="col-12 col-md-7">
+
+            <div> <!-- users contact settings header -->
+              <h5 v-text="$t('pages.contact.users.title')"></h5>
+            </div> <!-- users contact settings header -->
+
+            <b-form-row><!-- user2user messages -->
+              <b-form-group
+                id="user2user-msg-group"
+                :description="$t('pages.contact.users.msg.description')"
+                class="px-1 w-100">
+                <b-form-checkbox size="sm" class="mt-2" debounce="250"
+                  id="user2user-msg-input" name="user2user-msg"
+                  v-model="user.consent.user2me.message"
+                  @change="onU2uMsgConsentChange">
+                  <fa-icon :icon="page.iconSet.msg.icon" :space="page.iconSet.msg.space" class="mr-1"></fa-icon>
+                  <span v-text="$t('pages.contact.users.msg.title')"></span>
+                </b-form-checkbox>
+              </b-form-group>
+            </b-form-row><!-- user2user messages -->
+
+            <b-form-row><!-- user2user emails -->
+              <b-form-group
+                id="user2user-email-group"
+                :description="$t('pages.contact.users.email.description')"
+                class="px-1 w-100">
+                <b-form-checkbox size="sm" class="mt-2" debounce="250"
+                  id="user2user-email-input" name="user2user-email"
+                  v-model="user.consent.user2me.email"
+                  @change="onU2uMailConsentChange">
+                  <fa-icon :icon="page.iconSet.mail.icon" :space="page.iconSet.mail.space" class="mr-1"></fa-icon>
+                  <span v-text="$t('pages.contact.users.email.title')"></span>
+                </b-form-checkbox>
+              </b-form-group>
+            </b-form-row><!-- user2user emails -->
+
+            <b-form-row v-if="user.consent.user2me.email"><!-- user2user expose email address -->
+              <b-form-group
+                id="user2user-expose-group"
+                :description="$t('pages.contact.users.expose.description')"
+                class="px-1 w-100">
+                <b-form-checkbox size="sm" class="mt-2" debounce="250"
+                  id="user2user-expose-input" name="user2user-expose"
+                  v-model="user.consent.user2me.exposeMail"
+                  @change="onU2uExposeConsentChange">
+                  <fa-icon :icon="page.iconSet.contact.icon" :space="page.iconSet.contact.space" class="mr-1"></fa-icon>
+                  <span v-text="$t('pages.contact.users.expose.title')"></span>
+                </b-form-checkbox>
+              </b-form-group>
+            </b-form-row><!-- user2user expose email address -->
+
+          </b-col>
+        </b-row>
+
+        <b-row>
+          <b-col class="col-12 col-md-7">
+
+            <div class="pt-3"> <!-- system contact settings header -->
+              <h5 v-text="$t('pages.contact.system.title')"></h5>
+            </div> <!-- system contact settings header -->
+
+            <b-form-row><!-- sys2user messages -->
+              <b-form-group
+                id="sys2user-msg-group"
+                :description="$t('pages.contact.system.msg.description')"
+                class="px-1 w-100">
+                <b-form-checkbox size="sm" class="mt-2" debounce="250"
+                  id="sys2user-msg-input" name="sys2user-msg"
+                  v-model="user.consent.sys2me.message"
+                  @change="onS2uMsgConsentChange">
+                  <fa-icon :icon="page.iconSet.msg.icon" :space="page.iconSet.msg.space" class="mr-1"></fa-icon>
+                  <span v-text="$t('pages.contact.system.msg.title')"></span>
+                </b-form-checkbox>
+              </b-form-group>
+            </b-form-row><!-- sys2user messages -->
+
+            <b-form-row><!-- sys2user mails -->
+              <b-form-group
+                id="sys2user-email-group"
+                :description="$t('pages.contact.system.email.description')"
+                class="px-1 w-100">
+                <b-form-checkbox size="sm" class="mt-2" debounce="250"
+                  id="sys2user-email-input" name="sys2user-email"
+                  v-model="user.consent.sys2me.email"
+                  @change="onS2uMailConsentChange">
+                  <fa-icon :icon="page.iconSet.mail.icon" :space="page.iconSet.mail.space" class="mr-1"></fa-icon>
+                  <span v-text="$t('pages.contact.system.email.title')"></span>
+                </b-form-checkbox>
+              </b-form-group>
+            </b-form-row><!-- sys2user mails -->
+
+            <div> <!-- see also -->
+              <i18n path="pages.contact.system.seealso" tag="p">
+                <template #notifications>
+                  <router-link :to="{ name: 'notifications' }" class="text-nowrap">
+                    <fa-icon :icon="page.iconSet.notification.icon" :space="page.iconSet.notification.space" class="text-small"></fa-icon>
+                    <span v-text="$t('pages.account.links.notifications')"></span>
+                  </router-link>
+                </template>
+              </i18n>
+            </div> <!-- see also -->
+
+          </b-col>
+        </b-row>
+
+      </div>
+    </template>

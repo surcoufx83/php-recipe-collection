@@ -46,7 +46,7 @@ final class RoutingManager {
       'method' => ERequestMethod::HTTP_GET,
       'requiresAdmin' => true,
     ],
-    '/api/page-data\?/profile' => [ // update user profile
+    '/api/page-data\?/profile(/[^/]+)?' => [ // update user profile
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\User\ProfileRoute::class,
       'method' => ERequestMethod::HTTP_POST,
     ],

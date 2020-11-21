@@ -31,6 +31,11 @@ interface UserInterface {
   public function isAdmin() : bool;
   public function isOAuthUser() : bool;
   public function rejectAdmin() : bool;
+  public function setConsent_Sys2Me_Mail(bool $newValue) : void;
+  public function setConsent_Sys2Me_Message(bool $newValue) : void;
+  public function setConsent_User2Me_ExposeMail(bool $newValue) : void;
+  public function setConsent_User2Me_Mail(bool $newValue) : void;
+  public function setConsent_User2Me_Message(bool $newValue) : void;
   public function setFirstname(string $newValue) : void;
   public function setLastname(string $newValue) : void;
   public function setMail(string $newValue) : bool;

@@ -38,7 +38,12 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
             $user_last_activity,
             $user_avatar,
             $user_registration_completed,
-            $user_adconsent = false;
+            $user_adconsent = false,
+            $consent_user2user_msg = false,
+            $consent_user2user_mail = false,
+            $consent_user2user_expose_mail = false,
+            $consent_sys2user_msg = false,
+            $consent_sys2user_mail = false;
   protected $recipe_count = -1;
 
   private $changes = array();
@@ -61,6 +66,11 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
       $this->user_avatar = $record['user_avatar'];
       $this->user_registration_completed = (!is_null($record['user_registration_completed']) ? new DateTime($record['user_registration_completed']) : null);
       $this->user_adconsent = (!is_null($record['user_adconsent']) ? new DateTime($record['user_adconsent']) : false);
+      $this->consent_user2user_msg = (!is_null($record['consent_user2user_msg']) ? new DateTime($record['consent_user2user_msg']) : false);
+      $this->consent_user2user_mail = (!is_null($record['consent_user2user_mail']) ? new DateTime($record['consent_user2user_mail']) : false);
+      $this->consent_user2user_expose_mail = (!is_null($record['consent_user2user_expose_mail']) ? new DateTime($record['consent_user2user_expose_mail']) : false);
+      $this->consent_sys2user_msg = (!is_null($record['consent_sys2user_msg']) ? new DateTime($record['consent_sys2user_msg']) : false);
+      $this->consent_sys2user_mail = (!is_null($record['consent_sys2user_mail']) ? new DateTime($record['consent_sys2user_mail']) : false);
     } else {
       $this->user_id = intval($this->user_id);
       $this->user_isadmin = (ConverterHelper::to_bool($this->user_isadmin) && !is_null($this->user_email_validated));
@@ -69,6 +79,11 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
       $this->user_last_activity = (!is_null($this->user_last_activity) ? new DateTime($this->user_last_activity) : '');
       $this->user_registration_completed = (!is_null($this->user_registration_completed) ? new DateTime($this->user_registration_completed) : null);
       $this->user_adconsent = (!is_null($this->user_adconsent) ? new DateTime($this->user_adconsent) : false);
+      $this->consent_user2user_msg = (!is_null($this->consent_user2user_msg) ? new DateTime($this->consent_user2user_msg) : false);
+      $this->consent_user2user_mail = (!is_null($this->consent_user2user_mail) ? new DateTime($this->consent_user2user_mail) : false);
+      $this->consent_user2user_expose_mail = (!is_null($this->consent_user2user_expose_mail) ? new DateTime($this->consent_user2user_expose_mail) : false);
+      $this->consent_sys2user_msg = (!is_null($this->consent_sys2user_msg) ? new DateTime($this->consent_sys2user_msg) : false);
+      $this->consent_sys2user_mail = (!is_null($this->consent_sys2user_mail) ? new DateTime($this->consent_sys2user_mail) : false);
     }
     if ($this->user_firstname != '' || $this->user_lastname != '')
       $this->initials = strtoupper(substr($this->user_firstname, 0, 1).substr($this->user_lastname, 0, 1));
@@ -180,15 +195,16 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
       'avatar' => [
         'url' => $this->getAvatarUrl(),
       ],
-      'loggedIn' => true,
-      'id' => $this->user_id,
-      'isAdmin' => $this->isAdmin(),
-      'meta' => [
-        'email' => $this->user_email,
-        'fn' => $this->user_firstname,
-        'ln' => $this->user_lastname,
-        'un' => $this->getUsername(),
-        'initials' => $this->getInitials(),
+      'consent' => [
+        'sys2me' => [
+          'message' => $this->consent_sys2user_msg !== false,
+          'email' => $this->consent_sys2user_mail !== false,
+        ],
+        'user2me' => [
+          'message' => $this->consent_user2user_msg !== false,
+          'email' => $this->consent_user2user_mail !== false,
+          'exposeMail' => $this->consent_user2user_expose_mail !== false,
+        ],
       ],
       'customSettings' => [
         'formats' => [
@@ -214,6 +230,16 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
             'minutes' => $Controller->Config()->Defaults('Recipes', 'LtMinutes'),
           ]
         ]
+      ],
+      'loggedIn' => true,
+      'id' => $this->user_id,
+      'isAdmin' => $this->isAdmin(),
+      'meta' => [
+        'email' => $this->user_email,
+        'fn' => $this->user_firstname,
+        'ln' => $this->user_lastname,
+        'un' => $this->getUsername(),
+        'initials' => $this->getInitials(),
       ]
     ];
   }
@@ -314,6 +340,43 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
       return true;
     }
     return false;
+  }
+
+  public function setConsent_Sys2Me_Mail(bool $newValue) : void {
+    global $Controller;
+    $this->consent_sys2user_mail = $newValue ? new \DateTime() : false;
+    $this->changes['consent_sys2user_mail'] = $newValue ? $this->consent_sys2user_mail->format(DTF_SQL) : null;
+    $Controller->updateDbObject($this);
+  }
+
+  public function setConsent_Sys2Me_Message(bool $newValue) : void {
+    global $Controller;
+    $this->consent_sys2user_msg = $newValue ? new \DateTime() : false;
+    $this->changes['consent_sys2user_msg'] = $newValue ? $this->consent_sys2user_msg->format(DTF_SQL) : null;
+    $Controller->updateDbObject($this);
+  }
+
+  public function setConsent_User2Me_ExposeMail(bool $newValue) : void {
+    global $Controller;
+    $this->consent_user2user_expose_mail = $newValue ? new \DateTime() : false;
+    $this->changes['consent_user2user_expose_mail'] = $newValue ? $this->consent_user2user_expose_mail->format(DTF_SQL) : null;
+    $Controller->updateDbObject($this);
+  }
+
+  public function setConsent_User2Me_Mail(bool $newValue) : void {
+    global $Controller;
+    $this->consent_user2user_mail = $newValue ? new \DateTime() : false;
+    if ($newValue == false)
+      $this->setConsent_User2Me_ExposeMail(false);
+    $this->changes['consent_user2user_mail'] = $newValue ? $this->consent_user2user_mail->format(DTF_SQL) : null;
+    $Controller->updateDbObject($this);
+  }
+
+  public function setConsent_User2Me_Message(bool $newValue) : void {
+    global $Controller;
+    $this->consent_user2user_msg = $newValue ? new \DateTime() : false;
+    $this->changes['consent_user2user_msg'] = $newValue ? $this->consent_user2user_msg->format(DTF_SQL) : null;
+    $Controller->updateDbObject($this);
   }
 
   public function setFirstname(string $newValue) : void {

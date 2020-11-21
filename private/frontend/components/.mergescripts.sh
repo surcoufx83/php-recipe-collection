@@ -9,6 +9,7 @@ cat \
   ./component-RecipeEditor.js \
   ./component-RecipeGallery.js \
   ./component-SearchRecipe.js \
+  ./component-UserContactSettings.js \
   ./component-UserLogin.js \
   ./component-UserProfile.js \
   ./vue-router.js \

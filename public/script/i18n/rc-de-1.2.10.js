@@ -73,7 +73,38 @@ const rc_i18n_de = {
       navtitle: 'Kochbuch'
     },
     contact: {
-      subtitle: 'Kontaktmöglichkeiten'
+      subtitle: 'Kontaktmöglichkeiten',
+      form: {
+        title: 'Wie dürfen andere dich kontaktieren?',
+        description: 'Privatsphäre ist wichtig. In den Grundeinstellung darf dich niemand kontaktieren, aber du kannst hier erlauben, dass dir andere Benutzer des Kochbuchs eine Nachricht oder E-Mail schreiben düren.'
+      },
+      system: {
+        title: 'Was darf die Kochbuch-Webseite?',
+        seealso: 'Wir werden dich nun nicht mit Nachrichten und E-Mails überhäufen. Wie auch bei diesen Kontakteinstellungen sind alle Optionen datenschutzfreundlich deaktiviert. Damit hast du am Anfang zwar mehr Arbeit, dafür aber die volle Kontrolle und du wirst nur mit den Sachen zugespammt, die du wirklich möchtest. Im Abschnitt {notifications} findest du dafür weitere Einstellungen.',
+        email: {
+          title: 'Das Kochbuch darf mir E-Mails schicken.',
+          description: 'Wir wissen noch nicht wofür, aber mit dem Schalter kannst du der Kochbuch-Webseite erlauben, dir E-Mails zu schicken.'
+        },
+        msg: {
+          title: 'Das Kochbuch darf mir Benachrichtigungen anzeigen.',
+          description: 'Wenn diese Option aktiviert ist, zeigen wir dir gelegentlich Benachrichtigungen an, während du auf der Kochbuch-Seite unterwegs bist.'
+        }
+      },
+      users: {
+        title: 'Was dürfen andere Benutzer?',
+        email: {
+          title: 'Andere dürfen mir E-Mails schicken.',
+          description: 'Ist diese Option aktiv, können dir andere Benutzer eine E-Mail schicken.'
+        },
+        expose: {
+          title: 'Ich möchte anderen Benutzern meine E-Mailadresse zeigen.',
+          description: 'Wenn du diese Option aktivierst, wird anderen Benutzern deine E-Mailadresse angezeigt, wenn Sie dir eine E-Mail schreiben. Aktiviere den Schalter nur, wenn du weißt, was das für Dich bedeutet!'
+        },
+        msg: {
+          title: 'Andere dürfen mir Nachrichten schreiben.',
+          description: 'Ist diese Option aktiv, können dir andere Benutzer eine Nachricht schreiben. Die Nachricht wird dir hier auf der Kochbuch-Webseite angezeigt.'
+        }
+      }
     },
     editRecipe: {
       subtitle: '',

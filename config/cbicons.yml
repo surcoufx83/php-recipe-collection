@@ -20,6 +20,9 @@ clock:
 cloud:
   icon: cloud
   space: fas
+contact:
+  icon: address-card
+  space: fas
 credentials:
   icon: key
   space: fas
@@ -46,6 +49,9 @@ like:
   space: fas
 lock:
   icon: lock
+  space: fas
+mail:
+  icon: envelope
   space: fas
 meal:
   icon: utensils

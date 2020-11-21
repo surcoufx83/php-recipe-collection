@@ -2,7 +2,7 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { name: 'account', path: '/profile', component: UserProfile, children: [
-      { name: 'contact', path: 'contact' },
+      { name: 'contact', path: 'contact', component: UserContactSettings },
       { name: 'notifications', path: 'notifications' },
       { name: 'settings', path: 'settings' },
       { name: 'subscriptions', path: 'subscriptions' },

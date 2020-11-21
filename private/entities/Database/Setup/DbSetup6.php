@@ -32,7 +32,8 @@ final class DbSetup6 extends DbSetup {
     return 'ALTER TABLE `users`
     	ADD COLUMN `consent_user2user_msg` DATETIME NULL DEFAULT NULL AFTER `user_adconsent`,
     	ADD COLUMN `consent_user2user_mail` DATETIME NULL DEFAULT NULL AFTER `consent_user2user_msg`,
-    	ADD COLUMN `consent_sys2user_msg` DATETIME NULL DEFAULT NULL AFTER `consent_user2user_mail`,
+    	ADD COLUMN `consent_user2user_expose_mail` DATETIME NULL DEFAULT NULL AFTER `consent_user2user_mail`,
+    	ADD COLUMN `consent_sys2user_msg` DATETIME NULL DEFAULT NULL AFTER `consent_user2user_expose_mail`,
     	ADD COLUMN `consent_sys2user_mail` DATETIME NULL DEFAULT NULL AFTER `consent_sys2user_msg`';
   }
 
