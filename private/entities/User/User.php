@@ -254,22 +254,32 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
   public function setFirstname(string $newValue) : void {
     global $Controller;
     $this->user_firstname = $newValue;
+    $this->user_fullname = $this->user_firstname.' '.$this->user_lastname;
     $this->changes['user_firstname'] = $this->user_firstname;
+    $this->changes['user_fullname'] = $this->user_fullname;
     $Controller->updateDbObject($this);
   }
 
   public function setLastname(string $newValue) : void {
     global $Controller;
     $this->user_lastname = $newValue;
+    $this->user_fullname = $this->user_firstname.' '.$this->user_lastname;
     $this->changes['user_lastname'] = $this->user_lastname;
+    $this->changes['user_fullname'] = $this->user_fullname;
     $Controller->updateDbObject($this);
   }
 
-  public function setMail(string $newValue) : void {
+  public function setMail(string $newValue) : bool {
     global $Controller;
+    if ($newValue != '') {
+      $filter = filter_var($newValue, FILTER_VALIDATE_EMAIL);
+      if ($filter == false)
+        return false;
+    }
     $this->user_email = $newValue;
     $this->changes['user_email'] = $this->user_email;
     $Controller->updateDbObject($this);
+    return true;
   }
 
   public function setName(string $newValue) : void {

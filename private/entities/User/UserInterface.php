@@ -32,7 +32,7 @@ interface UserInterface {
   public function rejectAdmin() : bool;
   public function setFirstname(string $newValue) : void;
   public function setLastname(string $newValue) : void;
-  public function setMail(string $newValue) : void;
+  public function setMail(string $newValue) : bool;
   public function setName(string $newValue) : void;
   public function setPassword(string $newPassword, string $oldPassword) : bool;
   public function setRegistrationCompleted() : void;
