@@ -14,7 +14,7 @@ class OAuthUser extends User {
     global $Controller;
     $this->user_name = 'OAuth2::'.$userid.'@'.$Controller->Config()->System('OAUTH2', 'DisplayName');
     $this->oauth_user_name = $userid;
-    $this->user_email = 'OAuth2::'.$userid.'@'.$Controller->Config()->System('OAUTH2', 'DisplayName');
+    $this->user_email = '';
   }
 
   public function save(array &$response) : bool {

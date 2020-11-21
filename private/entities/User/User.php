@@ -109,7 +109,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
     $hash_token = password_hash($session_token, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
     $hash_password = password_hash($session_password4hash, PASSWORD_ARGON2I, ['threads' => $Controller->Config()->System('Checksums', 'PwHashThreads')]);
 
-    if ($Controller->setSessionCookies($this->user_email, $session_token, $session_password, $keepSession)) {
+    if ($Controller->setSessionCookies($this->user_name, $session_token, $session_password, $keepSession)) {
       $tokenstr = (!is_null($token) ? json_encode($token->jsonSerialize()) : NULL);
       $query = new QueryBuilder(EQueryType::qtINSERT, 'user_logins');
       $query->columns(['user_id', 'login_token', 'login_password', 'login_keep', 'login_oauthdata'])
