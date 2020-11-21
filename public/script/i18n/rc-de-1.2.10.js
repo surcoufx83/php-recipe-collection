@@ -74,6 +74,7 @@ const rc_i18n_de = {
     },
     contact: {
       subtitle: 'Kontaktmöglichkeiten',
+      nomail: 'Du musst zuerst im Benutzerprofil eine E-Mailadresse angeben, damit diese Option verfügbar wird.',
       form: {
         title: 'Wie dürfen andere dich kontaktieren?',
         description: 'Privatsphäre ist wichtig. In den Grundeinstellung darf dich niemand kontaktieren, aber du kannst hier erlauben, dass dir andere Benutzer des Kochbuchs eine Nachricht oder E-Mail schreiben düren.'

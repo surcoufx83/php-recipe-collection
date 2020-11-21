@@ -198,12 +198,12 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
       'consent' => [
         'sys2me' => [
           'message' => $this->consent_sys2user_msg !== false,
-          'email' => $this->consent_sys2user_mail !== false,
+          'email' => $this->user_email != '' && $this->consent_sys2user_mail !== false,
         ],
         'user2me' => [
           'message' => $this->consent_user2user_msg !== false,
-          'email' => $this->consent_user2user_mail !== false,
-          'exposeMail' => $this->consent_user2user_expose_mail !== false,
+          'email' => $this->user_email != '' && $this->consent_user2user_mail !== false,
+          'exposeMail' => $this->user_email != '' && $this->consent_user2user_mail !== false && $this->consent_user2user_expose_mail !== false,
         ],
       ],
       'customSettings' => [
