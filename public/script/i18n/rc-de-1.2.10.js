@@ -80,7 +80,7 @@ const rc_i18n_de = {
       },
       system: {
         title: 'Was darf die Kochbuch-Webseite?',
-        seealso: 'Wir werden dich nun nicht mit Nachrichten und E-Mails überhäufen. Wie auch bei diesen Kontakteinstellungen sind alle Optionen datenschutzfreundlich deaktiviert. Damit hast du am Anfang zwar mehr Arbeit, dafür aber die volle Kontrolle und du wirst nur mit den Sachen zugespammt, die du wirklich möchtest. Im Abschnitt {notifications} findest du dafür weitere Einstellungen.',
+        seealso: 'Wir werden dich nicht mit Nachrichten und E-Mails überhäufen. Wie auch bei diesen Kontakteinstellungen müssen Benachrichtigungen erst aktiviert werden. Damit hast du am Anfang zwar mehr Arbeit, dafür aber die volle Kontrolle und du wirst nur mit den Sachen zugespammt, die du wirklich möchtest. Im Abschnitt {notifications} findest du dafür weitere Einstellungen.',
         email: {
           title: 'Das Kochbuch darf mir E-Mails schicken.',
           description: 'Wir wissen noch nicht wofür, aber mit dem Schalter kannst du der Kochbuch-Webseite erlauben, dir E-Mails zu schicken.'
