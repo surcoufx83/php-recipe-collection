@@ -275,6 +275,9 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
       $filter = filter_var($newValue, FILTER_VALIDATE_EMAIL);
       if ($filter == false)
         return false;
+      $newuser = $Controller->OM()->User($newValue);
+      if (!is_null($newuser))
+        return false;
     }
     $this->user_email = $newValue;
     $this->changes['user_email'] = $this->user_email;

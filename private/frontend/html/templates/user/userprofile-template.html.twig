@@ -32,26 +32,89 @@
         <router-view
           :config="config"
           :page="page"
-          :user="user" v-if="this.$router.currentRoute.matched.length > 1">
+          :user="user">
         </router-view>
-        <div v-else>
+        <div v-if="this.$router.currentRoute.matched.length == 1"> <!-- profile view if no child is selected -->
           <b-row>
             <b-col class="col-12 col-md-7">
 
-              <div class="pb-3">
-                <h4 v-text="$t('pages.account.header.title', { name: user.meta.un })"></h4>
+              <div class="pb-3"> <!-- general information header -->
+                <h4 v-text="$t('pages.account.header.title')"></h4>
                 <i18n path="pages.account.header.description" tag="p" class="text-muted text-small">
                   <template #pubprofile>
-                    <router-link :to="{ name: 'user', params: { id: user.id, name: user.meta.un } }">
+                    <router-link :to="{ name: 'user', params: { id: user.id, name: user.meta.un } }" class="text-nowrap">
                       <fa-icon :icon="page.iconSet.user.icon" :space="page.iconSet.user.space" class="text-small"></fa-icon>
                       <span v-text="$t('pages.account.header.publicProfileLink')"></span>
                     </router-link>
                   </template>
                 </i18n>
-              </div>
+              </div> <!-- general information header -->
 
             </b-col>
           </b-row>
-        </div>
+
+          <b-row>
+            <b-col class="col-12 col-md-7">
+
+              <div class="pb-3"> <!-- who are you header -->
+                <h5 v-text="$t('pages.account.personal.title')"></h5>
+                <p class="text-muted text-small" v-text="$t('pages.account.personal.description')"></p>
+              </div> <!-- who are you header -->
+
+              <b-form-row><!-- user firstname -->
+                <b-form-group
+                  id="user-firstname-group"
+                  :label="$t('pages.account.personal.firstname.title')"
+                  label-for="user-firstname-input"
+                  :description="$t('pages.account.personal.firstname.description')"
+                  class="px-1 w-100">
+                  <b-form-input trim size="sm" class="mt-2" debounce="250"
+                    id="user-firstname-input" name="user-firstname"
+                    v-model="user.meta.fn"
+                    :placeholder="$t('pages.account.personal.firstname.placeholder')"
+                    @input="onFirstnameInput">
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row><!-- user firstname -->
+
+              <b-form-row><!-- user lastname -->
+                <b-form-group
+                  id="user-lastname-group"
+                  :label="$t('pages.account.personal.lastname.title')"
+                  label-for="user-lastname-input"
+                  :description="$t('pages.account.personal.lastname.description')"
+                  class="px-1 w-100">
+                  <b-form-input trim size="sm" class="mt-2" debounce="250"
+                    id="user-lastname-input" name="user-lastname"
+                    v-model="user.meta.ln"
+                    :placeholder="$t('pages.account.personal.lastname.placeholder')"
+                    @input="onLastnameInput">
+                  </b-form-input>
+                </b-form-group>
+              </b-form-row><!-- user lastname -->
+
+              <b-form-row><!-- user email -->
+                <b-form-group
+                  id="user-email-group"
+                  :label="$t('pages.account.personal.email.title')"
+                  label-for="user-email-input"
+                  :description="$t('pages.account.personal.email.description')"
+                  class="px-1 w-100">
+                  <b-form-input trim size="sm" class="mt-2" debounce="250" type="email"
+                    id="user-email-input" name="user-email" :state="validEmail(user.meta.email)"
+                    v-model="user.meta.email"
+                    :placeholder="$t('pages.account.personal.email.placeholder')"
+                    :invalid-feedback="$t('pages.account.personal.email.invalidFeedback')"
+                    @input="onEmailInput">
+                  </b-form-input>
+                </b-form-group>
+                <b-alert variant="danger" dismissible fade
+                  v-text="mailupdate.message" :show="mailupdate.failed"></b-alert>
+              </b-form-row><!-- user email -->
+
+            </b-col>
+          </b-row>
+
+        </div> <!-- profile view if no child is selected -->
       </b-container>
     </template>

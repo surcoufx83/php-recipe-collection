@@ -62,6 +62,7 @@ final class Config implements ConfigInterface {
       301 => ['code' => 301, 'message' => '', 'i18nmessage' => 'responseMessages.badImageData', 'success' => false],
       302 => ['code' => 302, 'message' => '', 'i18nmessage' => 'responseMessages.mimetypeNotSupported', 'success' => false],
       303 => ['code' => 303, 'message' => '', 'i18nmessage' => 'responseMessages.saveFileFailed', 'success' => false],
+      401 => ['code' => 401, 'message' => '', 'i18nmessage' => 'responseMessages.mailInUse', 'success' => false],
     ];
   }
 

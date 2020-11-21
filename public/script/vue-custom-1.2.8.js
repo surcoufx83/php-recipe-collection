@@ -32,6 +32,11 @@ function evaluateFactor(value) {
   return 50
 }
 
+function validEmail(email) {
+  var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
 
 Vue.component('btn-scrollto', {
   props: {
@@ -844,11 +849,45 @@ const UserProfile = {
   delimiters: ['${', '}'],
   props: ['config', 'page', 'user'],
   template: '#userprofile-template',
+  data: function() {
+    return {
+      mailupdate: {
+        failed: false,
+        message: ''
+      }
+    }
+  },
+  methods: {
+    onEmailInput: _.debounce(function(e) {
+      if (e !== '' && !validEmail(e))
+        return
+      this.mailupdate.failed = false
+      const me = this
+      postPageData(app.$route.path, { 'update': { 'email': e } }, function (data) {
+        if (!data.success) {
+          if (data.code == 401) {
+            me.mailupdate.message = app.$t(data.i18nmessage)
+            me.mailupdate.failed = true
+          }
+        }
+      })
+    }, 500),
+    onFirstnameInput: _.debounce(function(e) {
+      postPageData(app.$route.path, { 'update': { 'firstname': e } })
+    }, 500),
+    onLastnameInput: _.debounce(function(e) {
+      postPageData(app.$route.path, { 'update': { 'lastname': e } })
+    }, 500),
+    validEmail: function(e) {
+      return (e === '' || validEmail(e))
+    }
+  }
 }
 const router = new VueRouter({
   mode: 'history',
   routes: [
     { name: 'account', path: '/profile', component: UserProfile, children: [
+      { name: 'contact', path: 'contact' },
       { name: 'notifications', path: 'notifications' },
       { name: 'settings', path: 'settings' },
       { name: 'subscriptions', path: 'subscriptions' },
@@ -913,7 +952,9 @@ var app = new Vue({
     title: function() {
       switch(this.$router.currentRoute.matched[0].name) {
         case 'account':
-          return this.$t('pages.account.title', { name: this.user.meta.fn })
+          if (this.user.meta.fn !== '')
+            return this.$t('pages.account.title', { name: this.user.meta.fn })
+          return this.$t('pages.account.titleNoUser')
         case 'gallery':
         case 'recipe':
           return this.$t('pages.recipe.title', { recipe: this.page.currentRecipe.name })
@@ -1160,7 +1201,8 @@ function postPageData(path, data, callback, updateOnSuccess = false) {
       updateProps(data, app)
     app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
     app.$set(app.page, 'updating',false)
-    callback(data);
+    if (callback !== undefined)
+      callback(data);
   })
   .fail(function(jqXHR, textStatus) {
     console.log(jqXHR, textStatus)

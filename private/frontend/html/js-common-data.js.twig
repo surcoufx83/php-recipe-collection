@@ -149,6 +149,7 @@
     id: 0,
     isAdmin: false,
     meta: {
+      email: '',
       fn: '',
       ln: '',
       un: '',
@@ -187,6 +188,7 @@
     id: {{ Controller.User().getId() }},
     isAdmin: {% if Controller.User().isAdmin() %}true{% else %}false{% endif %},
     meta: {
+      email: '{{ Controller.User().getMail() }}',
       fn: '{{ Controller.User().getFirstname() }}',
       ln: '{{ Controller.User().getLastname() }}',
       un: '{{ Controller.User().getUsername() }}',

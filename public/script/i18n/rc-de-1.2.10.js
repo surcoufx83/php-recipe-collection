@@ -35,10 +35,11 @@ const rc_i18n_de = {
     account: {
       subtitle: 'Übersicht über dein Benutzerprofil',
       title: 'Benutzerprofil von {name}',
+      titleNoUser: 'Benutzerprofil',
       moreoptions: 'Hinweis: Du kannst auch über die Seitenleiste zwischen den Seiten {profile}, {subscriptions}, {notifications} und {settings} wechseln.',
       header: {
         title: 'Allgemeine Informationen',
-        description: 'Dein Benutzerprofil gibt Dir einen Überblick über die Informationen welche das Kochbuch über dich gespeichert hat. Diese Angaben sind nur für dich ersichtlich und nicht für andere einsehbar. In deinem {pubprofile} hingegen sind deine veröffentlichten Rezepte und deine Kontaktmöglichkeiten zu finden. Welche Angaben öffentlich ersichtlich sind, kannst du hier in deinem Profil verwalten.',
+        description: 'Dein Benutzerprofil gibt Dir einen Überblick über die Informationen welche das Kochbuch über dich gespeichert hat. Diese Angaben sind nur für dich ersichtlich und nicht für andere einsehbar. In deinem {pubprofile} hingegen sind deine veröffentlichten Rezepte und deine Kontaktmöglichkeiten zu finden. Welche Angaben von anderen gesehen werden können, kannst du hier in deinem Profil verwalten.',
         publicProfileLink: 'öffentlichen Profil'
       },
       links: {
@@ -46,10 +47,33 @@ const rc_i18n_de = {
         notifications: 'Benachrichtigungen',
         settings: 'Webseiten-Einstellungen',
         subscriptions: 'Abonnements'
+      },
+      personal: {
+        title: 'Wer bist du?',
+        description: 'In diesem ersten Abschnitt kannst du einige persönliche Angaben zu Dir machen, dabei gilt: Alles kann, nichts muss.',
+        email: {
+          title: 'E-Mailadresse',
+          description: 'Gib optional deine E-Mailadresse an. Wenn diese leer ist, bekommst du nie E-Mails vom Kochbuch. Benachrichtigungen zu Abonnements erhältst du dann, wenn du das nächste Mal das Kochbuch aufrufst.',
+          placeholder: 'Dein E-Mailadresse',
+          invalidFeedback: 'Die E-Mailadresse hat ein ungültiges Format. Die Änderung wurde nicht gespeichert.'
+        },
+        firstname: {
+          title: 'Vorname',
+          description: 'Dein Vorname. Nix besonders. Aber nur wenn du willst. Wenn nicht, lass leer. Mit dem Namen spricht dich das Kochbuch an einigen Stellen an.',
+          placeholder: 'Dein Vorname'
+        },
+        lastname: {
+          title: 'Nachname',
+          description: 'Dein Nachname. Auch einfach: Wenn du möchtest, gib deinen Nachnamen an, ansonsten lasse das Feld leer.',
+          placeholder: 'Dein Nachname'
+        }
       }
     },
     common: {
       navtitle: 'Kochbuch'
+    },
+    contact: {
+      subtitle: 'Kontaktmöglichkeiten'
     },
     editRecipe: {
       subtitle: '',
@@ -503,6 +527,7 @@ const rc_i18n_de = {
     insufficientPermissionException: 'Unzureichende Berechtigung für diese Aktion.',
     loginFailed: 'Anmeldung fehlgeschlagen. Bitte überprüfe die eingegebenen Daten.',
     loginSuccessfull: 'Anmeldung erfolgreich.',
+    mailInUse: 'Die eingegebene Mailadresse wurde nicht gespeichert, da sie bereits einem anderen Benutzerkonto zugeordnet ist.',
     maintenanceException: 'Wartungsmodus ist aktiviert.',
     mimetypeNotSupported: 'Das Bildformat wird derzeit nicht unterstützt.',
     missingArgumentsException: 'Die eingegebenen Informationen sind unvollständig. Die Anfrage kann nicht verarbeitet werden.',
@@ -533,6 +558,7 @@ const rc_i18n_de = {
     myRecipes: 'Meine Rezepte',
     profile: {
       account: 'Benutzerprofil',
+      contact: 'Kontakt',
       notifications: 'Benachrichtigungen',
       settings: 'Einstellungen',
       subscriptions: 'Abonnements'

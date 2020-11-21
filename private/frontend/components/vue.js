@@ -34,7 +34,9 @@ var app = new Vue({
     title: function() {
       switch(this.$router.currentRoute.matched[0].name) {
         case 'account':
-          return this.$t('pages.account.title', { name: this.user.meta.fn })
+          if (this.user.meta.fn !== '')
+            return this.$t('pages.account.title', { name: this.user.meta.fn })
+          return this.$t('pages.account.titleNoUser')
         case 'gallery':
         case 'recipe':
           return this.$t('pages.recipe.title', { recipe: this.page.currentRecipe.name })
@@ -281,7 +283,8 @@ function postPageData(path, data, callback, updateOnSuccess = false) {
       updateProps(data, app)
     app.$set(app.page, 'loadingTime', formatMillis(performance.now() - m0))
     app.$set(app.page, 'updating',false)
-    callback(data);
+    if (callback !== undefined)
+      callback(data);
   })
   .fail(function(jqXHR, textStatus) {
     console.log(jqXHR, textStatus)

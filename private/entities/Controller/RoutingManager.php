@@ -46,6 +46,10 @@ final class RoutingManager {
       'method' => ERequestMethod::HTTP_GET,
       'requiresAdmin' => true,
     ],
+    '/api/page-data\?/profile' => [ // update user profile
+      'class' => \Surcouf\Cookbook\Controller\Routes\Api\User\ProfileRoute::class,
+      'method' => ERequestMethod::HTTP_POST,
+    ],
     '/api/page-data\?/random(/-(?<id>\d+))?' => [ // random recipe page
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RandomRecipePageRoute::class,
       'method' => ERequestMethod::HTTP_GET,
@@ -68,13 +72,13 @@ final class RoutingManager {
         ],
       ]
     ],
-    '/api/page-data\?/search' => [ // search query
-      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Search\SearchResultsRoute::class,
-      'method' => ERequestMethod::HTTP_POST,
-    ],
     '/api/page-data\?(/recipes(/(?<filter>[^/]+)(/(?<id>\d+)-(?<name>.+))?)?|(?<home>/(home)?))' => [ // recipe listing page with filter
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipeListRoute::class,
       'method' => ERequestMethod::HTTP_GET,
+    ],
+    '/api/page-data\?/search' => [ // search query
+      'class' => \Surcouf\Cookbook\Controller\Routes\Api\Search\SearchResultsRoute::class,
+      'method' => ERequestMethod::HTTP_POST,
     ],
     '/api/page-data\?/write' => [ // post new recipe
       'class' => \Surcouf\Cookbook\Controller\Routes\Api\Recipe\RecipeCreateRoute::class,
