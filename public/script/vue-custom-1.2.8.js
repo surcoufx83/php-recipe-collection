@@ -909,7 +909,10 @@ var app = new Vue({
   },
   computed: {
     title: function() {
-      switch(this.$route.name) {
+      console.log(this.$router.currentRoute)
+      switch(this.$router.currentRoute.matched[0].name) {
+        case 'account':
+          return this.$t('pages.account.title', { name: this.user.meta.fn })
         case 'gallery':
         case 'recipe':
           return this.$t('pages.recipe.title', { recipe: this.page.currentRecipe.name })
