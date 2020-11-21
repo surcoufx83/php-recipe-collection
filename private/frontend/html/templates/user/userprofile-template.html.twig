@@ -1,19 +1,57 @@
 
     <template id="userprofile-template">
       <b-container>
-        <b-row>
-          <b-col class="col-12 col-md-7">
 
-            <div class="pb-3">
-              <h4 v-text="$t('pages.account.header.title', { name: user.meta.un })"></h4>
-            </div>
+        <i18n path="pages.account.moreoptions" tag="p" class="d-inline-block d-lg-none text-small text-muted">
+          <template #profile>
+            <router-link :to="{ name: 'profile' }" class="text-nowrap">
+              <fa-icon :icon="page.iconSet.user.icon" :space="page.iconSet.user.space" class="text-small"></fa-icon>
+              <span v-text="$t('pages.account.links.general')"></span>
+            </router-link>
+          </template>
+          <template #subscriptions>
+            <router-link :to="{ name: 'subscriptions' }" class="text-nowrap">
+              <fa-icon :icon="page.iconSet.star.icon" :space="page.iconSet.star.space" class="text-small"></fa-icon>
+              <span v-text="$t('pages.account.links.subscriptions')"></span>
+            </router-link>
+          </template>
+          <template #notifications>
+            <router-link :to="{ name: 'notifications' }" class="text-nowrap">
+              <fa-icon :icon="page.iconSet.notification.icon" :space="page.iconSet.notification.space" class="text-small"></fa-icon>
+              <span v-text="$t('pages.account.links.notifications')"></span>
+            </router-link>
+          </template>
+          <template #settings>
+            <router-link :to="{ name: 'settings' }" class="text-nowrap">
+              <fa-icon :icon="page.iconSet.settings.icon" :space="page.iconSet.settings.space" class="text-small"></fa-icon>
+              <span v-text="$t('pages.account.links.settings')"></span>
+            </router-link>
+          </template>
+        </i18n>
 
-          </b-col>
-        </b-row>
         <router-view
           :config="config"
           :page="page"
-          :user="user">
+          :user="user" v-if="this.$router.currentRoute.matched.length > 1">
         </router-view>
+        <div v-else>
+          <b-row>
+            <b-col class="col-12 col-md-7">
+
+              <div class="pb-3">
+                <h4 v-text="$t('pages.account.header.title', { name: user.meta.un })"></h4>
+                <i18n path="pages.account.header.description" tag="p" class="text-muted text-small">
+                  <template #pubprofile>
+                    <router-link :to="{ name: 'user', params: { id: user.id, name: user.meta.un } }">
+                      <fa-icon :icon="page.iconSet.user.icon" :space="page.iconSet.user.space" class="text-small"></fa-icon>
+                      <span v-text="$t('pages.account.header.publicProfileLink')"></span>
+                    </router-link>
+                  </template>
+                </i18n>
+              </div>
+
+            </b-col>
+          </b-row>
+        </div>
       </b-container>
     </template>

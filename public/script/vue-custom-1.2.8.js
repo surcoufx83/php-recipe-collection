@@ -849,7 +849,9 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { name: 'account', path: '/profile', component: UserProfile, children: [
+      { name: 'notifications', path: 'notifications' },
       { name: 'settings', path: 'settings' },
+      { name: 'subscriptions', path: 'subscriptions' },
     ]},
     { name: 'admin', path: '/admin', children: [
       { name: 'configuration', path: 'configuration' },
@@ -909,7 +911,6 @@ var app = new Vue({
   },
   computed: {
     title: function() {
-      console.log(this.$router.currentRoute)
       switch(this.$router.currentRoute.matched[0].name) {
         case 'account':
           return this.$t('pages.account.title', { name: this.user.meta.fn })

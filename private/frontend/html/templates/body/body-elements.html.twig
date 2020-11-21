@@ -16,6 +16,27 @@
               :icon="page.iconSet.home.icon" :space="page.iconSet.home.space"
               :text="$t('sidebar.home')"></sidebar-ul1-li>
 
+            <sidebar-ul1-li to="account"
+              :icon="page.iconSet.user.icon" :space="page.iconSet.user.space"
+              :text="$t('sidebar.profile.account')"></sidebar-ul1-li>
+
+            <ul class="nav-sidebar-level2"
+              v-if="$route.matched[0].name === 'account'">
+
+              <sidebar-ul1-li to="subscriptions"
+                :icon="page.iconSet.star.icon" :space="page.iconSet.star.space"
+                :text="$t('sidebar.profile.subscriptions')"></sidebar-ul1-li>
+
+              <sidebar-ul1-li to="notifications"
+                :icon="page.iconSet.notification.icon" :space="page.iconSet.notification.space"
+                :text="$t('sidebar.profile.notifications')"></sidebar-ul1-li>
+
+              <sidebar-ul1-li to="settings"
+                :icon="page.iconSet.settings.icon" :space="page.iconSet.settings.space"
+                :text="$t('sidebar.profile.settings')"></sidebar-ul1-li>
+
+            </ul>
+
             <sidebar-ul1-li to="writeRecipe"
               :icon="page.iconSet.add.icon" :space="page.iconSet.add.space"
               :text="$t('sidebar.writeRecipe')"></sidebar-ul1-li>
@@ -31,10 +52,6 @@
             <sidebar-ul1-li to="random"
               :icon="page.iconSet.random.icon" :space="page.iconSet.random.space"
               :text="$t('sidebar.random')"></sidebar-ul1-li>
-
-            <sidebar-ul1-li to="settings" class="d-list-item d-lg-none"
-              :icon="page.iconSet.settings.icon" :space="page.iconSet.settings.space"
-              :text="$t('sidebar.settings')"></sidebar-ul1-li>
 
             <sidebar-ul1-li to="admin"
               v-if="user.isAdmin"

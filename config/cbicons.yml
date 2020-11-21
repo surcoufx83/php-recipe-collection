@@ -59,6 +59,9 @@ minus:
 msg:
   icon: comment-dots
   space: fas
+notification:
+  icon: bell
+  space: far
 nouser:
   icon: user-slash
   space: fas

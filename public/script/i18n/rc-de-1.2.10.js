@@ -33,10 +33,19 @@ const rc_i18n_de = {
   },
   pages: {
     account: {
-      subtitle: '',
-      title: 'Benutzerprofil',
+      subtitle: 'Übersicht über dein Benutzerprofil',
+      title: 'Benutzerprofil von {name}',
+      moreoptions: 'Hinweis: Du kannst auch über die Seitenleiste zwischen den Seiten {profile}, {subscriptions}, {notifications} und {settings} wechseln.',
       header: {
-        title: 'Dein Profil {name}'
+        title: 'Allgemeine Informationen',
+        description: 'Dein Benutzerprofil gibt Dir einen Überblick über die Informationen welche das Kochbuch über dich gespeichert hat. Diese Angaben sind nur für dich ersichtlich und nicht für andere einsehbar. In deinem {pubprofile} hingegen sind deine veröffentlichten Rezepte und deine Kontaktmöglichkeiten zu finden. Welche Angaben öffentlich ersichtlich sind, kannst du hier in deinem Profil verwalten.',
+        publicProfileLink: 'öffentlichen Profil'
+      },
+      links: {
+        general: 'Allgemeines',
+        notifications: 'Benachrichtigungen',
+        settings: 'Webseiten-Einstellungen',
+        subscriptions: 'Abonnements'
       }
     },
     common: {
@@ -127,6 +136,9 @@ const rc_i18n_de = {
     myRecipes: {
       subtitle: '',
       title: 'Meine Rezepte'
+    },
+    notifications: {
+      subtitle: 'Benachrichtigungseinstellungen'
     },
     random: {
       subtitle: 'Kurzen Moment, ich suche gerade nach einem Rezept...',
@@ -337,8 +349,10 @@ const rc_i18n_de = {
       }
     },
     settings: {
-      subtitle: '',
-      title: 'Einstellungen'
+      subtitle: 'Benutzervorgaben und Seiteneinstellungen'
+    },
+    subscriptions: {
+      subtitle: 'Verwaltung deiner Abonements'
     },
     userRecipes: {
       subtitle: '',
@@ -517,9 +531,14 @@ const rc_i18n_de = {
     close: 'Ausblenden',
     home: 'Startseite',
     myRecipes: 'Meine Rezepte',
+    profile: {
+      account: 'Benutzerprofil',
+      notifications: 'Benachrichtigungen',
+      settings: 'Einstellungen',
+      subscriptions: 'Abonnements'
+    },
     random: 'Zufallsrezept',
     search: 'Suche',
-    settings: 'Einstellungen',
     writeRecipe: 'Neues Rezept'
   }
 }
