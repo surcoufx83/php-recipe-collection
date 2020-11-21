@@ -22,7 +22,7 @@ if (ISWEB) {
   }
   if (MAINTENANCE)
     $Controller->Dispatcher()->forwardTo($Controller->getLink('maintenance'));
-  $Controller->Dispatcher()->routingFailed();
+  $Controller->Dispatcher()->notImplemented();
 } else if (ISCONSOLE) {
   require_once DIR_BACKEND  .'/cli.php';
   require_once DIR_FRONTEND .'/cli/autoload.php';

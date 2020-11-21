@@ -346,6 +346,11 @@ final class Dispatcher {
     exit;
   }
 
+  public function notImplemented() : void {
+    header('HTTP/1.0 501 Not Implemented', true, 501);
+    exit;
+  }
+
   public function queryOAuthUserData() : bool {
     global $Controller;
     $provider = $Controller->getOAuthProvider();
