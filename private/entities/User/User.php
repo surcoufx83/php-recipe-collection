@@ -20,7 +20,7 @@ use League\OAuth2\Client\Token\AccessToken;
 if (!defined('CORE2'))
   exit;
 
-class User implements UserInterface, DbObjectInterface, HashableInterface {
+class User implements UserInterface, DbObjectInterface, HashableInterface, \JsonSerializable {
 
   protected $user_id,
             $user_name,
@@ -167,6 +167,64 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
     return $this->initials;
   }
 
+  public function getJsonObj(bool $short=true) : array {
+    global $Controller;
+    if (!$short && $Controller->isAuthenticated() && $Controller->User()->getId() == $this->getId())
+      return $this->getJsonObj_Extended();
+    return $this->getJsonObj_Simple();
+  }
+
+  private function getJsonObj_Extended() : array {
+    global $Controller;
+    return [
+      'avatar' => [
+        'url' => $this->getAvatarUrl(),
+      ],
+      'loggedIn' => true,
+      'id' => $this->user_id,
+      'isAdmin' => $this->isAdmin(),
+      'meta' => [
+        'email' => $this->user_email,
+        'fn' => $this->user_firstname,
+        'ln' => $this->user_lastname,
+        'un' => $this->getUsername(),
+        'initials' => $this->getInitials(),
+      ],
+      'customSettings' => [
+        'formats' => [
+          'date' => [
+            'long' => $Controller->Config()->Defaults('Formats', 'UiLongDate'),
+            'short' => $Controller->Config()->Defaults('Formats', 'UiShortDate'),
+          ],
+          'datetime' => [
+            'long' => $Controller->Config()->Defaults('Formats', 'UiLongDatetime'),
+            'short' => $Controller->Config()->Defaults('Formats', 'UiShortDatetime'),
+          ],
+          'decimals' => $Controller->Config()->Defaults('Formats', 'Decimals'),
+          'decimalSeparator' => $Controller->Config()->Defaults('Formats', 'DecimalsSeparator'),
+          'thousandsSeparator' => $Controller->Config()->Defaults('Formats', 'ThousandsSeparator'),
+          'time' => $Controller->Config()->Defaults('Formats', 'UiTime'),
+        ],
+        'lists' => [
+          'entries' => $Controller->Config()->Defaults('Lists', 'Entries'),
+        ],
+        'recipes' => [
+          'ltwarning' => [
+            'enabled' => $Controller->Config()->Defaults('Recipes', 'LtWarning'),
+            'minutes' => $Controller->Config()->Defaults('Recipes', 'LtMinutes'),
+          ]
+        ]
+      ]
+    ];
+  }
+
+  private function getJsonObj_Simple() : array {
+    return [
+      'id' => $this->user_id,
+      'name' => $this->getUsername(),
+    ];
+  }
+
   public function getLastname() : string {
     return $this->user_lastname;
   }
@@ -235,6 +293,13 @@ class User implements UserInterface, DbObjectInterface, HashableInterface {
 
   public function isOAuthUser() : bool {
     return !is_null($this->oauth_user_name);
+  }
+
+  public function jsonSerialize() : array {
+    return [
+      'id' => $this->user_id,
+      'name' => $this->getUsername(),
+    ];
   }
 
   public function rejectAdmin() : bool {

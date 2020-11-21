@@ -17,6 +17,7 @@ interface UserInterface {
   public function getFirstname() : string;
   public function getId() : int;
   public function getInitials() : string;
+  public function getJsonObj(bool $short=true) : array;
   public function getLastname() : string;
   public function getLastActivityTime() : ?DateTime;
   public function getMail() : string;
