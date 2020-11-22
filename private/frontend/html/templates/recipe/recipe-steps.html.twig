@@ -13,7 +13,7 @@
                 </span>
               </h5>
               <p class="text-small"
-                v-if="step.timeConsumed.total !== ''">
+                v-if="step.timeConsumed.total !== '' && step.timeConsumed.total > 0">
                 <fa-icon class="fa-fw mr-1"
                   :icon="page.iconSet.clock.icon" :space="page.iconSet.clock.space"></fa-icon>
                 <span v-text="duration(step.timeConsumed.total)"></span>
