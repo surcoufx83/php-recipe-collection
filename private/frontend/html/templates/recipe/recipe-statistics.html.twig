@@ -9,12 +9,12 @@
                 <li class="list-group-item bg-transparent border-0">
                   <fa-icon :icon="page.iconSet.view.icon"
                     :space="page.iconSet.view.space" fw class="mr-2"></fa-icon>
-                  <span v-html="$t('pages.recipe.stats.views.times', [ recipe.socials.cookedCounter ])"></span>
+                  <span v-html="$t('pages.recipe.stats.views.times', [ recipe.socials.viewCounter ])"></span>
                 </li>
                 <li class="list-group-item bg-transparent">
                   <fa-icon :icon="page.iconSet.meal.icon"
                     :space="page.iconSet.meal.space" fw class="mr-2"></fa-icon>
-                  <span v-html="$t('pages.recipe.stats.cooked.times', [ recipe.socials.viewCounter ])"></span>
+                  <span v-html="$t('pages.recipe.stats.cooked.times', [ recipe.socials.cookedCounter ])"></span>
                 </li>
               </ul>
             </div>
