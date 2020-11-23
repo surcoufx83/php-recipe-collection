@@ -45,6 +45,11 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
             $consent_sys2user_msg = false,
             $consent_sys2user_mail = false;
   protected $recipe_count = -1;
+  protected $cooked_count = 0,
+            $distinct_views_count = 0,
+            $pictures_uploaded = 0,
+            $views_count = 0,
+            $voted_count = 0;
 
   private $changes = array();
 
@@ -191,6 +196,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
 
   private function getJsonObj_Extended() : array {
     global $Controller;
+    $this->loadStatistics();
     return [
       'avatar' => [
         'url' => $this->getAvatarUrl(),
@@ -245,6 +251,18 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
       'recipes' => [
         'count' => $this->getRecipeCount(),
         'list' => $this->getRecipeListing()
+      ],
+      'statistics' => [
+        'pictures' => [
+          'uploaded' => $this->pictures_uploaded,
+        ],
+        'recipes' => [
+          'cooked' => $this->cooked_count,
+          'created' => $this->getRecipeCount(),
+          'distinctviews' => $this->distinct_views_count,
+          'viewed' => $this->views_count,
+          'voted' => $this->voted_count,
+        ]
       ]
     ];
   }
@@ -352,6 +370,25 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
       'id' => $this->user_id,
       'name' => $this->getUsername(),
     ];
+  }
+
+  private function loadStatistics() : void {
+    global $Controller;
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipe_ratings');
+    $query->select2('recipe_ratings', 'entry_viewed', ['aggregation' => EAggregationType::atSUM, 'alias' => 'views'])
+          ->select2('recipe_ratings', 'entry_viewed', ['aggregation' => EAggregationType::atSUM || EAggregationType::atDISTINCT, 'alias' => 'distinctviews'])
+          ->select2('recipe_ratings', 'entry_cooked', ['aggregation' => EAggregationType::atSUM, 'alias' => 'cooked'])
+          ->select2('recipe_ratings', 'entry_vote', ['aggregation' => EAggregationType::atCOUNT, 'alias' => 'votes'])
+          ->where('recipe_ratings', 'user_id', '=', $this->user_id);
+    $result = $Controller->select($query);
+    if (!is_null($result)) {
+      $record = $result->fetch_assoc();
+      $this->cooked_count = intval($record['cooked']);
+      $this->distinct_views_count = intval($record['distinctviews']);
+      $this->views_count = intval($record['views']);
+      $this->voted_count = intval($record['votes']);
+    }
+    $this->pictures_uploaded = $Controller->selectCountSimple('recipe_pictures', 'user_id', $this->user_id);
   }
 
   public function rejectAdmin() : bool {

@@ -58,7 +58,6 @@ Vue.component('recipes-listing-item', {
   template: '#recipes-listing-item-template',
   computed: {
     pubdate: function() {
-      console.log(this.recipe.published)
       return moment(this.recipe.published, moment.ISO_8601).format(app.user.customSettings.formats.date.short)
     }
   }

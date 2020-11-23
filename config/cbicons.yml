@@ -62,6 +62,9 @@ menu:
 minus:
   icon: minus
   space: fas
+more:
+  icon: expand-alt
+  space: fas
 msg:
   icon: comment-dots
   space: fas

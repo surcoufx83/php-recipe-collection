@@ -32,7 +32,7 @@ var app = new Vue({
   },
   computed: {
     title: function() {
-      switch(this.$router.currentRoute.matched[0].name) {
+      switch(this.$route.matched[0].name) {
         case 'account':
           if (this.user.meta.fn !== '')
             return this.$t('pages.account.title', { name: this.user.meta.fn })

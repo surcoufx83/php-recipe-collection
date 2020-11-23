@@ -12,5 +12,10 @@ const UserProfile = {
     name: function() {
       return this.user.meta.fn + " " + this.user.meta.ln;
     }
+  },
+  methods: {
+    onShowMore: function() {
+      this.showAllRecipes = !this.showAllRecipes
+    }
   }
 }

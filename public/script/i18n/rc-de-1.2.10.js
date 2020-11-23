@@ -63,9 +63,22 @@ const rc_i18n_de = {
       recipes: {
         title: 'Deine gespeicherten Rezepte',
         description: 'Hier findest du eine kompakte Auflistung aller deiner Rezepte.',
-        gotoList: 'Zur Listenansicht',
         count: 'Anzahl Rezepte:',
-        countStr: 'Keine|1 Rezept|{count} Rezepte'
+        pictures: 'Anzahl Bilder:',
+        countStr: 'Keine|1 Rezept|{count} Rezepte',
+        pictureStr: 'Keine|1 Bild hochgeladen|{count} Bilder hochgeladen',
+        gotoList: 'Zur Listenansicht',
+        list: 'Rezeptliste:',
+        showMore: 'Alle auflisten'
+      },
+      statistics: {
+        title: 'Deine Aktivitäten',
+        description: 'Interaktionen mit der Kochbuchwebseite wie das Aufrufen oder Bewerten von Rezepten speichern wir in der Datenbank. Hier bekommst du einen Überblick darüber.',
+        countStr: 'Keine|1 Rezept|{count} Rezepte',
+        viewsStr: 'Keine|1 Aufruf|{count} Aufrufe auf',
+        recipesViewed: 'Rezeptaufrufe:',
+        cooked: 'Nachgekocht',
+        voted: 'Bewertet'
       }
     },
     common: {

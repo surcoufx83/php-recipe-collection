@@ -36,10 +36,10 @@
         </router-view>
         <div v-if="this.$router.currentRoute.matched.length == 1"> <!-- profile view if no child is selected -->
 
-          <b-row class="mb-3 mb-lg-5">
+          <b-row class="mb-5">
             <b-col class="col-12 col-md-7">
 
-              <div class="pb-3"> <!-- general information header -->
+              <div class="pb-1"> <!-- general information header -->
                 <h4 v-text="$t('pages.account.header.title')"></h4>
                 <i18n path="pages.account.header.description" tag="p" class="text-muted text-small">
                   <template #pubprofile>
@@ -103,10 +103,10 @@
             </b-col>
           </b-row>
 
-          <b-row>
+          <b-row class="mb-5">
             <b-col class="col-12 col-md-7">
 
-              <div class="pb-3"> <!-- my recipes header -->
+              <div class="pb-1"> <!-- my recipes header -->
                 <router-link :to="{ name: 'myRecipes' }" class="float-right">
                   <rc-button
                     :icon="page.iconSet.recipes.icon" :space="page.iconSet.recipes.space"
@@ -125,11 +125,23 @@
                 </b-col>
               </b-row> <!-- recipes count -->
 
+              <b-row class="mb-2"> <!-- picture upload count -->
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.recipes.pictures')">
+                </b-col>
+                <b-col cols="12" md="8" class="font-weight-bold">
+                  <span v-text="$tc('pages.account.recipes.pictureStr', user.statistics.pictures.uploaded)"></span>
+                </b-col>
+              </b-row> <!-- picture upload count -->
+
               <b-row class="mb-2" v-if="user.recipes.count > 0">
-                <b-col cols="12" offset-md="4" md="8"
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.recipes.list')">
+                </b-col>
+                <b-col cols="12" md="8"
                   v-for="(recipe, index) in user.recipes.list"
-                  v-if="index < 15 || showAllRecipes === true"
-                  :key="index" :page="page">
+                  v-if="index < user.customSettings.lists.entries || showAllRecipes === true"
+                  :key="index" :page="page" :offset-md="index !== 0 ? 4 : '*'">
                   <router-link
                     :to="{ name: 'recipe', params: { 'id': recipe.id, 'name': recipe.name } }">
                     &bull; <span v-text="recipe.name"></span>
@@ -137,7 +149,53 @@
                       :icon="page.iconSet.lock.icon" :space="page.iconSet.lock.space" ></fa-icon>
                   </router-link>
                 </b-col>
+                <b-col cols="12" offset-md="4" md="8" class="pt-2"
+                  v-if="user.recipes.count > user.customSettings.lists.entries && showAllRecipes === false">
+                  <rc-button outline
+                    :icon="page.iconSet.more.icon" :space="page.iconSet.more.space"
+                    :title="$t('pages.account.recipes.showMore')"
+                    @click="onShowMore"></rc-button>
+                </b-col>
               </b-row>
+
+            </b-col>
+          </b-row>
+
+          <b-row class="mb-5">
+            <b-col class="col-12 col-md-7">
+
+              <div class="pb-1"> <!-- my statistics header -->
+                <h4 v-text="$t('pages.account.statistics.title')"></h4>
+                <p class="text-muted text-small" v-text="$t('pages.account.statistics.description')"></p>
+              </div> <!-- my statistics header -->
+
+              <b-row class="mb-2"> <!-- recipe views count -->
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.statistics.recipesViewed')">
+                </b-col>
+                <b-col cols="12" md="8" class="font-weight-bold">
+                  <span v-text="$tc('pages.account.statistics.viewsStr', user.statistics.recipes.viewed)"></span>
+                  <span v-text="$tc('pages.account.statistics.countStr', user.statistics.recipes.distinctviews)"></span>
+                </b-col>
+              </b-row> <!-- recipe views count -->
+
+              <b-row class="mb-2"> <!-- recipe cooked count -->
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.statistics.cooked')">
+                </b-col>
+                <b-col cols="12" md="8" class="font-weight-bold">
+                  <span v-text="$tc('pages.account.statistics.countStr', user.statistics.recipes.cooked)"></span>
+                </b-col>
+              </b-row> <!-- recipe cooked count -->
+
+              <b-row class="mb-2"> <!-- recipe voted count -->
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.statistics.voted')">
+                </b-col>
+                <b-col cols="12" md="8" class="font-weight-bold">
+                  <span v-text="$tc('pages.account.statistics.countStr', user.statistics.recipes.voted)"></span>
+                </b-col>
+              </b-row> <!-- recipe voted count -->
 
             </b-col>
           </b-row>

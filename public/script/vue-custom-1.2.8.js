@@ -96,7 +96,6 @@ Vue.component('recipes-listing-item', {
   template: '#recipes-listing-item-template',
   computed: {
     pubdate: function() {
-      console.log(this.recipe.published)
       return moment(this.recipe.published, moment.ISO_8601).format(app.user.customSettings.formats.date.short)
     }
   }
@@ -920,6 +919,11 @@ const UserProfile = {
     name: function() {
       return this.user.meta.fn + " " + this.user.meta.ln;
     }
+  },
+  methods: {
+    onShowMore: function() {
+      this.showAllRecipes = !this.showAllRecipes
+    }
   }
 }
 const router = new VueRouter({
@@ -990,7 +994,7 @@ var app = new Vue({
   },
   computed: {
     title: function() {
-      switch(this.$router.currentRoute.matched[0].name) {
+      switch(this.$route.matched[0].name) {
         case 'account':
           if (this.user.meta.fn !== '')
             return this.$t('pages.account.title', { name: this.user.meta.fn })
