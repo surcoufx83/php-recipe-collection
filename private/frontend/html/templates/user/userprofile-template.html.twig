@@ -35,7 +35,8 @@
           :user="user">
         </router-view>
         <div v-if="this.$router.currentRoute.matched.length == 1"> <!-- profile view if no child is selected -->
-          <b-row>
+
+          <b-row class="mb-3 mb-lg-5">
             <b-col class="col-12 col-md-7">
 
               <div class="pb-3"> <!-- general information header -->
@@ -50,67 +51,93 @@
                 </i18n>
               </div> <!-- general information header -->
 
+              <div class="pb-3"> <!-- general information header -->
+                <router-link :to="{ name: 'editProfile' }" class="float-right">
+                  <rc-button
+                    :icon="page.iconSet.edit.icon" :space="page.iconSet.edit.space"
+                    :title="$t('common.edit')"></rc-button>
+                </router-link>
+                <h4 v-text="$t('pages.account.personal.title')"></h4>
+                <p class="text-muted text-small" v-text="$t('pages.account.personal.description')"></p>
+              </div> <!-- general information header -->
+
+              <b-row class="mb-2"> <!-- your name -->
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.personal.yourName')">
+                </b-col>
+                <b-col cols="12" md="8" class="font-weight-bold">
+                  <span v-if="name !== ''" v-text="name"></span>
+                  <span v-else v-text="$t('common.noInfo')"></span>
+                </b-col>
+              </b-row> <!-- your name -->
+
+              <b-row class="mb-2"> <!-- your username -->
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.personal.yourUsername')">
+                </b-col>
+                <b-col cols="12" md="8" class="font-weight-bold">
+                  <span v-text="user.meta.un"></span>
+                </b-col>
+              </b-row> <!-- your username -->
+
+              <b-row class="mb-2"> <!-- your email -->
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.personal.yourMail')">
+                </b-col>
+                <b-col cols="12" md="8" class="font-weight-bold">
+                  <span v-if="user.meta.email !== ''" v-text="user.meta.email"></span>
+                  <span v-else v-text="$t('common.noInfo')"></span>
+                </b-col>
+              </b-row> <!-- your email -->
+
+              <b-row class="mb-2"> <!-- registration type -->
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.personal.registrationType')">
+                </b-col>
+                <b-col cols="12" md="8" class="font-weight-bold">
+                  <span v-if="user.cloudAccount === true" v-text="$t('pages.account.personal.cloudAccount')"></span>
+                  <span v-else v-text="$t('pages.account.personal.localAccount')"></span>
+                </b-col>
+              </b-row> <!-- registration type -->
+
             </b-col>
           </b-row>
 
           <b-row>
             <b-col class="col-12 col-md-7">
 
-              <div class="pb-3"> <!-- who are you header -->
-                <h5 v-text="$t('pages.account.personal.title')"></h5>
-                <p class="text-muted text-small" v-text="$t('pages.account.personal.description')"></p>
-              </div> <!-- who are you header -->
+              <div class="pb-3"> <!-- my recipes header -->
+                <router-link :to="{ name: 'myRecipes' }" class="float-right">
+                  <rc-button
+                    :icon="page.iconSet.recipes.icon" :space="page.iconSet.recipes.space"
+                    :title="$t('pages.account.recipes.gotoList')"></rc-button>
+                </router-link>
+                <h4 v-text="$t('pages.account.recipes.title')"></h4>
+                <p class="text-muted text-small" v-text="$t('pages.account.recipes.description')"></p>
+              </div> <!-- my recipes header -->
 
-              <b-form-row><!-- user firstname -->
-                <b-form-group
-                  id="user-firstname-group"
-                  :label="$t('pages.account.personal.firstname.title')"
-                  label-for="user-firstname-input"
-                  :description="$t('pages.account.personal.firstname.description')"
-                  class="px-1 w-100">
-                  <b-form-input trim size="sm" class="mt-2" debounce="250"
-                    id="user-firstname-input" name="user-firstname"
-                    v-model="user.meta.fn"
-                    :placeholder="$t('pages.account.personal.firstname.placeholder')"
-                    @input="onFirstnameInput">
-                  </b-form-input>
-                </b-form-group>
-              </b-form-row><!-- user firstname -->
+              <b-row class="mb-2"> <!-- recipes count -->
+                <b-col cols="12" md="4" class="text-md-right pr-md-2"
+                  v-text="$t('pages.account.recipes.count')">
+                </b-col>
+                <b-col cols="12" md="8" class="font-weight-bold">
+                  <span v-text="$tc('pages.account.recipes.countStr', user.recipes.count)"></span>
+                </b-col>
+              </b-row> <!-- recipes count -->
 
-              <b-form-row><!-- user lastname -->
-                <b-form-group
-                  id="user-lastname-group"
-                  :label="$t('pages.account.personal.lastname.title')"
-                  label-for="user-lastname-input"
-                  :description="$t('pages.account.personal.lastname.description')"
-                  class="px-1 w-100">
-                  <b-form-input trim size="sm" class="mt-2" debounce="250"
-                    id="user-lastname-input" name="user-lastname"
-                    v-model="user.meta.ln"
-                    :placeholder="$t('pages.account.personal.lastname.placeholder')"
-                    @input="onLastnameInput">
-                  </b-form-input>
-                </b-form-group>
-              </b-form-row><!-- user lastname -->
-
-              <b-form-row><!-- user email -->
-                <b-form-group
-                  id="user-email-group"
-                  :label="$t('pages.account.personal.email.title')"
-                  label-for="user-email-input"
-                  :description="$t('pages.account.personal.email.description')"
-                  class="px-1 w-100">
-                  <b-form-input trim size="sm" class="mt-2" debounce="250" type="email"
-                    id="user-email-input" name="user-email" :state="validEmail(user.meta.email)"
-                    v-model="user.meta.email"
-                    :placeholder="$t('pages.account.personal.email.placeholder')"
-                    :invalid-feedback="$t('pages.account.personal.email.invalidFeedback')"
-                    @input="onEmailInput">
-                  </b-form-input>
-                </b-form-group>
-                <b-alert variant="danger" dismissible fade
-                  v-text="mailupdate.message" :show="mailupdate.failed"></b-alert>
-              </b-form-row><!-- user email -->
+              <b-row class="mb-2" v-if="user.recipes.count > 0">
+                <b-col cols="12" offset-md="4" md="8"
+                  v-for="(recipe, index) in user.recipes.list"
+                  v-if="index < 15 || showAllRecipes === true"
+                  :key="index" :page="page">
+                  <router-link
+                    :to="{ name: 'recipe', params: { 'id': recipe.id, 'name': recipe.name } }">
+                    &bull; <span v-text="recipe.name"></span>
+                    <fa-icon class="text-small" v-if="!recipe.public"
+                      :icon="page.iconSet.lock.icon" :space="page.iconSet.lock.space" ></fa-icon>
+                  </router-link>
+                </b-col>
+              </b-row>
 
             </b-col>
           </b-row>
@@ -120,3 +147,4 @@
     </template>
 
     {% include 'templates/user/usercontact-template.html.twig' %}
+    {% include 'templates/user/useredit-template.html.twig' %}

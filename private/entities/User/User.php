@@ -195,6 +195,7 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
       'avatar' => [
         'url' => $this->getAvatarUrl(),
       ],
+      'cloudAccount' => $this->isOAuthUser(),
       'consent' => [
         'sys2me' => [
           'message' => $this->consent_sys2user_msg !== false,
@@ -240,6 +241,10 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
         'ln' => $this->user_lastname,
         'un' => $this->getUsername(),
         'initials' => $this->getInitials(),
+      ],
+      'recipes' => [
+        'count' => $this->getRecipeCount(),
+        'list' => $this->getRecipeListing()
       ]
     ];
   }
@@ -272,11 +277,32 @@ class User implements UserInterface, DbObjectInterface, HashableInterface, \Json
       global $Controller;
       $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
       $query->select([['*', EAggregationType::atCOUNT, 'count']])
-            ->where('recipes', 'recipe_public', '=', 1)
-            ->andWhere('recipes', 'user_id', '=', $this->user_id);
+            ->where('recipes', 'user_id', '=', $this->user_id);
+      if (!$Controller->isAuthenticated() || $Controller->User()->getId() != $this->getId())
+        $query->andWhere('recipes', 'recipe_public', '=', 1);
       $this->recipe_count = $Controller->select($query)->fetch_assoc()['count'];
     }
     return $this->recipe_count;
+  }
+
+  private function getRecipeListing() : array {
+    global $Controller;
+    $items = [];
+    $query = new QueryBuilder(EQueryType::qtSELECT, 'recipes');
+    $query->select('recipes', ['recipe_id', 'recipe_name', 'recipe_public'])
+          ->where('recipes', 'user_id', '=', $this->user_id)
+          ->orderBy2('recipes', 'recipe_name', 'ASC');
+    $result = $Controller->select($query);
+    if (!is_null($result)) {
+      while($record = $result->fetch_assoc()) {
+        $items[] = [
+          'id' => $record['recipe_id'],
+          'name' => $record['recipe_name'],
+          'public' => ConverterHelper::to_bool($record['recipe_public'])
+        ];
+      }
+    }
+    return $items;
   }
 
   public function getSession() : ?SessionInterface {

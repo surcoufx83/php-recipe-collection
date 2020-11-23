@@ -10,7 +10,9 @@ const rc_i18n_de = {
         uc: 'Ja',
         lc: 'ja'
       }
-    }
+    },
+    edit: 'Bearbeiten',
+    noInfo: 'Keine Angabe'
   },
   greetings: {
     hello: 'Hallo {user}'
@@ -49,24 +51,21 @@ const rc_i18n_de = {
         subscriptions: 'Abonnements'
       },
       personal: {
-        title: 'Wer bist du?',
-        description: 'In diesem ersten Abschnitt kannst du einige persönliche Angaben zu Dir machen, dabei gilt: Alles kann, nichts muss.',
-        email: {
-          title: 'E-Mailadresse',
-          description: 'Gib optional deine E-Mailadresse an. Wenn diese leer ist, bekommst du nie E-Mails vom Kochbuch. Benachrichtigungen zu Abonnements erhältst du dann, wenn du das nächste Mal das Kochbuch aufrufst.',
-          placeholder: 'Dein E-Mailadresse',
-          invalidFeedback: 'Die E-Mailadresse hat ein ungültiges Format. Die Änderung wurde nicht gespeichert.'
-        },
-        firstname: {
-          title: 'Vorname',
-          description: 'Dein Vorname. Nix besonders. Aber nur wenn du willst. Wenn nicht, lass leer. Mit dem Namen spricht dich das Kochbuch an einigen Stellen an.',
-          placeholder: 'Dein Vorname'
-        },
-        lastname: {
-          title: 'Nachname',
-          description: 'Dein Nachname. Auch einfach: Wenn du möchtest, gib deinen Nachnamen an, ansonsten lasse das Feld leer.',
-          placeholder: 'Dein Nachname'
-        }
+        title: 'Persönliche Daten',
+        description: 'Die folgenden persönlichen Daten haben wir über dich in der Datenbank gespeichert.',
+        cloudAccount: 'Cloud-Konto',
+        localAccount: 'Standard-Konto (= Anmeldung mit Benutzername und Passwort)',
+        registrationType: 'Kontoart:',
+        yourMail: 'Deine Mailadresse:',
+        yourName: 'Dein Name:',
+        yourUsername: 'Dein Benutzername:'
+      },
+      recipes: {
+        title: 'Deine gespeicherten Rezepte',
+        description: 'Hier findest du eine kompakte Auflistung aller deiner Rezepte.',
+        gotoList: 'Zur Listenansicht',
+        count: 'Anzahl Rezepte:',
+        countStr: 'Keine|1 Rezept|{count} Rezepte'
       }
     },
     common: {
@@ -104,6 +103,29 @@ const rc_i18n_de = {
         msg: {
           title: 'Andere dürfen mir Nachrichten schreiben.',
           description: 'Ist diese Option aktiv, können dir andere Benutzer eine Nachricht schreiben. Die Nachricht wird dir hier auf der Kochbuch-Webseite angezeigt.'
+        }
+      }
+    },
+    editProfile: {
+      subtitle: 'Allgemeine Angaben aktualisieren',
+      personal: {
+        title: 'Wer bist du?',
+        description: 'In diesem Bereich kannst du persönliche Angaben zu dir bearbeiten, dabei gilt: Alles kann, nichts muss.',
+        email: {
+          title: 'E-Mailadresse',
+          description: 'Gib optional deine E-Mailadresse an. Wenn diese leer ist, bekommst du nie E-Mails vom Kochbuch. Benachrichtigungen zu Abonnements erhältst du dann, wenn du das nächste Mal das Kochbuch aufrufst.',
+          placeholder: 'Dein E-Mailadresse',
+          invalidFeedback: 'Die E-Mailadresse hat ein ungültiges Format. Die Änderung wurde nicht gespeichert.'
+        },
+        firstname: {
+          title: 'Vorname',
+          description: 'Dein Vorname. Nix besonders. Aber nur wenn du willst. Wenn nicht, lass leer. Mit dem Namen spricht dich das Kochbuch an einigen Stellen an.',
+          placeholder: 'Dein Vorname'
+        },
+        lastname: {
+          title: 'Nachname',
+          description: 'Dein Nachname. Auch einfach: Wenn du möchtest, gib deinen Nachnamen an, ansonsten lasse das Feld leer.',
+          placeholder: 'Dein Nachname'
         }
       }
     },

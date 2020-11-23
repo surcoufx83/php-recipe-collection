@@ -10,6 +10,7 @@ cat \
   ./component-RecipeGallery.js \
   ./component-SearchRecipe.js \
   ./component-UserContactSettings.js \
+  ./component-UserEdit.js \
   ./component-UserLogin.js \
   ./component-UserProfile.js \
   ./vue-router.js \

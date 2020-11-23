@@ -1,0 +1,68 @@
+
+    <template id="useredit-template">
+      <div>
+
+        <b-row>
+          <b-col class="col-12 col-md-7">
+
+            <div class="pb-3"> <!-- who are you header -->
+              <h5 v-text="$t('pages.editProfile.personal.title')"></h5>
+              <p class="text-muted text-small" v-text="$t('pages.editProfile.personal.description')"></p>
+            </div> <!-- who are you header -->
+
+            <b-form-row><!-- user firstname -->
+              <b-form-group
+                id="user-firstname-group"
+                :label="$t('pages.editProfile.personal.firstname.title')"
+                label-for="user-firstname-input"
+                :description="$t('pages.editProfile.personal.firstname.description')"
+                class="px-1 w-100">
+                <b-form-input trim size="sm" class="mt-2" debounce="250"
+                  id="user-firstname-input" name="user-firstname"
+                  v-model="user.meta.fn"
+                  :placeholder="$t('pages.editProfile.personal.firstname.placeholder')"
+                  @input="onFirstnameInput">
+                </b-form-input>
+              </b-form-group>
+            </b-form-row><!-- user firstname -->
+
+            <b-form-row><!-- user lastname -->
+              <b-form-group
+                id="user-lastname-group"
+                :label="$t('pages.editProfile.personal.lastname.title')"
+                label-for="user-lastname-input"
+                :description="$t('pages.editProfile.personal.lastname.description')"
+                class="px-1 w-100">
+                <b-form-input trim size="sm" class="mt-2" debounce="250"
+                  id="user-lastname-input" name="user-lastname"
+                  v-model="user.meta.ln"
+                  :placeholder="$t('pages.editProfile.personal.lastname.placeholder')"
+                  @input="onLastnameInput">
+                </b-form-input>
+              </b-form-group>
+            </b-form-row><!-- user lastname -->
+
+            <b-form-row><!-- user email -->
+              <b-form-group
+                id="user-email-group"
+                :label="$t('pages.editProfile.personal.email.title')"
+                label-for="user-email-input"
+                :description="$t('pages.editProfile.personal.email.description')"
+                class="px-1 w-100">
+                <b-form-input trim size="sm" class="mt-2" debounce="250" type="email"
+                  id="user-email-input" name="user-email" :state="validEmail(user.meta.email)"
+                  v-model="user.meta.email"
+                  :placeholder="$t('pages.editProfile.personal.email.placeholder')"
+                  :invalid-feedback="$t('pages.editProfile.personal.email.invalidFeedback')"
+                  @input="onEmailInput">
+                </b-form-input>
+              </b-form-group>
+              <b-alert variant="danger" dismissible fade
+                v-text="mailupdate.message" :show="mailupdate.failed"></b-alert>
+            </b-form-row><!-- user email -->
+
+          </b-col>
+        </b-row>
+
+      </div>
+    </template>
