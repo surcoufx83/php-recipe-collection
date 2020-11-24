@@ -96,7 +96,17 @@ const RecipesCreator = {
       this.page.currentRecipe.preparation.ingredients.splice(i, 1)
     },
     onIngredientAddBtnClick: function() {
-      this.page.currentRecipe.preparation.ingredients.push({ amount: '', unit: '', description: '' })
+      this.page.currentRecipe.preparation.ingredients.push({
+        description: '',
+        id: 0,
+        quantity: '',
+        quantityCalc: '',
+        unit: {
+          id: 0,
+          name: ''
+        },
+        unitId: 0
+      })
     },
     onStepDelBtnClick: function(i) {
       this.page.currentRecipe.preparation.steps.splice(i, 1)
