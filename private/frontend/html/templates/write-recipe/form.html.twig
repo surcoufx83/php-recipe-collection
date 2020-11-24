@@ -239,7 +239,7 @@
                       name="recipe-ingredient-quantity[]"
                       size="sm"
                       v-model="ingredient.quantity"
-                      type="number"
+                      type="number" step="0.001" no-wheel
                       :placeholder="$t('pages.writeRecipe.chapter2.quantity.header')"
                       >
                     </b-form-input>
