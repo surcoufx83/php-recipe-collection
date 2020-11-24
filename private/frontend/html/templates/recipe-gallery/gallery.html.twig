@@ -39,7 +39,7 @@
               :class="['card m-2 p-1', recipe.ownerId === user.id && page.draggingActive ? 'draggable' : '']">
               <a :href="pic.link" data-toggle="lightbox"
                 data-gallery="recipe-gallery" data-type="image">
-                <b-img-lazy class="card-img-top" :src="pic.link350" :id="'recipe-picture-' + index"></b-img>
+                <b-img-lazy class="card-img-top" :src="pic.thumbnail" :id="'recipe-picture-' + index"></b-img>
               </a>
               <div class="card-body text-muted">
                 <p>
