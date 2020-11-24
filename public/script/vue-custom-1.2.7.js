@@ -5,16 +5,16 @@ function eatercalc(value, eater, neweater) {
     return 0
   var calc = value * neweater / eater
   var factor = evaluateFactor(calc)
-  // console.log(value, eater, neweater)
-  // console.log(calc, factor)
-  if (calc < 1)
+  // console.log(value, neweater, eater, calc, factor)
+  if (calc < .01)
     return calc
   calc = Math.round(calc / factor) * factor
-
   return calc
 }
 
 function evaluateFactor(value) {
+  if (value < .1)
+    return .01
   if (value < 1)
     return .1
   if (value < 2)
