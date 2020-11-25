@@ -13,11 +13,13 @@ interface PictureInterface {
 
   public function getDescription() : string;
   public function getExtension() : string;
-  public function getFilename(?int $width=null, ?int $height=null) : string;
-  public function getFullpath() : string;
+  public function getFilename(bool $thumbnail = false) : string;
+  public function getFolderName() : string;
+  public function getFullpath(bool $thumbnail = false) : string;
   public function getId() : int;
   public function getIndex() : int;
   public function getName() : string;
+  public function getPublicPath(bool $thumbnail = false) : string;
   public function getRecipe() : RecipeInterface;
   public function getRecipeId() : int;
   public function getUploadDate() : DateTime;

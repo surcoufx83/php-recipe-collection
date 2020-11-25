@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "677625d4d2589ea20b0689541614f303",
+    "content-hash": "b41a58a2d5724c0063b8ed80ab8eee18",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -67,42 +67,6 @@
                 }
             ],
             "time": "2020-10-09T00:51:05+00:00"
-        },
-        {
-            "name": "benmajor/php-image-resize",
-            "version": "1.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/benmajor/PHP-Image-Resize.git",
-                "reference": "655a28997f9ee698f2622fe267588528a12e663e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/benmajor/PHP-Image-Resize/zipball/655a28997f9ee698f2622fe267588528a12e663e",
-                "reference": "655a28997f9ee698f2622fe267588528a12e663e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">= 5.6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "BenMajor\\ImageResize\\": "src/BenMajor/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ben Major",
-                    "email": "ben.major88@gmail.com"
-                }
-            ],
-            "description": "A simple PHP class to handle image resizing and editing.",
-            "time": "2019-07-03T09:27:51+00:00"
         },
         {
             "name": "components/jquery",
@@ -3264,5 +3228,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }

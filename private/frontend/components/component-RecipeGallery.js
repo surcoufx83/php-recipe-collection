@@ -12,7 +12,7 @@ const RecipeGallery = {
         id: 0,
         index: i,
         link: '/pictures/_dummy.jpg',
-        link350: '/pictures/_dummy.jpg',
+        thumbnail: '/pictures/_dummy.jpg',
         name: '',
         uploaded: '',
         uploadFile: null,
@@ -48,7 +48,7 @@ const RecipeGallery = {
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'id', response.picture.id)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'index', response.picture.index)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'link', response.picture.link)
-              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'link350', response.picture.link350)
+              app.$set(app.page.currentRecipe.pictures[response.picture.index], 'thumbnail', response.picture.thumbnail)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'name', response.picture.name)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploaded', response.picture.uploaded)
               app.$set(app.page.currentRecipe.pictures[response.picture.index], 'uploadFile', null)
