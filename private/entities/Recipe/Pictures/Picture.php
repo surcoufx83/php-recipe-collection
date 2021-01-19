@@ -25,7 +25,9 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
             $picture_hash,
             $picture_filename,
             $picture_full_path,
-            $picture_uploaded;
+            $picture_uploaded,
+            $picture_width,
+            $picture_height;
   private $changes = array();
 
   public function __construct(?array $record=null) {
@@ -38,8 +40,10 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
       $this->picture_description = $record['picture_description'];
       $this->picture_hash = $record['picture_hash'];
       $this->picture_filename = $record['picture_filename'];
-      $this->picture_full_path = $record['picture_filename'];
+      $this->picture_full_path = $record['picture_full_path'];
       $this->picture_uploaded = new DateTime($record['picture_uploaded']);
+      $this->picture_width = !is_null($record['picture_width']) ? intval($record['picture_width']) : null;
+      $this->picture_height = !is_null($record['picture_height']) ? intval($record['picture_height']) : null;
     } else {
       $this->picture_id = intval($this->picture_id);
       $this->recipe_id = intval($this->recipe_id);
@@ -47,6 +51,8 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
       $this->picture_sortindex = intval($this->picture_sortindex);
       $this->picture_uploaded = new DateTime();
     }
+    if (is_null($this->picture_width) || is_null($this->picture_height))
+      $this->initDimensions();
   }
 
   public function calculateHash() : string {
@@ -131,6 +137,12 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
     return $this->picture_hash;
   }
 
+  public function getHeight() : int {
+    if (is_null($this->picture_height))
+      $this->initDimensions();
+    return $this->picture_height;
+  }
+
   public function getId() : int {
     return $this->picture_id;
   }
@@ -169,6 +181,22 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
     return $this->user_id;
   }
 
+  public function getWidth() : int {
+    if (is_null($this->picture_width))
+      $this->initDimensions();
+    return $this->picture_width;
+  }
+
+  private function initDimensions() : void {
+    global $Controller;
+    $data = getimagesize($this->getFullpath());
+    $this->picture_width = $data[0];
+    $this->picture_height = $data[1];
+    $this->changes['picture_width'] = $this->picture_width;
+    $this->changes['picture_height'] = $this->picture_height;
+    $Controller->updateDbObject($this);
+  }
+
   public function hasHash() : bool {
     return !is_null($this->picture_hash);
   }
@@ -186,6 +214,8 @@ class Picture implements PictureInterface, DbObjectInterface, HashableInterface,
       'uploadFile' => null,
       'uploaderId' => (!is_null($this->user_id) ? $this->user_id : 0),
       'uploaderName' => (!is_null($this->user_id) ? $this->getUser()->getUsername() : ''),
+      'w' => $this->getWidth(),
+      'h' => $this->getHeight(),
     ];
   }
 

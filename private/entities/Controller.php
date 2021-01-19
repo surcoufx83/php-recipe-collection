@@ -435,6 +435,15 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
           $this->update($query);
           break;
 
+        case 'Surcouf\Cookbook\Recipe\Pictures\Picture':
+          if (count($object->getDbChanges()) == 0)
+            break;
+          $query = new QueryBuilder(EQueryType::qtUPDATE, 'recipe_pictures');
+          $query->update($object->getDbChanges());
+          $query->where('recipe_pictures', 'picture_id', '=', $object->getId());
+          $this->update($query);
+          break;
+
         case 'Surcouf\Cookbook\User\BlankUser':
         case 'Surcouf\Cookbook\User\User':
           if (count($object->getDbChanges()) == 0)
@@ -445,7 +454,7 @@ final class Controller implements ControllerInterface, DatabaseManagerInterface 
           $this->update($query);
           break;
 
-        case 'Surcouf\Cookbook\User\Session':
+        case 'Surcouf\Cookbook\User\Session\Session':
           if (count($object->getDbChanges()) == 0)
             break;
           $query = new QueryBuilder(EQueryType::qtUPDATE, 'user_logins');

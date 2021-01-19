@@ -87,7 +87,6 @@ const RecipeGallery = {
       })
     },
     onPictureMoved: function(evt) {
-      // console.log('Picture.onPictureMoved', evt)
       postPageData(app.$route.path, {
         moved: {
           from: evt.oldIndex,
@@ -104,6 +103,19 @@ const RecipeGallery = {
     },
     upldate: function(date) {
       return moment(date, moment.ISO_8601).format(app.user.customSettings.formats.date.short)
+    },
+    toggleGallery: function(i) {
+      var picItems = []
+      for (e in this.recipe.pictures) {
+        picItems.push({
+          src: this.recipe.pictures[e].link,
+          h: this.recipe.pictures[e].h,
+          w: this.recipe.pictures[e].w
+        })
+      }
+      let pswp = document.querySelectorAll('.pswp')[0]
+      let gal = new PhotoSwipe(pswp, PhotoSwipeUI_Default, picItems, { index: i })
+      gal.init()
     }
   }
 }

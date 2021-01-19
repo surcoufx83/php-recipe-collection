@@ -12,16 +12,14 @@
               <b-row>
                 <b-col class="p-1 col-12" v-for="(pic, index) in recipe.pictures.slice(0, 1)" :key="index">
                   <b-aspect aspect="3:1">
-                    <router-link :to="{ name: 'gallery', params: { id: recipe.id, name: recipe.name }, query: { picture: pic.id } }">
-                      <b-img-lazy thumbnail fluid class="rounded of-cover" :src="pic.thumbnail"></b-img>
-                    </router-link>
+                    <img loading="lazy" class="rounded of-cover img-fluid img-thumbnail pointer" :src="pic.thumbnail" :id="'recipe-picture-' + index"
+                      @click="toggleGallery(index)"></img>
                   </b-aspect>
                 </b-col>
                 <b-col class="p-1 col-6" v-for="(pic, index) in recipe.pictures.slice(1, 5)" :key="index+1">
                   <b-aspect aspect="16:9">
-                    <router-link :to="{ name: 'gallery', params: { id: recipe.id, name: recipe.name }, query: { picture: pic.id } }">
-                      <b-img-lazy thumbnail fluid class="rounded of-cover" :src="pic.thumbnail"></b-img>
-                    </router-link>
+                    <img loading="lazy" class="rounded of-cover img-fluid img-thumbnail pointer" :src="pic.thumbnail" :id="'recipe-picture-' + index+1"
+                      @click="toggleGallery(index+1)"></img>
                   </b-aspect>
                 </b-col>
               </b-row>
